@@ -1,0 +1,76 @@
+/var/www/sun/backend/logs/backend-out-0.log last 30 lines:
+0|backend  | > node -r dotenv/config dist/index.js
+0|backend  |
+0|backend  |
+0|backend  | > backend@1.0.0 start
+0|backend  | > node -r dotenv/config dist/index.js
+0|backend  |
+0|backend  |
+0|backend  | > backend@1.0.0 start
+0|backend  | > node -r dotenv/config dist/index.js
+0|backend  |
+0|backend  |
+0|backend  | > backend@1.0.0 start
+0|backend  | > node -r dotenv/config dist/index.js
+0|backend  |
+0|backend  |
+0|backend  | > backend@1.0.0 start
+0|backend  | > node -r dotenv/config dist/index.js
+0|backend  |
+0|backend  |
+0|backend  | > backend@1.0.0 start
+0|backend  | > node -r dotenv/config dist/index.js
+0|backend  |
+0|backend  |
+0|backend  | > backend@1.0.0 start
+0|backend  | > node -r dotenv/config dist/index.js
+0|backend  |
+0|backend  |
+0|backend  | > backend@1.0.0 start
+0|backend  | > node -r dotenv/config dist/index.js
+0|backend  |
+
+/root/.pm2/logs/backend-error-0.log last 30 lines:
+0|backend  | npm error code 1
+0|backend  | npm error path /var/www/sun/backend
+0|backend  | npm error workspace backend@1.0.0
+0|backend  | npm error location /var/www/sun/backend
+0|backend  | npm error command failed
+0|backend  | npm error command sh -c node -r dotenv/config dist/index.js
+0|backend  | npm warn config ignoring workspace config at /var/www/sun/backend/.npmrc
+0|backend  | npm error Lifecycle script `start` failed with error:
+0|backend  | npm error code 1
+0|backend  | npm error path /var/www/sun/backend
+0|backend  | npm error workspace backend@1.0.0
+0|backend  | npm error location /var/www/sun/backend
+0|backend  | npm error command failed
+0|backend  | npm error command sh -c node -r dotenv/config dist/index.js
+0|backend  | npm warn config ignoring workspace config at /var/www/sun/backend/.npmrc
+0|backend  | npm error Lifecycle script `start` failed with error:
+0|backend  | npm error code 1
+0|backend  | npm error path /var/www/sun/backend
+0|backend  | npm error workspace backend@1.0.0
+0|backend  | npm error location /var/www/sun/backend
+0|backend  | npm error command failed
+0|backend  | npm error command sh -c node -r dotenv/config dist/index.js
+0|backend  | npm warn config ignoring workspace config at /var/www/sun/backend/.npmrc
+0|backend  | npm error Lifecycle script `start` failed with error:
+0|backend  | npm error code 1
+0|backend  | npm error path /var/www/sun/backend
+0|backend  | npm error workspace backend@1.0.0
+0|backend  | npm error location /var/www/sun/backend
+0|backend  | npm error command failed
+0|backend  | npm error command sh -c node -r dotenv/config dist/index.js
+
+0|backend  | npm warn config ignoring workspace config at /var/www/sun/backend/.npmrc
+0|backend  | > backend@1.0.0 start
+0|backend  | > node -r dotenv/config dist/index.js
+0|backend  | npm error Lifecycle script `start` failed with error:
+0|backend  | npm error code 1
+0|backend  | npm error path /var/www/sun/backend
+0|backend  | npm error workspace backend@1.0.0
+0|backend  | npm error location /var/www/sun/backend
+0|backend  | npm error command failed
+0|backend  | npm error command sh -c node -r dotenv/config dist/index.js
+0|backend  | npm warn config ignoring workspace config at /var/www/sun/backend/.npmrc
+0|backend  | > backend@1.0.0 start
