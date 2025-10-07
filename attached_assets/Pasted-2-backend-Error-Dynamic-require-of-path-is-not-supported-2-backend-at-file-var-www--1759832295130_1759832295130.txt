@@ -1,0 +1,347 @@
+2|backend  | Error: Dynamic require of "path" is not supported
+2|backend  |     at file:///var/www/sun/backend/dist/index.js:11:9
+2|backend  |     at ../node_modules/depd/index.js (file:///var/www/sun/backend/dist/index.js:43:20)
+2|backend  |     at __require2 (file:///var/www/sun/backend/dist/index.js:17:51)
+2|backend  |     at ../node_modules/body-parser/index.js (file:///var/www/sun/backend/dist/index.js:17042:21)
+2|backend  |     at __require2 (file:///var/www/sun/backend/dist/index.js:17:51)
+2|backend  |     at ../node_modules/express/lib/express.js (file:///var/www/sun/backend/dist/index.js:23675:22)
+2|backend  |     at __require2 (file:///var/www/sun/backend/dist/index.js:17:51)
+2|backend  |     at ../node_modules/express/index.js (file:///var/www/sun/backend/dist/index.js:23744:23)
+2|backend  |     at __require2 (file:///var/www/sun/backend/dist/index.js:17:51)
+2|backend  |     at file:///var/www/sun/backend/dist/index.js:225567:33
+2|backend  | Node.js v20.19.5
+2|backend  | npm error Lifecycle script `start` failed with error:
+2|backend  | npm error code 1
+2|backend  | npm error path /var/www/sun/backend
+2|backend  | npm error workspace backend@1.0.0
+2|backend  | npm error location /var/www/sun/backend
+2|backend  | npm error command failed
+2|backend  | npm error command sh -c node dist/index.js
+PM2        | App [backend:2] exited with code [1] via signal [SIGINT]
+PM2        | App [backend:2] starting in -fork mode-
+PM2        | App [backend:2] online
+2|backend  | npm warn config ignoring workspace config at /var/www/sun/backend/.npmrc
+2|backend  | > backend@1.0.0 start
+2|backend  | > node dist/index.js
+2|backend  | file:///var/www/sun/backend/dist/index.js:11
+2|backend  |   throw Error('Dynamic require of "' + x + '" is not supported');
+2|backend  |         ^
+2|backend  | Error: Dynamic require of "path" is not supported
+2|backend  |     at file:///var/www/sun/backend/dist/index.js:11:9
+2|backend  |     at ../node_modules/depd/index.js (file:///var/www/sun/backend/dist/index.js:43:20)
+2|backend  |     at __require2 (file:///var/www/sun/backend/dist/index.js:17:51)
+2|backend  |     at ../node_modules/body-parser/index.js (file:///var/www/sun/backend/dist/index.js:17042:21)
+2|backend  |     at __require2 (file:///var/www/sun/backend/dist/index.js:17:51)
+2|backend  |     at ../node_modules/express/lib/express.js (file:///var/www/sun/backend/dist/index.js:23675:22)
+2|backend  |     at __require2 (file:///var/www/sun/backend/dist/index.js:17:51)
+2|backend  |     at ../node_modules/express/index.js (file:///var/www/sun/backend/dist/index.js:23744:23)
+2|backend  |     at __require2 (file:///var/www/sun/backend/dist/index.js:17:51)
+2|backend  |     at file:///var/www/sun/backend/dist/index.js:225567:33
+2|backend  | Node.js v20.19.5
+2|backend  | npm error Lifecycle script `start` failed with error:
+2|backend  | npm error code 1
+2|backend  | npm error path /var/www/sun/backend
+2|backend  | npm error workspace backend@1.0.0
+2|backend  | npm error location /var/www/sun/backend
+2|backend  | npm error command failed
+2|backend  | npm error command sh -c node dist/index.js
+PM2        | App [backend:2] exited with code [1] via signal [SIGINT]
+PM2        | App [backend:2] starting in -fork mode-
+PM2        | App [backend:2] online
+2|backend  | npm warn config ignoring workspace config at /var/www/sun/backend/.npmrc
+2|backend  | > backend@1.0.0 start
+2|backend  | > node dist/index.js
+2|backend  | file:///var/www/sun/backend/dist/index.js:11
+2|backend  |   throw Error('Dynamic require of "' + x + '" is not supported');
+2|backend  |         ^
+2|backend  | Error: Dynamic require of "path" is not supported
+2|backend  |     at file:///var/www/sun/backend/dist/index.js:11:9
+2|backend  |     at ../node_modules/depd/index.js (file:///var/www/sun/backend/dist/index.js:43:20)
+2|backend  |     at __require2 (file:///var/www/sun/backend/dist/index.js:17:51)
+2|backend  |     at ../node_modules/body-parser/index.js (file:///var/www/sun/backend/dist/index.js:17042:21)
+2|backend  |     at __require2 (file:///var/www/sun/backend/dist/index.js:17:51)
+2|backend  |     at ../node_modules/express/lib/express.js (file:///var/www/sun/backend/dist/index.js:23675:22)
+2|backend  |     at __require2 (file:///var/www/sun/backend/dist/index.js:17:51)
+2|backend  |     at ../node_modules/express/index.js (file:///var/www/sun/backend/dist/index.js:23744:23)
+2|backend  |     at __require2 (file:///var/www/sun/backend/dist/index.js:17:51)
+2|backend  |     at file:///var/www/sun/backend/dist/index.js:225567:33
+2|backend  | Node.js v20.19.5
+2|backend  | npm error Lifecycle script `start` failed with error:
+2|backend  | npm error code 1
+2|backend  | npm error path /var/www/sun/backend
+2|backend  | npm error workspace backend@1.0.0
+2|backend  | npm error location /var/www/sun/backend
+2|backend  | npm error command failed
+2|backend  | npm error command sh -c node dist/index.js
+PM2        | App [backend:2] exited with code [1] via signal [SIGINT]
+PM2        | App [backend:2] starting in -fork mode-
+PM2        | App [backend:2] online
+1|mobile   | added 1 package, and audited 1452 packages in 7s
+1|mobile   | 203 packages are looking for funding
+1|mobile   |   run `npm fund` for details
+1|mobile   | 6 vulnerabilities (4 moderate, 1 high, 1 critical)
+1|mobile   | To address all issues possible (including breaking changes), run:
+1|mobile   |   npm audit fix --force
+1|mobile   | Some issues need review, and may require choosing
+1|mobile   | a different dependency.
+1|mobile   | Run `npm audit` for details.
+2|backend  | npm warn config ignoring workspace config at /var/www/sun/backend/.npmrc
+2|backend  | > backend@1.0.0 start
+2|backend  | > node dist/index.js
+PM2        | App [mobile:1] exited with code [0] via signal [SIGINT]
+PM2        | App [mobile:1] starting in -fork mode-
+PM2        | App [mobile:1] online
+2|backend  | file:///var/www/sun/backend/dist/index.js:11
+2|backend  |   throw Error('Dynamic require of "' + x + '" is not supported');
+2|backend  |         ^
+2|backend  | Error: Dynamic require of "path" is not supported
+2|backend  |     at file:///var/www/sun/backend/dist/index.js:11:9
+2|backend  |     at ../node_modules/depd/index.js (file:///var/www/sun/backend/dist/index.js:43:20)
+2|backend  |     at __require2 (file:///var/www/sun/backend/dist/index.js:17:51)
+2|backend  |     at ../node_modules/body-parser/index.js (file:///var/www/sun/backend/dist/index.js:17042:21)
+2|backend  |     at __require2 (file:///var/www/sun/backend/dist/index.js:17:51)
+2|backend  |     at ../node_modules/express/lib/express.js (file:///var/www/sun/backend/dist/index.js:23675:22)
+2|backend  |     at __require2 (file:///var/www/sun/backend/dist/index.js:17:51)
+2|backend  |     at ../node_modules/express/index.js (file:///var/www/sun/backend/dist/index.js:23744:23)
+2|backend  |     at __require2 (file:///var/www/sun/backend/dist/index.js:17:51)
+2|backend  |     at file:///var/www/sun/backend/dist/index.js:225567:33
+2|backend  | Node.js v20.19.5
+2|backend  | npm error Lifecycle script `start` failed with error:
+2|backend  | npm error code 1
+2|backend  | npm error path /var/www/sun/backend
+2|backend  | npm error workspace backend@1.0.0
+2|backend  | npm error location /var/www/sun/backend
+2|backend  | npm error command failed
+2|backend  | npm error command sh -c node dist/index.js
+PM2        | App [backend:2] exited with code [1] via signal [SIGINT]
+PM2        | App [backend:2] starting in -fork mode-
+PM2        | App [backend:2] online
+1|mobile   | > customer-mobile@0.1.0 dev
+1|mobile   | > next dev -p 3001
+2|backend  | npm warn config ignoring workspace config at /var/www/sun/backend/.npmrc
+1|mobile   |  ⚠ You are using a non-standard "NODE_ENV" value in your environment. This creates inconsistencies in the project and is strongly advised against. Read more: https://nextjs.org/docs/messages/non-standard-node-env
+2|backend  | > backend@1.0.0 start
+2|backend  | > node dist/index.js
+2|backend  | file:///var/www/sun/backend/dist/index.js:11
+2|backend  |   throw Error('Dynamic require of "' + x + '" is not supported');
+2|backend  |         ^
+2|backend  | Error: Dynamic require of "path" is not supported
+2|backend  |     at file:///var/www/sun/backend/dist/index.js:11:9
+2|backend  |     at ../node_modules/depd/index.js (file:///var/www/sun/backend/dist/index.js:43:20)
+2|backend  |     at __require2 (file:///var/www/sun/backend/dist/index.js:17:51)
+2|backend  |     at ../node_modules/body-parser/index.js (file:///var/www/sun/backend/dist/index.js:17042:21)
+2|backend  |     at __require2 (file:///var/www/sun/backend/dist/index.js:17:51)
+2|backend  |     at ../node_modules/express/lib/express.js (file:///var/www/sun/backend/dist/index.js:23675:22)
+2|backend  |     at __require2 (file:///var/www/sun/backend/dist/index.js:17:51)
+2|backend  |     at ../node_modules/express/index.js (file:///var/www/sun/backend/dist/index.js:23744:23)
+2|backend  |     at __require2 (file:///var/www/sun/backend/dist/index.js:17:51)
+2|backend  |     at file:///var/www/sun/backend/dist/index.js:225567:33
+2|backend  | Node.js v20.19.5
+1|mobile   |   ▲ Next.js 15.0.0
+1|mobile   |   - Local:        http://localhost:3001
+1|mobile   |  ✓ Starting...
+2|backend  | npm error Lifecycle script `start` failed with error:
+2|backend  | npm error code 1
+2|backend  | npm error path /var/www/sun/backend
+2|backend  | npm error workspace backend@1.0.0
+2|backend  | npm error location /var/www/sun/backend
+2|backend  | npm error command failed
+2|backend  | npm error command sh -c node dist/index.js
+PM2        | App [backend:2] exited with code [1] via signal [SIGINT]
+PM2        | App [backend:2] starting in -fork mode-
+PM2        | App [backend:2] online
+2|backend  | npm warn config ignoring workspace config at /var/www/sun/backend/.npmrc
+2|backend  | > backend@1.0.0 start
+2|backend  | > node dist/index.js
+PM2        | App [mobile:1] exited with code [0] via signal [SIGINT]
+PM2        | App [mobile:1] starting in -fork mode-
+PM2        | App [mobile:1] online
+2|backend  | file:///var/www/sun/backend/dist/index.js:11
+2|backend  |   throw Error('Dynamic require of "' + x + '" is not supported');
+2|backend  |         ^
+2|backend  | Error: Dynamic require of "path" is not supported
+2|backend  |     at file:///var/www/sun/backend/dist/index.js:11:9
+2|backend  |     at ../node_modules/depd/index.js (file:///var/www/sun/backend/dist/index.js:43:20)
+2|backend  |     at __require2 (file:///var/www/sun/backend/dist/index.js:17:51)
+2|backend  |     at ../node_modules/body-parser/index.js (file:///var/www/sun/backend/dist/index.js:17042:21)
+2|backend  |     at __require2 (file:///var/www/sun/backend/dist/index.js:17:51)
+2|backend  |     at ../node_modules/express/lib/express.js (file:///var/www/sun/backend/dist/index.js:23675:22)
+2|backend  |     at __require2 (file:///var/www/sun/backend/dist/index.js:17:51)
+2|backend  |     at ../node_modules/express/index.js (file:///var/www/sun/backend/dist/index.js:23744:23)
+2|backend  |     at __require2 (file:///var/www/sun/backend/dist/index.js:17:51)
+2|backend  |     at file:///var/www/sun/backend/dist/index.js:225567:33
+2|backend  | Node.js v20.19.5
+2|backend  | npm error Lifecycle script `start` failed with error:
+2|backend  | npm error code 1
+2|backend  | npm error path /var/www/sun/backend
+2|backend  | npm error workspace backend@1.0.0
+2|backend  | npm error location /var/www/sun/backend
+2|backend  | npm error command failed
+2|backend  | npm error command sh -c node dist/index.js
+PM2        | App [backend:2] exited with code [1] via signal [SIGINT]
+PM2        | App [backend:2] starting in -fork mode-
+PM2        | App [backend:2] online
+1|mobile   | > customer-mobile@0.1.0 dev
+1|mobile   | > next dev -p 3001
+2|backend  | npm warn config ignoring workspace config at /var/www/sun/backend/.npmrc
+2|backend  | > backend@1.0.0 start
+2|backend  | > node dist/index.js
+1|mobile   |  ⚠ You are using a non-standard "NODE_ENV" value in your environment. This creates inconsistencies in the project and is strongly advised against. Read more: https://nextjs.org/docs/messages/non-standard-node-env
+2|backend  | file:///var/www/sun/backend/dist/index.js:11
+2|backend  |   throw Error('Dynamic require of "' + x + '" is not supported');
+2|backend  |         ^
+2|backend  | Error: Dynamic require of "path" is not supported
+2|backend  |     at file:///var/www/sun/backend/dist/index.js:11:9
+2|backend  |     at ../node_modules/depd/index.js (file:///var/www/sun/backend/dist/index.js:43:20)
+2|backend  |     at __require2 (file:///var/www/sun/backend/dist/index.js:17:51)
+2|backend  |     at ../node_modules/body-parser/index.js (file:///var/www/sun/backend/dist/index.js:17042:21)
+2|backend  |     at __require2 (file:///var/www/sun/backend/dist/index.js:17:51)
+2|backend  |     at ../node_modules/express/lib/express.js (file:///var/www/sun/backend/dist/index.js:23675:22)
+2|backend  |     at __require2 (file:///var/www/sun/backend/dist/index.js:17:51)
+2|backend  |     at ../node_modules/express/index.js (file:///var/www/sun/backend/dist/index.js:23744:23)
+2|backend  |     at __require2 (file:///var/www/sun/backend/dist/index.js:17:51)
+2|backend  |     at file:///var/www/sun/backend/dist/index.js:225567:33
+2|backend  | Node.js v20.19.5
+2|backend  | npm error Lifecycle script `start` failed with error:
+2|backend  | npm error code 1
+2|backend  | npm error path /var/www/sun/backend
+2|backend  | npm error workspace backend@1.0.0
+2|backend  | npm error location /var/www/sun/backend
+2|backend  | npm error command failed
+2|backend  | npm error command sh -c node dist/index.js
+PM2        | App [backend:2] exited with code [1] via signal [SIGINT]
+PM2        | App [backend:2] starting in -fork mode-
+PM2        | App [backend:2] online
+1|mobile   |   ▲ Next.js 15.0.0
+1|mobile   |   - Local:        http://localhost:3001
+1|mobile   |  ✓ Starting...
+2|backend  | npm warn config ignoring workspace config at /var/www/sun/backend/.npmrc
+2|backend  | > backend@1.0.0 start
+2|backend  | > node dist/index.js
+2|backend  | file:///var/www/sun/backend/dist/index.js:11
+2|backend  |   throw Error('Dynamic require of "' + x + '" is not supported');
+2|backend  |         ^
+2|backend  | Error: Dynamic require of "path" is not supported
+2|backend  |     at file:///var/www/sun/backend/dist/index.js:11:9
+2|backend  |     at ../node_modules/depd/index.js (file:///var/www/sun/backend/dist/index.js:43:20)
+2|backend  |     at __require2 (file:///var/www/sun/backend/dist/index.js:17:51)
+2|backend  |     at ../node_modules/body-parser/index.js (file:///var/www/sun/backend/dist/index.js:17042:21)
+2|backend  |     at __require2 (file:///var/www/sun/backend/dist/index.js:17:51)
+2|backend  |     at ../node_modules/express/lib/express.js (file:///var/www/sun/backend/dist/index.js:23675:22)
+2|backend  |     at __require2 (file:///var/www/sun/backend/dist/index.js:17:51)
+2|backend  |     at ../node_modules/express/index.js (file:///var/www/sun/backend/dist/index.js:23744:23)
+2|backend  |     at __require2 (file:///var/www/sun/backend/dist/index.js:17:51)
+2|backend  |     at file:///var/www/sun/backend/dist/index.js:225567:33
+2|backend  | Node.js v20.19.5
+2|backend  | npm error Lifecycle script `start` failed with error:
+2|backend  | npm error code 1
+2|backend  | npm error path /var/www/sun/backend
+2|backend  | npm error workspace backend@1.0.0
+2|backend  | npm error location /var/www/sun/backend
+2|backend  | npm error command failed
+2|backend  | npm error command sh -c node dist/index.js
+PM2        | App [backend:2] exited with code [1] via signal [SIGINT]
+PM2        | App [backend:2] starting in -fork mode-
+PM2        | App [backend:2] online
+PM2        | App [mobile:1] exited with code [0] via signal [SIGINT]
+PM2        | App [mobile:1] starting in -fork mode-
+PM2        | App [mobile:1] online
+2|backend  | npm warn config ignoring workspace config at /var/www/sun/backend/.npmrc
+2|backend  | > backend@1.0.0 start
+2|backend  | > node dist/index.js
+1|mobile   | > customer-mobile@0.1.0 dev
+1|mobile   | > next dev -p 3001
+1|mobile   |  ⚠ You are using a non-standard "NODE_ENV" value in your environment. This creates inconsistencies in the project and is strongly advised against. Read more: https://nextjs.org/docs/messages/non-standard-node-env
+2|backend  | file:///var/www/sun/backend/dist/index.js:11
+2|backend  |   throw Error('Dynamic require of "' + x + '" is not supported');
+2|backend  |         ^
+2|backend  | Error: Dynamic require of "path" is not supported
+2|backend  |     at file:///var/www/sun/backend/dist/index.js:11:9
+2|backend  |     at ../node_modules/depd/index.js (file:///var/www/sun/backend/dist/index.js:43:20)
+2|backend  |     at __require2 (file:///var/www/sun/backend/dist/index.js:17:51)
+2|backend  |     at ../node_modules/body-parser/index.js (file:///var/www/sun/backend/dist/index.js:17042:21)
+2|backend  |     at __require2 (file:///var/www/sun/backend/dist/index.js:17:51)
+2|backend  |     at ../node_modules/express/lib/express.js (file:///var/www/sun/backend/dist/index.js:23675:22)
+2|backend  |     at __require2 (file:///var/www/sun/backend/dist/index.js:17:51)
+2|backend  |     at ../node_modules/express/index.js (file:///var/www/sun/backend/dist/index.js:23744:23)
+2|backend  |     at __require2 (file:///var/www/sun/backend/dist/index.js:17:51)
+2|backend  |     at file:///var/www/sun/backend/dist/index.js:225567:33
+2|backend  | Node.js v20.19.5
+2|backend  | npm error Lifecycle script `start` failed with error:
+2|backend  | npm error code 1
+2|backend  | npm error path /var/www/sun/backend
+2|backend  | npm error workspace backend@1.0.0
+2|backend  | npm error location /var/www/sun/backend
+2|backend  | npm error command failed
+2|backend  | npm error command sh -c node dist/index.js
+PM2        | App [backend:2] exited with code [1] via signal [SIGINT]
+PM2        | App [backend:2] starting in -fork mode-
+PM2        | App [backend:2] online
+1|mobile   |   ▲ Next.js 15.0.0
+1|mobile   |   - Local:        http://localhost:3001
+1|mobile   |  ✓ Starting...
+2|backend  | npm warn config ignoring workspace config at /var/www/sun/backend/.npmrc
+2|backend  | > backend@1.0.0 start
+2|backend  | > node dist/index.js
+2|backend  | file:///var/www/sun/backend/dist/index.js:11
+2|backend  |   throw Error('Dynamic require of "' + x + '" is not supported');
+2|backend  |         ^
+2|backend  | Error: Dynamic require of "path" is not supported
+2|backend  |     at file:///var/www/sun/backend/dist/index.js:11:9
+2|backend  |     at ../node_modules/depd/index.js (file:///var/www/sun/backend/dist/index.js:43:20)
+2|backend  |     at __require2 (file:///var/www/sun/backend/dist/index.js:17:51)
+2|backend  |     at ../node_modules/body-parser/index.js (file:///var/www/sun/backend/dist/index.js:17042:21)
+2|backend  |     at __require2 (file:///var/www/sun/backend/dist/index.js:17:51)
+2|backend  |     at ../node_modules/express/lib/express.js (file:///var/www/sun/backend/dist/index.js:23675:22)
+2|backend  |     at __require2 (file:///var/www/sun/backend/dist/index.js:17:51)
+2|backend  |     at ../node_modules/express/index.js (file:///var/www/sun/backend/dist/index.js:23744:23)
+2|backend  |     at __require2 (file:///var/www/sun/backend/dist/index.js:17:51)
+2|backend  |     at file:///var/www/sun/backend/dist/index.js:225567:33
+2|backend  | Node.js v20.19.5
+2|backend  | npm error Lifecycle script `start` failed with error:
+2|backend  | npm error code 1
+2|backend  | npm error path /var/www/sun/backend
+2|backend  | npm error workspace backend@1.0.0
+2|backend  | npm error location /var/www/sun/backend
+2|backend  | npm error command failed
+2|backend  | npm error command sh -c node dist/index.js
+PM2        | App [backend:2] exited with code [1] via signal [SIGINT]
+PM2        | App [backend:2] starting in -fork mode-
+PM2        | App [backend:2] online
+2|backend  | npm warn config ignoring workspace config at /var/www/sun/backend/.npmrc
+2|backend  | > backend@1.0.0 start
+2|backend  | > node dist/index.js
+PM2        | App [mobile:1] exited with code [0] via signal [SIGINT]
+PM2        | App [mobile:1] starting in -fork mode-
+PM2        | App [mobile:1] online
+1|mobile   | > customer-mobile@0.1.0 dev
+1|mobile   | > next dev -p 3001
+2|backend  | file:///var/www/sun/backend/dist/index.js:11
+2|backend  |   throw Error('Dynamic require of "' + x + '" is not supported');
+2|backend  |         ^
+2|backend  | Error: Dynamic require of "path" is not supported
+2|backend  |     at file:///var/www/sun/backend/dist/index.js:11:9
+2|backend  |     at ../node_modules/depd/index.js (file:///var/www/sun/backend/dist/index.js:43:20)
+2|backend  |     at __require2 (file:///var/www/sun/backend/dist/index.js:17:51)
+2|backend  |     at ../node_modules/body-parser/index.js (file:///var/www/sun/backend/dist/index.js:17042:21)
+2|backend  |     at __require2 (file:///var/www/sun/backend/dist/index.js:17:51)
+2|backend  |     at ../node_modules/express/lib/express.js (file:///var/www/sun/backend/dist/index.js:23675:22)
+2|backend  |     at __require2 (file:///var/www/sun/backend/dist/index.js:17:51)
+2|backend  |     at ../node_modules/express/index.js (file:///var/www/sun/backend/dist/index.js:23744:23)
+2|backend  |     at __require2 (file:///var/www/sun/backend/dist/index.js:17:51)
+2|backend  |     at file:///var/www/sun/backend/dist/index.js:225567:33
+2|backend  | Node.js v20.19.5
+1|mobile   |  ⚠ You are using a non-standard "NODE_ENV" value in your environment. This creates inconsistencies in the project and is strongly advised against. Read more: https://nextjs.org/docs/messages/non-standard-node-env
+2|backend  | npm error Lifecycle script `start` failed with error:
+2|backend  | npm error code 1
+2|backend  | npm error path /var/www/sun/backend
+2|backend  | npm error workspace backend@1.0.0
+2|backend  | npm error location /var/www/sun/backend
+2|backend  | npm error command failed
+2|backend  | npm error command sh -c node dist/index.js
+PM2        | App [backend:2] exited with code [1] via signal [SIGINT]
+PM2        | App [backend:2] starting in -fork mode-
+PM2        | App [backend:2] online
+2|backend  | npm warn config ignoring workspace config at /var/www/sun/backend/.npmrc
+2|backend  | > backend@1.0.0 start
+2|backend  | > node dist/index.js

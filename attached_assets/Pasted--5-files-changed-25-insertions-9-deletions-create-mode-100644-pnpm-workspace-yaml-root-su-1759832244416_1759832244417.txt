@@ -1,0 +1,42 @@
+ 5 files changed, 25 insertions(+), 9 deletions(-)
+ create mode 100644 pnpm-workspace.yaml
+root@sunfoods:/var/www/sun# npm install
+npm warn reify invalid or damaged lockfile detected
+npm warn reify please re-try this operation once it completes
+npm warn reify so that the damage can be corrected, or perform
+npm warn reify a fresh install with no lockfile if the problem persists.
+npm warn reify invalid or damaged lockfile detected
+npm warn reify please re-try this operation once it completes
+npm warn reify so that the damage can be corrected, or perform
+npm warn reify a fresh install with no lockfile if the problem persists.
+npm warn reify invalid or damaged lockfile detected
+npm warn reify please re-try this operation once it completes
+npm warn reify so that the damage can be corrected, or perform
+npm warn reify a fresh install with no lockfile if the problem persists.
+npm warn reify invalid or damaged lockfile detected
+npm warn reify please re-try this operation once it completes
+npm warn reify so that the damage can be corrected, or perform
+npm warn reify a fresh install with no lockfile if the problem persists.
+npm warn reify invalid or damaged lockfile detected
+npm warn reify please re-try this operation once it completes
+npm warn reify so that the damage can be corrected, or perform
+npm warn reify a fresh install with no lockfile if the problem persists.
+npm warn deprecated q@1.5.1: You or someone you depend on is using Q, the JavaScript Promise library that gave JavaScript developers strong feelings about promises. They can almost certainly migrate to the native JavaScript promise now. Thank you literally everyone for joining me in this bet against the odds. Be excellent to each other.
+npm warn deprecated
+npm warn deprecated (For a CapTP with native promises, see @endo/eventual-send and @endo/captp)
+
+added 44 packages, removed 131 packages, changed 263 packages, and audited 1451 packages in 55s
+
+203 packages are looking for funding
+  run `npm fund` for details
+
+10 vulnerabilities (6 moderate, 3 high, 1 critical)
+
+To address all issues possible (including breaking changes), run:
+  npm audit fix --force
+
+Some issues need review, and may require choosing
+a different dependency.
+
+Run `npm audit` for details.
+root@sunfoods:/var/www/sun#
