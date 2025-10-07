@@ -1,0 +1,115 @@
+root@sunfoods:/var/www/sun# sleep 3 && curl http://localhost:3000/api/health
+curl: (7) Failed to connect to localhost port 3000 after 0 ms: Couldn't connect to server
+root@sunfoods:/var/www/sun# pm2 logs backend --lines 20
+[TAILING] Tailing last 20 lines for [backend] process (change the value with --lines option)
+/root/.pm2/logs/backend-error-0.log last 20 lines:
+0|backend  | npm error workspace backend@1.0.0
+0|backend  | npm error location /var/www/sun/backend
+0|backend  | npm error command failed
+0|backend  | npm error command sh -c node -r dotenv/config dist/index.js
+0|backend  | npm warn config ignoring workspace config at /var/www/sun/backend/.npmrc
+0|backend  | npm error Lifecycle script `start` failed with error:
+0|backend  | npm error code 1
+0|backend  | npm error path /var/www/sun/backend
+0|backend  | npm error workspace backend@1.0.0
+0|backend  | npm error location /var/www/sun/backend
+0|backend  | npm error command failed
+0|backend  | npm error command sh -c node -r dotenv/config dist/index.js
+0|backend  | npm warn config ignoring workspace config at /var/www/sun/backend/.npmrc
+0|backend  | npm error Lifecycle script `start` failed with error:
+0|backend  | npm error code 1
+0|backend  | npm error path /var/www/sun/backend
+0|backend  | npm error workspace backend@1.0.0
+0|backend  | npm error location /var/www/sun/backend
+0|backend  | npm error command failed
+0|backend  | npm error command sh -c node -r dotenv/config dist/index.js
+
+/var/www/sun/backend/logs/backend-out-0.log last 20 lines:
+0|backend  |
+0|backend  |
+0|backend  | > backend@1.0.0 start
+0|backend  | > node -r dotenv/config dist/index.js
+0|backend  |
+0|backend  |
+0|backend  | > backend@1.0.0 start
+0|backend  | > node -r dotenv/config dist/index.js
+0|backend  |
+0|backend  |
+0|backend  | > backend@1.0.0 start
+0|backend  | > node -r dotenv/config dist/index.js
+0|backend  |
+0|backend  | 📋 Hướng dẫn lấy credentials:
+0|backend  | 📋 Hướng dẫn lấy credentials:
+0|backend  | 📋 Hướng dẫn lấy credentials:
+0|backend  | 📋 Hướng dẫn lấy credentials:
+0|backend  | 📋 Hướng dẫn lấy credentials:
+0|backend  | 📋 Hướng dẫn lấy credentials:
+0|backend  | 📋 Hướng dẫn lấy credentials:
+
+0|backend  | ⚠️  VAPID keys not configured! Push notifications will not work.
+0|backend  |    Set VAPID_PUBLIC_KEY and VAPID_PRIVATE_KEY environment variables.
+0|backend  | ⚠️ THÔNG BÁO: Đang sử dụng TikTok credentials mẫu. Vui lòng thay thế bằng credentials thật từ TikTok Developer Portal để kết nối thực tế.
+0|backend  | 📋 Hướng dẫn lấy credentials:
+0|backend  | 1. Truy cập: https://developers.tiktok.com/
+0|backend  | 2. Tạo ứng dụng mới hoặc chọn ứng dụng hiện tại
+0|backend  | 3. Sao chép Client Key và Client Secret
+0|backend  | 4. Thay thế trong file tiktok-auth.ts dòng 40-41
+0|backend  | 🏥 Started worker health monitoring
+0|backend  | ⚠️ Replit OAuth credentials not found. Set REPLIT_APP_ID and REPLIT_APP_SECRET environment variables.
+0|backend  | Error: WORKER_JWT_SECRET environment variable must be set in production
+0|backend  |     at /var/www/sun/backend/dist/index.js:242809:11
+0|backend  |     at Object.<anonymous> (/var/www/sun/backend/dist/index.js:242812:3)
+0|backend  |     at Module._compile (node:internal/modules/cjs/loader:1521:14)
+0|backend  |     at Module._extensions..js (node:internal/modules/cjs/loader:1623:10)
+0|backend  |     at Module.load (node:internal/modules/cjs/loader:1266:32)
+0|backend  |     at Module._load (node:internal/modules/cjs/loader:1091:12)
+0|backend  |     at /usr/local/lib/node_modules/pm2/lib/ProcessContainer.js:292:27
+0|backend  |     at wrapper (/usr/local/lib/node_modules/pm2/node_modules/async/internal/once.js:12:16)
+0|backend  |     at next (/usr/local/lib/node_modules/pm2/node_modules/async/waterfall.js:96:20)
+0|backend  |     at /usr/local/lib/node_modules/pm2/node_modules/async/internal/onlyOnce.js:12:16
+0|backend  | ⚠️  VAPID keys not configured! Push notifications will not work.
+0|backend  |    Set VAPID_PUBLIC_KEY and VAPID_PRIVATE_KEY environment variables.
+0|backend  | ⚠️ THÔNG BÁO: Đang sử dụng TikTok credentials mẫu. Vui lòng thay thế bằng credentials thật từ TikTok Developer Portal để kết nối thực tế.
+0|backend  | 📋 Hướng dẫn lấy credentials:
+0|backend  | 1. Truy cập: https://developers.tiktok.com/
+0|backend  | 2. Tạo ứng dụng mới hoặc chọn ứng dụng hiện tại
+0|backend  | 3. Sao chép Client Key và Client Secret
+0|backend  | 4. Thay thế trong file tiktok-auth.ts dòng 40-41
+0|backend  | 🏥 Started worker health monitoring
+0|backend  | ⚠️ Replit OAuth credentials not found. Set REPLIT_APP_ID and REPLIT_APP_SECRET environment variables.
+0|backend  | Error: WORKER_JWT_SECRET environment variable must be set in production
+0|backend  |     at /var/www/sun/backend/dist/index.js:242809:11
+0|backend  |     at Object.<anonymous> (/var/www/sun/backend/dist/index.js:242812:3)
+0|backend  |     at Module._compile (node:internal/modules/cjs/loader:1521:14)
+0|backend  |     at Module._extensions..js (node:internal/modules/cjs/loader:1623:10)
+0|backend  |     at Module.load (node:internal/modules/cjs/loader:1266:32)
+0|backend  |     at Module._load (node:internal/modules/cjs/loader:1091:12)
+0|backend  |     at /usr/local/lib/node_modules/pm2/lib/ProcessContainer.js:292:27
+0|backend  |     at wrapper (/usr/local/lib/node_modules/pm2/node_modules/async/internal/once.js:12:16)
+0|backend  |     at next (/usr/local/lib/node_modules/pm2/node_modules/async/waterfall.js:96:20)
+0|backend  |     at /usr/local/lib/node_modules/pm2/node_modules/async/internal/onlyOnce.js:12:16
+0|backend  | ⚠️  VAPID keys not configured! Push notifications will not work.
+0|backend  |    Set VAPID_PUBLIC_KEY and VAPID_PRIVATE_KEY environment variables.
+0|backend  | ⚠️ THÔNG BÁO: Đang sử dụng TikTok credentials mẫu. Vui lòng thay thế bằng credentials thật từ TikTok Developer Portal để kết nối thực tế.
+0|backend  | 📋 Hướng dẫn lấy credentials:
+0|backend  | 1. Truy cập: https://developers.tiktok.com/
+0|backend  | 2. Tạo ứng dụng mới hoặc chọn ứng dụng hiện tại
+0|backend  | 3. Sao chép Client Key và Client Secret
+0|backend  | 4. Thay thế trong file tiktok-auth.ts dòng 40-41
+0|backend  | 🏥 Started worker health monitoring
+0|backend  | ⚠️ Replit OAuth credentials not found. Set REPLIT_APP_ID and REPLIT_APP_SECRET environment variables.
+0|backend  | Error: WORKER_JWT_SECRET environment variable must be set in production
+0|backend  |     at /var/www/sun/backend/dist/index.js:242809:11
+0|backend  |     at Object.<anonymous> (/var/www/sun/backend/dist/index.js:242812:3)
+0|backend  |     at Module._compile (node:internal/modules/cjs/loader:1521:14)
+0|backend  |     at Module._extensions..js (node:internal/modules/cjs/loader:1623:10)
+0|backend  |     at Module.load (node:internal/modules/cjs/loader:1266:32)
+0|backend  |     at Module._load (node:internal/modules/cjs/loader:1091:12)
+0|backend  |     at /usr/local/lib/node_modules/pm2/lib/ProcessContainer.js:292:27
+0|backend  |     at wrapper (/usr/local/lib/node_modules/pm2/node_modules/async/internal/once.js:12:16)
+0|backend  |     at next (/usr/local/lib/node_modules/pm2/node_modules/async/waterfall.js:96:20)
+0|backend  |     at /usr/local/lib/node_modules/pm2/node_modules/async/internal/onlyOnce.js:12:16
+0|backend  | ⚠️  VAPID keys not configured! Push notifications will not work.
+0|backend  |    Set VAPID_PUBLIC_KEY and VAPID_PRIVATE_KEY environment variables.
+^C
+root@sunfoods:/var/www/sun#
