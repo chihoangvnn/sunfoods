@@ -1,5 +1,5 @@
 import { db } from '../db.js';
-import { orders, viettelpostConfigs } from '../../shared/schema.js';
+import { orders } from '../../shared/schema.js';
 import { eq, and } from 'drizzle-orm';
 import ViettelPostShippingService from './viettelpost-shipping-service.js';
 

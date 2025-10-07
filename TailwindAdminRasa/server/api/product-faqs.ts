@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { DatabaseStorage } from '../storage.js';
 import { eq, inArray, sql } from 'drizzle-orm';
 import { db } from '../db.js';
-import { products, categories, faqGenerationJobs, faqGenerationResults, productFAQs } from '../../shared/schema.js';
+import { products, categories, faqGenerationJobs, faqGenerationResults, productFaqs } from '../../shared/schema.js';
 import { createHash } from 'crypto';
 
 const router = Router();

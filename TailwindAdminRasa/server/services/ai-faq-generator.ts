@@ -1,6 +1,6 @@
 import { GoogleGenAI } from "@google/genai";
 import { db } from '../db';
-import { productFAQs, faqLibrary } from '@shared/schema';
+import { productFaqs, faqLibrary } from '@shared/schema';
 import { eq, and } from 'drizzle-orm';
 
 // Initialize Gemini AI

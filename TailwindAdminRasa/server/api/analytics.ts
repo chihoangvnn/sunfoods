@@ -2,7 +2,6 @@ import { Router } from 'express';
 import { db } from '../db';
 import { 
   accountGroups, 
-  groupAccounts, 
   scheduledPosts, 
   socialAccounts
 } from '../../shared/schema';

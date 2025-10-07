@@ -5,7 +5,7 @@
  */
 
 import { db } from '../db';
-import { products, customDescriptionTemplates } from '../../shared/schema';
+import { products } from '../../shared/schema';
 import { eq, and } from 'drizzle-orm';
 import type { 
   CustomDescriptionData, 

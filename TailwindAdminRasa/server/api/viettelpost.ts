@@ -1,6 +1,6 @@
 import express from 'express';
 import { db } from '../db.js';
-import { orders, viettelpostConfigs, viettelpostServices, viettelpostLocations } from '../../shared/schema.js';
+import { orders } from '../../shared/schema.js';
 import { eq, and, desc, like, sql } from 'drizzle-orm';
 import ViettelPostShippingService from '../services/viettelpost-shipping-service.js';
 import ViettelPostAPI from '../services/viettelpost-api.js';

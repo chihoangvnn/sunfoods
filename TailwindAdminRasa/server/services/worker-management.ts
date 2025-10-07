@@ -25,7 +25,7 @@ import type {
   WorkerPlatform,
   WorkerCapability
 } from '@shared/schema';
-import { SUPPORTED_WORKER_PLATFORMS } from '@shared/schema';
+// import { SUPPORTED_WORKER_PLATFORMS } from '@shared/schema';
 
 // Worker registration and capabilities
 export interface WorkerRegistrationData {

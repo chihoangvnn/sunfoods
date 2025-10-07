@@ -3,7 +3,7 @@ import { storage } from '../storage';
 import { cacheMiddleware, invalidateCacheMiddleware, CacheKeys } from '../middleware/cache';
 import { requirePOSAuth } from '../middleware/pos-auth';
 import { db } from '../db';
-import { categoryFAQTemplates, contentFAQAssignments } from '@shared/schema';
+import { categoryFaqTemplates, contentFaqAssignments } from '@shared/schema';
 import { eq, and, sql } from 'drizzle-orm';
 import { AIFAQGenerator } from '../services/ai-faq-generator';
 import { 
@@ -28,15 +28,15 @@ async function inheritCategoryFAQTemplates(productId: string, categoryId: string
     // Get active auto-inherit templates for this category
     const templates = await db
       .select()
-      .from(categoryFAQTemplates)
+      .from(categoryFaqTemplates)
       .where(
         and(
-          eq(categoryFAQTemplates.categoryId, categoryId),
-          eq(categoryFAQTemplates.isActive, true),
-          eq(categoryFAQTemplates.autoInherit, true)
+          eq(categoryFaqTemplates.categoryId, categoryId),
+          eq(categoryFaqTemplates.isActive, true),
+          eq(categoryFaqTemplates.autoInherit, true)
         )
       )
-      .orderBy(categoryFAQTemplates.sortOrder);
+      .orderBy(categoryFaqTemplates.sortOrder);
 
     if (templates.length === 0) {
       console.log('🤷 No auto-inherit FAQ templates found for this category');
@@ -61,7 +61,7 @@ async function inheritCategoryFAQTemplates(productId: string, categoryId: string
 
     // Insert all assignments at once
     const createdAssignments = await db
-      .insert(contentFAQAssignments)
+      .insert(contentFaqAssignments)
       .values(assignments)
       .returning();
 

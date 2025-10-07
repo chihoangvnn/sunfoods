@@ -1,5 +1,5 @@
 import { db } from '../db.js';
-import { orders, viettelpostConfigs, viettelpostServices, viettelpostLocations } from '../../shared/schema.js';
+import { orders } from '../../shared/schema.js';
 import { eq, and, desc, sql } from 'drizzle-orm';
 import ViettelPostAPI, { VTPOrderRequest, VTPOrderResponse, VTPTrackingResponse } from './viettelpost-api.js';
 import crypto from 'crypto';
