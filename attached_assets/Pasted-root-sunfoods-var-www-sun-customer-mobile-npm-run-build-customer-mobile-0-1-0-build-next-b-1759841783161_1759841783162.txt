@@ -1,0 +1,38 @@
+root@sunfoods:/var/www/sun/customer-mobile# npm run build
+
+> customer-mobile@0.1.0 build
+> next build
+
+ ⚠ You are using a non-standard "NODE_ENV" value in your environment. This creates inconsistencies in the project and is strongly advised against. Read more: https://nextjs.org/docs/messages/non-standard-node-env
+  ▲ Next.js 15.0.0
+
+   Creating an optimized production build ...
+Bus error
+npm error Lifecycle script `build` failed with error:
+npm error code 135
+npm error path /var/www/sun/customer-mobile
+npm error workspace customer-mobile@0.1.0
+npm error location /var/www/sun/customer-mobile
+npm error command failed
+npm error command sh -c next build
+root@sunfoods:/var/www/sun/customer-mobile# cd /var/www/sun
+root@sunfoods:/var/www/sun# pm2 restart mobile
+Use --update-env to update environment variables
+[PM2] Applying action restartProcessId on app [mobile](ids: [ 1 ])
+[PM2] [mobile](1) ✓
+┌────┬────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name       │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ backend    │ default     │ 1.0.0   │ cluster │ 352812   │ 2m     │ 51   │ online    │ 0%       │ 181.9mb  │ root     │ disabled │
+│ 1  │ mobile     │ default     │ N/A     │ fork    │ 356964   │ 0s     │ 408  │ online    │ 0%       │ 19.0mb   │ root     │ disabled │
+└────┴────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+root@sunfoods:/var/www/sun# sleep 3 && pm2 status
+┌────┬────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name       │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ backend    │ default     │ 1.0.0   │ cluster │ 352812   │ 2m     │ 51   │ online    │ 0%       │ 181.5mb  │ root     │ disabled │
+│ 1  │ mobile     │ default     │ N/A     │ fork    │ 0        │ 0      │ 416  │ errored   │ 0%       │ 0b       │ root     │ disabled │
+└────┴────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+root@sunfoods:/var/www/sun# curl http://localhost:3001
+curl: (7) Failed to connect to localhost port 3001 after 0 ms: Couldn't connect to server
+root@sunfoods:/var/www/sun#
