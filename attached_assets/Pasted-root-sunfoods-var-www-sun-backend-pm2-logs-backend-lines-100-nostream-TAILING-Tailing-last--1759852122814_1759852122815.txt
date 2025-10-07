@@ -1,0 +1,105 @@
+root@sunfoods:/var/www/sun/backend# pm2 logs backend --lines 100 --nostream
+[TAILING] Tailing last 100 lines for [backend] process (change the value with --lines option)
+/root/.pm2/logs/backend-error-0.log last 100 lines:
+0|backend  |   '🔴 WORKERS is unhealthy: Critical issue detected',
+0|backend  |   '🔴 CRITICAL: No workers are online - Auto-posting system is offline'
+0|backend  | ]
+0|backend  | 🚨 SYSTEM HEALTH CRITICAL: [
+0|backend  |   '🔴 WORKERS is unhealthy: Critical issue detected',
+0|backend  |   '🔴 CRITICAL: No workers are online - Auto-posting system is offline'
+0|backend  | ]
+0|backend  | 🚨 SYSTEM HEALTH CRITICAL: [
+0|backend  |   '🔴 WORKERS is unhealthy: Critical issue detected',
+0|backend  |   '🔴 CRITICAL: No workers are online - Auto-posting system is offline'
+0|backend  | ]
+0|backend  | Failed to compile pattern for GET /api/webhooks/facebook/:appId?: PathError [TypeError]: Unexpected ? at index 29, expected end: /api/webhooks/facebook/:appId?; visit https://git.new/pathToRegexpError for info
+0|backend  |     at consumeUntil (/var/www/sun/backend/dist/index.js:176437:17)
+0|backend  |     at parse (/var/www/sun/backend/dist/index.js:176441:28)
+0|backend  |     at pathToRegexp2 (/var/www/sun/backend/dist/index.js:176540:58)
+0|backend  |     at ApiConfigurationCache.getAllConfigs (/var/www/sun/backend/dist/index.js:176793:67)
+0|backend  |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+0|backend  |     at async ApiConfigurationCache.findMatchingConfig (/var/www/sun/backend/dist/index.js:176809:28)
+0|backend  |     at async /var/www/sun/backend/dist/index.js:176685:22 {
+0|backend  |   originalPath: '/api/webhooks/facebook/:appId?'
+0|backend  | }
+0|backend  | Failed to compile pattern for POST /api/webhooks/facebook/:appId?: PathError [TypeError]: Unexpected ? at index 29, expected end: /api/webhooks/facebook/:appId?; visit https://git.new/pathToRegexpError for info
+0|backend  |     at consumeUntil (/var/www/sun/backend/dist/index.js:176437:17)
+0|backend  |     at parse (/var/www/sun/backend/dist/index.js:176441:28)
+0|backend  |     at pathToRegexp2 (/var/www/sun/backend/dist/index.js:176540:58)
+0|backend  |     at ApiConfigurationCache.getAllConfigs (/var/www/sun/backend/dist/index.js:176793:67)
+0|backend  |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+0|backend  |     at async ApiConfigurationCache.findMatchingConfig (/var/www/sun/backend/dist/index.js:176809:28)
+0|backend  |     at async /var/www/sun/backend/dist/index.js:176685:22 {
+0|backend  |   originalPath: '/api/webhooks/facebook/:appId?'
+0|backend  | }
+0|backend  | 🚨 SYSTEM HEALTH CRITICAL: [
+0|backend  |   '🔴 WORKERS is unhealthy: Critical issue detected',
+0|backend  |   '🔴 CRITICAL: No workers are online - Auto-posting system is offline'
+0|backend  | ]
+0|backend  | 🚨 SYSTEM HEALTH CRITICAL: [
+0|backend  |   '🔴 WORKERS is unhealthy: Critical issue detected',
+0|backend  |   '🔴 CRITICAL: No workers are online - Auto-posting system is offline'
+0|backend  | ]
+0|backend  | 🚨 SYSTEM HEALTH CRITICAL: [
+0|backend  |   '🔴 WORKERS is unhealthy: Critical issue detected',
+0|backend  |   '🔴 CRITICAL: No workers are online - Auto-posting system is offline'
+0|backend  | ]
+0|backend  | 🚨 SYSTEM HEALTH CRITICAL: [
+0|backend  |   '🔴 WORKERS is unhealthy: Critical issue detected',
+0|backend  |   '🔴 CRITICAL: No workers are online - Auto-posting system is offline'
+0|backend  | ]
+0|backend  | 🚨 SYSTEM HEALTH CRITICAL: [
+0|backend  |   '🔴 WORKERS is unhealthy: Critical issue detected',
+0|backend  |   '🔴 CRITICAL: No workers are online - Auto-posting system is offline'
+0|backend  | ]
+0|backend  | 🚨 SYSTEM HEALTH CRITICAL: [
+0|backend  |   '🔴 WORKERS is unhealthy: Critical issue detected',
+0|backend  |   '🔴 CRITICAL: No workers are online - Auto-posting system is offline'
+0|backend  | ]
+0|backend  | ⚠️  VAPID keys not configured! Push notifications will not work.
+0|backend  |    Set VAPID_PUBLIC_KEY and VAPID_PRIVATE_KEY environment variables.
+0|backend  | ⚠️ THÔNG BÁO: Đang sử dụng TikTok credentials mẫu. Vui lòng thay thế bằng credentials thật từ TikTok Developer Portal để kết nối thực tế.
+0|backend  | ⚠️ Replit OAuth credentials not found. Set REPLIT_APP_ID and REPLIT_APP_SECRET environment variables.
+0|backend  | ⚠️ Campaign verifier: Redis not configured - running without queue-based verification
+0|backend  | Failed to compile pattern for GET /api/webhooks/facebook/:appId?: PathError [TypeError]: Unexpected ? at index 29, expected end: /api/webhooks/facebook/:appId?; visit https://git.new/pathToRegexpError for info
+0|backend  |     at consumeUntil (/var/www/sun/backend/dist/index.js:176460:17)
+0|backend  |     at parse (/var/www/sun/backend/dist/index.js:176464:28)
+0|backend  |     at pathToRegexp2 (/var/www/sun/backend/dist/index.js:176563:58)
+0|backend  |     at ApiConfigurationCache.getAllConfigs (/var/www/sun/backend/dist/index.js:176816:67)
+0|backend  |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+0|backend  |     at async ApiConfigurationCache.findMatchingConfig (/var/www/sun/backend/dist/index.js:176832:28)
+0|backend  |     at async /var/www/sun/backend/dist/index.js:176708:22 {
+0|backend  |   originalPath: '/api/webhooks/facebook/:appId?'
+0|backend  | }
+0|backend  | Failed to compile pattern for POST /api/webhooks/facebook/:appId?: PathError [TypeError]: Unexpected ? at index 29, expected end: /api/webhooks/facebook/:appId?; visit https://git.new/pathToRegexpError for info
+0|backend  |     at consumeUntil (/var/www/sun/backend/dist/index.js:176460:17)
+0|backend  |     at parse (/var/www/sun/backend/dist/index.js:176464:28)
+0|backend  |     at pathToRegexp2 (/var/www/sun/backend/dist/index.js:176563:58)
+0|backend  |     at ApiConfigurationCache.getAllConfigs (/var/www/sun/backend/dist/index.js:176816:67)
+0|backend  |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+0|backend  |     at async ApiConfigurationCache.findMatchingConfig (/var/www/sun/backend/dist/index.js:176832:28)
+0|backend  |     at async /var/www/sun/backend/dist/index.js:176708:22 {
+0|backend  |   originalPath: '/api/webhooks/facebook/:appId?'
+0|backend  | }
+0|backend  | 🚨 SYSTEM HEALTH CRITICAL: [
+0|backend  |   '🔴 WORKERS is unhealthy: Critical issue detected',
+0|backend  |   '🔴 CRITICAL: No workers are online - Auto-posting system is offline'
+0|backend  | ]
+0|backend  | 🚨 SYSTEM HEALTH CRITICAL: [
+0|backend  |   '🔴 WORKERS is unhealthy: Critical issue detected',
+0|backend  |   '🔴 CRITICAL: No workers are online - Auto-posting system is offline'
+0|backend  | ]
+0|backend  | 🚨 SYSTEM HEALTH CRITICAL: [
+0|backend  |   '🔴 WORKERS is unhealthy: Critical issue detected',
+0|backend  |   '🔴 CRITICAL: No workers are online - Auto-posting system is offline'
+0|backend  | ]
+0|backend  | 🚨 SYSTEM HEALTH CRITICAL: [
+0|backend  |   '🔴 WORKERS is unhealthy: Critical issue detected',
+0|backend  |   '🔴 CRITICAL: No workers are online - Auto-posting system is offline'
+0|backend  | ]
+0|backend  | 🚨 SYSTEM HEALTH CRITICAL: [
+0|backend  |   '🔴 WORKERS is unhealthy: Critical issue detected',
+0|backend  |   '🔴 CRITICAL: No workers are online - Auto-posting system is offline'
+0|backend  | ]
+
+/var/www/sun/backend/logs/backend-out-0.log last 100 lines:

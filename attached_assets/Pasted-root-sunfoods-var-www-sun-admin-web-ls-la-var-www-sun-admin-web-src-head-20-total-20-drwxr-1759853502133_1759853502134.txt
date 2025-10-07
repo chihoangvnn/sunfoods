@@ -1,0 +1,44 @@
+root@sunfoods:/var/www/sun/admin-web# ls -la /var/www/sun/admin-web/src/ | head -20
+total 20
+drwxr-xr-x  4 root root 4096 Oct  7 14:19 .
+drwxr-xr-x  4 root root 4096 Oct  7 23:09 ..
+-rw-r--r--  1 root root 2311 Oct  7 14:19 index.html
+drwxr-xr-x  2 root root 4096 Oct  7 14:19 public
+drwxr-xr-x 14 root root 4096 Oct  7 14:19 src
+root@sunfoods:/var/www/sun/admin-web# find /var/www/sun/admin-web -name "main.tsx" -type f
+/var/www/sun/admin-web/src/src/main.tsx
+root@sunfoods:/var/www/sun/admin-web# sed -i 's|"/src/main.tsx"|"/src/src/main.tsx"|g' /var/www/sun/admin-web/index.html
+root@sunfoods:/var/www/sun/admin-web# pnpm run build
+
+> admin-web@1.0.0 build /var/www/sun/admin-web
+> vite build --mode production
+
+vite v5.4.20 building for production...
+transforming (1) index.htmlnode:internal/process/promises:391
+    triggerUncaughtException(err, true /* fromPromise */);
+    ^
+
+[Failed to load PostCSS config: Failed to load PostCSS config (searchPath: /var/www/sun/admin-web): [Error] Loading PostCSS Plugin failed: Cannot find module 'caniuse-lite/dist/unpacker/agents'
+Require stack:
+- /var/www/sun/node_modules/browserslist/index.js
+- /var/www/sun/node_modules/autoprefixer/lib/autoprefixer.js
+- /var/www/sun/admin-web/postcss.config.js
+
+(@/var/www/sun/admin-web/postcss.config.js)
+Error: Loading PostCSS Plugin failed: Cannot find module 'caniuse-lite/dist/unpacker/agents'
+Require stack:
+- /var/www/sun/node_modules/browserslist/index.js
+- /var/www/sun/node_modules/autoprefixer/lib/autoprefixer.js
+- /var/www/sun/admin-web/postcss.config.js
+
+(@/var/www/sun/admin-web/postcss.config.js)
+    at load (file:///var/www/sun/node_modules/vite/dist/node/chunks/dep-D_zLpgQd.js:33632:11)
+    at file:///var/www/sun/node_modules/vite/dist/node/chunks/dep-D_zLpgQd.js:33657:16
+    at Array.map (<anonymous>)
+    at plugins (file:///var/www/sun/node_modules/vite/dist/node/chunks/dep-D_zLpgQd.js:33656:8)
+    at processResult (file:///var/www/sun/node_modules/vite/dist/node/chunks/dep-D_zLpgQd.js:33726:14)
+    at file:///var/www/sun/node_modules/vite/dist/node/chunks/dep-D_zLpgQd.js:33856:14]
+
+Node.js v20.19.5
+ ELIFECYCLE  Command failed with exit code 1.
+root@sunfoods:/var/www/sun/admin-web#

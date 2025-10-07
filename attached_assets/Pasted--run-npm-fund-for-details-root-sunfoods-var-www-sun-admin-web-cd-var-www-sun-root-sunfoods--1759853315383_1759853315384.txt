@@ -1,0 +1,53 @@
+  run `npm fund` for details
+root@sunfoods:/var/www/sun/admin-web# cd /var/www/sun
+root@sunfoods:/var/www/sun# pnpm install
+Scope: all 4 workspace projects
+admin-web                                |  WARN  Moving tailwindcss that was installed by a different package manager to "node_modules/.ignored"
+admin-web                                |  WARN  Moving vite that was installed by a different package manager to "node_modules/.ignored"
+admin-web                                |  WARN  Moving @tanstack/react-query that was installed by a different package manager to "node_modules/.ignored"
+admin-web                                |  WARN  Moving clsx that was installed by a different package manager to "node_modules/.ignored"
+admin-web                                |  WARN  Moving date-fns that was installed by a different package manager to "node_modules/.ignored"
+ WARN  52 other warnings
+admin-web                                |  WARN  deprecated @types/dompurify@3.2.0
+customer-mobile                          |  WARN  deprecated eslint@8.57.1
+ WARN  8 deprecated subdependencies found: @esbuild-kit/core-utils@3.3.2, @esbuild-kit/esm-loader@2.6.5, @humanwhocodes/config-array@0.13.0, @humanwhocodes/object-schema@2.0.3, glob@7.2.3, inflight@1.0.6, q@1.5.1, rimraf@3.0.2
+Packages: +6 -5
+++++++-----
+Progress: resolved 1260, reused 1067, downloaded 2, added 6, done
+Done in 12s using pnpm v10.18.1
+root@sunfoods:/var/www/sun# cd admin-web
+root@sunfoods:/var/www/sun/admin-web# pnpm run build
+
+> admin-web@1.0.0 build /var/www/sun/admin-web
+> vite build --mode production
+
+vite v5.4.20 building for production...
+✓ 2 modules transformed.
+x Build failed in 73ms
+error during build:
+[vite]: Rollup failed to resolve import "/src/main.tsx" from "/var/www/sun/admin-web/index.html".
+This is most likely unintended because it can break your application at runtime.
+If you do want to externalize this module explicitly add it to
+`build.rollupOptions.external`
+    at viteWarn (file:///var/www/sun/node_modules/.pnpm/vite@5.4.20_@types+node@22.18.8_lightningcss@1.30.1/node_modules/vite/dist/node/chunks/dep-D_zLpgQd.js:65854:17)
+    at onwarn (file:///var/www/sun/node_modules/.pnpm/@vitejs+plugin-react@4.7.0_vite@5.4.20_@types+node@22.18.8_lightningcss@1.30.1_/node_modules/@vitejs/plugin-react/dist/index.js:90:7)
+    at onRollupWarning (file:///var/www/sun/node_modules/.pnpm/vite@5.4.20_@types+node@22.18.8_lightningcss@1.30.1/node_modules/vite/dist/node/chunks/dep-D_zLpgQd.js:65884:5)
+    at onwarn (file:///var/www/sun/node_modules/.pnpm/vite@5.4.20_@types+node@22.18.8_lightningcss@1.30.1/node_modules/vite/dist/node/chunks/dep-D_zLpgQd.js:65549:7)
+    at file:///var/www/sun/node_modules/.pnpm/rollup@4.52.4/node_modules/rollup/dist/es/shared/node-entry.js:20951:13
+    at Object.logger [as onLog] (file:///var/www/sun/node_modules/.pnpm/rollup@4.52.4/node_modules/rollup/dist/es/shared/node-entry.js:22823:9)
+    at ModuleLoader.handleInvalidResolvedId (file:///var/www/sun/node_modules/.pnpm/rollup@4.52.4/node_modules/rollup/dist/es/shared/node-entry.js:21567:26)
+    at file:///var/www/sun/node_modules/.pnpm/rollup@4.52.4/node_modules/rollup/dist/es/shared/node-entry.js:21525:26
+ ELIFECYCLE  Command failed with exit code 1.
+root@sunfoods:/var/www/sun/admin-web# cp -r dist/* /var/www/sun/backend/public/admin/
+tart baccp: cannot stat 'dist/*': No such file or directory
+root@sunfoods:/var/www/sun/admin-web# pm2 restart backend
+Use --update-env to update environment variables
+[PM2] Applying action restartProcessId on app [backend](ids: [ 0 ])
+[PM2] [backend](0) ✓
+┌────┬────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name       │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ backend    │ default     │ 1.0.0   │ cluster │ 361592   │ 0s     │ 53   │ online    │ 0%       │ 40.3mb   │ root     │ disabled │
+│ 2  │ mobile     │ default     │ 0.39.7  │ fork    │ 360914   │ 47m    │ 1    │ online    │ 0%       │ 57.7mb   │ root     │ disabled │
+└────┴────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+root@sunfoods:/var/www/sun/admin-web#

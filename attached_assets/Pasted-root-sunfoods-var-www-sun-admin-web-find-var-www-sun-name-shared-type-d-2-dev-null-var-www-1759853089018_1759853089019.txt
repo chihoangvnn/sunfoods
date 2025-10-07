@@ -1,0 +1,54 @@
+root@sunfoods:/var/www/sun/admin-web# find /var/www/sun -name "shared" -type d 2>/dev/null
+/var/www/sun/admin-web/node_modules/.ignored/lucide-react/dist/esm/shared
+/var/www/sun/admin-web/node_modules/lucide-react/dist/esm/shared
+/var/www/sun/admin-web/node_modules/rollup/dist/shared
+/var/www/sun/admin-web/node_modules/rollup/dist/es/shared
+/var/www/sun/backend/shared
+/var/www/sun/backend/node_modules/rollup/dist/shared
+/var/www/sun/backend/node_modules/rollup/dist/es/shared
+/var/www/sun/customer-mobile/node_modules/next/dist/shared
+/var/www/sun/customer-mobile/node_modules/next/dist/esm/shared
+/var/www/sun/customer-mobile/node_modules/lucide-react/dist/esm/shared
+/var/www/sun/customer-mobile/node_modules/eslint/lib/shared
+/var/www/sun/customer-mobile/node_modules/@eslint/eslintrc/lib/shared
+/var/www/sun/node_modules/framer-motion/dist/es/projection/shared
+/var/www/sun/node_modules/.pnpm/next@15.0.0_@opentelemetry+api@1.9.0_react-dom@18.3.1_react@18.3.1__react@18.3.1/node_modules/next/dist/shared
+/var/www/sun/node_modules/.pnpm/next@15.0.0_@opentelemetry+api@1.9.0_react-dom@18.3.1_react@18.3.1__react@18.3.1/node_modules/next/dist/esm/shared
+/var/www/sun/node_modules/.pnpm/@eslint+eslintrc@2.1.4/node_modules/@eslint/eslintrc/lib/shared
+/var/www/sun/node_modules/.pnpm/consola@3.4.2/node_modules/consola/dist/shared
+/var/www/sun/node_modules/.pnpm/eslint@8.57.1/node_modules/eslint/lib/shared
+/var/www/sun/node_modules/.pnpm/rollup@4.52.4/node_modules/rollup/dist/shared
+/var/www/sun/node_modules/.pnpm/rollup@4.52.4/node_modules/rollup/dist/es/shared
+/var/www/sun/node_modules/.pnpm/lucide-react@0.453.0_react@18.3.1/node_modules/lucide-react/dist/esm/shared
+/var/www/sun/node_modules/.pnpm/lucide-react@0.400.0_react@18.3.1/node_modules/lucide-react/dist/esm/shared
+/var/www/sun/node_modules/.pnpm/framer-motion@11.18.2_react-dom@18.3.1_react@18.3.1__react@18.3.1/node_modules/framer-motion/dist/es/projection/shared
+/var/www/sun/node_modules/consola/dist/shared
+root@sunfoods:/var/www/sun/admin-web# cd /var/www/sun/admin-web
+root@sunfoods:/var/www/sun/admin-web# find /var/www/sun -name "shared" -type d 2>/dev/null
+/var/www/sun/admin-web/node_modules/.ignored/lucide-react/dist/esm/shared
+/var/www/sun/admin-web/node_modules/lucide-react/dist/esm/shared
+/var/www/sun/admin-web/node_modules/rollup/dist/shared
+/var/www/sun/admin-web/node_modules/rollup/dist/es/shared
+/var/www/sun/backend/shared
+/var/www/sun/backend/node_modules/rollup/dist/shared
+/var/www/sun/backend/node_modules/rollup/dist/es/shared
+/var/www/sun/customer-mobile/node_modules/next/dist/shared
+/var/www/sun/customer-mobile/node_modules/next/dist/esm/shared
+/var/www/sun/customer-mobile/node_modules/lucide-react/dist/esm/shared
+/var/www/sun/customer-mobile/node_modules/eslint/lib/shared
+/var/www/sun/customer-mobile/node_modules/@eslint/eslintrc/lib/shared
+/var/www/sun/node_modules/framer-motion/dist/es/projection/shared
+/var/www/sun/node_modules/.pnpm/next@15.0.0_@opentelemetry+api@1.9.0_react-dom@18.3.1_react@18.3.1__react@18.3.1/node_modules/next/dist/shared
+/var/www/sun/node_modules/.pnpm/next@15.0.0_@opentelemetry+api@1.9.0_react-dom@18.3.1_react@18.3.1__react@18.3.1/node_modules/next/dist/esm/shared
+/var/www/sun/node_modules/.pnpm/@eslint+eslintrc@2.1.4/node_modules/@eslint/eslintrc/lib/shared
+/var/www/sun/node_modules/.pnpm/consola@3.4.2/node_modules/consola/dist/shared
+/var/www/sun/node_modules/.pnpm/eslint@8.57.1/node_modules/eslint/lib/shared
+/var/www/sun/node_modules/.pnpm/rollup@4.52.4/node_modules/rollup/dist/shared
+/var/www/sun/node_modules/.pnpm/rollup@4.52.4/node_modules/rollup/dist/es/shared
+/var/www/sun/node_modules/.pnpm/lucide-react@0.453.0_react@18.3.1/node_modules/lucide-react/dist/esm/shared
+/var/www/sun/node_modules/.pnpm/lucide-react@0.400.0_react@18.3.1/node_modules/lucide-react/dist/esm/shared
+/var/www/sun/node_modules/.pnpm/framer-motion@11.18.2_react-dom@18.3.1_react@18.3.1__react@18.3.1/node_modules/framer-motion/dist/es/projection/shared
+/var/www/sun/node_modules/consola/dist/shared
+root@sunfoods:/var/www/sun/admin-web# ls -la /var/www/sun/ | grep -E "shared|backend"
+drwxr-xr-x   8 root root   4096 Oct  7 18:49 backend
+root@sunfoods:/var/www/sun/admin-web#
