@@ -4,7 +4,7 @@ module.exports = {
       name: 'backend',
       script: 'npm',
       args: 'start',
-      cwd: './TailwindAdminRasa',
+      cwd: './backend',
       exec_mode: 'cluster',
       instances: 1,
       env: {
@@ -22,7 +22,7 @@ module.exports = {
       name: 'mobile',
       script: 'npm',
       args: 'start',
-      cwd: './customer-mobile-shop-clean',
+      cwd: './customer-mobile',
       env: {
         NODE_ENV: 'production',
         PORT: 3001
