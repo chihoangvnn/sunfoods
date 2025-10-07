@@ -1,14 +1,27 @@
+/**
+ * ⚠️ ABEBOOKS SERVICE - CURRENTLY DISABLED
+ * AbebooksAccount, AbebooksListing, AbebooksSearchHistory tables do not exist in database
+ * Using local stub types to prevent import errors
+ */
 import { 
-  type AbebooksAccount, 
-  type AbebooksListing, 
-  type AbebooksSearchHistory,
+  // DISABLED: Types do not exist in schema
+  // type AbebooksAccount, 
+  // type AbebooksListing, 
+  // type AbebooksSearchHistory,
   type BookCondition,
   BOOK_CONDITIONS 
 } from "@shared/schema";
 import { storage } from '../storage';
 
+// STUB TYPES - Replace with real schema types when tables are created
+type AbebooksAccount = any;
+type AbebooksListing = any;
+type AbebooksSearchHistory = any;
+
 /**
  * 🔄 ABEBOOKS MULTI-ACCOUNT & VENDOR MANAGEMENT SERVICE
+ * 
+ * ⚠️ CURRENTLY DISABLED - Required tables not in database
  * 
  * Comprehensive AbeBooks integration with:
  * - 📚 Rare & Used Books specialization

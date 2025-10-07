@@ -5,9 +5,9 @@ import {
   generalCategoryAssignments,
   generalCategoryPriceRules,
   generalCategoryAnalytics,
-  insertGeneralCategorySchema,
-  insertGeneralCategoryAssignmentSchema,
-  insertGeneralCategoryPriceRuleSchema,
+  insertGeneralCategoriesSchema,
+  insertGeneralCategoryAssignmentsSchema,
+  insertGeneralCategoryPriceRulesSchema,
   type GeneralCategory,
   type GeneralCategoryWithStats,
   type GeneralCategoryWithChildren
@@ -160,7 +160,7 @@ router.get('/:id', async (req, res) => {
 // Create new general category
 router.post('/', async (req, res) => {
   try {
-    const validatedData = insertGeneralCategorySchema.parse(req.body);
+    const validatedData = insertGeneralCategoriesSchema.parse(req.body);
     
     // Auto-generate slug if not provided
     if (!validatedData.slug && validatedData.name) {
@@ -203,7 +203,7 @@ router.post('/', async (req, res) => {
 router.put('/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const validatedData = insertGeneralCategorySchema.partial().parse(req.body);
+    const validatedData = insertGeneralCategoriesSchema.partial().parse(req.body);
     
     // Auto-generate slug if name is updated
     if (validatedData.name && !validatedData.slug) {
@@ -334,7 +334,7 @@ router.get('/:id/price-rules', async (req, res) => {
 router.post('/:id/price-rules', async (req, res) => {
   try {
     const { id: categoryId } = req.params;
-    const validatedData = insertGeneralCategoryPriceRuleSchema.parse({
+    const validatedData = insertGeneralCategoryPriceRulesSchema.parse({
       ...req.body,
       categoryId
     });

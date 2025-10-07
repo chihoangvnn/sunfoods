@@ -1,5 +1,10 @@
+/**
+ * ⚠️ VENDOR REFUND SERVICE - PARTIALLY DISABLED
+ * vendorTransactions table does not exist in database
+ * Refund tracking disabled, but service structure preserved
+ */
 import { db } from '../db';
-import { vendors, vendorTransactions, vendorOrders } from '@shared/schema';
+import { vendors, /* vendorTransactions - DISABLED: table not in database */ vendorOrders } from '@shared/schema';
 import { eq, sql } from 'drizzle-orm';
 
 export interface RefundResult {
@@ -68,7 +73,9 @@ export class VendorRefundService {
       })
       .where(eq(vendors.id, vendor.id));
 
-    const [transaction] = await db.insert(vendorTransactions)
+    // DISABLED: vendorTransactions table not in database
+    // Transaction logging disabled
+    /* const [transaction] = await db.insert(vendorTransactions)
       .values({
         vendorId: vendor.id,
         type: 'refund',
@@ -83,13 +90,13 @@ export class VendorRefundService {
           refundType: 'deposit_credit'
         }
       })
-      .returning();
+      .returning(); */
 
     return {
       success: true,
-      transactionId: transaction.id,
+      transactionId: undefined, // transaction?.id
       balanceAfter: balanceAfter.toFixed(2),
-      message: 'Deposit balance credited successfully'
+      message: 'Deposit balance credited successfully (transaction logging disabled)'
     };
   }
 
@@ -130,7 +137,8 @@ export class VendorRefundService {
       })
       .where(eq(vendors.id, vendor.id));
 
-    const [transaction] = await db.insert(vendorTransactions)
+    // DISABLED: vendorTransactions table not in database
+    /* const [transaction] = await db.insert(vendorTransactions)
       .values({
         vendorId: vendor.id,
         type: 'refund',
@@ -147,13 +155,13 @@ export class VendorRefundService {
           refundType: 'debt_reduction_and_credit'
         }
       })
-      .returning();
+      .returning(); */
 
     return {
       success: true,
-      transactionId: transaction.id,
+      transactionId: undefined, // transaction?.id
       balanceAfter: newDepositBalance.toFixed(2),
-      message: description
+      message: description + ' (transaction logging disabled)'
     };
   }
 
@@ -182,7 +190,8 @@ export class VendorRefundService {
       })
       .where(eq(vendors.id, vendor.id));
 
-    const [transaction] = await db.insert(vendorTransactions)
+    // DISABLED: vendorTransactions table not in database
+    /* const [transaction] = await db.insert(vendorTransactions)
       .values({
         vendorId: vendor.id,
         type: 'refund',
@@ -201,13 +210,13 @@ export class VendorRefundService {
           refundType: 'revenue_share_deduction'
         }
       })
-      .returning();
+      .returning(); */
 
     return {
       success: true,
-      transactionId: transaction.id,
+      transactionId: undefined, // transaction?.id
       balanceAfter: balanceAfter.toFixed(2),
-      message: `Vendor share deducted: ${vendorRefund.toFixed(2)} (${commissionRate}% of total refund)`
+      message: `Vendor share deducted: ${vendorRefund.toFixed(2)} (${commissionRate}% of total refund) (transaction logging disabled)`
     };
   }
 }

@@ -1,7 +1,7 @@
 import type { Express, Request, Response } from "express";
 import { db } from "../db";
 import { storage } from "../storage";
-import { insertCustomerEventSchema } from "@shared/schema";
+import { insertCustomerEventsSchema } from "@shared/schema";
 import { z } from "zod";
 
 /**
@@ -13,7 +13,7 @@ export function registerBotEventsRoutes(app: Express) {
   // 🎯 POST /api/bot/events/track - Track any event (generic tracker)
   app.post("/api/bot/events/track", async (req: Request, res: Response) => {
     try {
-      const eventData = insertCustomerEventSchema.parse(req.body);
+      const eventData = insertCustomerEventsSchema.parse(req.body);
       
       const event = await storage.trackCustomerEvent(eventData);
       

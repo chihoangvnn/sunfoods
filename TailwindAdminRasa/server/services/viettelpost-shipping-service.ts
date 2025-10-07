@@ -1,3 +1,8 @@
+/**
+ * ⚠️ VIETTELPOST SHIPPING SERVICE - CURRENTLY DISABLED
+ * viettelpostConfigs table does not exist in database
+ * Service is stubbed to prevent import errors
+ */
 import { db } from '../db.js';
 import { orders } from '../../shared/schema.js';
 import { eq, and, desc, sql } from 'drizzle-orm';
@@ -68,61 +73,10 @@ class ViettelPostShippingService {
 
   /**
    * Khởi tạo với cấu hình ViettelPost
+   * DISABLED: viettelpostConfigs table does not exist in database
    */
   async initialize(configId?: string): Promise<void> {
-    try {
-      let config;
-      
-      if (configId) {
-        config = await db
-          .select()
-          .from(viettelpostConfigs)
-          .where(and(
-            eq(viettelpostConfigs.id, configId),
-            eq(viettelpostConfigs.isActive, true)
-          ))
-          .limit(1);
-      } else {
-        // Lấy cấu hình mặc định
-        config = await db
-          .select()
-          .from(viettelpostConfigs)
-          .where(and(
-            eq(viettelpostConfigs.isDefault, true),
-            eq(viettelpostConfigs.isActive, true)
-          ))
-          .limit(1);
-      }
-
-      if (!config || config.length === 0) {
-        throw new Error('No active ViettelPost configuration found');
-      }
-
-      const vtpConfig = config[0];
-      
-      // Decrypt password
-      const decryptedPassword = this.decryptPassword(vtpConfig.password);
-      
-      this.vtpApi = new ViettelPostAPI({
-        username: vtpConfig.username,
-        password: decryptedPassword,
-        baseUrl: 'https://partner.viettelpost.vn/v2',
-        groupAddressId: vtpConfig.groupAddressId || undefined
-      });
-
-      // Update last token refresh
-      await db
-        .update(viettelpostConfigs)
-        .set({ 
-          lastTokenRefresh: new Date(),
-          updatedAt: new Date()
-        })
-        .where(eq(viettelpostConfigs.id, vtpConfig.id));
-
-    } catch (error) {
-      console.error('ViettelPost service initialization error:', error);
-      throw error;
-    }
+    throw new Error('ViettelPost service disabled - viettelpostConfigs table not in database');
   }
 
   /**
@@ -455,20 +409,7 @@ class ViettelPostShippingService {
   // Helper Methods
 
   private async getDefaultConfig() {
-    const config = await db
-      .select()
-      .from(viettelpostConfigs)
-      .where(and(
-        eq(viettelpostConfigs.isDefault, true),
-        eq(viettelpostConfigs.isActive, true)
-      ))
-      .limit(1);
-
-    if (!config || config.length === 0) {
-      throw new Error('No default ViettelPost configuration found');
-    }
-
-    return config[0];
+    throw new Error('ViettelPost service disabled - viettelpostConfigs table not in database');
   }
 
   private async updateOrderVTPInfo(orderId: string, updateData: any) {

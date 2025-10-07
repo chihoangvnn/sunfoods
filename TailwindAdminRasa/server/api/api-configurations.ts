@@ -1,6 +1,6 @@
 import express from 'express';
 import { storage } from '../storage';
-import { insertApiConfigurationSchema, updateApiConfigurationSchema } from '@shared/schema';
+import { insertApiConfigurationsSchema } from '@shared/schema';
 import { z } from 'zod';
 import { apiCache } from '../middleware/api-management';
 
@@ -93,7 +93,7 @@ router.get('/:id', async (req, res) => {
  */
 router.post('/', async (req, res) => {
   try {
-    const validatedData = insertApiConfigurationSchema.parse(req.body);
+    const validatedData = insertApiConfigurationsSchema.parse(req.body);
     const config = await storage.createApiConfiguration(validatedData);
     
     // Clear cache to ensure new config is picked up
@@ -123,7 +123,7 @@ router.post('/', async (req, res) => {
 router.put('/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const validatedData = updateApiConfigurationSchema.parse(req.body);
+    const validatedData = insertApiConfigurationsSchema.partial().parse(req.body);
     
     const config = await storage.updateApiConfiguration(id, validatedData);
     

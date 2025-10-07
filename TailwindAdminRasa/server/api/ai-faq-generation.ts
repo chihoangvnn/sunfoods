@@ -323,3 +323,11 @@ export const aiFAQGenerationRoutes = {
   bulkGenerate: [requireAuth, bulkGenerateProductFAQs],
   status: [requireAuth, getFAQGenerationStatus]
 };
+
+// Default router export for compatibility
+import { Router } from 'express';
+const router = Router();
+router.post('/generate', ...aiFAQGenerationRoutes.generate);
+router.post('/bulk-generate', ...aiFAQGenerationRoutes.bulkGenerate);
+router.get('/status/:id', ...aiFAQGenerationRoutes.status);
+export default router;

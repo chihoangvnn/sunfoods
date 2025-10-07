@@ -6,7 +6,7 @@ import { postScheduler } from '../services/post-scheduler';
 import { aiContentGenerator } from '../services/ai-content-generator';
 import { facebookPostingService } from '../services/facebook-posting-service';
 import { limitEngine } from '../services/limit-management-engine';
-import { insertContentCategorySchema, insertContentAssetSchema, insertScheduledPostSchema, insertContentLibrarySchema, updateContentLibrarySchema } from '../../shared/schema';
+import { insertContentCategoriesSchema, insertContentAssetsSchema, insertScheduledPostsSchema, insertContentLibrarySchema } from '../../shared/schema';
 import { smartSchedulerService } from '../services/smart-scheduler';
 import type { SmartSchedulingConfig } from '../services/smart-scheduler';
 
@@ -78,7 +78,7 @@ router.get('/categories', requireAuth, async (req, res) => {
 // Create new content category (requires admin auth)
 router.post('/categories', requireAdminAuth, async (req, res) => {
   try {
-    const validatedData = insertContentCategorySchema.parse(req.body);
+    const validatedData = insertContentCategoriesSchema.parse(req.body);
     const category = await storage.createContentCategory(validatedData);
     res.status(201).json(category);
   } catch (error) {
@@ -91,7 +91,7 @@ router.post('/categories', requireAdminAuth, async (req, res) => {
 router.put('/categories/:id', requireAdminAuth, async (req, res) => {
   try {
     const id = parseInt(req.params.id);
-    const validatedData = insertContentCategorySchema.partial().parse(req.body);
+    const validatedData = insertContentCategoriesSchema.partial().parse(req.body);
     const category = await storage.updateContentCategory(id, validatedData);
     
     if (!category) {
@@ -353,7 +353,7 @@ router.get('/scheduled-posts/upcoming', requireAuth, async (req, res) => {
 // Create new scheduled post (requires admin auth - sensitive operation)
 router.post('/scheduled-posts', requireAdminAuth, async (req, res) => {
   try {
-    const validatedData = insertScheduledPostSchema.parse({
+    const validatedData = insertScheduledPostsSchema.parse({
       ...req.body,
       scheduledTime: new Date(req.body.scheduledTime),
     });
@@ -814,7 +814,7 @@ router.post('/library', async (req, res) => {
 router.put('/library/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const validatedData = updateContentLibrarySchema.parse(req.body);
+    const validatedData = insertContentLibrarySchema.partial().parse(req.body);
     
     const updatedItem = await storage.updateContentLibraryItem(id, validatedData);
     

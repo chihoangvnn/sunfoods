@@ -5,12 +5,14 @@ import {
   bookPrices,
   bookCategories,
   bookCategoryAssignments,
-  savedSearchFilters,
-  searchAnalytics,
+  // DISABLED: Tables do not exist in database
+  // savedSearchFilters,
+  // searchAnalytics,
   type Book,
   type BookPrice,
-  type BookCategory,
-  type SavedSearchFilter
+  type BookCategory
+  // DISABLED: Type doesn't exist in schema
+  // type SavedSearchFilter
 } from '../../shared/schema';
 import { eq, desc, asc, like, ilike, or, and, sql, between, gte, lte, count, avg, min, max, inArray } from 'drizzle-orm';
 

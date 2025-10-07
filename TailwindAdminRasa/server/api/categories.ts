@@ -4,8 +4,8 @@ import {
   categories,
   frontendCategoryAssignments,
   industries,
-  insertCategorySchema,
-  insertFrontendCategoryAssignmentSchema,
+  insertCategoriesSchema,
+  insertFrontendCategoryAssignmentsSchema,
   type Category,
   type InsertCategory,
   type FrontendCategoryAssignment
@@ -156,7 +156,7 @@ router.get('/:id', async (req, res) => {
 // Create new category
 router.post('/', async (req, res) => {
   try {
-    const categoryData = insertCategorySchema.parse(req.body);
+    const categoryData = insertCategoriesSchema.parse(req.body);
     
     const [newCategory] = await db
       .insert(categories)
@@ -174,7 +174,7 @@ router.post('/', async (req, res) => {
 router.put('/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const updateData = insertCategorySchema.partial().parse(req.body);
+    const updateData = insertCategoriesSchema.partial().parse(req.body);
     
     const [updatedCategory] = await db
       .update(categories)
@@ -271,7 +271,7 @@ router.get('/frontend/:frontendId', async (req, res) => {
 // Assign category to frontend
 router.post('/frontend/assign', async (req, res) => {
   try {
-    const assignmentData = insertFrontendCategoryAssignmentSchema.parse(req.body);
+    const assignmentData = insertFrontendCategoryAssignmentsSchema.parse(req.body);
     
     const [newAssignment] = await db
       .insert(frontendCategoryAssignments)
@@ -289,7 +289,7 @@ router.post('/frontend/assign', async (req, res) => {
 router.put('/frontend/assign/:assignmentId', async (req, res) => {
   try {
     const { assignmentId } = req.params;
-    const updateData = insertFrontendCategoryAssignmentSchema.partial().parse(req.body);
+    const updateData = insertFrontendCategoryAssignmentsSchema.partial().parse(req.body);
     
     const [updatedAssignment] = await db
       .update(frontendCategoryAssignments)

@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertProductSchema, insertCustomerSchema, insertOrderSchema, insertCategorySchema, insertPaymentSchema, insertSocialAccountSchema, insertShopSettingsSchema, insertTikTokBusinessAccountSchema, insertTikTokShopOrderSchema, insertTikTokShopProductSchema, insertTikTokVideoSchema, insertBotSettingsSchema } from "@shared/schema";
+import { insertProductsSchema, insertCustomersSchema, insertOrdersSchema, insertCategoriesSchema, insertPaymentsSchema, insertSocialAccountsSchema, insertShopSettingsSchema, insertTiktokBusinessAccountsSchema, insertTiktokShopOrdersSchema, insertTiktokShopProductsSchema, insertTiktokVideosSchema, insertBotSettingsSchema } from "@shared/schema";
 import { z } from "zod";
 import { promisify } from 'util';
 import { lookup } from 'dns';
@@ -196,8 +196,12 @@ import systemHealthRouter from './api/system-health';
 import orchestratorRouter from './api/orchestrator';
 import faqLibraryRouter from './api/faq-library';
 import faqAssignmentsRouter from './api/faq-assignments';
-import { categoryFAQTemplatesRoutes } from './api/category-faq-templates';
-import { aiFAQGenerationRoutes } from './api/ai-faq-generation';
+// DISABLED: Tables do not exist in database
+// import { categoryFAQTemplatesRoutes } from './api/category-faq-templates';
+import categoryFAQTemplatesRouter from './api/category-faq-templates';
+// DISABLED: Check if this also has missing tables
+// import { aiFAQGenerationRoutes } from './api/ai-faq-generation';
+import aiFAQGenerationRouter from './api/ai-faq-generation';
 import reviewSeedingRouter from './api/review-seeding';
 import adminReviewsRouter from './api/admin-reviews';
 import themesRouter from './api/themes';
@@ -2065,7 +2069,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         preprocessedBody.categoryId = null;
       }
       
-      const validatedData = insertProductSchema.parse(preprocessedBody);
+      const validatedData = insertProductsSchema.parse(preprocessedBody);
       
       // Generate SKU automatically
       let generatedSKU: string = "";
@@ -2124,7 +2128,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.put("/api/products/:id", async (req, res) => {
     try {
-      const partialProductSchema = insertProductSchema.partial();
+      const partialProductSchema = insertProductsSchema.partial();
       const validatedData = partialProductSchema.parse(req.body);
       
       // Fix: Handle empty categoryId - convert empty string to null
@@ -2300,7 +2304,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post("/api/customers", requirePOSAuth, async (req, res) => {
     try {
-      const validatedData = insertCustomerSchema.parse(req.body);
+      const validatedData = insertCustomersSchema.parse(req.body);
       const customer = await storage.createCustomer(validatedData);
       res.status(201).json(customer);
     } catch (error) {
@@ -2314,7 +2318,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.put("/api/customers/:id", async (req, res) => {
     try {
-      const partialCustomerSchema = insertCustomerSchema.partial();
+      const partialCustomerSchema = insertCustomersSchema.partial();
       const validatedData = partialCustomerSchema.parse(req.body);
       const customer = await storage.updateCustomer(req.params.id, validatedData);
       if (!customer) {
@@ -2917,7 +2921,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post("/api/categories", async (req, res) => {
     try {
-      const validatedData = insertCategorySchema.parse(req.body);
+      const validatedData = insertCategoriesSchema.parse(req.body);
       const category = await storage.createCategory(validatedData);
       res.status(201).json(category);
     } catch (error) {
@@ -2931,7 +2935,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.put("/api/categories/:id", async (req, res) => {
     try {
-      const partialCategorySchema = insertCategorySchema.partial();
+      const partialCategorySchema = insertCategoriesSchema.partial();
       const validatedData = partialCategorySchema.parse(req.body);
       const category = await storage.updateCategory(req.params.id, validatedData);
       if (!category) {
@@ -3215,7 +3219,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       
       // Validate the order data
-      const validatedData = insertOrderSchema.parse(orderData);
+      const validatedData = insertOrdersSchema.parse(orderData);
       console.log("✅ Validated order data:", validatedData);
       
       // Create the order
@@ -3461,7 +3465,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.put("/api/orders/:id", async (req, res) => {
     try {
-      const partialOrderSchema = insertOrderSchema.partial();
+      const partialOrderSchema = insertOrdersSchema.partial();
       const validatedData = partialOrderSchema.parse(req.body);
       const order = await storage.updateOrder(req.params.id, validatedData);
       if (!order) {
@@ -3619,7 +3623,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         bankInfo: bankInfo,
       };
 
-      const validatedData = insertPaymentSchema.parse(paymentData);
+      const validatedData = insertPaymentsSchema.parse(paymentData);
       const payment = await storage.createPayment(validatedData);
       
       // Log payment creation for audit trail
@@ -4652,7 +4656,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/tiktok/business-accounts", requireAdminAuth, requireCSRFToken, async (req, res) => {
     try {
       // Validate request body with Zod
-      const validatedData = insertTikTokBusinessAccountSchema.parse(req.body);
+      const validatedData = insertTiktokBusinessAccountsSchema.parse(req.body);
       const account = await storage.createTikTokBusinessAccount(validatedData);
       
       // Return safe fields only (no sensitive tokens)
@@ -4687,7 +4691,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       
       // Validate partial update data with Zod
-      const validatedData = insertTikTokBusinessAccountSchema.partial().parse(req.body);
+      const validatedData = insertTiktokBusinessAccountsSchema.partial().parse(req.body);
       const account = await storage.updateTikTokBusinessAccount(req.params.id, validatedData);
       
       if (!account) {
@@ -4753,7 +4757,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post("/api/tiktok/shop-orders", requireAdminAuth, requireCSRFToken, async (req, res) => {
     try {
-      const validatedData = insertTikTokShopOrderSchema.parse(req.body);
+      const validatedData = insertTiktokShopOrdersSchema.parse(req.body);
       const order = await storage.createTikTokShopOrder(validatedData);
       res.status(201).json(order);
     } catch (error) {
@@ -4771,7 +4775,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ error: "Invalid order ID format" });
       }
       
-      const validatedData = insertTikTokShopOrderSchema.partial().parse(req.body);
+      const validatedData = insertTiktokShopOrdersSchema.partial().parse(req.body);
       const order = await storage.updateTikTokShopOrder(req.params.id, validatedData);
       if (!order) {
         return res.status(404).json({ error: "TikTok shop order not found" });
@@ -4816,7 +4820,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post("/api/tiktok/shop-products", requireAdminAuth, requireCSRFToken, async (req, res) => {
     try {
-      const validatedData = insertTikTokShopProductSchema.parse(req.body);
+      const validatedData = insertTiktokShopProductsSchema.parse(req.body);
       const product = await storage.createTikTokShopProduct(validatedData);
       res.status(201).json(product);
     } catch (error) {
@@ -4834,7 +4838,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ error: "Invalid product ID format" });
       }
       
-      const validatedData = insertTikTokShopProductSchema.partial().parse(req.body);
+      const validatedData = insertTiktokShopProductsSchema.partial().parse(req.body);
       const product = await storage.updateTikTokShopProduct(req.params.id, validatedData);
       if (!product) {
         return res.status(404).json({ error: "TikTok shop product not found" });
@@ -4883,7 +4887,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post("/api/tiktok/videos", requireAdminAuth, requireCSRFToken, async (req, res) => {
     try {
-      const validatedData = insertTikTokVideoSchema.parse(req.body);
+      const validatedData = insertTiktokVideosSchema.parse(req.body);
       const video = await storage.createTikTokVideo(validatedData);
       res.status(201).json(video);
     } catch (error) {
@@ -4901,7 +4905,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ error: "Invalid video ID format" });
       }
       
-      const validatedData = insertTikTokVideoSchema.partial().parse(req.body);
+      const validatedData = insertTiktokVideosSchema.partial().parse(req.body);
       const video = await storage.updateTikTokVideo(req.params.id, validatedData);
       if (!video) {
         return res.status(404).json({ error: "TikTok video not found" });
@@ -6211,7 +6215,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           
           if (existingCustomers.length === 0) {
             // Validate and create new customer record
-            const customerData = insertCustomerSchema.parse({
+            const customerData = insertCustomersSchema.parse({
               name: order.customerName,
               phone: order.customerPhone,
               email: order.customerEmail || undefined, // Use undefined instead of empty string
@@ -6732,22 +6736,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // ==========================================
   // FAQ MANAGEMENT API ROUTES
+  // ⚠️ DISABLED - Tables do not exist in database
   // ==========================================
   app.use("/api/faq-library", faqLibraryRouter);
   app.use("/api/faq-assignments", faqAssignmentsRouter);
+  app.use("/api/category-faq-templates", categoryFAQTemplatesRouter);
+  app.use("/api/ai-faq-generation", aiFAQGenerationRouter);
   
-  // 🏷️ Category FAQ Templates API - Vietnamese incense business automation
-  app.get("/api/category-faq-templates", ...categoryFAQTemplatesRoutes.get);
-  app.post("/api/category-faq-templates", ...categoryFAQTemplatesRoutes.post);
-  app.put("/api/category-faq-templates/:id", ...categoryFAQTemplatesRoutes.put);
-  app.delete("/api/category-faq-templates/:id", ...categoryFAQTemplatesRoutes.delete);
-  app.post("/api/category-faq-templates/bulk-create", ...categoryFAQTemplatesRoutes.bulkCreate);
-  app.put("/api/category-faq-templates/reorder", ...categoryFAQTemplatesRoutes.reorder);
-
-  // 🤖 AI FAQ Generation routes - Auto-generate FAQs for products
-  app.post("/api/ai-faq-generation/generate", ...aiFAQGenerationRoutes.generate);
-  app.post("/api/ai-faq-generation/bulk-generate", ...aiFAQGenerationRoutes.bulkGenerate);
-  app.get("/api/ai-faq-generation/status/:id", ...aiFAQGenerationRoutes.status);
+  // DISABLED: Tables do not exist in database
+  // app.get("/api/category-faq-templates", ...categoryFAQTemplatesRoutes.get);
+  // app.post("/api/category-faq-templates", ...categoryFAQTemplatesRoutes.post);
+  // app.put("/api/category-faq-templates/:id", ...categoryFAQTemplatesRoutes.put);
+  // app.delete("/api/category-faq-templates/:id", ...categoryFAQTemplatesRoutes.delete);
+  // app.post("/api/category-faq-templates/bulk-create", ...categoryFAQTemplatesRoutes.bulkCreate);
+  // app.put("/api/category-faq-templates/reorder", ...categoryFAQTemplatesRoutes.reorder);
+  // app.post("/api/ai-faq-generation/generate", ...aiFAQGenerationRoutes.generate);
+  // app.post("/api/ai-faq-generation/bulk-generate", ...aiFAQGenerationRoutes.bulkGenerate);
+  // app.get("/api/ai-faq-generation/status/:id", ...aiFAQGenerationRoutes.status);
 
   // ==========================================
   // AI REVIEW SEEDING & MANAGEMENT API ROUTES
