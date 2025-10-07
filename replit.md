@@ -12,6 +12,7 @@ Preferred communication style: Simple, everyday language.
   - Changed TypeScript module from "commonjs" to "ES2020" to match package.json "type": "module"
   - Replaced `tsc` with `esbuild` for faster, more reliable builds (6s vs 30s+ timeout)
   - Updated @types/node from 20.16.11 to ^20.19.0 to fix peer dependency conflict with vite@7.1.9
+  - **CRITICAL**: Moved esbuild from devDependencies to dependencies for production install compatibility
 - **Monorepo Package Management**:
   - Created `pnpm-workspace.yaml` for proper pnpm workspace support
   - Added explicit port configuration: backend (3000), mobile (3001)
