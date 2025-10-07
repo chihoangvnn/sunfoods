@@ -6,12 +6,10 @@ module.exports = {
       cwd: './backend',
       interpreter: 'node',
       interpreter_args: '-r dotenv/config',
-      exec_mode: 'cluster',
-      instances: 1,
+      exec_mode: 'fork',
       env: {
         NODE_ENV: 'production',
-        PORT: 3000,
-        DOTENV_CONFIG_PATH: '/var/www/sun/backend/.env'
+        PORT: 3000
       },
       error_log: './logs/backend-error.log',
       out_log: './logs/backend-out.log',
