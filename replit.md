@@ -6,6 +6,16 @@ This project is a comprehensive e-commerce management system designed to streaml
 ## User Preferences
 Preferred communication style: Simple, everyday language.
 
+## Recent Changes (October 2025)
+### Complete Schema Generation & Database Fixes
+- **134 Tables Schema**: Automatically generated complete Drizzle schema from database introspection using information_schema
+- **Column Naming Fixed**: Corrected all camelCase/snake_case mismatches (avgResponseTime → avg_response_time, scheduledTime → scheduled_time, etc.)
+- **Orders API Fixed**: Corrected `orders.userId` field references (was incorrectly using `customerId`) in 16 locations across storage.ts
+- **Redis Graceful Degradation**: Implemented graceful error handling for Redis connections; system degrades gracefully without cache/queue functionality
+- **Frontend Import Fixes**: Fixed schema import naming (insertCustomerSchema → insertCustomersSchema)
+- **Production Status**: All critical APIs verified working (GET /api/orders returns HTTP 200 with valid data, GET /api/books, /api/admin/me, /api/dashboard/stats all functional)
+- **Dead Code Cleanup**: Commented out services referencing non-existent tables (secure-address-service, smart-search, viettelpost-shipping, abebooks, vendor-returns, faq-library)
+
 ## System Architecture
 
 ### UI/UX Decisions
