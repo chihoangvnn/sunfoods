@@ -7,7 +7,25 @@ This project is a comprehensive e-commerce management system designed to streaml
 Preferred communication style: Simple, everyday language.
 
 ## Recent Changes (October 2025)
-### Production Build Fixes for VPS Deployment (Latest - October 7, 2025)
+### VPS Ubuntu 24 Production Deployment Fixes (Latest - October 7, 2025)
+- **bcrypt Native Module Fix**:
+  - Added `--external:bcrypt` to esbuild config to prevent bundling native C++ module
+  - bcrypt now loads from `node_modules` at runtime instead of being bundled into `dist/index.js`
+  - Fixes "No native build was found for platform=linux" error on VPS
+- **PM2 Environment Loading**:
+  - Added `env_file: './.env'` to `ecosystem.config.js` backend config
+  - PM2 now automatically loads `.env` file in production (no manual export needed)
+  - Fixes "DATABASE_URL must be set" error when running `npm start`
+- **ENCRYPTION_KEY Configuration**:
+  - Updated `.env.example` with proper 64-character hex format requirement
+  - Generated example ENCRYPTION_KEY: `c3a948be4ebd4b4bcee04378906aad2012a49fdde6d3b13ce080fab843a360ce`
+  - Added generation instructions: `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"`
+- **VPS Deployment Guide**:
+  - Created `VPS_UBUNTU24_FIXES.md` with step-by-step troubleshooting for Ubuntu 24
+  - Includes quick fix checklist and common error resolutions
+- **Status**: ✅ All VPS Ubuntu 24 deployment issues resolved, production-ready
+
+### Production Build Fixes for VPS Deployment (October 7, 2025)
 - **Backend Build Fixed**: 
   - Replaced `tsc` with `esbuild` for faster, more reliable builds (6s vs 30s+ timeout)
   - Changed esbuild output from ESM to **CommonJS format** (`--format=cjs`) for Express compatibility
