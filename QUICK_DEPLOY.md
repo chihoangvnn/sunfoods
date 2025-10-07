@@ -19,19 +19,22 @@ sudo apt install -y nginx
 git clone <your-repo-url> /var/www/ecommerce
 cd /var/www/ecommerce
 
-# Install dependencies
-cd TailwindAdminRasa && npm install
-cd ../customer-mobile-shop-clean && npm install
-cd ..
+# Install dependencies (npm workspaces - installs all at once)
+npm install
+
+# OR install per-workspace if needed:
+# cd backend && npm install && cd ..
+# cd admin-web && npm install && cd ..
+# cd customer-mobile && npm install && cd ..
 ```
 
 ### 2. Environment Setup
 ```bash
 # Copy environment template
-cp .env.example TailwindAdminRasa/.env
+cp .env.example .env
 
 # Edit .env and add your values:
-nano TailwindAdminRasa/.env
+nano .env
 ```
 
 **Required variables:**
@@ -48,12 +51,18 @@ CLOUDINARY_CLOUD_NAME=your_cloud
 
 ### 3. Build Applications
 ```bash
-cd TailwindAdminRasa
-npm run build
+# Build all applications from root
+npm run build:all
+
 # This builds:
-# - Admin frontend (Vite)
-# - Mobile app (Next.js)  
-# - Backend bundle (esbuild)
+# - Admin dashboard (Vite) → backend/public/admin/
+# - Backend API (esbuild) → backend/dist/
+# - Mobile app (Next.js) → customer-mobile/.next/
+
+# OR build individually:
+# npm run build:admin
+# npm run build:backend
+# npm run build:mobile
 ```
 
 ### 4. Configure Nginx
@@ -121,7 +130,7 @@ pm2 logs backend --err
 pm2 logs mobile --err
 
 # Check environment
-cd TailwindAdminRasa && node -e "console.log(process.env.DATABASE_URL)"
+cd backend && node -e "console.log(process.env.DATABASE_URL)"
 ```
 
 ### Nginx errors
@@ -136,7 +145,7 @@ sudo tail -f /var/log/nginx/error.log
 ### Database connection failed
 ```bash
 # Test database connection
-cd TailwindAdminRasa
+cd backend
 node -e "require('pg').Pool({connectionString: process.env.DATABASE_URL}).query('SELECT NOW()').then(r => console.log('✅ DB OK:', r.rows[0])).catch(e => console.error('❌ DB Error:', e.message))"
 ```
 

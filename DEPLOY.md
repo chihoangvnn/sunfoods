@@ -17,18 +17,37 @@ This guide walks you through deploying the **All-in-One E-Commerce Platform** on
 
 ### What Will Be Deployed
 
-- **Backend Admin Panel** (`/adminhoang`) - Full-featured admin interface running on port 3000
-- **RESTful APIs** (`/api/*`) - Backend API endpoints for mobile and admin communication
-- **Mobile Customer App** (root `/`) - Next.js customer-facing storefront running on port 3001
+- **Backend API** (port 3000) - Serves RESTful APIs (`/api/*`) and admin static files (`/adminhoang`)
+- **Admin Dashboard** - React-based admin interface (built to `backend/public/admin/`)
+- **Mobile Customer App** (port 3001) - Next.js customer-facing storefront (root `/`)
 
 ### Architecture Overview
 
 ```
 Internet → Nginx (Port 80/443)
-           ├─ /adminhoang/* → Backend (Port 3000)
-           ├─ /api/*        → Backend (Port 3000)
-           └─ /*            → Mobile App (Port 3001)
+           ├─ /adminhoang/* → Backend (Port 3000) → Serves admin static files
+           ├─ /api/*        → Backend (Port 3000) → API endpoints
+           └─ /*            → Mobile App (Port 3001) → Customer storefront
 ```
+
+### Monorepo Structure
+
+```
+sunfoods-monorepo/
+├── backend/              # API + Serve admin static
+│   ├── src/             # All server code
+│   ├── shared/          # Shared schemas
+│   ├── public/admin/    # Built admin static files
+│   └── package.json
+├── admin-web/           # Admin dashboard (React)
+│   ├── src/             # React client code
+│   └── package.json
+└── customer-mobile/     # Mobile app (Next.js)
+    ├── src/             # Next.js app
+    └── package.json
+```
+
+> 💡 **Note**: This is a monorepo setup using npm workspaces. The backend serves both API endpoints and the built admin static files. Only **2 PM2 processes run** (backend + mobile), making it suitable for VPS with 2GB RAM.
 
 ### System Requirements
 
@@ -201,22 +220,38 @@ cd /var/www/ecommerce-platform
 
 ### Step 2: Install Dependencies
 
+This project uses **npm workspaces** for monorepo management. You can install dependencies for all workspaces at once, or per-workspace.
+
+**Option A: Install All Workspaces (Recommended)**
+
 ```bash
 # Navigate to project root
 cd /var/www/ecommerce-platform
 
-# Install root dependencies (PM2, etc.)
+# Install all workspace dependencies at once
 npm install
+```
+
+This single command installs dependencies for:
+- Root workspace
+- `backend/` - API server
+- `admin-web/` - Admin dashboard
+- `customer-mobile/` - Mobile app
+
+**Option B: Install Per-Workspace**
+
+```bash
+# Navigate to project root
+cd /var/www/ecommerce-platform
 
 # Install backend dependencies
-cd TailwindAdminRasa
-npm install
-cd ..
+cd backend && npm install && cd ..
+
+# Install admin-web dependencies
+cd admin-web && npm install && cd ..
 
 # Install mobile app dependencies
-cd customer-mobile-shop-clean
-npm install
-cd ..
+cd customer-mobile && npm install && cd ..
 ```
 
 **Expected Output:**
@@ -299,23 +334,58 @@ echo "WORKER_DISPATCH_SECRET=$(node -e "console.log(require('crypto').randomByte
 
 ### Step 4: Build Applications
 
+The monorepo includes convenient build scripts for all workspaces:
+
 ```bash
 # Navigate to project root
 cd /var/www/ecommerce-platform
 
-# Build both backend and mobile app
+# Build all applications (recommended for production)
 npm run build:all
 ```
 
-**This command will:**
-1. Build the backend (TailwindAdminRasa)
-2. Build the mobile Next.js app (customer-mobile-shop-clean)
+**Available Build Commands:**
+
+```bash
+# Build admin dashboard only (builds to backend/public/admin/)
+npm run build:admin
+
+# Build backend API server only
+npm run build:backend
+
+# Build mobile app only
+npm run build:mobile
+
+# Build all applications
+npm run build:all
+```
+
+**What `npm run build:all` does:**
+
+1. **Build Admin Dashboard** → Output: `backend/public/admin/`
+   - Builds React admin interface using Vite
+   - Creates optimized production bundle
+   - Static files served by backend at `/adminhoang`
+
+2. **Build Backend API** → Output: `backend/dist/`
+   - Compiles TypeScript server code
+   - Bundles API endpoints and middleware
+   - Serves both API and admin static files
+
+3. **Build Mobile App** → Output: `customer-mobile/.next/`
+   - Builds Next.js customer storefront
+   - Creates optimized production build
+   - Generates static pages and server routes
 
 **Expected Output:**
 ```
+> build:admin
+Building admin dashboard...
+✓ Admin build complete → backend/public/admin/
+
 > build:backend
-Building backend...
-✓ Backend build complete
+Building backend API...
+✓ Backend build complete → backend/dist/
 
 > build:mobile  
 Building mobile app...
@@ -329,7 +399,9 @@ Building mobile app...
 
 **What to Check:**
 - ✅ No build errors
-- ✅ Both `TailwindAdminRasa/dist` and `customer-mobile-shop-clean/.next` directories created
+- ✅ `backend/public/admin/` directory created with admin static files
+- ✅ `backend/dist/` directory created with server bundle
+- ✅ `customer-mobile/.next/` directory created
 - ✅ Build process completes without TypeScript errors
 
 **If Build Fails:**
@@ -338,14 +410,40 @@ Building mobile app...
 node --version  # Must be 18.x or higher
 
 # Clear build cache and retry
-cd TailwindAdminRasa && rm -rf dist && cd ..
-cd customer-mobile-shop-clean && rm -rf .next && cd ..
+cd backend && rm -rf dist public/admin && cd ..
+cd admin-web && rm -rf dist && cd ..
+cd customer-mobile && rm -rf .next && cd ..
 npm run build:all
 
 # Check for specific errors in logs
+npm run build:admin 2>&1 | tee admin-build.log
 npm run build:backend 2>&1 | tee backend-build.log
 npm run build:mobile 2>&1 | tee mobile-build.log
 ```
+
+---
+
+### Optional: Development Mode
+
+For local development or testing before deployment, you can run services individually:
+
+```bash
+# Run backend development server (port 3000)
+npm run dev:backend
+
+# Run admin dashboard development server (port 5173)
+npm run dev:admin
+
+# Run mobile app development server (port 3001)
+npm run dev:mobile
+```
+
+**Development URLs:**
+- Backend API: `http://localhost:3000/api/*`
+- Admin Dashboard: `http://localhost:5173/adminhoang`
+- Mobile App: `http://localhost:3001/`
+
+> 💡 **Tip**: In development, admin runs on port 5173 (Vite dev server). In production, admin static files are served by backend at port 3000.
 
 ---
 
@@ -409,8 +507,10 @@ npm run start:prod
 ```
 
 **This command starts:**
-- `backend` process (port 3000)
-- `mobile` process (port 3001)
+- `backend` process (port 3000) - Runs from `./backend` directory
+- `mobile` process (port 3001) - Runs from `./customer-mobile` directory
+
+> 💡 **PM2 Configuration**: The `ecosystem.config.js` file defines process working directories. Backend uses `cwd: './backend'` and mobile uses `cwd: './customer-mobile'`. This ensures each process runs in its correct workspace.
 
 **Check Process Status:**
 ```bash
@@ -667,12 +767,15 @@ cd /var/www/ecommerce-platform
 # 2. Pull latest changes
 git pull origin main  # or master
 
-# 3. Install any new dependencies
+# 3. Install any new dependencies (npm workspaces handles all at once)
 npm install
-cd TailwindAdminRasa && npm install && cd ..
-cd customer-mobile-shop-clean && npm install && cd ..
 
-# 4. Rebuild applications
+# Optional: Install per-workspace if needed
+# cd backend && npm install && cd ..
+# cd admin-web && npm install && cd ..
+# cd customer-mobile && npm install && cd ..
+
+# 4. Rebuild all applications
 npm run build:all
 
 # 5. Restart PM2 processes
@@ -743,11 +846,12 @@ Module not found: Error: Can't resolve 'module-name'
 rm -rf node_modules package-lock.json
 npm install
 
-# Clear build cache
-cd TailwindAdminRasa && rm -rf dist && cd ..
-cd customer-mobile-shop-clean && rm -rf .next && cd ..
+# Clear build cache for all workspaces
+cd backend && rm -rf dist public/admin && cd ..
+cd admin-web && rm -rf dist && cd ..
+cd customer-mobile && rm -rf .next && cd ..
 
-# Rebuild
+# Rebuild all applications
 npm run build:all
 ```
 
@@ -968,10 +1072,13 @@ git pull origin main
 # 3. Check for breaking changes
 git log --oneline -10
 
-# 4. Install dependencies
+# 4. Install dependencies (npm workspaces - installs all at once)
 npm install
-cd TailwindAdminRasa && npm install && cd ..
-cd customer-mobile-shop-clean && npm install && cd ..
+
+# OR install per-workspace if needed:
+# cd backend && npm install && cd ..
+# cd admin-web && npm install && cd ..
+# cd customer-mobile && npm install && cd ..
 
 # 5. Build applications
 npm run build:all
