@@ -754,7 +754,7 @@ export class DatabaseStorage implements IStorage {
     return await db
       .select()
       .from(orders)
-      .where(eq(orders.customerId, customerId))
+      .where(eq(orders.userId, customerId))
       .orderBy(desc(orders.createdAt))
       .limit(limit);
   }
@@ -1528,14 +1528,14 @@ export class DatabaseStorage implements IStorage {
     // 🚀 Optimized: Single query with LEFT JOIN instead of N+1 queries
     const subquery = db
       .select({
-        customerId: orders.customerId,
+        customerId: orders.userId,
         totalOrders: count(orders.id).as('total_orders'),
         totalSpent: sum(orders.total).as('total_spent'),
         lastOrderDate: sql<string>`MAX(${orders.createdAt})::text`.as('last_order_date')
       })
       .from(orders)
       .where(inArray(orders.status, ['delivered', 'shipped']))
-      .groupBy(orders.customerId)
+      .groupBy(orders.userId)
       .as('order_stats');
 
     let query = db
@@ -1626,14 +1626,14 @@ export class DatabaseStorage implements IStorage {
     // 🚀 Optimized: Single query with LEFT JOIN and direct ILIKE search
     const subquery = db
       .select({
-        customerId: orders.customerId,
+        customerId: orders.userId,
         totalOrders: count(orders.id).as('total_orders'),
         totalSpent: sum(orders.total).as('total_spent'),
         lastOrderDate: sql<string>`MAX(${orders.createdAt})::text`.as('last_order_date')
       })
       .from(orders)
       .where(inArray(orders.status, ['delivered', 'shipped']))
-      .groupBy(orders.customerId)
+      .groupBy(orders.userId)
       .as('order_stats');
 
     const searchPattern = `%${searchTerm}%`;
@@ -1758,7 +1758,7 @@ export class DatabaseStorage implements IStorage {
           })
           .from(orders)
           .where(and(
-            eq(orders.customerId, customer.id),
+            eq(orders.userId, customer.id),
             inArray(orders.status, ['delivered', 'shipped'])
           ));
 
@@ -1887,7 +1887,7 @@ export class DatabaseStorage implements IStorage {
 
   async deleteCustomer(id: string): Promise<boolean> {
     // First delete all orders associated with this customer
-    const customerOrders = await db.select({ id: orders.id }).from(orders).where(eq(orders.customerId, id));
+    const customerOrders = await db.select({ id: orders.id }).from(orders).where(eq(orders.userId, id));
     
     // Delete payments, order items, then orders for each order
     for (const order of customerOrders) {
@@ -1898,7 +1898,7 @@ export class DatabaseStorage implements IStorage {
     }
     
     // Delete orders
-    await db.delete(orders).where(eq(orders.customerId, id));
+    await db.delete(orders).where(eq(orders.userId, id));
     
     // Finally delete the customer
     const result = await db.delete(customers).where(eq(customers.id, id));
@@ -1956,7 +1956,7 @@ export class DatabaseStorage implements IStorage {
             })
             .from(orders)
             .where(and(
-              eq(orders.customerId, customer.id),
+              eq(orders.userId, customer.id),
               inArray(orders.status, ['delivered', 'shipped'])
             ));
 
@@ -1987,7 +1987,7 @@ export class DatabaseStorage implements IStorage {
       thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
       const recentCustomerIds = await db
-        .selectDistinct({ customerId: orders.customerId })
+        .selectDistinct({ customerId: orders.userId })
         .from(orders)
         .where(gte(orders.createdAt, thirtyDaysAgo));
 
@@ -2014,7 +2014,7 @@ export class DatabaseStorage implements IStorage {
             })
             .from(orders)
             .where(and(
-              eq(orders.customerId, customer.id),
+              eq(orders.userId, customer.id),
               inArray(orders.status, ['delivered', 'shipped'])
             ));
 
@@ -2061,7 +2061,7 @@ export class DatabaseStorage implements IStorage {
             })
             .from(orders)
             .where(and(
-              eq(orders.customerId, customer.id),
+              eq(orders.userId, customer.id),
               inArray(orders.status, ['delivered', 'shipped'])
             ));
 
@@ -2091,14 +2091,14 @@ export class DatabaseStorage implements IStorage {
       // Get customers with their order counts
       const customerOrderCounts = await db
         .select({
-          customerId: orders.customerId,
+          customerId: orders.userId,
           totalOrders: count(orders.id),
           totalSpent: sum(orders.total),
           lastOrderDate: sql<string>`MAX(${orders.createdAt})::text`
         })
         .from(orders)
         .where(inArray(orders.status, ['delivered', 'shipped']))
-        .groupBy(orders.customerId)
+        .groupBy(orders.userId)
         .having(sql`COUNT(${orders.id}) > 0`)
         .orderBy(sql`COUNT(${orders.id}) DESC`)
         .limit(limit);
@@ -2301,7 +2301,7 @@ export class DatabaseStorage implements IStorage {
     const result = await db
       .select({
         id: orders.id,
-        customerId: orders.customerId,
+        userId: orders.userId,
         total: orders.total,
         status: orders.status,
         items: orders.items,
@@ -2316,7 +2316,7 @@ export class DatabaseStorage implements IStorage {
         syncStatus: orders.syncStatus,
       })
       .from(orders)
-      .leftJoin(customers, eq(orders.customerId, customers.id))
+      .leftJoin(customers, eq(orders.userId, customers.id))
       .orderBy(desc(orders.createdAt))
       .limit(limit);
     
@@ -2438,7 +2438,7 @@ export class DatabaseStorage implements IStorage {
     const orderResult = await db
       .select({
         id: orders.id,
-        customerId: orders.customerId,
+        userId: orders.userId,
         total: orders.total,
         status: orders.status,
         items: orders.items,
@@ -2448,7 +2448,7 @@ export class DatabaseStorage implements IStorage {
         customerEmail: customers.email,
       })
       .from(orders)
-      .leftJoin(customers, eq(orders.customerId, customers.id))
+      .leftJoin(customers, eq(orders.userId, customers.id))
       .where(eq(orders.id, id));
 
     if (!orderResult[0]) return undefined;
