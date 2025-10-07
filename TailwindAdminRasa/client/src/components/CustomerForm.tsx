@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { insertCustomerSchema, type InsertCustomer, type Customer } from "@shared/schema";
+import { insertCustomersSchema, type InsertCustomers, type Customers } from "@shared/schema";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -12,7 +12,7 @@ import { Camera, Upload, X } from "lucide-react";
 import { z } from "zod";
 
 // Form schema that extends the base insert schema with additional validation
-const customerFormSchema = insertCustomerSchema.extend({
+const customerFormSchema = insertCustomersSchema.extend({
   email: z.string().min(1, "Email là bắt buộc").email("Email không hợp lệ"),
   phone: z.string().optional().refine((val) => {
     if (!val) return true; // Optional field
@@ -32,8 +32,8 @@ const customerFormSchema = insertCustomerSchema.extend({
 type CustomerFormData = z.infer<typeof customerFormSchema>;
 
 interface CustomerFormProps {
-  customer?: Customer;
-  onSubmit: (data: InsertCustomer) => Promise<void>;
+  customer?: Customers;
+  onSubmit: (data: InsertCustomers) => Promise<void>;
   onCancel: () => void;
   isLoading?: boolean;
   mode: "add" | "edit";
@@ -102,7 +102,7 @@ export function CustomerForm({
 
   const handleFormSubmit = async (data: CustomerFormData) => {
     try {
-      const submitData: InsertCustomer = {
+      const submitData: InsertCustomers = {
         name: data.name.trim(),
         email: data.email.trim().toLowerCase(),
         phone: data.phone?.trim() || "",
