@@ -4,8 +4,8 @@
   "license": "MIT",
   "scripts": {
     "start": "node -r dotenv/config dist/index.js",
-    "build": "esbuild src/index.ts --bundle --platform=node --format=cjs --outdir=dist --external:@neondatabase/serverless --external:@google/genai --external:canvas --external:firebase-admin --external:bullmq --external:ioredis --external:bcrypt",
-    "dev": "npx tsx watch src/index.ts",
+    "build": "npx esbuild src/index.ts --bundle --platform=node --format=cjs --outdir=dist --external:@neondatabase/serverless --external:@google/genai --external:canvas --external:firebase-admin --external:bullmq --external:ioredis --external:bcrypt",
+    "dev": "npm run build && node dist/index.js",
     "db:push": "drizzle-kit push"
   },
   "dependencies": {
@@ -66,7 +66,7 @@
     "@types/web-push": "^3.6.4",
     "@types/ws": "^8.5.13",
     "drizzle-kit": "^0.30.4",
-    "tsx": "^4.19.1",
+    "ts-node": "^10.9.2",
     "typescript": "5.6.3"
   },
   "optionalDependencies": {

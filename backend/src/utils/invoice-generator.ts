@@ -1,8 +1,22 @@
-import { createCanvas, loadImage } from 'canvas';
 import QRCode from 'qrcode';
 import { db } from '../db';
 import { orders, customers, shopSettings, InvoiceTemplateConfig } from '../../shared/schema';
 import { eq } from 'drizzle-orm';
+
+// Lazy-load canvas only when needed (optional dependency)
+let createCanvas: any;
+let loadImage: any;
+async function ensureCanvas() {
+  if (!createCanvas) {
+    try {
+      const canvas = await import('canvas');
+      createCanvas = canvas.createCanvas;
+      loadImage = canvas.loadImage;
+    } catch (error) {
+      throw new Error('Canvas module not available. Install canvas with: pnpm rebuild canvas');
+    }
+  }
+}
 
 interface InvoiceData {
   orderId: string;
@@ -79,6 +93,9 @@ export async function generateInvoiceImage(
   orderId: string,
   customConfig?: Partial<InvoiceTemplateConfig>
 ): Promise<Buffer> {
+  // Ensure canvas is loaded before proceeding
+  await ensureCanvas();
+  
   const orderResult = await db
     .select()
     .from(orders)
