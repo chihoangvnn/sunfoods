@@ -23,26 +23,72 @@ import { eq, sql } from 'drizzle-orm';
 import { getParticipationsDueForVerification } from '../services/campaigns';
 import { verifyShareWithEngagement } from '../services/facebook-graph';
 
-// Redis connection (reuse existing or create new)
-const connection = new IORedis({
-  host: process.env.REDIS_HOST || 'localhost',
-  port: parseInt(process.env.REDIS_PORT || '6379'),
-  maxRetriesPerRequest: null
-});
+// Check if Redis is configured
+const REDIS_URL = process.env.REDIS_URL || process.env.UPSTASH_REDIS_URL;
+const REDIS_CONFIGURED = !!(REDIS_URL || (process.env.REDIS_HOST && process.env.REDIS_PORT));
 
-// Create BullMQ queue for campaign verification
-export const campaignVerifierQueue = new Queue('campaign-verifier', {
-  connection,
-  defaultJobOptions: {
-    attempts: 3,
-    backoff: {
-      type: 'exponential',
-      delay: 60000 // 1 minute
-    },
-    removeOnComplete: 100,
-    removeOnFail: 500
+// Redis connection (only if configured)
+let connection: IORedis | null = null;
+let campaignVerifierQueue: Queue | null = null;
+let campaignVerifierWorker: Worker | null = null;
+
+if (REDIS_CONFIGURED) {
+  try {
+    if (REDIS_URL) {
+      connection = new IORedis(REDIS_URL, {
+        maxRetriesPerRequest: null,
+        retryStrategy(times) {
+          if (times > 3) {
+            console.warn('⚠️ Campaign verifier: Redis connection failed, disabling queue-based verification');
+            return null;
+          }
+          return Math.min(times * 1000, 3000);
+        }
+      });
+    } else {
+      connection = new IORedis({
+        host: process.env.REDIS_HOST || 'localhost',
+        port: parseInt(process.env.REDIS_PORT || '6379'),
+        maxRetriesPerRequest: null,
+        retryStrategy(times) {
+          if (times > 3) {
+            console.warn('⚠️ Campaign verifier: Redis connection failed, disabling queue-based verification');
+            return null;
+          }
+          return Math.min(times * 1000, 3000);
+        }
+      });
+    }
+
+    connection.on('error', (err) => {
+      if (err.code === 'ECONNREFUSED' || err.code === 'ENOTFOUND') {
+        console.warn('⚠️ Campaign verifier: Redis unavailable - running without queue');
+      }
+    });
+
+    // Create BullMQ queue for campaign verification
+    campaignVerifierQueue = new Queue('campaign-verifier', {
+      connection,
+      defaultJobOptions: {
+        attempts: 3,
+        backoff: {
+          type: 'exponential',
+          delay: 60000 // 1 minute
+        },
+        removeOnComplete: 100,
+        removeOnFail: 500
+      }
+    });
+  } catch (error) {
+    console.warn('⚠️ Campaign verifier: Failed to initialize Redis, queue-based verification disabled');
+    connection = null;
+    campaignVerifierQueue = null;
   }
-});
+} else {
+  console.warn('⚠️ Campaign verifier: Redis not configured - running without queue-based verification');
+}
+
+export { campaignVerifierQueue };
 
 /**
  * Main verification function - Verifies a single participation
@@ -190,30 +236,41 @@ async function rewardParticipation(data: {
 
 /**
  * BullMQ Worker - Processes verification jobs from the queue
+ * Only initialized if Redis is configured
  */
-export const campaignVerifierWorker = new Worker(
-  'campaign-verifier',
-  async (job) => {
-    const { participationId } = job.data;
-    console.log(`🔍 Verifying participation ${participationId}...`);
-    
-    try {
-      await verifyParticipation(participationId);
-      console.log(`✅ Participation ${participationId} verified successfully`);
-    } catch (error) {
-      console.error(`❌ Error verifying participation ${participationId}:`, error);
-      throw error; // Re-throw to trigger retry
-    }
-  },
-  {
-    connection,
-    concurrency: 5 // Process 5 jobs in parallel
+if (connection && REDIS_CONFIGURED) {
+  try {
+    campaignVerifierWorker = new Worker(
+      'campaign-verifier',
+      async (job) => {
+        const { participationId } = job.data;
+        console.log(`🔍 Verifying participation ${participationId}...`);
+        
+        try {
+          await verifyParticipation(participationId);
+          console.log(`✅ Participation ${participationId} verified successfully`);
+        } catch (error) {
+          console.error(`❌ Error verifying participation ${participationId}:`, error);
+          throw error; // Re-throw to trigger retry
+        }
+      },
+      {
+        connection,
+        concurrency: 5 // Process 5 jobs in parallel
+      }
+    );
+  } catch (error) {
+    console.warn('⚠️ Campaign verifier: Failed to create worker, queue-based verification disabled');
+    campaignVerifierWorker = null;
   }
-);
+}
+
+export { campaignVerifierWorker };
 
 /**
  * Scheduler function - Finds and queues participations due for verification
  * Called periodically to process pending verifications
+ * If Redis is not available, verifications are processed directly (without queue)
  */
 export async function schedulePendingVerifications(): Promise<void> {
   // Get participations due for verification
@@ -230,12 +287,27 @@ export async function schedulePendingVerifications(): Promise<void> {
       })
       .where(eq(campaignParticipations.id, participation.id));
     
-    // Queue verification job
-    await campaignVerifierQueue.add('verify', {
-      participationId: participation.id
-    });
-    
-    console.log(`📤 Queued verification for participation ${participation.id}`);
+    // Queue verification job if Redis is available, otherwise process directly
+    if (campaignVerifierQueue && REDIS_CONFIGURED) {
+      try {
+        await campaignVerifierQueue.add('verify', {
+          participationId: participation.id
+        });
+        console.log(`📤 Queued verification for participation ${participation.id}`);
+      } catch (error) {
+        console.warn(`⚠️ Failed to queue verification, processing directly for ${participation.id}`);
+        // Process directly if queue fails
+        await verifyParticipation(participation.id).catch(err => {
+          console.error(`❌ Direct verification failed for ${participation.id}:`, err);
+        });
+      }
+    } else {
+      // Process directly if queue is not available
+      console.log(`🔄 Processing verification directly (no queue) for ${participation.id}`);
+      await verifyParticipation(participation.id).catch(err => {
+        console.error(`❌ Direct verification failed for ${participation.id}:`, err);
+      });
+    }
   }
 }
 

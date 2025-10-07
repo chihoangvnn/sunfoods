@@ -3,44 +3,77 @@ import Redis from 'ioredis';
 /**
  * Redis Client Singleton for Queue Management
  * Used for distributed job queue across multiple serverless workers
+ * With graceful degradation when Redis is not available
  */
 class RedisService {
   private static instance: Redis | null = null;
   private static isConnected = false;
+  private static isAvailable = false;
+  private static hasWarned = false;
 
   /**
    * Get Redis client instance (singleton pattern)
+   * Returns null if Redis is not configured (graceful degradation)
    */
-  static getInstance(): Redis {
+  static getInstance(): Redis | null {
     if (!this.instance) {
       const redisUrl = process.env.REDIS_URL || process.env.UPSTASH_REDIS_URL;
       
       if (!redisUrl) {
-        throw new Error('REDIS_URL or UPSTASH_REDIS_URL environment variable is required');
+        if (!this.hasWarned) {
+          console.warn('⚠️ Redis not configured - running without cache/queue support');
+          this.hasWarned = true;
+        }
+        this.isAvailable = false;
+        return null;
       }
 
-      this.instance = new Redis(redisUrl, {
-        enableReadyCheck: false,
-        maxRetriesPerRequest: 3,
-        lazyConnect: true,
-        keepAlive: 30000,
-        connectionName: 'satellite-brain'
-      });
+      try {
+        this.instance = new Redis(redisUrl, {
+          enableReadyCheck: false,
+          maxRetriesPerRequest: 3,
+          lazyConnect: true,
+          keepAlive: 30000,
+          connectionName: 'satellite-brain',
+          retryStrategy(times) {
+            if (times > 3) {
+              console.warn('⚠️ Redis connection failed after 3 retries - running without cache');
+              return null;
+            }
+            return Math.min(times * 1000, 3000);
+          }
+        });
 
-      // Single instance error handling
-      if (!this.instance.options.enableOfflineQueue) {
         this.instance.on('connect', () => {
-          console.log('🔗 Redis connected');
+          console.log('✅ Redis connected');
           this.isConnected = true;
+          this.isAvailable = true;
         });
+        
         this.instance.on('error', (err) => {
-          console.error('❌ Redis error:', err.message);
+          if (err.code === 'ECONNREFUSED' || err.code === 'ENOTFOUND') {
+            if (!this.hasWarned) {
+              console.warn('⚠️ Redis unavailable - running without cache/queue support');
+              this.hasWarned = true;
+            }
+          } else {
+            console.error('❌ Redis error:', err.message);
+          }
           this.isConnected = false;
         });
+        
         this.instance.on('close', () => {
-          console.log('🔒 Redis connection closed');
+          if (this.isConnected) {
+            console.log('🔒 Redis connection closed');
+          }
           this.isConnected = false;
         });
+        
+        this.isAvailable = true;
+      } catch (error) {
+        console.warn('⚠️ Failed to initialize Redis - running without cache:', error instanceof Error ? error.message : 'Unknown error');
+        this.instance = null;
+        this.isAvailable = false;
       }
     }
 
@@ -53,12 +86,19 @@ class RedisService {
   static async isHealthy(): Promise<boolean> {
     try {
       const redis = this.getInstance();
+      if (!redis) return false;
       await redis.ping();
       return true;
     } catch (error) {
-      console.error('Redis health check failed:', error);
       return false;
     }
+  }
+
+  /**
+   * Check if Redis is available (configured)
+   */
+  static isRedisAvailable(): boolean {
+    return this.isAvailable;
   }
 
   /**
@@ -86,11 +126,20 @@ class RedisService {
   static async getInfo(): Promise<Record<string, any>> {
     try {
       const redis = this.getInstance();
+      if (!redis) {
+        return {
+          connected: false,
+          available: false,
+          message: 'Redis not configured'
+        };
+      }
+      
       const info = await redis.info();
       const memoryInfo = await redis.info('memory');
       
       return {
         connected: this.isConnected,
+        available: this.isAvailable,
         uptime: this.extractInfoValue(info, 'uptime_in_seconds'),
         usedMemory: this.extractInfoValue(memoryInfo, 'used_memory_human'),
         connectedClients: this.extractInfoValue(info, 'connected_clients'),
@@ -99,6 +148,7 @@ class RedisService {
     } catch (error) {
       return {
         connected: false,
+        available: this.isAvailable,
         error: error instanceof Error ? error.message : 'Unknown error'
       };
     }

@@ -55,12 +55,18 @@ class QueueService {
   /**
    * Get or create a queue for specific platform and region
    * Queue naming convention: posts:{platform}:{region}
+   * Returns null if Redis is not available
    */
-  static getQueue(platform: string, region: string = 'default'): Queue<PostJobPayload> {
+  static getQueue(platform: string, region: string = 'default'): Queue<PostJobPayload> | null {
     const queueName = `posts:${platform}:${region}`;
     
     if (!this.queues.has(queueName)) {
       const redis = RedisService.getInstance();
+      
+      if (!redis) {
+        console.warn(`⚠️ Cannot create queue ${queueName} - Redis not available`);
+        return null;
+      }
       
       const queueOptions: QueueOptions = {
         connection: redis,
@@ -82,19 +88,25 @@ class QueueService {
       console.log(`📊 Created queue: ${queueName}`);
     }
 
-    return this.queues.get(queueName)!;
+    return this.queues.get(queueName) || null;
   }
 
   /**
    * Add a job to the appropriate queue
+   * Returns null if Redis is not available
    */
   static async addJob(
     platform: string,
     region: string,
     payload: PostJobPayload,
     options?: JobsOptions
-  ): Promise<Job<PostJobPayload>> {
+  ): Promise<Job<PostJobPayload> | null> {
     const queue = this.getQueue(platform, region);
+    
+    if (!queue) {
+      console.warn(`⚠️ Cannot add job - Redis not available`);
+      return null;
+    }
     
     const jobOptions: JobsOptions = {
       jobId: payload.idempotencyKey, // Prevent duplicates
@@ -208,11 +220,12 @@ class QueueService {
       
       // Check if we can create a test queue
       const testQueue = this.getQueue('test', 'health');
+      if (!testQueue) return false;
+      
       await testQueue.getJobCounts();
       
       return true;
     } catch (error) {
-      console.error('Queue health check failed:', error);
       return false;
     }
   }
