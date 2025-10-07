@@ -6,82 +6,6 @@ This project is a comprehensive e-commerce management system designed to streaml
 ## User Preferences
 Preferred communication style: Simple, everyday language.
 
-## Recent Changes (October 2025)
-### Admin Routing Complete Restoration (October 7, 2025)
-- **9 Orphaned Pages Restored**: Successfully added all orphaned admin pages back to routing system:
-  - Fixed Satellites routing bug (was incorrectly pointing to PostScheduler, now points to Satellites.tsx)
-  - Added routes: /chatbot-analytics, /chatbot-settings, /chatbot-responses, /chatbot-test
-  - Added routes: /landing-page-manager (LandingPageManager), /queue-manager, /viettelpost-settings
-  - Added route: /faq-library (new FAQLibrary.tsx wrapper for FAQLibraryManagement component)
-  - Added route: /post-scheduler (PostScheduler moved from /satellites)
-- **Duplicate Route Fixed**: Resolved /landing-page-manager conflict:
-  - ProductLandingPageManager moved to /product-landing-pages (product-specific pages)
-  - LandingPageManager keeps /landing-page-manager (general landing page settings)
-  - Updated all navigation links in AppSidebar and LandingPageEditor
-- **LSP Error Resolution**: Fixed all 355 TypeScript errors → 0 errors:
-  - Added type annotations for all callback parameters across 4 files
-  - Fixed lucide-react import issues with wildcard import workaround
-  - Created lucide-react.d.ts type declaration file
-  - All files now compile cleanly with zero diagnostics
-- **Status**: ✅ All admin pages accessible, routing system complete, zero TypeScript errors
-
-### VPS Ubuntu 24 Production Deployment Fixes (October 7, 2025)
-- **bcrypt Native Module Fix**:
-  - Added `--external:bcrypt` to esbuild config to prevent bundling native C++ module
-  - bcrypt now loads from `node_modules` at runtime instead of being bundled into `dist/index.js`
-  - Fixes "No native build was found for platform=linux" error on VPS
-- **PM2 Environment Loading**:
-  - Added `dotenv` package to dependencies
-  - Updated start script to `node -r dotenv/config dist/index.js` for automatic .env loading
-  - Fixes "DATABASE_URL must be set" error when running `npm start` via PM2
-- **ESM/CommonJS __dirname Compatibility**:
-  - Fixed `fileURLToPath(import.meta.url)` error in production CommonJS build
-  - Added conditional __dirname logic: ESM mode (dev) uses import.meta.url, CommonJS (production) uses process.cwd()
-  - Fixes "TypeError: The 'path' argument must be of type string" error
-- **ENCRYPTION_KEY Configuration**:
-  - Updated `.env.example` with proper 64-character hex format requirement
-  - Generated example ENCRYPTION_KEY: `c3a948be4ebd4b4bcee04378906aad2012a49fdde6d3b13ce080fab843a360ce`
-  - Added generation instructions: `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"`
-- **VPS Deployment Guide**:
-  - Created `VPS_UBUNTU24_FIXES.md` with step-by-step troubleshooting for Ubuntu 24
-  - Includes quick fix checklist and common error resolutions
-- **Status**: ✅ All VPS Ubuntu 24 deployment issues resolved, production-ready
-
-### Production Build Fixes for VPS Deployment (October 7, 2025)
-- **Backend Build Fixed**: 
-  - Replaced `tsc` with `esbuild` for faster, more reliable builds (6s vs 30s+ timeout)
-  - Changed esbuild output from ESM to **CommonJS format** (`--format=cjs`) for Express compatibility
-  - Removed `"type": "module"` from package.json (source uses ESM, build outputs CommonJS)
-  - Updated @types/node from 20.16.11 to ^20.19.0 to fix peer dependency conflict with vite@7.1.9
-  - **CRITICAL**: Moved esbuild from devDependencies to dependencies for production install compatibility
-- **Monorepo Package Management**:
-  - Created `pnpm-workspace.yaml` for proper pnpm workspace support
-  - Added explicit port configuration: backend (3000), mobile (3001)
-- **PM2 Production Config**: ecosystem.config.js uses `npm start` (production builds) for both apps
-- **Status**: ✅ Backend builds successfully to dist/index.js (CommonJS), ready for VPS deployment
-
-### Modified API-First Monorepo Restructuring
-- **Architecture Change**: Migrated from single-app structure to Modified API-First monorepo for VPS 2GB RAM compatibility
-- **New Structure**:
-  - `backend/` - Express.js API server (port 3000) + serves admin static files from `/adminhoang`
-  - `admin-web/` - React dashboard (Vite build → backend/public/admin/)
-  - `customer-mobile/` - Next.js SSR storefront (port 3001)
-- **Package Management**: Used pnpm for dependency installation (npm crashed with esbuild SIGSEGV error)
-- **ESM Compatibility**: Fixed `__dirname` usage with `fileURLToPath(import.meta.url)` for ES modules
-- **path-to-regexp v8**: Updated to named imports `import { pathToRegexp }` for API pattern matching
-- **Deployment Configs**: Updated ecosystem.config.js, DEPLOY.md, QUICK_DEPLOY.md for new structure
-- **Workflow**: Backend API running on port 3000, all health checks passing
-- **Status**: ✅ Monorepo restructuring complete, backend operational, all APIs working
-
-### Complete Schema Generation & Database Fixes
-- **134 Tables Schema**: Automatically generated complete Drizzle schema from database introspection using information_schema
-- **Column Naming Fixed**: Corrected all camelCase/snake_case mismatches (avgResponseTime → avg_response_time, scheduledTime → scheduled_time, etc.)
-- **Orders API Fixed**: Corrected `orders.userId` field references (was incorrectly using `customerId`) in 16 locations across storage.ts
-- **Redis Graceful Degradation**: Implemented graceful error handling for Redis connections; system degrades gracefully without cache/queue functionality
-- **Frontend Import Fixes**: Fixed schema import naming (insertCustomerSchema → insertCustomersSchema)
-- **Production Status**: All critical APIs verified working (GET /api/orders returns HTTP 200 with valid data, GET /api/books, /api/admin/me, /api/dashboard/stats all functional)
-- **Dead Code Cleanup**: Commented out services referencing non-existent tables (secure-address-service, smart-search, viettelpost-shipping, abebooks, vendor-returns, faq-library)
-
 ## System Architecture
 
 ### UI/UX Decisions
@@ -100,15 +24,15 @@ The backend is an Express.js-based REST API written in TypeScript. It employs se
 - **Build Commands**: `npm run build:all` builds both apps, `npm run start:prod` starts PM2 processes
 
 ### Feature Specifications
-- **Admin & Customer Authentication**: Role-based access control (RBAC) for various admin and customer roles. Includes a robust Multi-OAuth 2.0 system integrating Google, Facebook, Zalo, and Replit, with features like automatic profile enrichment, unified API endpoints, and CSRF protection.
+- **Admin & Customer Authentication**: Role-based access control (RBAC) with Multi-OAuth 2.0 (Google, Facebook, Zalo, Replit) and CSRF protection.
 - **Storefront & Landing Page Generation**: Dynamic storefronts and customizable product landing pages.
-- **Social Media Integration**: Multi-platform social media management, notably Facebook integration with the "Bộ Não - Cánh Tay - Vệ Tinh" architecture for automated content distribution to over 1000 Facebook pages, including a Facebook Apps Manager and an Auto-Posting System.
-- **Chatbot Integration**: RASA chatbot for customer support and product recommendations, optimized for Vietnamese, with automatic Facebook Messenger integration, multi-fanpage configuration, and automatic tagging of bot-created orders. Includes auto-profile enrichment and personalized Vietnamese greetings.
-- **Intelligent Customer Profile Management**: Two-tier profile status ('incomplete'/'complete'), with admin-editable fields for gender, addresses, and credit limits.
+- **Social Media Integration**: Multi-platform social media management, especially Facebook with "Bộ Não - Cánh Tay - Vệ Tinh" architecture for automated content distribution to over 1000 Facebook pages, including an Apps Manager and Auto-Posting System.
+- **Chatbot Integration**: RASA chatbot for customer support, product recommendations, optimized for Vietnamese, with automatic Facebook Messenger integration, multi-fanpage configuration, and order tagging.
+- **Intelligent Customer Profile Management**: Two-tier profile status ('incomplete'/'complete'), with admin-editable fields.
 - **Automatic Facebook Messenger Order Notifications**: Automated order status change notifications.
 - **Vietnamese Books Management System**: ISBN-based book tracking, price comparison, AbeBooks integration, and hierarchical category management.
-- **International Payment Gateway System**: Comprehensive multi-provider payment processing (Stripe, PayPal, Apple Pay, Google Pay, Klarna, Braintree/Venmo, Shopify Pay) with encrypted credential storage.
-- **POS Enhancement System**: Vietnamese retail POS features including keyboard shortcuts, barcode scanner integration, decimal quantity support, KPOS ZY307 receipt printing, and a 3-tab navigation for sales, POS orders, and real-time Facebook Messenger support chat.
+- **International Payment Gateway System**: Comprehensive multi-provider payment processing (Stripe, PayPal, Apple Pay, Google Pay, Klarna, Braintree/Venmo, Shopify Pay).
+- **POS Enhancement System**: Vietnamese retail POS features including keyboard shortcuts, barcode scanner integration, decimal quantity support, KPOS ZY307 receipt printing, and a 3-tab navigation.
 - **Driver & Delivery Management System**: Complete driver and delivery operations platform.
 - **Shop Settings Management System**: Centralized configuration management with admin UI.
 - **Invoice Generation & Auto-Send System**: Automated invoice generation and delivery via Facebook Messenger, including QR banking codes.
@@ -116,12 +40,12 @@ The backend is an Express.js-based REST API written in TypeScript. It employs se
 - **Order Tagging & Source Tracking System**: Comprehensive order tagging with automatic source identification and universal decimal quantity support.
 - **Phone Number Normalization System**: Unified phone number normalization for Vietnamese formats.
 - **IP Pool Management System**: Manages multiple IP sources for the "Brain-Arms-Satellites" architecture, including health scoring and rotation.
-- **Vendor/Consignment Management System**: Platform for consignment sales, including automated order assignment, financial management, and masked customer data for privacy.
-- **Customer Voucher & Discount System**: Comprehensive voucher management (claim, view, redeem) and a Viral Marketing Campaign system with share-to-earn mechanics, Facebook Graph API verification, and an auto-reward system.
-- **Vendor Returns Management System**: Complete returns processing with financial refund logic for different payment models and an admin approval workflow.
-- **Affiliate Portal System**: Tier-based commission platform with affiliate APIs, commission tiers, share rate limiting, and privacy protection for customer data.
+- **Vendor/Consignment Management System**: Platform for consignment sales, including automated order assignment, financial management, and masked customer data.
+- **Customer Voucher & Discount System**: Comprehensive voucher management and a Viral Marketing Campaign system with share-to-earn mechanics, Facebook Graph API verification, and an auto-reward system.
+- **Vendor Returns Management System**: Complete returns processing with financial refund logic and an admin approval workflow.
+- **Affiliate Portal System**: Tier-based commission platform with affiliate APIs, commission tiers, share rate limiting, and privacy protection.
 - **GHN Shipping Integration**: Complete integration with Giao Hàng Nhanh (GHN) for Vietnamese shipping, including API wrapper, webhook status updates, and label generation.
-- **Web Push Notifications System**: Real-time browser notifications for vendor alerts (new order, return request, low stock, payment reminder) with VAPID authentication and subscription management.
+- **Web Push Notifications System**: Real-time browser notifications for vendor alerts with VAPID authentication and subscription management.
 
 ## External Dependencies
 
