@@ -68,7 +68,7 @@ export async function setupVite(app: Express, server: Server) {
 }
 
 export function serveStatic(app: Express) {
-  const adminDistPath = path.resolve(import.meta.dirname, "public");
+  const adminDistPath = path.resolve(import.meta.dirname, "..", "public", "admin");
   const mobileDistPath = path.resolve(import.meta.dirname, "..", "dist-mobile");
 
   if (!fs.existsSync(adminDistPath)) {
