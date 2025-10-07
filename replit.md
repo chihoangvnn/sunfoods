@@ -7,7 +7,18 @@ This project is a comprehensive e-commerce management system designed to streaml
 Preferred communication style: Simple, everyday language.
 
 ## Recent Changes (October 2025)
-### Modified API-First Monorepo Restructuring (Latest)
+### Production Build Fixes for VPS Deployment (Latest - October 7, 2025)
+- **Backend Build Fixed**: 
+  - Changed TypeScript module from "commonjs" to "ES2020" to match package.json "type": "module"
+  - Replaced `tsc` with `esbuild` for faster, more reliable builds (6s vs 30s+ timeout)
+  - Updated @types/node from 20.16.11 to ^20.19.0 to fix peer dependency conflict with vite@7.1.9
+- **Monorepo Package Management**:
+  - Created `pnpm-workspace.yaml` for proper pnpm workspace support
+  - Added explicit port configuration: backend (3000), mobile (3001)
+- **PM2 Production Config**: Reverted ecosystem.config.js to use `npm start` (production builds) instead of `npm run dev`
+- **Status**: ✅ Backend builds successfully to dist/index.js (9.1MB), ready for VPS deployment
+
+### Modified API-First Monorepo Restructuring
 - **Architecture Change**: Migrated from single-app structure to Modified API-First monorepo for VPS 2GB RAM compatibility
 - **New Structure**:
   - `backend/` - Express.js API server (port 3000) + serves admin static files from `/adminhoang`

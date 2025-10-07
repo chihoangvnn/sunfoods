@@ -3,12 +3,12 @@ module.exports = {
     {
       name: 'backend',
       script: 'npm',
-      args: 'run dev',
+      args: 'start',
       cwd: './backend',
       exec_mode: 'cluster',
       instances: 1,
       env: {
-        NODE_ENV: 'development',
+        NODE_ENV: 'production',
         PORT: 3000
       },
       error_log: './logs/backend-error.log',
@@ -21,10 +21,10 @@ module.exports = {
     {
       name: 'mobile',
       script: 'npm',
-      args: 'run dev',
+      args: 'start',
       cwd: './customer-mobile',
       env: {
-        NODE_ENV: 'development',
+        NODE_ENV: 'production',
         PORT: 3001
       },
       error_log: './logs/mobile-error.log',
