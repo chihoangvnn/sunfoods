@@ -1,0 +1,43 @@
+npm WARN   node_modules/@react-leaflet/core
+npm WARN     @react-leaflet/core@"^3.0.0" from react-leaflet@5.0.0
+npm WARN     node_modules/react-leaflet
+npm ERR! code ERESOLVE
+npm ERR! ERESOLVE could not resolve
+npm ERR!
+npm ERR! While resolving: react-leaflet@5.0.0
+npm ERR! Found: react@18.3.1
+npm ERR! node_modules/react
+npm ERR!   react@"18.3.1" from the root project
+npm ERR!   peer react@">=16.8.0" from @floating-ui/react-dom@2.1.6
+npm ERR!   node_modules/@floating-ui/react-dom
+npm ERR!     @floating-ui/react-dom@"^2.0.0" from @radix-ui/react-popper@1.2.8
+npm ERR!     node_modules/@radix-ui/react-popper
+npm ERR!       @radix-ui/react-popper@"1.2.8" from @radix-ui/react-menu@2.1.16
+npm ERR!       node_modules/@radix-ui/react-menu
+npm ERR!         @radix-ui/react-menu@"2.1.16" from @radix-ui/react-dropdown-menu@2.1.16
+npm ERR!         node_modules/@radix-ui/react-dropdown-menu
+npm ERR!       2 more (@radix-ui/react-popover, @radix-ui/react-select)
+npm ERR!   48 more (@radix-ui/react-arrow, @radix-ui/react-checkbox, ...)
+npm ERR!
+npm ERR! Could not resolve dependency:
+npm ERR! peer react@"^19.0.0" from react-leaflet@5.0.0
+npm ERR! node_modules/react-leaflet
+npm ERR!   react-leaflet@"^5.0.0" from the root project
+npm ERR!
+npm ERR! Conflicting peer dependency: react@19.2.0
+npm ERR! node_modules/react
+npm ERR!   peer react@"^19.0.0" from react-leaflet@5.0.0
+npm ERR!   node_modules/react-leaflet
+npm ERR!     react-leaflet@"^5.0.0" from the root project
+npm ERR!
+npm ERR! Fix the upstream dependency conflict, or retry
+npm ERR! this command with --force or --legacy-peer-deps
+npm ERR! to accept an incorrect (and potentially broken) dependency resolution.
+npm ERR!
+npm ERR!
+npm ERR! For a full report see:
+npm ERR! /root/.npm/_logs/2025-10-07T01_21_02_034Z-eresolve-report.txt
+
+npm ERR! A complete log of this run can be found in:
+npm ERR!     /root/.npm/_logs/2025-10-07T01_21_02_034Z-debug-0.log
+root@sunfoods:/var/www/sunfoods.vn/customer-mobile-shop-clean#
