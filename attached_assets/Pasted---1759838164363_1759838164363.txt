@@ -1,0 +1,46 @@
+└────┴────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+root@sunfoods:/var/www/sun# tail -100 /root/.pm2/logs/backend-error-0.log | grep -A 30 "TypeError\|Error:"
+root@sunfoods:/var/www/sun# cd /var/www/sun
+root@sunfoods:/var/www/sun# pm2 start ecosystem.config.js --only backend --no-daemon
+pm2 launched in no-daemon mode (you can add DEBUG="*" env variable to get more messages)
+[PM2] Applying action restartProcessId on app [backend](ids: [ 0 ])
+[PM2] [backend](0) ✓
+┌────┬────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name       │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ backend    │ default     │ N/A     │ cluster │ 245959   │ 0s     │ 1442 │ online    │ 0%       │ 39.5mb   │ root     │ disabled │
+│ 1  │ mobile     │ default     │ N/A     │ fork    │ 245929   │ 0s     │ 2914 │ online    │ 0%       │ 62.0mb   │ root     │ disabled │
+└────┴────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+[--no-daemon] Continue to stream logs
+[--no-daemon] Exit on target PM2 exit pid=68646
+18:55:45 1|mobile  | Error: Could not find a production build in the '.next' directory. Try building your app with 'next build' before starting the production server. https://nextjs.org/docs/messages/production-start-no-build-id
+18:55:45 1|mobile  |     at setupFsCheck (/var/www/sun/customer-mobile/node_modules/next/dist/server/lib/router-utils/filesystem.js:149:19)
+18:55:45 1|mobile  |     at async initialize (/var/www/sun/customer-mobile/node_modules/next/dist/server/lib/router-server.js:65:23)
+18:55:45 1|mobile  |     at async Server.<anonymous> (/var/www/sun/customer-mobile/node_modules/next/dist/server/lib/start-server.js:266:36)
+18:55:45 1|mobile  | npm error Lifecycle script `start` failed with error:
+18:55:45 1|mobile  | npm error code 1
+18:55:45 1|mobile  | npm error path /var/www/sun/customer-mobile
+18:55:45 1|mobile  | npm error workspace customer-mobile@0.1.0
+18:55:45 1|mobile  | npm error location /var/www/sun/customer-mobile
+18:55:45 1|mobile  | npm error command failed
+18:55:45 1|mobile  | npm error command sh -c next start -p 3001
+18:55:45 PM2       | App [mobile:1] exited with code [1] via signal [SIGINT]
+18:55:45 PM2       | App [mobile:1] starting in -fork mode-
+18:55:45 PM2       | App [mobile:1] online
+18:55:45 0|backend | npm warn config ignoring workspace config at /var/www/sun/backend/.npmrc
+18:55:45 0|backend | > backend@1.0.0 start
+18:55:45 0|backend | > node -r dotenv/config dist/index.js
+18:55:45 1|mobile  | > customer-mobile@0.1.0 start
+18:55:45 1|mobile  | > next start -p 3001
+18:55:46 1|mobile  |   ▲ Next.js 15.0.0
+18:55:46 1|mobile  |   - Local:        http://localhost:3001
+18:55:46 1|mobile  |  ✓ Starting...
+18:55:46 1|mobile  | Error: Could not find a production build in the '.next' directory. Try building your app with 'next build' before starting the production server. https://nextjs.org/docs/messages/production-start-no-build-id
+18:55:46 1|mobile  |     at setupFsCheck (/var/www/sun/customer-mobile/node_modules/next/dist/server/lib/router-utils/filesystem.js:149:19)
+18:55:46 1|mobile  |     at async initialize (/var/www/sun/customer-mobile/node_modules/next/dist/server/lib/router-server.js:65:23)
+18:55:46 1|mobile  |     at async Server.<anonymous> (/var/www/sun/customer-mobile/node_modules/next/dist/server/lib/start-server.js:266:36)
+18:55:46 1|mobile  | npm error Lifecycle script `start` failed with error:
+18:55:46 1|mobile  | npm error code 1
+18:55:46 1|mobile  | npm error path /var/www/sun/customer-mobile
+18:55:46 1|mobile  | npm error workspace customer-mobile@0.1.0
+18:55:46 1|mobile  | npm error location /var/www/sun/customer-mobile
