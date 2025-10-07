@@ -1,20 +1,25 @@
 {
-  "name": "workspace-root",
+  "name": "sunfoods-monorepo",
   "version": "1.0.0",
-  "description": "Root workspace for VPS deployment",
   "private": true,
+  "workspaces": [
+    "backend",
+    "admin-web",
+    "customer-mobile"
+  ],
   "scripts": {
-    "build:backend": "cd TailwindAdminRasa && npm run build",
-    "build:mobile": "cd customer-mobile-shop-clean && npm run build",
-    "build:all": "npm run build:backend && npm run build:mobile",
+    "install:all": "npm install",
+    "build:admin": "cd admin-web && npm run build",
+    "build:backend": "cd backend && npm run build", 
+    "build:mobile": "cd customer-mobile && npm run build",
+    "build:all": "npm run build:admin && npm run build:backend && npm run build:mobile",
+    "dev:backend": "cd backend && npm run dev",
+    "dev:admin": "cd admin-web && npm run dev",
+    "dev:mobile": "cd customer-mobile && npm run dev",
     "start:prod": "pm2 start ecosystem.config.js",
-    "stop": "pm2 stop ecosystem.config.js",
-    "restart": "pm2 restart ecosystem.config.js",
-    "logs": "pm2 logs",
-    "status": "pm2 status",
-    "deploy": "npm run build:all && npm run start:prod"
+    "db:push": "cd backend && npm run db:push"
   },
-  "dependencies": {
-    "pm2": "^5.4.2"
+  "engines": {
+    "node": ">=18.0.0"
   }
 }
