@@ -1,0 +1,36 @@
+root@sunfoods:/var/www/sun# tail -200 /root/.pm2/logs/backend-error-0.log | grep -A 20 "Error:"
+root@sunfoods:/var/www/sun# cd /var/www/sun/backend
+root@sunfoods:/var/www/sun/backend# node dist/index.js 2>&1 | head -50
+⚠️  VAPID keys not configured! Push notifications will not work.
+   Set VAPID_PUBLIC_KEY and VAPID_PRIVATE_KEY environment variables.
+Facebook OAuth credentials not found. Set FACEBOOK_APP_ID and FACEBOOK_APP_SECRET environment variables.
+⚠️ THÔNG BÁO: Đang sử dụng TikTok credentials mẫu. Vui lòng thay thế bằng credentials thật từ TikTok Developer Portal để kết nối thực tế.
+📋 Hướng dẫn lấy credentials:
+1. Truy cập: https://developers.tiktok.com/
+2. Tạo ứng dụng mới hoặc chọn ứng dụng hiện tại
+3. Sao chép Client Key và Client Secret
+4. Thay thế trong file tiktok-auth.ts dòng 40-41
+🏥 Started worker health monitoring
+⚠️ Replit OAuth credentials not found. Set REPLIT_APP_ID and REPLIT_APP_SECRET environment variables.
+🏥 Started system health monitoring
+🧩 Initializing built-in template registry...
+✅ Loaded 4 built-in templates
+⚠️ Campaign verifier: Redis not configured - running without queue-based verification
+node:internal/url:1487
+    throw new ERR_INVALID_ARG_TYPE('path', ['string', 'URL'], path);
+    ^
+
+TypeError [ERR_INVALID_ARG_TYPE]: The "path" argument must be of type string or an instance of URL. Received undefined
+    at fileURLToPath (node:internal/url:1487:11)
+    at Object.<anonymous> (/var/www/sun/backend/dist/index.js:279010:48)
+    at Module._compile (node:internal/modules/cjs/loader:1521:14)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1623:10)
+    at Module.load (node:internal/modules/cjs/loader:1266:32)
+    at Module._load (node:internal/modules/cjs/loader:1091:12)
+    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:164:12)
+    at node:internal/main/run_main_module:28:49 {
+  code: 'ERR_INVALID_ARG_TYPE'
+}
+
+Node.js v20.19.5
+root@sunfoods:/var/www/sun/backend#
