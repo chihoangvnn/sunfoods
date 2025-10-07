@@ -2,9 +2,10 @@ module.exports = {
   apps: [
     {
       name: 'backend',
-      script: 'node',
-      args: '-r dotenv/config dist/index.js',
+      script: './dist/index.js',
       cwd: './backend',
+      interpreter: 'node',
+      interpreter_args: '-r dotenv/config',
       exec_mode: 'cluster',
       instances: 1,
       env: {

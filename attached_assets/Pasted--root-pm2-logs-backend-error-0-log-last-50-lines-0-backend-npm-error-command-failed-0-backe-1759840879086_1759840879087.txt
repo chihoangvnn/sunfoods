@@ -1,0 +1,97 @@
+
+/root/.pm2/logs/backend-error-0.log last 50 lines:
+0|backend  | npm error command failed
+0|backend  | npm error command sh -c node -r dotenv/config dist/index.js
+0|backend  | npm warn config ignoring workspace config at /var/www/sun/backend/.npmrc
+0|backend  | npm error Lifecycle script `start` failed with error:
+0|backend  | npm error code 1
+0|backend  | npm error path /var/www/sun/backend
+0|backend  | npm error workspace backend@1.0.0
+0|backend  | npm error location /var/www/sun/backend
+0|backend  | npm error command failed
+0|backend  | npm error command sh -c node -r dotenv/config dist/index.js
+0|backend  | npm warn config ignoring workspace config at /var/www/sun/backend/.npmrc
+0|backend  | npm error Lifecycle script `start` failed with error:
+0|backend  | npm error code 1
+0|backend  | npm error path /var/www/sun/backend
+0|backend  | npm error workspace backend@1.0.0
+0|backend  | npm error location /var/www/sun/backend
+0|backend  | npm error command failed
+0|backend  | npm error command sh -c node -r dotenv/config dist/index.js
+0|backend  | npm warn config ignoring workspace config at /var/www/sun/backend/.npmrc
+0|backend  | npm error Lifecycle script `start` failed with error:
+0|backend  | npm error code 1
+0|backend  | npm error path /var/www/sun/backend
+0|backend  | npm error workspace backend@1.0.0
+0|backend  | npm error location /var/www/sun/backend
+0|backend  | npm error command failed
+0|backend  | npm error command sh -c node -r dotenv/config dist/index.js
+0|backend  | npm warn config ignoring workspace config at /var/www/sun/backend/.npmrc
+0|backend  | npm error Lifecycle script `start` failed with error:
+0|backend  | npm error code 1
+0|backend  | npm error path /var/www/sun/backend
+0|backend  | npm error workspace backend@1.0.0
+0|backend  | npm error location /var/www/sun/backend
+0|backend  | npm error command failed
+0|backend  | npm error command sh -c node -r dotenv/config dist/index.js
+0|backend  | npm warn config ignoring workspace config at /var/www/sun/backend/.npmrc
+0|backend  | npm error Lifecycle script `start` failed with error:
+0|backend  | npm error code 1
+0|backend  | npm error path /var/www/sun/backend
+0|backend  | npm error workspace backend@1.0.0
+0|backend  | npm error location /var/www/sun/backend
+0|backend  | npm error command failed
+0|backend  | npm error command sh -c node -r dotenv/config dist/index.js
+0|backend  | npm warn config ignoring workspace config at /var/www/sun/backend/.npmrc
+0|backend  | npm error Lifecycle script `start` failed with error:
+0|backend  | npm error code 1
+0|backend  | npm error path /var/www/sun/backend
+0|backend  | npm error workspace backend@1.0.0
+0|backend  | npm error location /var/www/sun/backend
+0|backend  | npm error command failed
+0|backend  | npm error command sh -c node -r dotenv/config dist/index.js
+
+0|backend  | /usr/bin/node:1
+0|backend  | ELF
+0|backend  | ^
+0|backend  | SyntaxError: Invalid or unexpected token
+0|backend  |     at wrapSafe (node:internal/modules/cjs/loader:1464:18)
+0|backend  |     at Module._compile (node:internal/modules/cjs/loader:1495:20)
+0|backend  |     at Module._extensions..js (node:internal/modules/cjs/loader:1623:10)
+0|backend  |     at Module.load (node:internal/modules/cjs/loader:1266:32)
+0|backend  |     at Module._load (node:internal/modules/cjs/loader:1091:12)
+0|backend  |     at /usr/local/lib/node_modules/pm2/lib/ProcessContainer.js:292:27
+0|backend  |     at wrapper (/usr/local/lib/node_modules/pm2/node_modules/async/internal/once.js:12:16)
+0|backend  |     at next (/usr/local/lib/node_modules/pm2/node_modules/async/waterfall.js:96:20)
+0|backend  |     at /usr/local/lib/node_modules/pm2/node_modules/async/internal/onlyOnce.js:12:16
+0|backend  |     at WriteStream.<anonymous> (/usr/local/lib/node_modules/pm2/lib/Utility.js:186:13)
+0|backend  | /usr/bin/node:1
+0|backend  | ELF
+0|backend  | ^
+0|backend  | SyntaxError: Invalid or unexpected token
+0|backend  |     at wrapSafe (node:internal/modules/cjs/loader:1464:18)
+0|backend  |     at Module._compile (node:internal/modules/cjs/loader:1495:20)
+0|backend  |     at Module._extensions..js (node:internal/modules/cjs/loader:1623:10)
+0|backend  |     at Module.load (node:internal/modules/cjs/loader:1266:32)
+0|backend  |     at Module._load (node:internal/modules/cjs/loader:1091:12)
+0|backend  |     at /usr/local/lib/node_modules/pm2/lib/ProcessContainer.js:292:27
+0|backend  |     at wrapper (/usr/local/lib/node_modules/pm2/node_modules/async/internal/once.js:12:16)
+0|backend  |     at next (/usr/local/lib/node_modules/pm2/node_modules/async/waterfall.js:96:20)
+0|backend  |     at /usr/local/lib/node_modules/pm2/node_modules/async/internal/onlyOnce.js:12:16
+0|backend  |     at WriteStream.<anonymous> (/usr/local/lib/node_modules/pm2/lib/Utility.js:186:13)
+0|backend  | /usr/bin/node:1
+0|backend  | ELF
+0|backend  | ^
+0|backend  | SyntaxError: Invalid or unexpected token
+0|backend  |     at wrapSafe (node:internal/modules/cjs/loader:1464:18)
+0|backend  |     at Module._compile (node:internal/modules/cjs/loader:1495:20)
+0|backend  |     at Module._extensions..js (node:internal/modules/cjs/loader:1623:10)
+0|backend  |     at Module.load (node:internal/modules/cjs/loader:1266:32)
+0|backend  |     at Module._load (node:internal/modules/cjs/loader:1091:12)
+0|backend  |     at /usr/local/lib/node_modules/pm2/lib/ProcessContainer.js:292:27
+0|backend  |     at wrapper (/usr/local/lib/node_modules/pm2/node_modules/async/internal/once.js:12:16)
+0|backend  |     at next (/usr/local/lib/node_modules/pm2/node_modules/async/waterfall.js:96:20)
+0|backend  |     at /usr/local/lib/node_modules/pm2/node_modules/async/internal/onlyOnce.js:12:16
+0|backend  |     at WriteStream.<anonymous> (/usr/local/lib/node_modules/pm2/lib/Utility.js:186:13)
+^C
+root@sunfoods:/var/www/sun#
