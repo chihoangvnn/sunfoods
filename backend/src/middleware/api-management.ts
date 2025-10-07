@@ -1,7 +1,7 @@
 import type { Request, Response, NextFunction } from 'express';
 import { storage } from '../storage';
 import type { ApiConfiguration } from '@shared/schema';
-import pathToRegexp from 'path-to-regexp';
+import { pathToRegexp } from 'path-to-regexp';
 
 // Enhanced cache for API configurations with pattern matching support
 interface PatternCacheEntry {

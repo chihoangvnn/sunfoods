@@ -3,7 +3,15 @@ import session from "express-session";
 import ConnectPGSimple from "connect-pg-simple";
 import cors from "cors";
 import { registerRoutes } from "./routes";
-import { setupVite, serveStatic, log } from "./vite";
+import path from "path";
+import { fileURLToPath } from "url";
+
+// ESM-compatible __dirname
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Simple logger
+const log = (msg: string) => console.log(msg);
 import { pool } from "./db";
 import { createApiManagementMiddleware } from "./middleware/api-management";
 import { scheduler } from "./services/scheduler";
@@ -190,14 +198,10 @@ app.use((req, res, next) => {
     // Don't throw - just log and respond to prevent process crash
   });
 
-  // importantly only setup vite in development and after
-  // setting up all the other routes so the catch-all route
-  // doesn't interfere with the other routes
-  if (app.get("env") === "development") {
-    await setupVite(app, server);
-  } else {
-    serveStatic(app);
-  }
+  // Serve admin static files from /adminhoang
+  const adminStaticPath = path.join(__dirname, "../public/admin");
+  app.use("/adminhoang", express.static(adminStaticPath));
+  log(`Serving admin static files from ${adminStaticPath}`);
 
   // ALWAYS serve the app on the port specified in the environment variable PORT
   // Other ports are firewalled. Default to 5000 if not specified.

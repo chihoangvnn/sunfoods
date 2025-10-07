@@ -5,9 +5,31 @@ integrations = ["javascript_gemini:1.0.0", "twilio_send_message:1.0.0", "javascr
 
 [nix]
 channel = "stable-25_05"
-packages = ["jq", "unzip", "libuuid"]
+packages = ["jq", "unzip", "libuuid", "cairo", "pango", "libjpeg", "giflib"]
 
 [workflows]
+runButton = "Project"
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Backend API"
+
+[[workflows.workflow]]
+name = "Backend API"
+author = "agent"
+
+[workflows.workflow.metadata]
+outputType = "console"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd backend && PORT=3000 npm run dev"
+waitForPort = 3000
 
 [[ports]]
 localPort = 3001
@@ -60,6 +82,10 @@ externalPort = 6800
 [[ports]]
 localPort = 46007
 externalPort = 6000
+
+[[ports]]
+localPort = 3000
+externalPort = 3000
 
 [deployment]
 deploymentTarget = "autoscale"
