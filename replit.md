@@ -7,6 +7,19 @@ This project is a comprehensive e-commerce management system designed to streaml
 Preferred communication style: Simple, everyday language.
 
 ## Recent Changes (October 2025)
+### Modified API-First Monorepo Restructuring (Latest)
+- **Architecture Change**: Migrated from single-app structure to Modified API-First monorepo for VPS 2GB RAM compatibility
+- **New Structure**:
+  - `backend/` - Express.js API server (port 3000) + serves admin static files from `/adminhoang`
+  - `admin-web/` - React dashboard (Vite build → backend/public/admin/)
+  - `customer-mobile/` - Next.js SSR storefront (port 3001)
+- **Package Management**: Used pnpm for dependency installation (npm crashed with esbuild SIGSEGV error)
+- **ESM Compatibility**: Fixed `__dirname` usage with `fileURLToPath(import.meta.url)` for ES modules
+- **path-to-regexp v8**: Updated to named imports `import { pathToRegexp }` for API pattern matching
+- **Deployment Configs**: Updated ecosystem.config.js, DEPLOY.md, QUICK_DEPLOY.md for new structure
+- **Workflow**: Backend API running on port 3000, all health checks passing
+- **Status**: ✅ Monorepo restructuring complete, backend operational, all APIs working
+
 ### Complete Schema Generation & Database Fixes
 - **134 Tables Schema**: Automatically generated complete Drizzle schema from database introspection using information_schema
 - **Column Naming Fixed**: Corrected all camelCase/snake_case mismatches (avgResponseTime → avg_response_time, scheduledTime → scheduled_time, etc.)

@@ -32,6 +32,10 @@ args = "cd backend && PORT=3000 npm run dev"
 waitForPort = 3000
 
 [[ports]]
+localPort = 3000
+externalPort = 3000
+
+[[ports]]
 localPort = 3001
 externalPort = 5000
 
@@ -80,12 +84,12 @@ localPort = 44103
 externalPort = 6800
 
 [[ports]]
-localPort = 46007
-externalPort = 6000
+localPort = 45609
+externalPort = 8081
 
 [[ports]]
-localPort = 3000
-externalPort = 3000
+localPort = 46007
+externalPort = 6000
 
 [deployment]
 deploymentTarget = "autoscale"
