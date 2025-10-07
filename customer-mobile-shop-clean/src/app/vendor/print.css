@@ -1,0 +1,44 @@
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  
+  .printable-labels,
+  .printable-labels *,
+  .printable-slips,
+  .printable-slips * {
+    visibility: visible;
+  }
+  
+  .printable-labels,
+  .printable-slips {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+  }
+  
+  .no-print {
+    display: none !important;
+  }
+  
+  .print-label {
+    width: 10cm;
+    height: 15cm;
+    page-break-inside: avoid;
+    page-break-after: always;
+    margin: 0;
+    padding: 1cm;
+    border: 1px solid #000;
+  }
+  
+  .print-slip {
+    page-break-after: always;
+    page-break-inside: avoid;
+  }
+  
+  @page {
+    size: A4;
+    margin: 1cm;
+  }
+}

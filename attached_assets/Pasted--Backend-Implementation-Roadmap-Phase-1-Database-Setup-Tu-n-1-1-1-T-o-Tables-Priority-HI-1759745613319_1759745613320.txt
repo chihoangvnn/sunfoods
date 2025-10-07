@@ -1,0 +1,171 @@
+
+🚀 Backend Implementation Roadmap
+Phase 1: Database Setup (Tuần 1)
+1.1 Tạo Tables
+
+Priority HIGH:
+□ vendor_returns (cho return management)
+□ vendor_push_subscriptions (cho notifications)  
+□ affiliates (cho affiliate portal)
+□ affiliate_orders
+□ affiliate_share_logs
+Priority MEDIUM:
+□ vendor_transactions (financial tracking)
+□ vendor_shipments (shipping integration)
+□ affiliate_unlocks
+□ affiliate_commissions
+1.2 Migrations
+
+Sử dụng Drizzle ORM (đã setup sẵn)
+Chạy npm run db:push để sync schema
+Seed initial data cho testing
+Phase 2: Core APIs (Tuần 2-3)
+2.1 Vendor Portal APIs (Priority: HIGH)
+
+□ GET/POST /api/vendor/returns (list, approve, reject)
+□ GET /api/vendor/returns/analytics
+□ POST /api/vendor/notifications/subscribe
+□ POST /api/vendor/products/bulk-upload (Excel)
+□ PATCH /api/vendor/products/bulk-update-*
+□ GET /api/vendor/financial/* (balance, transactions)
+2.2 Affiliate Portal APIs (Priority: HIGH)
+
+□ GET /api/affiliate/dashboard
+□ GET /api/affiliate/products
+□ POST /api/affiliate/products/{id}/unlock
+□ POST /api/affiliate/orders (quick order)
+□ POST /api/affiliate/share/log
+□ GET /api/affiliate/share/check-limit
+□ GET /api/affiliate/earnings
+Spec chi tiết: Đọc file customer-mobile-shop/BACKEND_API_SPEC.md
+
+Phase 3: Third-party Integrations (Tuần 3-4)
+3.1 Shipping Carriers
+
+□ GHN API integration (recommended first)
+  - Create shipment
+  - Generate label PDF
+  - Tracking webhook
+  
+□ GHTK API (optional)
+□ Viettel Post API (optional)
+3.2 Web Push Notifications
+
+□ Setup web-push library (npm i web-push)
+□ Use VAPID keys từ env (đã có sẵn)
+□ Implement notification triggers:
+  - New order → push to vendor
+  - Return request → push to vendor
+  - Low stock → daily check
+  - Payment reminder → 3 days before due
+3.3 Facebook Integration (cho Affiliate)
+
+□ Open Graph meta tags dynamic
+□ Share URL tracking (?ref=affiliateId)
+□ Cookie persistence cho attribution
+Phase 4: Business Logic (Tuần 4)
+4.1 Vendor Return Refunds
+
+// Logic tính refund theo payment model
+switch(vendor.paymentModel) {
+  case 'deposit': 
+    vendor.depositBalance += refundAmount
+    break
+  case 'monthly':
+    vendor.monthlyDebt -= refundAmount
+    break
+  case 'upfront':
+    return error('Returns not allowed')
+  case 'revenue_share':
+    refundAmount = orderTotal * vendor.sharePercent
+    vendor.balance -= refundAmount
+}
+4.2 Affiliate Commission Tiers
+
+// Auto tier upgrade
+if (totalSales >= 50M) tier = 'platinum', rate = 12%
+else if (totalSales >= 20M) tier = 'gold', rate = 10%
+else if (totalSales >= 5M) tier = 'silver', rate = 7%
+else tier = 'bronze', rate = 5%
+// Commission per order
+commission = orderTotal * rate
+4.3 Share Rate Limiting
+
+// Max 4 shares/day, 2h gap
+const sharesPerDay = 4
+const minGapHours = 2
+Phase 5: Real-time Features (Tuần 5)
+5.1 WebSocket/SSE cho Notifications
+
+□ Setup WebSocket server
+□ Emit events: new_order, return_request, low_stock
+□ Client subscribe via /api/vendor/notifications/stream
+5.2 Order Status Updates
+
+□ Webhook từ shipping carriers
+□ Real-time order tracking
+□ Push notification khi delivered
+Phase 6: Testing & Security (Tuần 6)
+6.1 Testing
+
+□ Unit tests cho business logic
+□ Integration tests cho APIs
+□ Load testing cho bulk operations
+□ E2E tests cho critical flows
+6.2 Security
+
+□ Session authentication (đã có)
+□ CSRF protection
+□ Rate limiting (Express)
+□ Input validation (Zod/Joi)
+□ SQL injection prevention (Drizzle ORM)
+Phase 7: Deployment (Tuần 7)
+7.1 Environment Setup
+
+□ Production database (Neon)
+□ Redis cho sessions
+□ Environment variables:
+  - VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY
+  - GHN_API_KEY, GHTK_TOKEN
+  - DATABASE_URL
+7.2 Deploy to Vercel
+
+□ Serverless functions
+□ Edge middleware cho sessions
+□ Static assets CDN
+📋 Quick Start Checklist
+Bắt đầu ngay:
+✅ Clone repo, cài dependencies
+✅ Setup Postgres database (Neon)
+✅ Copy .env.example → .env.local
+✅ Chạy npm run db:push để tạo tables
+✅ Đọc BACKEND_API_SPEC.md để hiểu API structure
+✅ Implement 1 module đơn giản trước (ví dụ: Affiliate Dashboard)
+✅ Test với mock data từ frontend
+✅ Kết nối API thật, remove mock data
+🎯 Priority Matrix
+Must Have (Launch blockers):
+
+Vendor Returns API
+Affiliate Orders API
+Web Push subscriptions
+1 shipping carrier (GHN)
+Should Have (Post-launch):
+
+Analytics endpoints
+Bulk operations optimization
+Additional shipping carriers
+Advanced reporting
+Nice to Have:
+
+Real-time WebSocket
+Advanced analytics
+Multi-language support
+📞 Support Docs
+API Spec: customer-mobile-shop/BACKEND_API_SPEC.md
+Database Schema: Trong BACKEND_API_SPEC.md section 6
+Business Logic: Section 8 trong spec
+Replit Docs: replit.md
+Frontend đã sẵn sàng với mock data. Backend implement theo spec, frontend tự động hoạt động! 🚀
+
+

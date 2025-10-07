@@ -1,0 +1,270 @@
+{
+  // === THÔNG TIN CƠ BẢN ===
+  "id": "faq_product_001",
+  "product_id": "nhang_tram_001",
+  "question": "Mùi hương nhang trầm như thế nào?",
+  "answer": "Nhang trầm hương thiên nhiên với mùi thơm thanh thoát, dịu nhẹ, không gắt. Tạo không gian thư giãn, tĩnh tâm. Hương lan tỏa đều trong phòng 15-20m² và duy trì 45-60 phút.",
+  
+  // === PHÂN LOẠI ===
+  "category": "fragrance",
+  "subcategory": "natural_scent",
+  "difficulty_level": "easy",
+  "priority": 1,
+  "status": "active",
+  
+  // === NGÔN NGỮ & VÙNG MIỀN ===
+  "language": "vi",
+  "regions": ["north", "central", "south"],
+  "dialect_variations": {
+    "north": ["thơm không", "mùi ra sao", "hương thế nào"],
+    "central": ["thơm ko", "mùi làm sao", "có thơm hem"],
+    "south": ["thơm hông", "mùi ra làm sao", "có thơm không"]
+  },
+  
+  // === PATTERN MATCHING THÔNG MINH ===
+  "tags": ["thơm không", "mùi thế nào", "hương ra sao", "scent", "fragrant", "aroma"],
+  "intent_patterns": {
+    "exact_match": ["thơm không", "có thơm không", "thơm ko"],
+    "similar_match": ["mùi thế nào", "hương ra sao", "smell like", "fragrance"],
+    "context_match": ["scent", "aroma", "perfume", "odor"],
+    "negative_match": ["không thơm", "hôi", "bad smell", "tanh"]
+  },
+  "keyword_weights": {
+    "thơm": 3.0,
+    "mùi": 2.5,
+    "hương": 2.8,
+    "scent": 2.0,
+    "fragrant": 2.0
+  },
+  
+  // === AI & MACHINE LEARNING ===
+  "ai_features": {
+    "auto_generated": false,
+    "ai_enhanced": true,
+    "generation_source": "human_expert",
+    "ai_confidence_score": 0.95,
+    "last_ai_review": "2025-01-20",
+    "ai_suggestions": ["Thêm thông tin về thời gian cháy", "Bổ sung so sánh với nhang khác"]
+  },
+  
+  "machine_learning": {
+    "training_weight": 1.5,
+    "model_accuracy": 0.92,
+    "false_positive_rate": 0.03,
+    "learning_iterations": 150,
+    "feature_importance": {
+      "keyword_match": 0.4,
+      "context_similarity": 0.3,
+      "user_satisfaction": 0.3
+    }
+  },
+  
+  // === PERSONALIZATION ===
+  "targeting": {
+    "customer_segments": ["new_customer", "returning_customer", "vip_customer"],
+    "demographics": {
+      "age_groups": ["18-25", "26-35", "36-50", "50+"],
+      "gender": ["male", "female", "unisex"],
+      "income_level": ["budget", "mid_range", "premium"]
+    },
+    "behavioral": {
+      "purchase_history": ["first_time", "repeat_buyer", "bulk_buyer"],
+      "engagement_level": ["browser", "engaged", "loyal"],
+      "price_sensitivity": ["low", "medium", "high"]
+    }
+  },
+  
+  // === BUSINESS INTELLIGENCE ===
+  "analytics": {
+    "performance_metrics": {
+      "view_count": 1250,
+      "click_through_rate": 0.15,
+      "success_rate": 0.87,
+      "bounce_rate": 0.12,
+      "average_session_time": 120,
+      "conversion_rate": 0.18
+    },
+    "satisfaction": {
+      "average_rating": 4.6,
+      "total_ratings": 89,
+      "thumbs_up": 78,
+      "thumbs_down": 11,
+      "detailed_feedback": ["Rất hữu ích", "Thông tin đầy đủ", "Cần thêm hình ảnh"]
+    },
+    "business_impact": {
+      "revenue_generated": 125000,
+      "cost_savings": 8500,
+      "support_ticket_reduction": 0.35,
+      "customer_lifetime_value_impact": 15000,
+      "lead_generation": 45
+    }
+  },
+  
+  // === A/B TESTING ===
+  "experimentation": {
+    "active_tests": [
+      {
+        "test_name": "answer_length_test",
+        "variant_a": "Short answer version",
+        "variant_b": "Detailed answer version", 
+        "traffic_split": 0.5,
+        "winning_variant": "variant_b",
+        "confidence_level": 0.95,
+        "test_duration_days": 14
+      }
+    ],
+    "past_tests": [
+      {
+        "test_name": "greeting_style",
+        "winner": "formal_greeting",
+        "improvement": 0.12
+      }
+    ]
+  },
+  
+  // === DỰ ĐOÁN & GỢI Ý ===
+  "predictive_intelligence": {
+    "next_likely_questions": [
+      {"question": "Cách sử dụng nhang", "probability": 0.75},
+      {"question": "Giá bao nhiêu", "probability": 0.68},
+      {"question": "Mua ở đâu", "probability": 0.45}
+    ],
+    "seasonal_trends": {
+      "tet_holiday": {"relevance": 0.95, "boost_factor": 2.0},
+      "summer": {"relevance": 0.6, "boost_factor": 0.8},
+      "autumn": {"relevance": 0.8, "boost_factor": 1.2}
+    },
+    "trending_indicators": {
+      "current_trend_score": 0.82,
+      "trend_direction": "increasing",
+      "forecast_30_days": 0.89
+    }
+  },
+  
+  // === CROSS-SELLING & UP-SELLING ===
+  "sales_intelligence": {
+    "related_products": [
+      {"product_id": "lu_huong_001", "relevance": 0.85, "conversion_rate": 0.23},
+      {"product_id": "nhang_cao_cap_001", "relevance": 0.78, "conversion_rate": 0.19}
+    ],
+    "upsell_opportunities": [
+      {"product_id": "combo_nhang_premium", "success_rate": 0.15, "revenue_increase": 45000}
+    ],
+    "bundle_suggestions": [
+      {"bundle_name": "Bộ nhang trầm complete", "products": ["nhang_001", "lu_001", "den_001"]}
+    ]
+  },
+  
+  // === ĐA PHƯƠNG TIỆN ===
+  "multimedia_content": {
+    "images": [
+      {"url": "nhang_demo_1.jpg", "alt": "Nhang trầm hương thiên nhiên", "type": "product"},
+      {"url": "usage_guide.jpg", "alt": "Hướng dẫn sử dụng", "type": "guide"}
+    ],
+    "videos": [
+      {"url": "THêm Link", "duration": 120, "type": "demo", "description": "Cách sử dụng nhang trầm"}
+    ],
+    "interactive_content": {
+      "step_by_step_guide": "usage_interactive.html",
+      "product_comparison": "compare_nhang.html"
+    }
+  },
+  
+  // === ĐA KÊNH (OMNICHANNEL) ===
+  "channel_versions": {
+    "website_desktop": {
+      "question": "Mùi hương nhang trầm như thế nào?",
+      "answer": "Full detailed answer with rich formatting..."
+    },
+    "mobile_app": {
+      "question": "Nhang có thơm không?",
+      "answer": "Shorter mobile-friendly version..."
+    },
+    "social_media": {
+      "facebook": "🌸 Hương trầm thiên nhiên thơm dịu nhẹ, tạo không gian thư giãn",
+      "instagram": "✨ Trầm hương cao cấp - Thơm thanh thoát 🌿 #NhangTramHuong",
+      "tiktok": "Nhang trầm siêu thơm! Ai thử rồi đều khen 😍"
+    },
+    "voice_assistant": {
+      "question_audio": "Nhang có mùi thơm như thế nào?",
+      "answer_audio": "Nhang trầm có mùi hương thiên nhiên, thanh thoát và dễ chịu..."
+    },
+    "email_marketing": {
+      "subject": "Tìm hiểu về hương thơm của nhang trầm",
+      "content": "Email-optimized detailed content..."
+    }
+  },
+  
+  // === TỰ ĐỘNG HÓA ===
+  "automation": {
+    "trigger_conditions": [
+      {"type": "keyword_match", "threshold": 0.8},
+      {"type": "context_similarity", "threshold": 0.7},
+      {"type": "user_intent", "confidence": 0.75}
+    ],
+    "escalation_rules": [
+      {"condition": "satisfaction_score < 3", "action": "transfer_to_human"},
+      {"condition": "complex_query", "action": "suggest_call_back"},
+      {"condition": "high_value_customer", "action": "priority_response"}
+    ],
+    "follow_up_sequence": [
+      {"delay_minutes": 5, "action": "satisfaction_check"},
+      {"delay_minutes": 30, "action": "related_suggestions"},
+      {"delay_hours": 24, "action": "purchase_reminder"}
+    ]
+  },
+  
+  // === TÍCH HỢP HỆ THỐNG ===
+  "integrations": {
+    "product_sync": {
+      "inventory_status": true,
+      "price_sync": true,
+      "promotion_sync": true,
+      "review_sync": true
+    },
+    "crm_integration": {
+      "customer_history": true,
+      "preference_tracking": true,
+      "interaction_logging": true
+    },
+    "analytics_platforms": ["google_analytics", "facebook_pixel", "internal_bi"],
+    "notification_systems": ["email", "sms", "push_notification"]
+  },
+  
+  // === CHẤT LƯỢNG & TUÂN THỦ ===
+  "quality_control": {
+    "content_review": {
+      "fact_checked": true,
+      "grammar_verified": true,
+      "brand_compliant": true,
+      "cultural_appropriate": true,
+      "legal_reviewed": true
+    },
+    "approval_workflow": {
+      "created_by": "content_team",
+      "reviewed_by": "senior_editor",
+      "approved_by": "product_manager",
+      "approval_date": "2025-01-20"
+    }
+  },
+  
+  // === METADATA & TRACKING ===
+  "metadata": {
+    "created_date": "2025-01-15T10:30:00Z",
+    "last_updated": "2025-01-20T14:45:00Z",
+    "version": "3.2",
+    "schema_version": "1.0",
+    "created_by": "system_admin",
+    "updated_by": "content_manager",
+    "tags_internal": ["high_priority", "customer_favorite", "conversion_driver"]
+  },
+  
+  // === BẢO MẬT & QUYỀN TRUY CẬP ===
+  "access_control": {
+    "visibility": "public",
+    "edit_permissions": ["admin", "content_manager"],
+    "view_permissions": ["all_users"],
+    "geographic_restrictions": [],
+    "time_based_restrictions": []
+  }
+}

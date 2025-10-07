@@ -1,0 +1,199 @@
+🏗️ Backend Architecture cho Multi-Fanpage System
+📊 1. Database Schema
+Table: tenants (Quản lý Fanpage)
+CREATE TABLE tenants (
+    id SERIAL PRIMARY KEY,
+    page_id VARCHAR(100) UNIQUE NOT NULL,  -- 'fb_page_123', 'web_001'
+    platform VARCHAR(20),                   -- 'facebook', 'web', 'zalo'
+    industry VARCHAR(50),                   -- 'e-commerce', 'food', 'healthcare'
+    business_name VARCHAR(255),
+    welcome_message TEXT,
+    config JSONB DEFAULT '{}',              -- Custom settings per fanpage
+    created_at TIMESTAMP DEFAULT NOW(),
+    active BOOLEAN DEFAULT true
+);
+-- Index cho lookup nhanh
+CREATE INDEX idx_tenants_page_id ON tenants(page_id);
+-- Sample data
+INSERT INTO tenants VALUES 
+    (1, 'fb_page_123', 'facebook', 'e-commerce', 'Trầm Hương Store', 
+     'Chào mừng đến Trầm Hương Store!', '{"currency":"VND"}', NOW(), true),
+    (2, 'fb_page_456', 'facebook', 'food', 'Quán Cơm Gia Đình',
+     'Xin chào! Quán chúng tôi phục vụ các món ăn gia đình.', '{}', NOW(), true);
+Table: orders (Thêm tenant_id)
+ALTER TABLE orders ADD COLUMN tenant_id INTEGER REFERENCES tenants(id);
+CREATE INDEX idx_orders_tenant ON orders(tenant_id);
+Table: products (Filter theo tenant)
+-- Option A: Shared products + tenant filter
+ALTER TABLE products ADD COLUMN tenant_id INTEGER REFERENCES tenants(id);
+-- Option B: Industry-based (recommended)
+-- Giữ nguyên products, filter qua industry
+SELECT * FROM products WHERE industry = 'e-commerce';
+🔌 2. API Endpoints Cần Implement
+A. Tenant Resolution API
+GET /api/tenants/resolve?sender={sender_id}
+Request:
+GET /api/tenants/resolve?sender=fb_page_123_user456
+Response:
+{
+  "tenant_id": 1,
+  "page_id": "fb_page_123",
+  "platform": "facebook",
+  "industry": "e-commerce",
+  "business_name": "Trầm Hương Store",
+  "welcome_message": "Chào mừng...",
+  "config": {
+    "currency": "VND",
+    "delivery_areas": ["Tiên Kỳ", "Tiên Cảnh"],
+    "business_hours": "8:00-22:00"
+  }
+}
+Logic:
+1. Parse sender_id: "fb_page_123_user456" → page_id = "fb_page_123"
+2. Query: SELECT * FROM tenants WHERE page_id = ? AND active = true
+3. Return tenant info
+B. Products API (Tenant-aware)
+GET /api/products?tenant_id={tenant_id}&query={search_term}
+Request:
+GET /api/products?tenant_id=1&query=gạo
+Response:
+{
+  "products": [
+    {
+      "id": 123,
+      "name": "Gạo ST25",
+      "price": 250000,
+      "industry": "e-commerce",
+      "tenant_id": 1
+    }
+  ],
+  "tenant_info": {
+    "business_name": "Trầm Hương Store"
+  }
+}
+Logic:
+1. Get tenant: SELECT industry FROM tenants WHERE id = ?
+2. Filter products: SELECT * FROM products 
+                     WHERE industry = ? 
+                     AND name ILIKE '%gạo%'
+C. Orders API (Tenant-aware)
+POST /api/orders
+Request:
+{
+  "tenant_id": 1,
+  "sender_id": "fb_page_123_user456",
+  "phone": "0912345678",
+  "productId": 123,
+  "quantity": 2,
+  "deliveryArea": "Tiên Kỳ",
+  "deliveryTime": "Giao ngay"
+}
+Response:
+{
+  "orderId": "12345678",
+  "total": 500000,
+  "invoiceUrl": "https://your-backend.com/invoice/12345678.png",
+  "tenant": {
+    "business_name": "Trầm Hương Store"
+  }
+}
+Logic:
+1. Validate tenant_id exists
+2. Create order với tenant_id
+3. Generate invoice (if enabled for tenant)
+4. Upload to ImgBB
+5. Store invoice_url
+6. Return order info
+D. Invoice Endpoint
+GET /invoice/{order_id}.png
+Logic:
+1. Query: SELECT invoice_imgbb_url, tenant_id 
+          FROM orders WHERE order_number = ?
+2. Verify tenant is active
+3. Redirect to ImgBB URL
+🔐 3. Middleware: Tenant Context
+// Express middleware
+function tenantContext(req, res, next) {
+  const tenantId = req.query.tenant_id || req.body.tenant_id;
+  
+  if (!tenantId) {
+    return res.status(400).json({ error: 'tenant_id required' });
+  }
+  
+  // Get tenant from DB
+  const tenant = db.query(
+    'SELECT * FROM tenants WHERE id = ? AND active = true',
+    [tenantId]
+  );
+  
+  if (!tenant) {
+    return res.status(404).json({ error: 'Tenant not found' });
+  }
+  
+  // Attach to request
+  req.tenant = tenant;
+  next();
+}
+// Usage:
+app.get('/api/products', tenantContext, (req, res) => {
+  const products = getProducts(req.tenant.industry);
+  res.json(products);
+});
+📈 4. Business Logic Flow
+User chat từ Fanpage A
+    ↓
+Bot: GET /api/tenants/resolve?sender=fb_page_123_user456
+    ← { tenant_id: 1, industry: "e-commerce" }
+    
+Bot cache: session[tenant_id] = 1
+    ↓
+    
+User: "tìm gạo"
+    ↓
+Bot: GET /api/products?tenant_id=1&query=gạo
+    ← [{ id: 123, name: "Gạo ST25" }]
+    ↓
+    
+User chọn & đặt hàng
+    ↓
+Bot: POST /api/orders { tenant_id: 1, ... }
+    ← { orderId: "12345678", invoiceUrl: "..." }
+    ↓
+    
+Bot gửi invoice cho user
+🎯 5. Config per Tenant
+Mỗi tenant có thể customize:
+
+{
+  "currency": "VND",
+  "delivery_areas": ["Tiên Kỳ", "Tiên Cảnh", "Tiên Mỹ"],
+  "delivery_times": ["Giao ngay", "10h30-11h", "16h30-17h"],
+  "welcome_message": "Chào mừng đến {business_name}!",
+  "synonyms": {
+    "gạo": ["lúa", "cơm"]
+  },
+  "payment_methods": ["cod", "bank_transfer"],
+  "invoice_enabled": true,
+  "analytics_enabled": true
+}
+📝 Summary - Backend cần có:
+✅ Database:
+
+tenants table với page_id, industry, config
+orders.tenant_id foreign key
+Indexes cho performance
+✅ APIs:
+
+GET /api/tenants/resolve - Resolve sender → tenant
+GET /api/products?tenant_id=X - Filtered products
+POST /api/orders - Tenant-aware order creation
+GET /invoice/{id}.png - Invoice redirect
+✅ Middleware:
+
+Tenant context injection
+Validation
+✅ Features:
+
+Invoice generation + ImgBB upload
+Per-tenant customization
+Multi-tenant data isolation

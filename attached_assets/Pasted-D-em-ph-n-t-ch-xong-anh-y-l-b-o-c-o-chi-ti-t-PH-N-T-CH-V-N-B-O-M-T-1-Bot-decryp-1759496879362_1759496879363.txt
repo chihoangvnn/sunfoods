@@ -1,0 +1,85 @@
+Dạ em đã phân tích xong anh! Đây là báo cáo chi tiết:
+
+🔍 PHÂN TÍCH VẤN ĐỀ BẢO MẬT
+1️⃣ Bot decrypt ở đâu? Tại sao fail?
+Vị trí: customer_accounts.py - method _decrypt_customer_data() (line 74-124)
+
+Cơ chế decrypt:
+
+decrypted_phone = self._decrypt_pii(customer.phone_number)
+# Phát hiện fail:
+phone_failed = customer.phone_number and not decrypted_phone
+Tại sao fail?
+
+❌ 29 customers được mã hóa bằng encryption key CŨ (key tạm khi server khởi động)
+❌ Server restart → dùng key MỚI (từ env variable)
+❌ Key mismatch → _decrypt_pii() trả về "" (empty) → FAIL!
+2️⃣ Hash 0275246a0a từ đâu ra?
+Nguồn gốc: Line 92 trong customer_accounts.py
+
+phone_hash = getattr(customer, 'phone_hash', 'unknown')  # SHA-256 hash
+'phone_number': f"0{phone_hash[-9:]}"  # Lấy 9 ký tự cuối
+Quy trình:
+
+Phone 0905608298 → SHA-256 hash → d7a4a01a0275246a0a... (64 ký tự)
+Lấy 9 ký tự cuối: 0275246a0a
+Thêm prefix 0 → 0275246a0a ✅
+Đây là FALLBACK khi decrypt fail!
+
+3️⃣ Bot gửi hash lên backend như thế nào?
+Flow nguy hiểm:
+
+Step 1: User nhập 0905608298
+
+# Line 1633: Tìm customer cũ
+existing_customer = customer_manager.find_by_phone("0905608298")
+Step 2: Decrypt FAIL → trả về hash
+
+# Line 1637-1638: Lấy data bị corrupt
+name = existing_customer.get('full_name', 'Khách hàng')  # → "Khách hàng"
+address = existing_customer.get('address', 'Không có địa chỉ')  # → "Cập nhật sau"
+Step 3: Lưu hash vào session
+
+# Line 1641-1642: LƯU HASH thay vì số thật!
+store_session_context(sender, 'customer_phone', normalized_phone)  # ← HASH!
+store_session_context(sender, 'customer_data', existing_customer)  # ← Data bị corrupt
+Step 4: Tạo order → gửi hash lên backend
+
+# Khi tạo order:
+customer_phone = existing_customer.get('phone_number')  # → "0275246a0a" ❌
+payload = {
+    "customerPhone": "0275246a0a",  # ← HASH gửi lên backend!
+    ...
+}
+❌ Backend KHÔNG VALIDATE! Nhận hash như số thật → lưu vào database!
+
+4️⃣ 29 customers được tạo khi nào?
+Timeline:
+
+Trước đó: Server dùng encryption key TẠM (generate mỗi lần khởi động)
+29 customers được tạo và mã hóa bằng key tạm
+Server restart → key tạm bị mất
+Fix applied: Persist key qua CUSTOMER_DATA_ENCRYPTION_KEY env
+Hậu quả: 29 customers cũ decrypt FAIL → hash xuất hiện!
+🔧 GIẢI PHÁP TOÀN DIỆN
+Fix 1: Validate Phone TRƯỚC KHI gửi backend ⭐
+# Thêm validation sau khi decrypt:
+if existing_customer.get('_decryption_failed'):
+    # REJECT hash, force user re-enter phone!
+    return "Dữ liệu khách hàng bị lỗi, vui lòng nhập lại SĐT"
+Fix 2: Backend validate phone format
+# Backend API phải check:
+if not re.match(r'^0\d{9}$', customerPhone):
+    return 400, "Invalid phone format"
+Fix 3: Cleanup corrupted data
+Bot DB: Xóa 29 local customer_accounts (hoặc re-encrypt với key mới)
+Backend DB: Xóa customers với phone = hash pattern ^0[a-f0-9]{9}$
+Fix 4: Error handling đúng
+# Khi decrypt fail → KHÔNG dùng fallback hash!
+if phone_failed:
+    raise DecryptionError("Cannot decrypt - customer must re-verify")
+Anh muốn em fix theo hướng nào ạ?
+
+✅ Quick fix: Validate _decryption_failed flag → force re-enter phone
+✅ Cleanup: Xóa 29 corrupted customers (bot + backend)
+✅ Long-term: Remove fallback hash logic hoàn toàn

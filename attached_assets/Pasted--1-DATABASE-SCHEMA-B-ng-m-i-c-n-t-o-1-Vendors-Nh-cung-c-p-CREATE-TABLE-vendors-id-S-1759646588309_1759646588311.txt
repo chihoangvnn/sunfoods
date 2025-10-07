@@ -1,0 +1,449 @@
+
+🗄️ 1. DATABASE SCHEMA
+Bảng mới cần tạo:
+-- 1. Vendors (Nhà cung cấp)
+CREATE TABLE vendors (
+  id SERIAL PRIMARY KEY,
+  shop_id VARCHAR,  -- Nếu multi-tenant
+  name VARCHAR NOT NULL,
+  email VARCHAR UNIQUE NOT NULL,
+  phone VARCHAR,
+  password_hash VARCHAR NOT NULL,
+  
+  -- Warehouse info
+  warehouse_address TEXT,
+  warehouse_province VARCHAR,
+  warehouse_district VARCHAR,
+  warehouse_ward VARCHAR,
+  
+  -- Payment settings
+  payment_method VARCHAR DEFAULT 'deposit', -- 'deposit' hoặc 'monthly'
+  deposit_balance DECIMAL(12,2) DEFAULT 0,
+  deposit_total DECIMAL(12,2) DEFAULT 0,
+  minimum_deposit DECIMAL(12,2) DEFAULT 1000000,
+  
+  -- Bank info
+  bank_name VARCHAR,
+  bank_account_number VARCHAR,
+  bank_account_holder VARCHAR,
+  bank_branch VARCHAR,
+  
+  -- Settings
+  commission_rate DECIMAL(3,2) DEFAULT 0.30,
+  notification_email BOOLEAN DEFAULT true,
+  notification_sms BOOLEAN DEFAULT false,
+  
+  status VARCHAR DEFAULT 'active', -- active/inactive/suspended
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW()
+);
+-- 2. Vendor Products (Hàng ký gửi)
+CREATE TABLE vendor_products (
+  id SERIAL PRIMARY KEY,
+  vendor_id INT REFERENCES vendors(id) ON DELETE CASCADE,
+  product_id VARCHAR NOT NULL, -- ID sản phẩm trong hệ thống chính
+  
+  quantity_consigned INT NOT NULL,
+  quantity_sold INT DEFAULT 0,
+  quantity_returned INT DEFAULT 0,
+  
+  consignment_price DECIMAL(12,2) NOT NULL, -- Giá vốn
+  discount_percent DECIMAL(3,2) DEFAULT 0, -- Chiết khấu cho shop
+  
+  consignment_date TIMESTAMP DEFAULT NOW(),
+  expiry_date TIMESTAMP, -- Hết hạn ký gửi
+  
+  status VARCHAR DEFAULT 'active', -- active/out_of_stock/expired/pending_approval
+  
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW()
+);
+-- 3. Vendor Orders (Đơn hàng của vendor)
+CREATE TABLE vendor_orders (
+  id SERIAL PRIMARY KEY,
+  vendor_id INT REFERENCES vendors(id),
+  order_id VARCHAR NOT NULL, -- Link đến orders chính
+  
+  -- Masked customer info (lưu sẵn để không phải mask real-time)
+  masked_customer_name VARCHAR,
+  masked_customer_phone VARCHAR,
+  masked_customer_address TEXT,
+  
+  -- Shipping info
+  shipping_provider VARCHAR, -- 'ghn', 'ghtk', 'vnpost'
+  shipping_code VARCHAR UNIQUE, -- Mã vận đơn
+  shipping_label_url TEXT, -- URL tem shipping (PDF/image)
+  
+  -- Financial
+  cod_amount DECIMAL(12,2),
+  vendor_cost DECIMAL(12,2), -- Giá vốn vendor
+  commission_amount DECIMAL(12,2), -- Commission shop nhận
+  deposit_deducted BOOLEAN DEFAULT false,
+  
+  -- Status tracking
+  status VARCHAR DEFAULT 'pending_pickup', 
+  -- pending_pickup/confirmed/shipped/in_transit/delivered/cancelled
+  
+  packed_at TIMESTAMP,
+  picked_up_at TIMESTAMP,
+  shipped_at TIMESTAMP,
+  delivered_at TIMESTAMP,
+  
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW()
+);
+-- 4. Consignment Requests (Yêu cầu ký gửi)
+CREATE TABLE consignment_requests (
+  id SERIAL PRIMARY KEY,
+  vendor_id INT REFERENCES vendors(id),
+  
+  product_name VARCHAR NOT NULL,
+  quantity INT NOT NULL,
+  proposed_price DECIMAL(12,2) NOT NULL,
+  discount_percent DECIMAL(3,2) DEFAULT 0,
+  notes TEXT,
+  
+  status VARCHAR DEFAULT 'pending', -- pending/approved/rejected
+  
+  reviewed_by INT, -- Admin user ID
+  reviewed_at TIMESTAMP,
+  rejection_reason TEXT,
+  
+  created_at TIMESTAMP DEFAULT NOW()
+);
+-- 5. Deposit Transactions (Giao dịch ký quỹ)
+CREATE TABLE deposit_transactions (
+  id SERIAL PRIMARY KEY,
+  vendor_id INT REFERENCES vendors(id),
+  
+  type VARCHAR NOT NULL, -- 'deposit', 'deduction', 'refund'
+  amount DECIMAL(12,2) NOT NULL,
+  
+  order_id VARCHAR, -- Nếu type='deduction'
+  
+  balance_before DECIMAL(12,2),
+  balance_after DECIMAL(12,2),
+  
+  proof_url TEXT, -- Screenshot chuyển khoản (nếu deposit)
+  description TEXT,
+  
+  created_at TIMESTAMP DEFAULT NOW()
+);
+-- 6. Return Requests (Yêu cầu hoàn hàng)
+CREATE TABLE return_requests (
+  id SERIAL PRIMARY KEY,
+  vendor_id INT REFERENCES vendors(id),
+  vendor_product_id INT REFERENCES vendor_products(id),
+  
+  quantity INT NOT NULL,
+  reason VARCHAR NOT NULL, -- 'expired', 'not_selling', 'defective', 'other'
+  reason_detail TEXT,
+  
+  status VARCHAR DEFAULT 'pending', -- pending/approved/rejected/completed
+  
+  pickup_scheduled_at TIMESTAMP,
+  picked_up_at TIMESTAMP,
+  
+  approved_by INT,
+  approved_at TIMESTAMP,
+  rejection_reason TEXT,
+  
+  created_at TIMESTAMP DEFAULT NOW()
+);
+-- Indexes cho performance
+CREATE INDEX idx_vendor_products_vendor ON vendor_products(vendor_id);
+CREATE INDEX idx_vendor_orders_vendor ON vendor_orders(vendor_id);
+CREATE INDEX idx_vendor_orders_status ON vendor_orders(status);
+CREATE INDEX idx_deposit_transactions_vendor ON deposit_transactions(vendor_id);
+CREATE INDEX idx_return_requests_vendor ON return_requests(vendor_id);
+🔌 2. API ENDPOINTS
+Authentication:
+POST   /api/vendor/auth/login
+POST   /api/vendor/auth/register (nếu cho phép tự đăng ký)
+POST   /api/vendor/auth/logout
+GET    /api/vendor/auth/me
+Dashboard:
+GET    /api/vendor/dashboard/stats
+Response: {
+  newOrders: number,
+  inTransit: number,
+  delivered: number,
+  revenue: number,
+  depositBalance: number,
+  recentOrders: Order[],
+  recentTransactions: Transaction[],
+  lowStockProducts: Product[]
+}
+Products:
+GET    /api/vendor/products?status=&search=
+GET    /api/vendor/products/:id
+PUT    /api/vendor/products/:id/quantity
+Consignment:
+POST   /api/vendor/consignment
+GET    /api/vendor/consignment/requests
+DELETE /api/vendor/consignment/:id  (cancel request)
+Orders:
+GET    /api/vendor/orders?status=&carrier=&dateFrom=&dateTo=&page=
+GET    /api/vendor/orders/:id
+POST   /api/vendor/orders/:id/mark-packed
+POST   /api/vendor/orders/:id/call-shipper
+GET    /api/vendor/orders/:id/shipping-label
+Financial:
+GET    /api/vendor/financial/balance
+GET    /api/vendor/financial/transactions?type=&dateFrom=&dateTo=&page=
+POST   /api/vendor/financial/deposit
+  Body: { amount: number, proof_url: string }
+Returns:
+GET    /api/vendor/returns?status=&page=
+POST   /api/vendor/returns
+  Body: { vendor_product_id, quantity, reason, reason_detail }
+GET    /api/vendor/returns/:id
+DELETE /api/vendor/returns/:id  (cancel if pending)
+Settings:
+GET    /api/vendor/settings
+PUT    /api/vendor/profile
+PUT    /api/vendor/warehouse
+PUT    /api/vendor/payment-settings
+PUT    /api/vendor/notifications
+POST   /api/vendor/change-password
+🚚 3. SHIPPING INTEGRATION (Quan trọng!)
+GHN (Giao Hàng Nhanh) API:
+// Setup
+const GHN_TOKEN = process.env.GHN_TOKEN;
+const GHN_SHOP_ID = process.env.GHN_SHOP_ID;
+const BASE_URL = 'https://online-gateway.ghn.vn/shiip/public-api/v2';
+// 1. Tạo đơn vận chuyển
+async function createGHNOrder(vendorOrder, vendor, customer) {
+  const response = await fetch(`${BASE_URL}/shipping-order/create`, {
+    method: 'POST',
+    headers: {
+      'Token': GHN_TOKEN,
+      'ShopId': GHN_SHOP_ID,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      payment_type_id: 2, // COD về shop
+      to_name: maskName(customer.name),
+      to_phone: maskPhone(customer.phone),
+      to_address: customer.address,
+      to_ward_code: customer.ward_code,
+      to_district_id: customer.district_id,
+      
+      // Pickup từ kho vendor
+      from_ward_code: vendor.warehouse_ward,
+      from_district_id: vendor.warehouse_district,
+      
+      cod_amount: vendorOrder.cod_amount,
+      content: "Sản phẩm tâm linh",
+      weight: 500, // gram
+      
+      items: [{
+        name: vendorOrder.product_name,
+        quantity: vendorOrder.quantity,
+        price: vendorOrder.cod_amount
+      }]
+    })
+  });
+  
+  const data = await response.json();
+  
+  // Lưu tracking code và label URL
+  return {
+    shipping_code: data.data.order_code,
+    shipping_label_url: `${BASE_URL}/a5/gen-token?token=${data.data.token}`
+  };
+}
+// 2. Webhook nhận update từ GHN
+POST /webhooks/ghn
+Body: {
+  OrderCode: string,
+  Status: string, // "ready_to_pick", "picking", "delivered", etc.
+  CODTransferDate: string
+}
+// Khi Status = "delivered" và CODTransferDate có giá trị
+// → Trigger auto-deduct deposit
+GHTK API (tương tự):
+// Base: https://services.giaohangtietkiem.vn/services
+// Token: process.env.GHTK_TOKEN
+💰 4. BUSINESS LOGIC QUAN TRỌNG
+Masking Functions (Server-side):
+// utils/masking.js
+function maskCustomerName(fullName) {
+  const parts = fullName.split(' ');
+  if (parts.length === 1) return parts[0].charAt(0) + '**';
+  
+  // "Nguyễn Văn An" → "Nguyễn V** A**"
+  return parts.map((part, i) => {
+    if (i === 0) return part; // Họ giữ nguyên
+    return part.charAt(0) + '**';
+  }).join(' ');
+}
+function maskPhone(phone) {
+  // "0987654321" → "098***4321"
+  return phone.substring(0, 3) + '***' + phone.substring(7);
+}
+function maskAddress(address) {
+  // "456 Nguyễn Huệ, Phường Bến Nghé, Quận 1, TP.HCM"
+  // → "456 Nguyễn Huệ, Phường.**, Quận.**, TP.HCM.**"
+  const parts = address.split(',');
+  return parts.map((part, i) => {
+    if (i === 0) return part; // Số nhà và đường giữ nguyên
+    return part.split(' ')[0] + '.**';
+  }).join(',');
+}
+Auto-Deduct Deposit Logic:
+// Khi order delivered và COD về shop
+async function handleCODCollected(vendorOrder) {
+  const vendor = await getVendor(vendorOrder.vendor_id);
+  
+  if (vendor.payment_method === 'deposit') {
+    const deductAmount = vendorOrder.vendor_cost;
+    
+    // Check balance
+    if (vendor.deposit_balance < deductAmount) {
+      await notifyVendor(vendor, 'LOW_BALANCE');
+      await notifyAdmin('Vendor balance insufficient');
+      return;
+    }
+    
+    // Deduct
+    await db.transaction(async (trx) => {
+      // Update balance
+      await trx('vendors')
+        .where('id', vendor.id)
+        .decrement('deposit_balance', deductAmount);
+      
+      // Log transaction
+      await trx('deposit_transactions').insert({
+        vendor_id: vendor.id,
+        type: 'deduction',
+        amount: -deductAmount,
+        order_id: vendorOrder.order_id,
+        balance_before: vendor.deposit_balance,
+        balance_after: vendor.deposit_balance - deductAmount,
+        description: `COD collected for order ${vendorOrder.order_id}`
+      });
+      
+      // Mark order as deducted
+      await trx('vendor_orders')
+        .where('id', vendorOrder.id)
+        .update({ deposit_deducted: true });
+    });
+    
+    // Check if balance low
+    const newBalance = vendor.deposit_balance - deductAmount;
+    if (newBalance < vendor.minimum_deposit) {
+      await notifyVendor(vendor, 'LOW_BALANCE_WARNING');
+    }
+  }
+}
+Order Assignment to Vendor:
+// Khi order được tạo, assign cho vendor có sản phẩm
+async function createOrderForVendor(order, orderItem) {
+  // Find vendor for this product
+  const vendorProduct = await db('vendor_products')
+    .where('product_id', orderItem.product_id)
+    .where('status', 'active')
+    .first();
+  
+  if (!vendorProduct) {
+    throw new Error('Product not available from any vendor');
+  }
+  
+  const vendor = await getVendor(vendorProduct.vendor_id);
+  const customer = await getCustomer(order.customer_id);
+  
+  // Create vendor order với masked info
+  const vendorOrder = await db('vendor_orders').insert({
+    vendor_id: vendor.id,
+    order_id: order.id,
+    
+    masked_customer_name: maskCustomerName(customer.name),
+    masked_customer_phone: maskPhone(customer.phone),
+    masked_customer_address: maskAddress(customer.address),
+    
+    cod_amount: order.total,
+    vendor_cost: vendorProduct.consignment_price * orderItem.quantity,
+    commission_amount: (order.total - vendorProduct.consignment_price * orderItem.quantity),
+    
+    status: 'pending_pickup'
+  });
+  
+  // Create shipping order với GHN/GHTK
+  const shippingInfo = await createGHNOrder(vendorOrder, vendor, customer);
+  
+  // Update với shipping info
+  await db('vendor_orders')
+    .where('id', vendorOrder.id)
+    .update({
+      shipping_provider: 'ghn',
+      shipping_code: shippingInfo.shipping_code,
+      shipping_label_url: shippingInfo.shipping_label_url
+    });
+  
+  // Update inventory
+  await db('vendor_products')
+    .where('id', vendorProduct.id)
+    .decrement('quantity_consigned', orderItem.quantity);
+  
+  // Notify vendor
+  await notifyVendor(vendor, 'NEW_ORDER', vendorOrder);
+}
+🔐 5. AUTHENTICATION & AUTHORIZATION
+// Middleware
+async function requireVendorAuth(req, res, next) {
+  if (!req.session.vendorId) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+  
+  const vendor = await db('vendors')
+    .where('id', req.session.vendorId)
+    .first();
+  
+  if (!vendor || vendor.status !== 'active') {
+    return res.status(403).json({ error: 'Vendor account inactive' });
+  }
+  
+  req.vendor = vendor;
+  next();
+}
+// Apply to all vendor routes
+app.use('/api/vendor/*', requireVendorAuth);
+📧 6. NOTIFICATIONS & WEBHOOKS
+Notifications vendor cần nhận:
+Đơn hàng mới → Email/SMS
+Ký quỹ sắp hết → Email
+Consignment request được approve/reject → Email
+Return request được approve → Email
+Order delivered (COD collected) → Email
+Webhooks cần implement:
+GHN/GHTK webhook → Update order status
+Payment webhook (nếu có auto bank transfer) → Update deposit balance
+🎯 7. PRIORITY ORDER (Thứ tự ưu tiên)
+Phase 1: Core (Cần gấp):
+
+✅ Database schema setup
+✅ Vendor authentication
+✅ Masking functions
+✅ Dashboard stats API
+✅ Products list API
+✅ Orders list API (with masked data)
+Phase 2: Shipping (Quan trọng):
+7. ✅ GHN API integration
+
+✅ Create shipping order logic
+✅ Print shipping label API
+✅ Webhook from GHN
+Phase 3: Financial (Ký quỹ):
+11. ✅ Deposit balance tracking
+
+✅ Auto-deduct logic
+✅ Transaction history
+✅ Deposit request workflow
+Phase 4: Advanced:
+15. ✅ Consignment approval workflow
+
+✅ Return requests
+✅ Settings management
+✅ Notifications
+Tóm lại: Bạn cần làm Database (6 tables) + API endpoints (~30 routes) + Shipping integration (GHN/GHTK) + Business logic (masking, auto-deduct).

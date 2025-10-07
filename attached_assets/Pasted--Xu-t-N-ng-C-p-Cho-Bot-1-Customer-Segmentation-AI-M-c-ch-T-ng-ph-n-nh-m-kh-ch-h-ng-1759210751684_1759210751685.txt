@@ -1,0 +1,57 @@
+🚀 Đề Xuất Nâng Cấp Cho Bot:
+1. 🤖 Customer Segmentation AI
+Mục đích: Tự động phân nhóm khách hàng dựa trên hành vi
+
+RFM Analysis - Recency, Frequency, Monetary (Gần đây, Thường xuyên, Giá trị)
+Behavior Clustering - Phân nhóm theo behavioral stats
+Predictive Churn - Dự đoán khách hàng sắp rời bỏ
+Auto-Tagging - Gắn tags tự động: "high_value", "at_risk", "loyal", "new"
+2. 📈 Smart Tier Upgrade Bot
+Mục đích: Tự động đề xuất nâng tier cho khách
+
+Bot phát hiện khách gần đủ điều kiện lên tier mới
+Gửi thông báo khuyến khích: "Chỉ cần mua thêm 500k là lên Bạc!"
+Auto-upgrade khi đạt ngưỡng
+Gửi chúc mừng + giải thích quyền lợi mới
+3. 💬 Conversational Commerce
+Mục đích: Bot bán hàng qua chat tự nhiên
+
+Product Recommendation - Gợi ý sản phẩm dựa trên lịch sử + preferences
+Cart Recovery - Nhắc nhở giỏ hàng bỏ quên (từ cartAbandonCount)
+Re-engagement - Kích hoạt lại khách lâu không mua
+Birthday/Anniversary Deals - Ưu đãi sinh nhật tự động
+4. 🎯 Personalized Marketing Auto-Pilot
+Mục đích: Marketing tự động dựa trên customer data
+
+Channel Preference - Gửi tin qua kênh họ hay dùng (FB/Web/Instagram)
+Time Optimization - Gửi vào giờ họ hay online (từ fbTimezone)
+Content Localization - Nội dung phù hợp ngôn ngữ (từ fbLocale)
+Device-Optimized - Tin nhắn tối ưu cho mobile/desktop
+5. 🔔 Smart Notification System
+Mục đích: Thông báo thông minh không spam
+
+Limit Alerts - Cảnh báo sắp hết hạn mức (maxOrdersPerDay, maxDiscountUsage)
+Milestone Celebrations - Chúc mừng đơn thứ 10, tổng chi 10 triệu
+Win-back Campaigns - Chiến dịch lôi kéo khách cũ
+Stock Alerts - Thông báo sản phẩm yêu thích có hàng lại
+6. 📊 Customer Journey Visualization
+Mục đính: Hiểu hành trình khách hàng
+
+Funnel Analysis - Từ lần đầu xem → mua → trung thành
+Touch Point Mapping - Các điểm chạm: Web → FB → Mua hàng
+Drop-off Detection - Phát hiện điểm khách bỏ cuộc
+Path to Purchase - Lộ trình mua hàng phổ biến
+7. 🎁 Loyalty Rewards Auto-Engine
+Mục đích: Hệ thống tích điểm thông minh
+
+Points Expiry Alerts - Nhắc điểm sắp hết hạn
+Smart Redemption - Gợi ý đổi điểm thông minh
+Bonus Events - Sự kiện tích điểm x2, x3 tự động
+Tier Benefits Reminder - Nhắc quyền lợi chưa dùng
+8. 🔍 Fraud Detection Bot
+Mục đích: Phát hiện gian lận tự động
+
+Suspicious Pattern - Phát hiện hành vi bất thường
+Multiple Accounts - Tìm tài khoản trùng (phone/device fingerprint)
+Risk Scoring - Chấm điểm rủi ro khách hàng
+Auto-Restrictions - Tự động giới hạn khi nghi ngờ
