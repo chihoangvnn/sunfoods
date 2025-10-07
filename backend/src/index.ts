@@ -6,9 +6,21 @@ import { registerRoutes } from "./routes";
 import path from "path";
 import { fileURLToPath } from "url";
 
-// ESM-compatible __dirname
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+// ESM/CommonJS compatible __dirname
+// In dev (ESM with tsx): use import.meta.url
+// In production (CommonJS build): use process.cwd() + dist
+const __dirname = (() => {
+  try {
+    if (typeof import.meta?.url !== 'undefined') {
+      // ESM mode: calculate from import.meta.url
+      return path.dirname(fileURLToPath(import.meta.url));
+    }
+  } catch (e) {
+    // Ignore and fall through to CommonJS mode
+  }
+  // CommonJS mode: dist/index.js is in cwd/dist/
+  return path.join(process.cwd(), 'dist');
+})();
 
 // Simple logger
 const log = (msg: string) => console.log(msg);
