@@ -2,8 +2,8 @@ module.exports = {
   apps: [
     {
       name: 'backend',
-      script: 'npm',
-      args: 'start',
+      script: 'node',
+      args: '-r dotenv/config dist/index.js',
       cwd: './backend',
       exec_mode: 'cluster',
       instances: 1,
