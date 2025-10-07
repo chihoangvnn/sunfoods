@@ -9,7 +9,8 @@ module.exports = {
       instances: 1,
       env: {
         NODE_ENV: 'production',
-        PORT: 3000
+        PORT: 3000,
+        DOTENV_CONFIG_PATH: '/var/www/sun/backend/.env'
       },
       error_log: './logs/backend-error.log',
       out_log: './logs/backend-out.log',
