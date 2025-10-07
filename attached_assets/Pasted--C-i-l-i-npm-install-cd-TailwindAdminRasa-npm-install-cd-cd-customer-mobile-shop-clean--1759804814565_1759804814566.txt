@@ -1,0 +1,162 @@
+# Cài lại
+npm install
+cd TailwindAdminRasa && npm install && cd ..
+cd customer-mobile-shop-clean && npm install && cd ..
+
+# Build
+npm run build:allroot@sunfoods:/var/www/sunfoods.vn# rm -rf customer-mobile-shop-clean/node_modules
+root@sunfoods:/var/www/sunfoods.vn# rm -rf node_modules
+root@sunfoods:/var/www/sunfoods.vn#
+root@sunfoods:/var/www/sunfoods.vn# # Cài lại
+root@sunfoods:/var/www/sunfoods.vn# npm install
+
+added 135 packages, and audited 136 packages in 2s
+
+13 packages are looking for funding
+  run `npm fund` for details
+
+1 low severity vulnerability
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+Run `npm audit` for details.
+root@sunfoods:/var/www/sunfoods.vn# cd TailwindAdminRasa && npm install && cd ..
+npm warn deprecated @esbuild-kit/esm-loader@2.6.5: Merged into tsx: https://tsx.is
+npm warn deprecated @esbuild-kit/core-utils@3.3.2: Merged into tsx: https://tsx.is
+
+added 773 packages, and audited 774 packages in 20s
+
+82 packages are looking for funding
+  run `npm fund` for details
+
+13 vulnerabilities (3 low, 8 moderate, 2 high)
+
+To address issues that do not require attention, run:
+  npm audit fix
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+Run `npm audit` for details.
+root@sunfoods:/var/www/sunfoods.vn# cd customer-mobile-shop-clean && npm install && cd ..
+npm warn ERESOLVE overriding peer dependency
+npm warn While resolving: @react-leaflet/core@3.0.0
+npm warn Found: react@18.3.1
+npm warn node_modules/react
+npm warn   react@"18.3.1" from the root project
+npm warn   49 more (@floating-ui/react-dom, @radix-ui/react-arrow, ...)
+npm warn
+npm warn Could not resolve dependency:
+npm warn peer react@"^19.0.0" from @react-leaflet/core@3.0.0
+npm warn node_modules/@react-leaflet/core
+npm warn   @react-leaflet/core@"^3.0.0" from react-leaflet@5.0.0
+npm warn   node_modules/react-leaflet
+npm warn
+npm warn Conflicting peer dependency: react@19.2.0
+npm warn node_modules/react
+npm warn   peer react@"^19.0.0" from @react-leaflet/core@3.0.0
+npm warn   node_modules/@react-leaflet/core
+npm warn     @react-leaflet/core@"^3.0.0" from react-leaflet@5.0.0
+npm warn     node_modules/react-leaflet
+npm warn ERESOLVE overriding peer dependency
+npm warn While resolving: @react-leaflet/core@3.0.0
+npm warn Found: react-dom@18.3.1
+npm warn node_modules/react-dom
+npm warn   react-dom@"18.3.1" from the root project
+npm warn   25 more (@floating-ui/react-dom, @radix-ui/react-arrow, ...)
+npm warn
+npm warn Could not resolve dependency:
+npm warn peer react-dom@"^19.0.0" from @react-leaflet/core@3.0.0
+npm warn node_modules/@react-leaflet/core
+npm warn   @react-leaflet/core@"^3.0.0" from react-leaflet@5.0.0
+npm warn   node_modules/react-leaflet
+npm warn
+npm warn Conflicting peer dependency: react-dom@19.2.0
+npm warn node_modules/react-dom
+npm warn   peer react-dom@"^19.0.0" from @react-leaflet/core@3.0.0
+npm warn   node_modules/@react-leaflet/core
+npm warn     @react-leaflet/core@"^3.0.0" from react-leaflet@5.0.0
+npm warn     node_modules/react-leaflet
+npm error code ERESOLVE
+npm error ERESOLVE could not resolve
+npm error
+npm error While resolving: react-leaflet@5.0.0
+npm error Found: react@18.3.1
+npm error node_modules/react
+npm error   react@"18.3.1" from the root project
+npm error   peer react@">=16.8.0" from @floating-ui/react-dom@2.1.6
+npm error   node_modules/@floating-ui/react-dom
+npm error     @floating-ui/react-dom@"^2.0.0" from @radix-ui/react-popper@1.2.8
+npm error     node_modules/@radix-ui/react-popper
+npm error       @radix-ui/react-popper@"1.2.8" from @radix-ui/react-menu@2.1.16
+npm error       node_modules/@radix-ui/react-menu
+npm error         @radix-ui/react-menu@"2.1.16" from @radix-ui/react-dropdown-menu@2.1.16
+npm error         node_modules/@radix-ui/react-dropdown-menu
+npm error       2 more (@radix-ui/react-popover, @radix-ui/react-select)
+npm error   48 more (@radix-ui/react-arrow, @radix-ui/react-checkbox, ...)
+npm error
+npm error Could not resolve dependency:
+npm error peer react@"^19.0.0" from react-leaflet@5.0.0
+npm error node_modules/react-leaflet
+npm error   react-leaflet@"^5.0.0" from the root project
+npm error
+npm error Conflicting peer dependency: react@19.2.0
+npm error node_modules/react
+npm error   peer react@"^19.0.0" from react-leaflet@5.0.0
+npm error   node_modules/react-leaflet
+npm error     react-leaflet@"^5.0.0" from the root project
+npm error
+npm error Fix the upstream dependency conflict, or retry
+npm error this command with --force or --legacy-peer-deps
+npm error to accept an incorrect (and potentially broken) dependency resolution.
+npm error
+npm error
+npm error For a full report see:
+npm error /root/.npm/_logs/2025-10-07T02_34_41_061Z-eresolve-report.txt
+npm error A complete log of this run can be found in: /root/.npm/_logs/2025-10-07T02_34_41_061Z-debug-0.log
+root@sunfoods:/var/www/sunfoods.vn/customer-mobile-shop-clean#
+root@sunfoods:/var/www/sunfoods.vn/customer-mobile-shop-clean# # Build
+npm warn deprecated @esbuild-kit/esm-loader@2.6.5: Merged into tsx: https://tsx.is
+npm warn deprecated @esbuild-kit/core-utils@3.3.2: Merged into tsx: https://tsx.is
+npm warn deprecated rimraf@3.0.2: Rimraf versions prior to v4 are no longer supported
+npm warn deprecated inflight@1.0.6: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
+npm warn deprecated glob@7.2.3: Glob versions prior to v9 are no longer supported
+npm warn deprecated @humanwhocodes/object-schema@2.0.3: Use @eslint/object-schema instead
+npm warn deprecated @humanwhocodes/config-array@0.13.0: Use @eslint/config-array instead
+npm warn deprecated eslint@8.57.1: This version is no longer supported. Please see https://eslint.org/version-support for other options.
+
+added 495 packages, and audited 496 packages in 23s
+
+162 packages are looking for funding
+  run `npm fund` for details
+
+5 vulnerabilities (4 moderate, 1 critical)
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+Run `npm audit` for details.
+root@sunfoods:/var/www/sunfoods.vn/customer-mobile-shop-clean#
+root@sunfoods:/var/www/sunfoods.vn/customer-mobile-shop-clean# # Backend
+root@sunfoods:/var/www/sunfoods.vn/customer-mobile-shop-clean# cd /var/www/sunfoods.vn/TailwindAdminRasa
+root@sunfoods:/var/www/sunfoods.vn/TailwindAdminRasa# npm install --legacy-peer-deps
+
+up to date, audited 774 packages in 4s
+
+82 packages are looking for funding
+  run `npm fund` for details
+
+13 vulnerabilities (3 low, 8 moderate, 2 high)
+
+To address issues that do not require attention, run:
+  npm audit fix
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+Run `npm audit` for details.
+root@sunfoods:/var/www/sunfoods.vn/TailwindAdminRasa#
+root@sunfoods:/var/www/sunfoods.vn/TailwindAdminRasa# # Build
+root@sunfoods:/var/www/sunfoods.vn/TailwindAdminRasa# cd /var/www/sunfoods.vn
+root@sunfoods:/var/www/sunfoods.vn# npm run build:all

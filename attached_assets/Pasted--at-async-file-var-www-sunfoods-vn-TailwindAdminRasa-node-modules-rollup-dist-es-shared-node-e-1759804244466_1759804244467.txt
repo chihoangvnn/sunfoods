@@ -1,0 +1,57 @@
+    at async file:///var/www/sunfoods.vn/TailwindAdminRasa/node_modules/rollup/dist/es/shared/node-entry.js:19809:33
+    at async Queue.work (file:///var/www/sunfoods.vn/TailwindAdminRasa/node_modules/rollup/dist/es/shared/node-entry.js:20899:32)
+root@sunfoods:/var/www/sunfoods.vn# git pull origin main^C
+root@sunfoods:/var/www/sunfoods.vn# git pull origin main
+remote: Enumerating objects: 10, done.
+remote: Counting objects: 100% (10/10), done.
+remote: Compressing objects: 100% (3/3), done.
+remote: Total 7 (delta 3), reused 7 (delta 3), pack-reused 0 (from 0)
+Unpacking objects: 100% (7/7), 5.78 KiB | 1.93 MiB/s, done.
+From https://github.com/chihoangvnn/sunfoods.vn
+ * branch            main       -> FETCH_HEAD
+   4b59a06..53f83d8  main       -> origin/main
+Updating 4b59a06..53f83d8
+Fast-forward
+ TailwindAdminRasa/shared/schema.ts                                                             | 621 ++++++++++++++++++++++++++++++++++++++++++++++
+ ...eaflet-core-npm-WARN-react-leaflet-core-3-0-0-from-react-le-1759800079505_1759800079506.txt |  43 ++++
+ 2 files changed, 664 insertions(+)
+ create mode 100644 TailwindAdminRasa/shared/schema.ts
+ create mode 100644 attached_assets/Pasted-npm-WARN-node-modules-react-leaflet-core-npm-WARN-react-leaflet-core-3-0-0-from-react-le-1759800079505_1759800079506.txt
+root@sunfoods:/var/www/sunfoods.vn# npm run build:all
+
+> workspace-root@1.0.0 build:all
+> npm run build:backend && npm run build:mobile
+
+
+> workspace-root@1.0.0 build:backend
+> cd TailwindAdminRasa && npm run build
+
+
+> rest-express@1.0.0 build
+> npm run build:all && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+
+
+> rest-express@1.0.0 build:all
+> npm run build:admin && npm run build:mobile
+
+
+> rest-express@1.0.0 build:admin
+> vite build
+
+vite v5.4.19 building for production...
+✓ 246 modules transformed.
+x Build failed in 8.66s
+error during build:gin that raised this warning, please contact the package author to fix the issue.
+[vite]: Rollup failed to resolve import "papaparse" from "/var/www/sunfoods.vn/TailwindAdminRasa/client/src/components/BulkUpload.tsx".
+This is most likely unintended because it can break your application at runtime.
+If you do want to externalize this module explicitly add it to
+`build.rollupOptions.external`
+    at viteWarn (file:///var/www/sunfoods.vn/TailwindAdminRasa/node_modules/vite/dist/node/chunks/dep-C6uTJdX2.js:65839:17)
+    at onwarn (file:///var/www/sunfoods.vn/TailwindAdminRasa/node_modules/@vitejs/plugin-react/dist/index.mjs:280:9)
+    at onRollupWarning (file:///var/www/sunfoods.vn/TailwindAdminRasa/node_modules/vite/dist/node/chunks/dep-C6uTJdX2.js:65869:5)
+    at onwarn (file:///var/www/sunfoods.vn/TailwindAdminRasa/node_modules/vite/dist/node/chunks/dep-C6uTJdX2.js:65534:7)
+    at file:///var/www/sunfoods.vn/TailwindAdminRasa/node_modules/rollup/dist/es/shared/node-entry.js:19452:13
+    at Object.logger [as onLog] (file:///var/www/sunfoods.vn/TailwindAdminRasa/node_modules/rollup/dist/es/shared/node-entry.js:21178:9)
+    at ModuleLoader.handleInvalidResolvedId (file:///var/www/sunfoods.vn/TailwindAdminRasa/node_modules/rollup/dist/es/shared/node-entry.js:20067:26)
+    at file:///var/www/sunfoods.vn/TailwindAdminRasa/node_modules/rollup/dist/es/shared/node-entry.js:20025:26
+root@sunfoods:/var/www/sunfoods.vn#
