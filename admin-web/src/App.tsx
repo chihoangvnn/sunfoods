@@ -28,7 +28,12 @@ import { AnalyticsDashboard as Analytics } from "@/pages/AnalyticsDashboard";
 import PostPerformanceAnalytics from "@/pages/PostPerformanceAnalytics";
 import BestTimeRecommendations from "@/pages/BestTimeRecommendations";
 import Chatbot from "@/pages/Chatbot";
+import ChatbotAnalytics from "@/pages/ChatbotAnalytics";
+import ChatbotSettings from "@/pages/ChatbotSettings";
+import ChatbotResponses from "@/pages/ChatbotResponses";
+import ChatbotTest from "@/pages/ChatbotTest";
 import LandingPage from "@/pages/LandingPage";
+import LandingPageManager from "@/pages/LandingPageManager";
 import ProductLandingPageManager from "@/pages/ProductLandingPageManager";
 import LandingPageEditor from "@/pages/LandingPageEditor";
 import PublicLandingPage from "@/pages/PublicLandingPage";
@@ -41,10 +46,13 @@ import TagManagement from "@/pages/TagManagement";
 import IndustryManager from "@/pages/IndustryManager";
 import TaskAssignment from "@/pages/TaskAssignment";
 import FaqTemplatesPage from "@/pages/FaqTemplatesPage";
+import FAQLibrary from "@/pages/FAQLibrary";
 import ShopSettings from "@/pages/ShopSettings";
 import { ContentLibrary } from "@/pages/ContentLibrary";
 import ScheduledPostsQueue from "@/components/ScheduledPostsQueue";
 import { PostScheduler } from "@/pages/PostScheduler";
+import { QueueManager } from "@/pages/QueueManager";
+import ViettelPostSettings from "@/pages/ViettelPostSettings";
 import FacebookAppsManager from "@/pages/FacebookAppsManager";
 import GroupsManager from "@/pages/GroupsManager";
 import TikTokBusiness from "@/pages/TikTokBusiness";
@@ -133,7 +141,7 @@ function AdminRouter() {
     <Switch>
       <Route path="/" component={Dashboard} />
       <Route path="/store" component={LandingPage} />
-      <Route path="/landing-page-manager" component={ProductLandingPageManager} />
+      <Route path="/product-landing-pages" component={ProductLandingPageManager} />
       <Route path="/landing-page-editor" component={LandingPageEditor} />
       <Route path="/landing-page-editor/:id" component={LandingPageEditor} />
       <Route path="/storefront-manager" component={StorefrontManager} />
@@ -169,16 +177,24 @@ function AdminRouter() {
       <Route path="/industries" component={IndustryManager} />
       <Route path="/task-assignment" component={TaskAssignment} />
       <Route path="/faq-templates" component={FaqTemplatesPage} />
+      <Route path="/faq-library" component={FAQLibrary} />
       <Route path="/shop-settings" component={ShopSettings} />
       <Route path="/analytics" component={Analytics} />
       <Route path="/post-analytics" component={PostPerformanceAnalytics} />
       <Route path="/best-time-recommendations" component={BestTimeRecommendations} />
       <Route path="/review-management" component={ReviewManagement} />
       <Route path="/chatbot" component={Chatbot} />
+      <Route path="/chatbot-analytics" component={ChatbotAnalytics} />
+      <Route path="/chatbot-settings" component={ChatbotSettings} />
+      <Route path="/chatbot-responses" component={ChatbotResponses} />
+      <Route path="/chatbot-test" component={ChatbotTest} />
       <Route path="/chat-logs" component={ChatLogs} />
       <Route path="/content-library" component={ContentLibrary} />
-      <Route path="/queue-manager" component={ScheduledPostsQueue} />
-      <Route path="/satellites" component={PostScheduler} />
+      <Route path="/queue-manager" component={QueueManager} />
+      <Route path="/post-scheduler" component={PostScheduler} />
+      <Route path="/satellites" component={Satellites} />
+      <Route path="/viettelpost-settings" component={ViettelPostSettings} />
+      <Route path="/landing-page-manager" component={LandingPageManager} />
       <Route path="/facebook-apps" component={FacebookAppsManager} />
       <Route path="/groups-manager" component={GroupsManager} />
       <Route path="/tiktok-business" component={TikTokBusiness} />

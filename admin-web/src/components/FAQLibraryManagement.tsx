@@ -339,12 +339,12 @@ export function FAQLibraryManagement({ className = "" }: FAQLibraryManagementPro
   };
 
   const getTagColor = (tagId: string) => {
-    const tag = tags.find(t => t.id === tagId);
+    const tag = tags.find((t: Tag) => t.id === tagId);
     return tag?.color || '#6B7280';
   };
 
   const getTagName = (tagId: string) => {
-    const tag = tags.find(t => t.id === tagId);
+    const tag = tags.find((t: Tag) => t.id === tagId);
     return tag?.name || tagId;
   };
 
@@ -521,7 +521,7 @@ export function FAQLibraryManagement({ className = "" }: FAQLibraryManagementPro
                   
                   <Select 
                     value="" 
-                    onValueChange={(value) => {
+                    onValueChange={(value: string) => {
                       if (value && !formTags.includes(value)) {
                         setFormTags([...formTags, value]);
                       }
@@ -531,7 +531,7 @@ export function FAQLibraryManagement({ className = "" }: FAQLibraryManagementPro
                       <SelectValue placeholder="Chọn tags..." />
                     </SelectTrigger>
                     <SelectContent>
-                      {tags.map((tag) => (
+                      {tags.map((tag: Tag) => (
                         <SelectItem key={tag.id} value={tag.id}>
                           <div className="flex items-center gap-2">
                             <div 
@@ -550,7 +550,7 @@ export function FAQLibraryManagement({ className = "" }: FAQLibraryManagementPro
                   <Checkbox
                     id="active"
                     checked={formIsActive}
-                    onCheckedChange={(checked) => setFormIsActive(checked === true)}
+                    onCheckedChange={(checked: boolean | 'indeterminate') => setFormIsActive(checked === true)}
                   />
                   <Label htmlFor="active">FAQ hoạt động</Label>
                 </div>
@@ -639,7 +639,7 @@ export function FAQLibraryManagement({ className = "" }: FAQLibraryManagementPro
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">Tất cả tags</SelectItem>
-                {tags.map((tag) => (
+                {tags.map((tag: Tag) => (
                   <SelectItem key={tag.id} value={tag.id}>
                     <div className="flex items-center gap-2">
                       <div 

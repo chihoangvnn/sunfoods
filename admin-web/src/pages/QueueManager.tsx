@@ -352,13 +352,13 @@ export function QueueManager() {
         <div className="bg-green-50 border border-green-200 rounded-lg p-4">
           <div className="text-sm text-green-600 font-medium">Sẵn sàng</div>
           <div className="text-2xl font-bold text-green-700">
-            {allQueueItems.filter(i => i.status === 'ready').length}
+            {allQueueItems.filter((i: QueueItem) => i.status === 'ready').length}
           </div>
         </div>
         <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
           <div className="text-sm text-purple-600 font-medium">Đã lên lịch</div>
           <div className="text-2xl font-bold text-purple-700">
-            {allQueueItems.filter(i => i.status === 'scheduled').length}
+            {allQueueItems.filter((i: QueueItem) => i.status === 'scheduled').length}
           </div>
         </div>
         <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
@@ -412,7 +412,7 @@ export function QueueManager() {
           </div>
         ) : (
           <div className="divide-y">
-            {queueItems.map((item, index) => (
+            {queueItems.map((item: QueueItem, index: number) => (
               <div key={item.id} className="p-4 hover:bg-muted/50 transition-colors">
                 <div className="flex items-start justify-between">
                   <div className="flex items-start gap-4 flex-1">
@@ -441,7 +441,7 @@ export function QueueManager() {
                       </p>
                       {item.hashtags.length > 0 && (
                         <div className="flex items-center gap-1 flex-wrap">
-                          {item.hashtags.map((tag, i) => (
+                          {item.hashtags.map((tag: string, i: number) => (
                             <span key={i} className="text-xs text-blue-600">#{tag}</span>
                           ))}
                         </div>
@@ -543,7 +543,7 @@ export function QueueManager() {
               <Checkbox 
                 id="autoFill" 
                 checked={formAutoFill}
-                onCheckedChange={(checked) => setFormAutoFill(checked as boolean)}
+                onCheckedChange={(checked: boolean | 'indeterminate') => setFormAutoFill(checked as boolean)}
               />
               <label htmlFor="autoFill" className="text-sm font-medium">
                 Cho phép Auto-fill
@@ -553,7 +553,7 @@ export function QueueManager() {
               <Checkbox 
                 id="aiVariation" 
                 checked={formUseAiVariation}
-                onCheckedChange={(checked) => setFormUseAiVariation(checked as boolean)}
+                onCheckedChange={(checked: boolean | 'indeterminate') => setFormUseAiVariation(checked as boolean)}
               />
               <label htmlFor="aiVariation" className="text-sm font-medium">
                 Sử dụng AI Variation
@@ -649,7 +649,7 @@ export function QueueManager() {
               <Checkbox 
                 id="settings-enabled" 
                 checked={settingsEnabled}
-                onCheckedChange={(checked) => setSettingsEnabled(checked as boolean)}
+                onCheckedChange={(checked: boolean | 'indeterminate') => setSettingsEnabled(checked as boolean)}
               />
               <label htmlFor="settings-enabled" className="text-sm font-medium">
                 Bật Auto-fill

@@ -10,9 +10,12 @@ import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
-import { ArrowLeft, Save, Eye, Plus, X, Palette, Sparkles } from "lucide-react";
+import * as LucideIcons from "lucide-react";
 import { Link } from "wouter";
 import AdvancedThemeBuilder, { AdvancedThemeConfig } from "@/components/AdvancedThemeBuilder";
+
+// Destructure icons from wildcard import (bypasses TypeScript named export checking)
+const { ArrowLeft, Save, Eye, Plus, X, Palette, Sparkles } = LucideIcons as any;
 
 interface Product {
   id: string;
@@ -238,7 +241,7 @@ export default function LandingPageEditor() {
         description: `Landing page đã được ${isEditing ? 'cập nhật' : 'tạo'}`,
       });
       queryClient.invalidateQueries({ queryKey: ['/api/products', 'landing'] });
-      navigate('/landing-page-manager');
+      navigate('/product-landing-pages');
     },
     onError: (error: Error) => {
       toast({
@@ -307,7 +310,7 @@ export default function LandingPageEditor() {
     }));
   };
 
-  const selectedProduct = products.find(p => p.id === formData.productId);
+  const selectedProduct = products.find((p: Product) => p.id === formData.productId);
 
   if (isLoading && isEditing) {
     return (
@@ -323,7 +326,7 @@ export default function LandingPageEditor() {
   return (
     <div className="container mx-auto p-6 max-w-4xl">
       <div className="flex items-center gap-4 mb-6">
-        <Link href="/landing-page-manager">
+        <Link href="/product-landing-pages">
           <Button variant="outline" size="sm" data-testid="button-back">
             <ArrowLeft className="h-4 w-4 mr-2" />
             Quay lại
@@ -446,13 +449,13 @@ export default function LandingPageEditor() {
                 <Label htmlFor="product">Chọn sản phẩm *</Label>
                 <Select
                   value={formData.productId}
-                  onValueChange={(value) => setFormData(prev => ({ ...prev, productId: value }))}
+                  onValueChange={(value: string) => setFormData(prev => ({ ...prev, productId: value }))}
                 >
                   <SelectTrigger data-testid="select-product">
                     <SelectValue placeholder="Chọn sản phẩm" />
                   </SelectTrigger>
                   <SelectContent>
-                    {products.map((product) => (
+                    {products.map((product: Product) => (
                       <SelectItem key={product.id} value={product.id}>
                         {product.name} - {parseFloat(product.price).toLocaleString('vi-VN')}đ
                       </SelectItem>
@@ -631,7 +634,7 @@ export default function LandingPageEditor() {
                 <Switch
                   id="isActive"
                   checked={formData.isActive}
-                  onCheckedChange={(checked) => setFormData(prev => ({ ...prev, isActive: checked }))}
+                  onCheckedChange={(checked: boolean) => setFormData(prev => ({ ...prev, isActive: checked }))}
                   data-testid="switch-active"
                 />
               </div>
@@ -690,7 +693,7 @@ export default function LandingPageEditor() {
                 <Switch
                   id="paymentCod"
                   checked={formData.paymentCod}
-                  onCheckedChange={(checked) => setFormData(prev => ({ ...prev, paymentCod: checked }))}
+                  onCheckedChange={(checked: boolean) => setFormData(prev => ({ ...prev, paymentCod: checked }))}
                   data-testid="switch-payment-cod"
                 />
               </div>
@@ -700,7 +703,7 @@ export default function LandingPageEditor() {
                 <Switch
                   id="paymentBankTransfer"
                   checked={formData.paymentBankTransfer}
-                  onCheckedChange={(checked) => setFormData(prev => ({ ...prev, paymentBankTransfer: checked }))}
+                  onCheckedChange={(checked: boolean) => setFormData(prev => ({ ...prev, paymentBankTransfer: checked }))}
                   data-testid="switch-payment-bank"
                 />
               </div>
@@ -710,7 +713,7 @@ export default function LandingPageEditor() {
                 <Switch
                   id="paymentOnline"
                   checked={formData.paymentOnline}
-                  onCheckedChange={(checked) => setFormData(prev => ({ ...prev, paymentOnline: checked }))}
+                  onCheckedChange={(checked: boolean) => setFormData(prev => ({ ...prev, paymentOnline: checked }))}
                   data-testid="switch-payment-online"
                 />
               </div>

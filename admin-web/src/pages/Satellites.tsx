@@ -827,7 +827,7 @@ export default function Satellites() {
       </div>
 
       {/* Navigation */}
-      <Tabs value={activeView} onValueChange={(value) => setActiveView(value as any)}>
+      <Tabs value={activeView} onValueChange={(value: string) => setActiveView(value as any)}>
         <TabsList>
           <TabsTrigger value="hub" className="flex items-center gap-2">
             <Satellite className="h-4 w-4" />
