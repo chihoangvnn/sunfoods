@@ -23,11 +23,18 @@ export default defineConfig({
       "@shared": path.resolve(import.meta.dirname, "..", "backend", "shared"),
       "@assets": path.resolve(import.meta.dirname, "..", "attached_assets"),
     },
+    extensions: ['.mjs', '.js', '.mts', '.ts', '.jsx', '.tsx', '.json'],
   },
   root: import.meta.dirname,
+  optimizeDeps: {
+    include: ['drizzle-orm', 'drizzle-zod', 'zod'],
+  },
   build: {
     outDir: path.resolve(import.meta.dirname, "..", "backend", "public", "admin"),
     emptyOutDir: true,
+    commonjsOptions: {
+      include: [/node_modules/, /backend\/shared/],
+    },
   },
   server: {
     host: "0.0.0.0",
@@ -35,6 +42,16 @@ export default defineConfig({
     fs: {
       strict: true,
       deny: ["**/.*"],
+    },
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+      },
+      '/uploads': {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+      },
     },
   },
 });
