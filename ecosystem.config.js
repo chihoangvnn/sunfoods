@@ -7,7 +7,6 @@ module.exports = {
       cwd: './backend',
       exec_mode: 'cluster',
       instances: 1,
-      env_file: './.env',
       env: {
         NODE_ENV: 'production',
         PORT: 3000

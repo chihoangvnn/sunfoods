@@ -13,9 +13,13 @@ Preferred communication style: Simple, everyday language.
   - bcrypt now loads from `node_modules` at runtime instead of being bundled into `dist/index.js`
   - Fixes "No native build was found for platform=linux" error on VPS
 - **PM2 Environment Loading**:
-  - Added `env_file: './.env'` to `ecosystem.config.js` backend config
-  - PM2 now automatically loads `.env` file in production (no manual export needed)
-  - Fixes "DATABASE_URL must be set" error when running `npm start`
+  - Added `dotenv` package to dependencies
+  - Updated start script to `node -r dotenv/config dist/index.js` for automatic .env loading
+  - Fixes "DATABASE_URL must be set" error when running `npm start` via PM2
+- **ESM/CommonJS __dirname Compatibility**:
+  - Fixed `fileURLToPath(import.meta.url)` error in production CommonJS build
+  - Added conditional __dirname logic: ESM mode (dev) uses import.meta.url, CommonJS (production) uses process.cwd()
+  - Fixes "TypeError: The 'path' argument must be of type string" error
 - **ENCRYPTION_KEY Configuration**:
   - Updated `.env.example` with proper 64-character hex format requirement
   - Generated example ENCRYPTION_KEY: `c3a948be4ebd4b4bcee04378906aad2012a49fdde6d3b13ce080fab843a360ce`

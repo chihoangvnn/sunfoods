@@ -1,0 +1,47 @@
+root@sunfoods:/var/www/sun# ^C
+root@sunfoods:/var/www/sun# cd /var/www/sun/backend
+root@sunfoods:/var/www/sun/backend# tail -500 /root/.pm2/logs/backend-error-0.log | grep -B 5 "Error:"
+root@sunfoods:/var/www/sun/backend# cd /var/www/sun/backend
+root@sunfoods:/var/www/sun/backend# export $(cat .env | grep -v '^#' | grep -v '^$' | xargs) && node dist/index.js 2>&1 | head -100
+⚠️  VAPID keys not configured! Push notifications will not work.
+   Set VAPID_PUBLIC_KEY and VAPID_PRIVATE_KEY environment variables.
+
+⚠️ THÔNG BÁO: Đang sử dụng TikTok credentials mẫu. Vui lòng thay thế bằng credentials thật từ TikTok Developer Portal để kết nối thực tế.
+📋 Hướng dẫn lấy credentials:
+1. Truy cập: https://developers.tiktok.com/
+2. Tạo ứng dụng mới hoặc chọn ứng dụng hiện tại
+3. Sao chép Client Key và Client Secret
+4. Thay thế trong file tiktok-auth.ts dòng 40-41
+🏥 Started worker health monitoring
+⚠️ Replit OAuth credentials not found. Set REPLIT_APP_ID and REPLIT_APP_SECRET environment variables.
+🏥 Started system health monitoring
+🧩 Initializing built-in template registry...
+✅ Loaded 4 built-in templates
+⚠️ Campaign verifier: Redis not configured - running without queue-based verification
+🚀 Registering API Management Middleware...
+✅ API Management Middleware registered successfully
+🚀 Starting Facebook post scheduler...
+🚀 Starting post scheduler - checking every minute for scheduled posts
+Query: select "id", "caption", "hashtags", "asset_ids", "social_account_id", "platform", "scheduled_time", "timezone", "status", "published_at", "platform_post_id", "platform_url", "error_message", "retry_count", "last_retry_at", "analytics", "created_at", "updated_at", "priority", "ip_pool_id", "ip_snapshot", "batch_id" from "scheduled_posts" where ("scheduled_posts"."status" = $1 and "scheduled_posts"."scheduled_time" <= $2) order by "scheduled_posts"."scheduled_time" -- params: ["scheduled", "2025-10-07T11:38:01.151Z"]
+✅ Shopee routes loaded successfully
+🔧 API Management middleware initialized
+🤖 Mounting Product FAQs Router...
+✅ Product FAQs Router mounted successfully
+🚚 Mounting ViettelPost routes...
+✅ ViettelPost routes mounted successfully
+Serving admin static files from /var/www/sun/backend/public/admin
+serving on port 3000
+🚀 Starting post scheduler...
+✅ Scheduler started - polling every 60s
+🚀 Starting analytics scheduler (interval: 3600s)
+📊 Starting analytics collection run...
+🚀 Starting campaign verifier...
+🚀 Starting campaign verifier worker...
+Query: select "id", "caption", "hashtags", "asset_ids", "social_account_id", "platform", "scheduled_time", "timezone", "status", "published_at", "platform_post_id", "platform_url", "error_message", "retry_count", "last_retry_at", "analytics", "created_at", "updated_at", "priority", "ip_pool_id", "ip_snapshot", "batch_id" from "scheduled_posts" where ("scheduled_posts"."status" = $1 and "scheduled_posts"."scheduled_time" <= $2) order by "scheduled_posts"."scheduled_time" -- params: ["scheduled", "2025-10-07T11:38:01.347Z"]
+Query: select "id", "caption", "hashtags", "asset_ids", "social_account_id", "platform", "scheduled_time", "timezone", "status", "published_at", "platform_post_id", "platform_url", "error_message", "retry_count", "last_retry_at", "analytics", "created_at", "updated_at", "priority", "ip_pool_id", "ip_snapshot", "batch_id" from "scheduled_posts" "scheduledPosts" where ("scheduledPosts"."status" = $1 and ("scheduledPosts"."analytics" is null or "scheduledPosts"."updated_at" < $2)) order by "scheduledPosts"."published_at" asc limit $3 -- params: ["posted", "2025-10-07T11:08:01.348Z", 50]
+Query: select "id", "campaign_id", "customer_id", "share_url", "submitted_at", "status", "verification_scheduled_at", "last_verified_at", "rewarded_at", "voucher_id", "rejection_reason", "verification_attempts", "metadata", "created_at", "updated_at" from "campaign_participations" where ("campaign_participations"."status" = $1 and "campaign_participations"."verification_scheduled_at" <= $2) order by "campaign_participations"."verification_scheduled_at" -- params: ["pending", "2025-10-07T11:38:01.348Z"]
+Query: select "id", "caption", "hashtags", "asset_ids", "social_account_id", "platform", "scheduled_time", "timezone", "status", "published_at", "platform_post_id", "platform_url", "error_message", "retry_count", "last_retry_at", "analytics", "created_at", "updated_at", "priority", "ip_pool_id", "ip_snapshot", "batch_id" from "scheduled_posts" where ("scheduled_posts"."status" = $1 and "scheduled_posts"."retry_count" <= $2) -- params: ["failed", 2]
+📈 Found 0 posts to fetch analytics for
+✅ Analytics collection complete: 0 success, 0 errors
+📋 Found 0 participations to verify
+📭 No due posts at 2025-10-07T11:38:01.347Z

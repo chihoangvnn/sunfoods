@@ -25,18 +25,18 @@ Error: No native build was found for platform=linux arch=x64
 Error: DATABASE_URL must be set
 ```
 
-**Solution:** Updated `ecosystem.config.js` to load `.env`:
-```javascript
+**Solution:** Added `dotenv` package and updated `package.json` start script:
+```json
 {
-  name: 'backend',
-  // ...
-  env_file: './.env',  // ← Added this line
-  env: {
-    NODE_ENV: 'production',
-    PORT: 3000
+  "scripts": {
+    "start": "node -r dotenv/config dist/index.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7"
   }
 }
 ```
+The `-r dotenv/config` flag preloads dotenv to automatically load `.env` file.
 
 ### 3. **Missing ENCRYPTION_KEY**
 **Problem:** Backend requires 64-character hex encryption key.
@@ -78,7 +78,7 @@ cp /var/www/sun/.env /var/www/sun/backend/.env
 
 ### Step 4: Install Dependencies
 ```bash
-# Install backend dependencies (includes bcrypt as external dependency)
+# Install backend dependencies (includes bcrypt as external + dotenv for .env loading)
 cd backend
 npm install
 cd ..
@@ -170,8 +170,9 @@ Before deploying to VPS:
 | Issue | File Changed | What Changed |
 |-------|-------------|--------------|
 | bcrypt bundling error | `backend/package.json` | Added `--external:bcrypt` to build script |
-| PM2 not loading .env | `ecosystem.config.js` | Added `env_file: './.env'` to backend config |
+| PM2 not loading .env | `backend/package.json` | Added `dotenv` package and `node -r dotenv/config` to start script |
 | Missing ENCRYPTION_KEY | `.env.example` | Added example key and generation instructions |
+| ESM/CommonJS __dirname | `backend/src/index.ts` | Added conditional __dirname for ESM/CommonJS compatibility |
 
 ---
 
