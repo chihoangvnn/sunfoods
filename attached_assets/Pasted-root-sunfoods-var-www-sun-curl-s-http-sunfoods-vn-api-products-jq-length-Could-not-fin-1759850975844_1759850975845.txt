@@ -1,0 +1,41 @@
+root@sunfoods:/var/www/sun# curl -s http://sunfoods.vn/api/products | jq '. | length'
+Could not find command-not-found database. Run 'sudo apt update' to populate it.
+jq: command not found
+root@sunfoods:/var/www/sun# curl -s http://sunfoods.vn/api/products | wc -c | awk '{print $1/1024/1024 " MB"}'
+0.126484 MB
+root@sunfoods:/var/www/sun# pm2 logs backend --lines 20 --nostream
+[TAILING] Tailing last 20 lines for [backend] process (change the value with --lines option)
+/root/.pm2/logs/backend-error-0.log last 20 lines:
+0|backend  |     at parse (/var/www/sun/backend/dist/index.js:176441:28)
+0|backend  |     at pathToRegexp2 (/var/www/sun/backend/dist/index.js:176540:58)
+0|backend  |     at ApiConfigurationCache.getAllConfigs (/var/www/sun/backend/dist/index.js:176793:67)
+0|backend  |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+0|backend  |     at async ApiConfigurationCache.findMatchingConfig (/var/www/sun/backend/dist/index.js:176809:28)
+0|backend  |     at async /var/www/sun/backend/dist/index.js:176685:22 {
+0|backend  |   originalPath: '/api/webhooks/facebook/:appId?'
+0|backend  | }
+0|backend  | 🚨 SYSTEM HEALTH CRITICAL: [
+0|backend  |   '🔴 WORKERS is unhealthy: Critical issue detected',
+0|backend  |   '🔴 CRITICAL: No workers are online - Auto-posting system is offline'
+0|backend  | ]
+0|backend  | 🚨 SYSTEM HEALTH CRITICAL: [
+0|backend  |   '🔴 WORKERS is unhealthy: Critical issue detected',
+0|backend  |   '🔴 CRITICAL: No workers are online - Auto-posting system is offline'
+0|backend  | ]
+0|backend  | 🚨 SYSTEM HEALTH CRITICAL: [
+0|backend  |   '🔴 WORKERS is unhealthy: Critical issue detected',
+0|backend  |   '🔴 CRITICAL: No workers are online - Auto-posting system is offline'
+0|backend  | ]
+
+/var/www/sun/backend/logs/backend-out-0.log last 20 lines:
+0|backend  | _url", "error_message", "retry_count", "last_retry_at", "analytics", "created_at", "updated_at", "priority", "ip_pool_id", "ip_snapshot", "batch_id" from "scheduled_posts" where ("scheduled_posts"."status" = $1 and "scheduled_posts"."scheduled_time" <= $2) order by "scheduled_posts"."scheduled_time" -- params: ["scheduled", "2025-10-07T15:29:19.664Z"]
+0|backend  | Rate limit check: 100 requests per 60s for /api/products
+0|backend  | Query: select "id", "name", "description", "price", "stock", "category_id", "status", "image", "created_at", "updated_at", "sku", "images", "videos", "tag_ids", "descriptions", "default_image_index", "item_code", "short_description", "slug", "ingredients", "benefits", "seo_title", "seo_description", "product_story", "usage_instructions", "specifications", "og_image_url", "unit_type", "unit", "allow_decimals", "min_quantity", "quantity_step", "consultation_data", "urgency_data", "social_proof_data", "personalization_data", "leading_questions_data", "objection_handling_data", "isbn", "smart_faq", "needs_assessment", "bot_personality", "consultation_scenarios", "competitor_comparison", "cross_sell_data", "consultation_tracking", "custom_descriptions", "original_price", "fake_sales_count", "is_new", "is_topseller", "is_freeshipping", "is_bestseller", "is_vip_only", "required_vip_tier", "local_price", "standard_price" from "products" order by "products"."created_at" desc limit $1 -- params: [50]
+0|backend  | Query: select "id", "caption", "hashtags", "asset_ids", "social_account_id", "platform", "scheduled_time", "timezone", "status", "published_at", "platform_post_id", "platform_url", "error_message", "retry_count", "last_retry_at", "analytics", "created_at", "updated_at", "priority", "ip_pool_id", "ip_snapshot", "batch_id" from "scheduled_posts" where ("scheduled_posts"."status" = $1 and "scheduled_posts"."scheduled_time" <= $2) order by "scheduled_posts"."scheduled_time" -- params: ["scheduled", "2025-10-07T15:29:19.830Z"]
+0|backend  | Query: select "customers"."id", "customers"."name", "customers"."email", "customers"."phone", "customers"."avatar", "customers"."status", "customers"."total_debt", "customers"."credit_limit", "customers"."join_date", "customers"."registration_source", "customers"."profile_status", "customers"."membership_tier", "customers"."points_balance", "customers"."points_earned", "customers"."last_tier_update", "customers"."auth_user_id", "customers"."membership_data", "customers"."social_account_ids", "customers"."social_data", "customers"."customer_role", "customers"."limits_data", "customers"."is_local_customer", "customers"."is_affiliate", "customers"."affiliate_code", "customers"."affiliate_status", "customers"."commission_rate", "customers"."affiliate_data", COALESCE("order_stats"."total_orders", 0) as "total_orders", COALESCE("order_stats"."total_spent", 0) as "order_total_spent", COALESCE("order_stats"."last_order_date", "customers"."join_date"::text) as "last_order_date" from "customers" left join (select "user_id", count("id") as "total_orders", sum("total") as "total_spent", MAX("created_at")::text as "last_order_date" from "orders" where "orders"."status" in ($1, $2) group by "orders"."user_id") "order_stats" on "customers"."id" = "order_stats"."user_id" where "customers"."profile_status" = $3 order by "customers"."join_date" desc limit $4 -- params: ["delivered", "shipped", "complete", 1]
+0|backend  | Query: select "id", "caption", "hashtags", "asset_ids", "social_account_id", "platform", "scheduled_time", "timezone", "status", "published_at", "platform_post_id", "platform_url", "error_message", "retry_count", "last_retry_at", "analytics", "created_at", "updated_at", "priority", "ip_pool_id", "ip_snapshot", "batch_id" from "scheduled_posts" where ("scheduled_posts"."status" = $1 and "scheduled_posts"."retry_count" <= $2) -- params: ["failed", 2]
+0|backend  | ✅ Health report generated in 1177ms - Overall: unhealthy
+0|backend  | 📭 No due posts at 2025-10-07T15:29:19.830Z
+0|backend  | GET /api/products 200 in 1455ms :: [{"id":"f5e0ea91-f81a-4231-b61b-1393c86ff66d…
+
+root@sunfoods:/var/www/sun#

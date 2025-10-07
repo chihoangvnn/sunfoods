@@ -1,0 +1,69 @@
+root@sunfoods:/var/www/sun# ls -lh /var/www/sun/customer-mobile/.next/server/app/
+total 444K
+drwxr-xr-x 3 root root 4.0K Oct  7 21:19 account
+drwxr-xr-x 2 root root 4.0K Oct  7 21:18 cart
+-rw-r--r-- 1 root root  16K Oct  7 21:19 cart.html
+-rw-r--r-- 1 root root  180 Oct  7 21:19 cart.meta
+-rw-r--r-- 1 root root 6.9K Oct  7 21:19 cart.rsc
+drwxr-xr-x 2 root root 4.0K Oct  7 21:18 checkout
+-rw-r--r-- 1 root root  16K Oct  7 21:19 checkout.html
+-rw-r--r-- 1 root root  192 Oct  7 21:19 checkout.meta
+-rw-r--r-- 1 root root 6.9K Oct  7 21:19 checkout.rsc
+drwxr-xr-x 3 root root 4.0K Oct  7 21:18 deals
+-rw-r--r-- 1 root root  39K Oct  7 21:19 index.html
+-rw-r--r-- 1 root root  152 Oct  7 21:19 index.meta
+-rw-r--r-- 1 root root 6.5K Oct  7 21:19 index.rsc
+drwxr-xr-x 2 root root 4.0K Oct  7 21:18 _not-found
+-rw-r--r-- 1 root root  15K Oct  7 21:19 _not-found.html
+-rw-r--r-- 1 root root  215 Oct  7 21:19 _not-found.meta
+-rw-r--r-- 1 root root 7.1K Oct  7 21:19 _not-found.rsc
+drwxr-xr-x 3 root root 4.0K Oct  7 21:18 order
+-rw-r--r-- 1 root root  12K Oct  7 21:18 page_client-reference-manifest.js
+-rw-r--r-- 1 root root 172K Oct  7 21:18 page.js
+-rw-r--r-- 1 root root 1.5K Oct  7 21:19 page.js.nft.json
+drwxr-xr-x 3 root root 4.0K Oct  7 21:18 product
+drwxr-xr-x 2 root root 4.0K Oct  7 21:18 profile
+-rw-r--r-- 1 root root  14K Oct  7 21:19 profile.html
+-rw-r--r-- 1 root root  189 Oct  7 21:19 profile.meta
+-rw-r--r-- 1 root root 6.9K Oct  7 21:19 profile.rsc
+drwxr-xr-x 2 root root 4.0K Oct  7 21:18 vegetables
+-rw-r--r-- 1 root root  15K Oct  7 21:19 vegetables.html
+-rw-r--r-- 1 root root  198 Oct  7 21:19 vegetables.meta
+-rw-r--r-- 1 root root 6.9K Oct  7 21:19 vegetables.rsc
+drwxr-xr-x 9 root root 4.0K Oct  7 21:19 vendor
+-rw-r--r-- 1 root root  11K Oct  7 21:19 vendor.html
+-rw-r--r-- 1 root root  240 Oct  7 21:19 vendor.meta
+-rw-r--r-- 1 root root 7.0K Oct  7 21:19 vendor.rsc
+root@sunfoods:/var/www/sun# du -sh /var/www/sun/customer-mobile/.next/static/chunks/* | sort -h | tail -10
+12K     /var/www/sun/customer-mobile/.next/static/chunks/146-21f31337f0ad627c.js
+12K     /var/www/sun/customer-mobile/.next/static/chunks/pages
+112K    /var/www/sun/customer-mobile/.next/static/chunks/632-982a5bc2a5ad2eac.js
+112K    /var/www/sun/customer-mobile/.next/static/chunks/polyfills-42372ed130431b0a.js
+140K    /var/www/sun/customer-mobile/.next/static/chunks/framework-00a8ba1a63cfdc9e.js
+164K    /var/www/sun/customer-mobile/.next/static/chunks/4723daf2-b93985da34781bad.js
+176K    /var/www/sun/customer-mobile/.next/static/chunks/215-bc22592ecee211bf.js
+356K    /var/www/sun/customer-mobile/.next/static/chunks/commons-c167673fa5a2d22c.js
+404K    /var/www/sun/customer-mobile/.next/static/chunks/9d532839-e35fabde149c5838.js
+600K    /var/www/sun/customer-mobile/.next/static/chunks/app
+root@sunfoods:/var/www/sun# time curl -s http://sunfoods.vn -o /dev/null
+
+real    0m0.060s
+user    0m0.006s
+sys     0m0.009s
+root@sunfoods:/var/www/sun# du -sh /var/www/sun/customer-mobile/node_modules/* | sort -h | tail -15
+4.4M    /var/www/sun/customer-mobile/node_modules/@tanstack
+4.4M    /var/www/sun/customer-mobile/node_modules/@unrs
+6.7M    /var/www/sun/customer-mobile/node_modules/tailwindcss
+7.6M    /var/www/sun/customer-mobile/node_modules/drizzle-kit
+9.3M    /var/www/sun/customer-mobile/node_modules/@esbuild-kit
+9.5M    /var/www/sun/customer-mobile/node_modules/@typescript-eslint
+9.9M    /var/www/sun/customer-mobile/node_modules/@esbuild
+11M     /var/www/sun/customer-mobile/node_modules/es-abstract
+17M     /var/www/sun/customer-mobile/node_modules/drizzle-orm
+23M     /var/www/sun/customer-mobile/node_modules/typescript
+32M     /var/www/sun/customer-mobile/node_modules/@img
+32M     /var/www/sun/customer-mobile/node_modules/lucide-react
+39M     /var/www/sun/customer-mobile/node_modules/date-fns
+119M    /var/www/sun/customer-mobile/node_modules/next
+297M    /var/www/sun/customer-mobile/node_modules/@next
+root@sunfoods:/var/www/sun#

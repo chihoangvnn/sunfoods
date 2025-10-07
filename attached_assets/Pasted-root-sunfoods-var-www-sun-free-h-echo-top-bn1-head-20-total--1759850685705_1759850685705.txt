@@ -1,0 +1,51 @@
+root@sunfoods:/var/www/sun# free -h && echo "---" && top -bn1 | head -20
+               total        used        free      shared  buff/cache   available
+Mem:           1.9Gi       559Mi       728Mi       5.2Mi       868Mi       1.4Gi
+Swap:          4.0Gi       145Mi       3.9Gi
+---
+top - 22:24:13 up 1 day, 21 min,  4 users,  load average: 0.00, 0.00, 0.00
+Tasks: 112 total,   1 running, 111 sleeping,   0 stopped,   0 zombie
+%Cpu(s):  0.0 us,  4.8 sy,  0.0 ni, 95.2 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st
+MiB Mem :   1967.8 total,    727.8 free,    559.9 used,    869.1 buff/cache
+MiB Swap:   4096.0 total,   3950.4 free,    145.6 used.   1407.9 avail Mem
+
+    PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
+ 360980 root      20   0   14528   5504   3456 R  10.0   0.3   0:00.01 top
+      1 root      20   0   22332   9216   6656 S   0.0   0.5   0:22.90 systemd
+      2 root      20   0       0      0      0 S   0.0   0.0   0:00.02 kthreadd
+      3 root      20   0       0      0      0 S   0.0   0.0   0:00.00 pool_wo+
+      4 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 kworker+
+      5 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 kworker+
+      6 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 kworker+
+      7 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 kworker+
+     10 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 kworker+
+     12 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 kworker+
+     13 root      20   0       0      0      0 I   0.0   0.0   0:00.00 rcu_tas+
+     14 root      20   0       0      0      0 I   0.0   0.0   0:00.00 rcu_tas+
+     15 root      20   0       0      0      0 I   0.0   0.0   0:00.00 rcu_tas+
+root@sunfoods:/var/www/sun# du -sh /var/www/sun/customer-mobile/.next
+206M    /var/www/sun/customer-mobile/.next
+root@sunfoods:/var/www/sun# du -sh /var/www/sun/customer-mobile/node_modules
+703M    /var/www/sun/customer-mobile/node_modules
+root@sunfoods:/var/www/sun# pm2 status
+┌────┬────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name       │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ backend    │ default     │ 1.0.0   │ cluster │ 352812   │ 2h     │ 51   │ online    │ 0%       │ 173.1mb  │ root     │ disabled │
+│ 2  │ mobile     │ default     │ 0.39.7  │ fork    │ 360914   │ 2m     │ 1    │ online    │ 0%       │ 56.9mb   │ root     │ disabled │
+└────┴────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+root@sunfoods:/var/www/sun# pm2 logs mobile --lines 50 --nostream
+[TAILING] Tailing last 50 lines for [mobile] process (change the value with --lines option)
+/root/.pm2/logs/mobile-error.log last 50 lines:
+/root/.pm2/logs/mobile-out.log last 50 lines:
+2|mobile   |
+2|mobile   | > customer-mobile@0.1.0 start
+2|mobile   | > next start -p 3001
+2|mobile   |
+2|mobile   |   ▲ Next.js 15.0.0
+2|mobile   |   - Local:        http://localhost:3001
+2|mobile   |
+2|mobile   |  ✓ Starting...
+2|mobile   |  ✓ Ready in 509ms
+
+root@sunfoods:/var/www/sun#
