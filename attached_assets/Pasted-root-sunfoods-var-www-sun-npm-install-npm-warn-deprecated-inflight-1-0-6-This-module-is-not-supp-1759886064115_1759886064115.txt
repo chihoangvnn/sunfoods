@@ -1,0 +1,69 @@
+root@sunfoods:/var/www/sun# npm install
+npm warn deprecated inflight@1.0.6: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
+npm warn deprecated @esbuild-kit/esm-loader@2.6.5: Merged into tsx: https://tsx.is
+npm warn deprecated @humanwhocodes/config-array@0.13.0: Use @eslint/config-array instead
+npm warn deprecated rimraf@3.0.2: Rimraf versions prior to v4 are no longer supported
+npm warn deprecated @esbuild-kit/core-utils@3.3.2: Merged into tsx: https://tsx.is
+npm warn deprecated @humanwhocodes/object-schema@2.0.3: Use @eslint/object-schema instead
+npm warn deprecated glob@7.2.3: Glob versions prior to v9 are no longer supported
+npm warn deprecated q@1.5.1: You or someone you depend on is using Q, the JavaScript Promise library that gave JavaScript developers strong feelings about promises. They can almost certainly migrate to the native JavaScript promise now. Thank you literally everyone for joining me in this bet against the odds. Be excellent to each other.
+npm warn deprecated
+npm warn deprecated (For a CapTP with native promises, see @endo/eventual-send and @endo/captp)
+npm warn deprecated eslint@8.57.1: This version is no longer supported. Please see https://eslint.org/version-support for other options.
+
+added 1156 packages, and audited 1160 packages in 4m
+
+211 packages are looking for funding
+  run `npm fund` for details
+
+12 vulnerabilities (8 moderate, 3 high, 1 critical)
+
+To address all issues possible (including breaking changes), run:
+  npm audit fix --force
+
+Some issues need review, and may require choosing
+a different dependency.
+
+Run `npm audit` for details.
+root@sunfoods:/var/www/sun# npm run build:admin
+
+> sunfoods-monorepo@1.0.0 build:admin
+> cd admin-web && npm run build
+
+
+> admin-web@1.0.0 build
+> npx vite build
+
+vite v5.4.20 building for production...
+✓ 4213 modules transformed.
+
+<--- Last few GCs --->
+
+[366081:0x63bcf60]    41108 ms: Mark-Compact 959.9 (1003.6) -> 954.2 (1006.1) MB, 1856.04 / 0.00 ms  (average mu = 0.417, current mu = 0.084) allocation failure; scavenge might not succeed
+[366081:0x63bcf60]    42805 ms: Mark-Compact 963.7 (1007.5) -> 957.0 (1008.9) MB, 1578.56 / 0.00 ms  (average mu = 0.275, current mu = 0.070) allocation failure; scavenge might not succeed
+
+
+<--- JS stacktrace --->
+
+FATAL ERROR: Reached heap limit Allocation failed - JavaScript heap out of memory
+----- Native stack trace -----
+
+ 1: 0xb76dc5 node::OOMErrorHandler(char const*, v8::OOMDetails const&) [node]
+ 2: 0xee6020 v8::Utils::ReportOOMFailure(v8::internal::Isolate*, char const*, v8::OOMDetails const&) [node]
+ 3: 0xee6307 v8::internal::V8::FatalProcessOutOfMemory(v8::internal::Isolate*, char const*, v8::OOMDetails const&) [node]
+ 4: 0x10f7f55  [node]
+ 5: 0x110fdd8 v8::internal::Heap::CollectGarbage(v8::internal::AllocationSpace, v8::internal::GarbageCollectionReason, v8::GCCallbackFlags) [node]
+ 6: 0x10e5ef1 v8::internal::HeapAllocator::AllocateRawWithLightRetrySlowPath(int, v8::internal::AllocationType, v8::internal::AllocationOrigin, v8::internal::AllocationAlignment) [node]
+ 7: 0x10e7085 v8::internal::HeapAllocator::AllocateRawWithRetryOrFailSlowPath(int, v8::internal::AllocationType, v8::internal::AllocationOrigin, v8::internal::AllocationAlignment) [node]
+ 8: 0x10c46d6 v8::internal::Factory::NewFillerObject(int, v8::internal::AllocationAlignment, v8::internal::AllocationType, v8::internal::AllocationOrigin) [node]
+ 9: 0x1520216 v8::internal::Runtime_AllocateInYoungGeneration(int, unsigned long*, v8::internal::Isolate*) [node]
+10: 0x1959ef6  [node]
+Aborted
+npm error Lifecycle script `build` failed with error:
+npm error code 134
+npm error path /var/www/sun/admin-web
+npm error workspace admin-web@1.0.0
+npm error location /var/www/sun/admin-web
+npm error command failed
+npm error command sh -c npx vite build
+root@sunfoods:/var/www/sun#
