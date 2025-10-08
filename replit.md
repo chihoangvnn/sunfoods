@@ -23,6 +23,15 @@ The backend is an Express.js-based REST API written in TypeScript. It employs se
 - **Deployment Files**: `ecosystem.config.js` (PM2 config), `nginx.conf.template` (Nginx config), `.env.example` (environment variables), `DEPLOY.md` (step-by-step deployment guide)
 - **Build Commands**: `npm run build:all` builds both apps, `npm run start:prod` starts PM2 processes
 
+### Development Workflow (Replit)
+**Admin-Web Build & Dev Setup:** The admin interface uses a separate React app (admin-web) that builds to static files served by the backend:
+- **Production Build**: `cd admin-web && pnpm build` → outputs to `backend/public/admin/` with base path `/adminhoang`
+- **Dev Server**: `cd admin-web && pnpm dev` → runs Vite on port 5173 with proxy to backend (port 3000)
+- **Backend Workflow**: Express backend runs on port 3000 (Replit auto-binds to external port 80)
+- **Admin Dev Workflow**: Vite dev server on port 5173 (console output)
+- **Proxy Config**: Vite proxies `/api` and `/uploads` requests to `localhost:3000` during development
+- **Port Rules**: Backend uses port 3000, Admin Dev uses port 5173 (Replit enforces port 5000 for webview frontends only)
+
 ### Feature Specifications
 - **Admin & Customer Authentication**: Role-based access control (RBAC) with Multi-OAuth 2.0 (Google, Facebook, Zalo, Replit) and CSRF protection.
 - **Storefront & Landing Page Generation**: Dynamic storefronts and customizable product landing pages.

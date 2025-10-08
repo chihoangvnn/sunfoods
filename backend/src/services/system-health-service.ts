@@ -237,12 +237,27 @@ export class SystemHealthService {
 
   /**
    * 👥 Check worker health and availability (using cached data)
+   * 
+   * Environment-aware: In development, no workers is expected (external Vercel Functions)
    */
   private async checkWorkerHealth(): Promise<SystemHealthCheck> {
     const startTime = Date.now();
+    const isDevelopment = process.env.NODE_ENV !== 'production';
+    
+    console.log(`🔍 Worker health check - NODE_ENV: ${process.env.NODE_ENV}, isDevelopment: ${isDevelopment}`);
     
     try {
-      const workers = this.getCachedWorkers();
+      const allWorkers = this.getCachedWorkers();
+      
+      // Filter out stale workers (not pinged in > 7 days)
+      const STALE_THRESHOLD = 7 * 24 * 60 * 60 * 1000; // 7 days in ms
+      const now = Date.now();
+      const workers = allWorkers.filter(w => {
+        if (!w.lastPingAt) return false; // Never pinged
+        const lastPing = new Date(w.lastPingAt).getTime();
+        return (now - lastPing) < STALE_THRESHOLD;
+      });
+      
       const onlineWorkers = workers.filter(w => w.isOnline);
       const healthyWorkers = onlineWorkers.filter(w => w.status === 'active');
       
@@ -251,8 +266,18 @@ export class SystemHealthService {
       let status: 'healthy' | 'degraded' | 'unhealthy' = 'healthy';
       const healthyRatio = workers.length > 0 ? healthyWorkers.length / workers.length : 0;
       
-      if (healthyRatio < 0.5) status = 'unhealthy';
-      else if (healthyRatio < 0.8) status = 'degraded';
+      console.log(`🔍 Workers: ${allWorkers.length} total, ${workers.length} active (${allWorkers.length - workers.length} stale), ${onlineWorkers.length} online`);
+      
+      // Environment-aware worker health assessment
+      if (workers.length === 0) {
+        // No workers registered - expected in dev, critical in prod
+        status = isDevelopment ? 'degraded' : 'unhealthy';
+        console.log(`🔍 No workers - setting status to: ${status}`);
+      } else if (healthyRatio < 0.5) {
+        status = 'unhealthy';
+      } else if (healthyRatio < 0.8) {
+        status = 'degraded';
+      }
 
       return {
         component: 'workers',
@@ -262,7 +287,11 @@ export class SystemHealthService {
           totalWorkers: workers.length,
           onlineWorkers: onlineWorkers.length,
           healthyWorkers: healthyWorkers.length,
-          healthyRatio: Math.round(healthyRatio * 100)
+          healthyRatio: Math.round(healthyRatio * 100),
+          environment: isDevelopment ? 'development' : 'production',
+          note: workers.length === 0 && isDevelopment 
+            ? 'Workers are external services - deploy to Vercel for auto-posting'
+            : undefined
         },
         checkedAt: new Date()
       };
@@ -464,22 +493,42 @@ export class SystemHealthService {
 
   /**
    * ⚠️ Generate system alerts based on health checks
+   * 
+   * Environment-aware: Development mode shows warnings, production shows critical alerts
    */
   private generateAlerts(components: SystemHealthCheck[], metrics: SystemHealthReport['metrics']): string[] {
     const alerts: string[] = [];
+    const isDevelopment = process.env.NODE_ENV !== 'production';
 
     // Check component alerts
     components.forEach(component => {
       if (component.status === 'unhealthy') {
         alerts.push(`🔴 ${component.component.toUpperCase()} is unhealthy: ${component.error || 'Critical issue detected'}`);
       } else if (component.status === 'degraded') {
-        alerts.push(`🟡 ${component.component.toUpperCase()} is degraded: Performance issues detected`);
+        // Environment-aware degraded alert for workers
+        if (component.component === 'workers' && metrics.totalWorkers === 0 && isDevelopment) {
+          alerts.push(`ℹ️ WORKERS: No external workers deployed - Auto-posting requires Vercel Function workers`);
+        } else {
+          alerts.push(`🟡 ${component.component.toUpperCase()} is degraded: Performance issues detected`);
+        }
       }
     });
 
-    // Check metrics alerts
-    if (metrics.onlineWorkers === 0) {
-      alerts.push('🔴 CRITICAL: No workers are online - Auto-posting system is offline');
+    // Check metrics alerts (environment-aware for workers)
+    if (metrics.onlineWorkers === 0 && metrics.totalWorkers === 0) {
+      // No workers registered at all
+      if (!isDevelopment) {
+        alerts.push('🔴 CRITICAL: No workers are registered - Auto-posting system is offline');
+      }
+      // In dev, we already added an info alert above
+    } else if (metrics.onlineWorkers === 0) {
+      // Workers registered but none online
+      if (isDevelopment) {
+        // In development, workers are external Vercel Functions - show info instead of critical
+        alerts.push('ℹ️ WORKERS: Workers are offline - Auto-posting requires deployed Vercel Functions');
+      } else {
+        alerts.push('🔴 CRITICAL: No workers are online - Auto-posting system is offline');
+      }
     } else if (metrics.onlineWorkers < metrics.totalWorkers * 0.5) {
       alerts.push('🟡 WARNING: Less than 50% of workers are online');
     }

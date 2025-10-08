@@ -23,9 +23,9 @@ import type {
   WorkerHealthCheck,
   InsertWorkerHealthCheck,
   WorkerPlatform,
-  WorkerCapability
+  WorkerCapability,
+  SUPPORTED_WORKER_PLATFORMS
 } from '@shared/schema';
-// import { SUPPORTED_WORKER_PLATFORMS } from '@shared/schema';
 
 // Worker registration and capabilities
 export interface WorkerRegistrationData {
@@ -312,7 +312,7 @@ export class WorkerManagementService {
     workerId: string, 
     jobData: {
       jobId: string;
-      scheduledPostId: string;
+      scheduledPostId?: string;
       platform: WorkerPlatform;
       jobType: string;
       priority: number;

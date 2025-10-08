@@ -16,7 +16,7 @@ import crypto from 'crypto';
 import axios, { AxiosError } from 'axios';
 import { WorkerManagementService } from './worker-management';
 import workerStorage from '../storage/worker-storage';
-import type { WorkerPlatform, Worker } from '@shared/schema';
+import type { WorkerPlatform, Workers } from '@shared/schema';
 
 // Job dispatch payload structure
 export interface JobDispatchPayload {
@@ -163,7 +163,7 @@ export class JobDispatchService {
   /**
    * 🎯 Select optimal worker for job based on platform, load, and performance
    */
-  private async selectOptimalWorker(payload: JobDispatchPayload): Promise<Worker | null> {
+  private async selectOptimalWorker(payload: JobDispatchPayload): Promise<Workers | null> {
     try {
       // Get available workers for this platform
       const availableWorkers = await workerStorage.getWorkers({
@@ -202,7 +202,7 @@ export class JobDispatchService {
   /**
    * 📊 Calculate worker score based on multiple factors
    */
-  private async calculateWorkerScore(worker: Worker, payload: JobDispatchPayload): Promise<number> {
+  private async calculateWorkerScore(worker: Workers, payload: JobDispatchPayload): Promise<number> {
     let score = 0;
 
     // Base score from success rate
@@ -273,7 +273,7 @@ export class JobDispatchService {
   /**
    * 📡 Send signed job request to Vercel Function worker
    */
-  private async sendJobToWorker(worker: Worker, signedRequest: SignedJobRequest): Promise<{ success: boolean; error?: string }> {
+  private async sendJobToWorker(worker: Workers, signedRequest: SignedJobRequest): Promise<{ success: boolean; error?: string }> {
     try {
       console.log(`📡 Sending job to worker ${worker.workerId} at ${worker.endpointUrl}`);
       
@@ -425,7 +425,7 @@ export class JobDispatchService {
   /**
    * 📈 Calculate new success rate for worker
    */
-  private calculateNewSuccessRate(worker: Worker, success: boolean): string {
+  private calculateNewSuccessRate(worker: Workers, success: boolean): string {
     const totalJobs = worker.totalJobsCompleted + worker.totalJobsFailed + 1;
     const successfulJobs = worker.totalJobsCompleted + (success ? 1 : 0);
     const rate = (successfulJobs / totalJobs) * 100;

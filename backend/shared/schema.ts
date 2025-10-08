@@ -3277,6 +3277,23 @@ export type VietnameseReviewTemplates = typeof vietnameseReviewTemplates.$inferS
 export type InsertWorkers = z.infer<typeof insertWorkersSchema>;
 export type Workers = typeof workers.$inferSelect;
 
+// Worker-specific types
+export type WorkerPlatform = 'facebook' | 'instagram' | 'twitter' | 'tiktok' | 'youtube' | 'linkedin';
+
+export const SUPPORTED_WORKER_PLATFORMS: WorkerPlatform[] = [
+  'facebook',
+  'instagram', 
+  'twitter',
+  'tiktok',
+  'youtube',
+  'linkedin'
+];
+
+export interface WorkerCapability {
+  platform: WorkerPlatform;
+  actions: string[];
+}
+
 export type BookWithPrices = Books & {
   prices?: BookPrices[];
 };
