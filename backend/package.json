@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "start": "node -r dotenv/config dist/index.js",
-    "build": "npx esbuild src/index.ts --bundle --platform=node --format=cjs --outdir=dist --external:@neondatabase/serverless --external:@google/genai --external:canvas --external:firebase-admin --external:bullmq --external:ioredis --external:bcrypt",
+    "build": "npx esbuild src/index.ts --bundle --platform=node --format=cjs --outdir=dist --external:@neondatabase/serverless --external:@google/genai --external:canvas --external:firebase-admin --external:bullmq --external:ioredis --external:bcrypt --external:lightningcss --external:vite",
     "dev": "npm run build && node dist/index.js",
     "db:push": "drizzle-kit push"
   },

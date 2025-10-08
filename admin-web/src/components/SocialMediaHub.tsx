@@ -5,7 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { Facebook, Instagram, Twitter, Music, Users, MessageCircle, TrendingUp, BarChart3, Calendar } from 'lucide-react';
+import { Facebook, Instagram, Twitter, Music, Users, MessageCircle, TrendingUp, BarChart, Calendar } from 'lucide-react';
 import { FacebookConnectButton } from '@/components/FacebookConnectButton';
 import { useToast } from '@/hooks/use-toast';
 
@@ -251,7 +251,7 @@ export function SocialMediaHub() {
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
         <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="overview" className="flex items-center gap-2">
-            <BarChart3 className="h-4 w-4" />
+            <BarChart className="h-4 w-4" />
             Overview
           </TabsTrigger>
           <TabsTrigger value="accounts" className="flex items-center gap-2">

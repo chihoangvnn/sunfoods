@@ -1,0 +1,255 @@
+================================================================================
+         HƯỚNG DẪN DEPLOY HOÀN CHỈNH CHO SUNFOODS.VN VPS
+================================================================================
+
+📦 PACKAGE NÀY BAO GỒM:
+  ✓ admin/                    - Admin dashboard đã build sẵn
+  ✓ nginx-production.conf     - Nginx config với SSL, caching, security
+  ✓ ecosystem.production.js   - PM2 config với clustering
+  ✓ deploy-to-vps.sh          - Script tự động deploy
+  ✓ DEPLOY-INSTRUCTIONS.txt   - File này
+
+================================================================================
+  BƯỚC 1: UPLOAD LÊN VPS
+================================================================================
+
+Từ máy local, upload file lên VPS:
+
+  scp deployment-complete.tar.gz root@your-vps-ip:/tmp/
+
+Hoặc dùng WinSCP/FileZilla để upload file lên /tmp/
+
+================================================================================
+  BƯỚC 2: SSH VÀO VPS
+================================================================================
+
+  ssh root@your-vps-ip
+
+================================================================================
+  BƯỚC 3: EXTRACT VÀ CHẠY DEPLOYMENT
+================================================================================
+
+Chạy các lệnh sau trên VPS:
+
+  # Extract deployment package
+  cd /tmp
+  tar -xzf deployment-complete.tar.gz
+  cd deployment-complete
+
+  # Make script executable
+  chmod +x deploy-to-vps.sh
+
+  # Run deployment script
+  bash deploy-to-vps.sh
+
+Script sẽ tự động:
+  ✓ Backup admin cũ (nếu có)
+  ✓ Deploy admin files mới
+  ✓ Clear Nginx proxy cache
+  ✓ Restart PM2 processes (backend + mobile)
+  ✓ Reload Nginx
+  ✓ Verify deployment
+
+================================================================================
+  BƯỚC 4: VERIFY DEPLOYMENT
+================================================================================
+
+1. MỞ BROWSER VÀ VÀO ADMIN:
+   
+   URL: https://sunfoods.vn/adminhoang/login
+
+2. HARD REFRESH ĐỂ CLEAR BROWSER CACHE:
+   
+   Windows/Linux: Ctrl + Shift + R
+   macOS:         Cmd + Shift + R
+
+3. KIỂM TRA CSS ĐÃ LOAD:
+   
+   • Mở DevTools (F12)
+   • Tab Network → Filter CSS
+   • Tìm file: index-WjAjsFk0.css
+   • Status phải là: 200 OK (màu xanh)
+
+4. LOGIN VÀO ADMIN:
+   
+   Email:    admin@example.com
+   Password: admin123
+
+5. KIỂM TRA MOBILE FRONTEND:
+   
+   URL: https://sunfoods.vn/
+
+================================================================================
+  CẤU HÌNH NGINX (Nếu chưa setup)
+================================================================================
+
+Nếu đây là lần đầu deploy hoặc cần update Nginx config:
+
+1. Copy Nginx config:
+   
+   sudo cp nginx-production.conf /etc/nginx/sites-available/sunfoods.vn
+
+2. Update SSL certificate paths trong file (nếu cần):
+   
+   sudo nano /etc/nginx/sites-available/sunfoods.vn
+   
+   # Tìm và update các dòng:
+   ssl_certificate /etc/letsencrypt/live/sunfoods.vn/fullchain.pem;
+   ssl_certificate_key /etc/letsencrypt/live/sunfoods.vn/privkey.pem;
+
+3. Enable site:
+   
+   sudo ln -sf /etc/nginx/sites-available/sunfoods.vn /etc/nginx/sites-enabled/
+
+4. Test và reload Nginx:
+   
+   sudo nginx -t
+   sudo systemctl reload nginx
+
+================================================================================
+  CẤU HÌNH PM2 (Nếu chưa setup)
+================================================================================
+
+Nếu cần update PM2 config:
+
+1. Copy PM2 ecosystem config:
+   
+   sudo cp ecosystem.production.js /var/www/sun/
+
+2. Stop các processes cũ (nếu có):
+   
+   pm2 delete all
+
+3. Start với config mới:
+   
+   cd /var/www/sun
+   pm2 start ecosystem.production.js
+
+4. Save PM2 config để auto-start khi reboot:
+   
+   pm2 save
+   pm2 startup
+
+================================================================================
+  TROUBLESHOOTING
+================================================================================
+
+❌ ADMIN KHÔNG CÓ CSS (Trang trắng):
+
+   1. Check file tồn tại:
+      ls -la /var/www/sun/backend/public/admin/assets/
+      # Phải thấy: index-WjAjsFk0.css
+
+   2. Test CSS URL trực tiếp:
+      curl -I https://sunfoods.vn/adminhoang/assets/index-WjAjsFk0.css
+      # Phải trả về: HTTP/2 200
+
+   3. Check Nginx logs:
+      tail -f /var/log/nginx/sunfoods.vn-error.log
+
+   4. Clear browser cache hoàn toàn:
+      Chrome: Settings → Privacy → Clear browsing data
+
+❌ PM2 PROCESSES KHÔNG CHẠY:
+
+   Check PM2 status:
+      pm2 status
+      pm2 logs backend --lines 50
+      pm2 logs mobile --lines 50
+
+   Restart nếu cần:
+      pm2 restart all
+
+❌ NGINX LỖI 502 BAD GATEWAY:
+
+   1. Check backend đang chạy:
+      pm2 status
+      curl http://localhost:3000/api/health
+
+   2. Check mobile đang chạy:
+      curl http://localhost:3001
+
+   3. Check Nginx config:
+      sudo nginx -t
+
+❌ SSL CERTIFICATE LỖI:
+
+   1. Verify cert files:
+      ls -la /etc/letsencrypt/live/sunfoods.vn/
+
+   2. Renew certificate (nếu hết hạn):
+      sudo certbot renew
+      sudo systemctl reload nginx
+
+================================================================================
+  USEFUL COMMANDS
+================================================================================
+
+# Check service status
+  sudo systemctl status nginx
+  pm2 status
+
+# View logs
+  pm2 logs backend --lines 100
+  pm2 logs mobile --lines 100
+  tail -f /var/log/nginx/sunfoods.vn-error.log
+  tail -f /var/log/nginx/sunfoods.vn-access.log
+
+# Restart services
+  pm2 restart all
+  sudo systemctl reload nginx
+
+# Monitor resources
+  pm2 monit
+  htop
+
+# Clear Nginx cache manually
+  sudo rm -rf /var/lib/nginx/proxy/*
+  sudo systemctl reload nginx
+
+================================================================================
+  POST-DEPLOYMENT CHECKLIST
+================================================================================
+
+□ Admin login works at https://sunfoods.vn/adminhoang/login
+□ CSS loads correctly (no white page)
+□ Mobile frontend works at https://sunfoods.vn/
+□ SSL certificate is valid (green padlock)
+□ PM2 processes are running (pm2 status)
+□ Nginx is running (sudo systemctl status nginx)
+□ Backend API responds (curl https://sunfoods.vn/api/health)
+□ No errors in logs (pm2 logs, nginx logs)
+
+================================================================================
+  PRODUCTION ENVIRONMENT VARIABLES
+================================================================================
+
+Đảm bảo file /var/www/sun/backend/.env có các biến sau:
+
+  NODE_ENV=production
+  PORT=3000
+  DATABASE_URL=postgresql://user:pass@host:5432/dbname
+  SESSION_SECRET=your-session-secret
+  # ... các biến khác
+
+Và /var/www/sun/customer-mobile/.env:
+
+  NODE_ENV=production
+  PORT=3001
+  NEXT_PUBLIC_API_URL=https://sunfoods.vn/api
+  # ... các biến khác
+
+================================================================================
+  CONTACT & SUPPORT
+================================================================================
+
+Nếu gặp vấn đề, gửi thông tin sau:
+
+  1. Output của: pm2 status
+  2. Output của: pm2 logs backend --lines 50
+  3. Output của: tail -100 /var/log/nginx/sunfoods.vn-error.log
+  4. Screenshot lỗi từ browser DevTools (Network tab)
+
+================================================================================
+                          DEPLOYMENT COMPLETE!
+================================================================================

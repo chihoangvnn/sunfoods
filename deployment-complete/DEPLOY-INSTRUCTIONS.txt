@@ -1,0 +1,172 @@
+================================================================================
+        SUNFOODS ADMIN DEPLOYMENT INSTRUCTIONS (Layout Fixed)
+================================================================================
+
+📦 PACKAGE CONTENTS:
+-------------------
+1. admin/                      - New admin build with SidebarInset layout fix
+   ├── index.html             - Entry point
+   └── assets/
+       ├── index-C-bl5VG9.js  - Main JS bundle (5.5 MB) - LAYOUT FIXED
+       └── index-WjAjsFk0.css - Styles (46 KB)
+
+2. nginx-production.conf       - Production Nginx configuration
+3. ecosystem.production.js     - PM2 process manager config
+4. deploy-to-vps.sh           - Automated deployment script
+5. DEPLOY-INSTRUCTIONS.txt     - This file
+
+================================================================================
+🚀 DEPLOYMENT STEPS
+================================================================================
+
+METHOD 1: AUTOMATED DEPLOYMENT (Recommended)
+--------------------------------------------
+1. Upload package to VPS:
+   scp deployment-LAYOUT-FIXED.tar.gz root@sunfoods.vn:/tmp/
+
+2. SSH into VPS:
+   ssh root@sunfoods.vn
+
+3. Extract package:
+   cd /tmp
+   tar -xzf deployment-LAYOUT-FIXED.tar.gz
+   cd deployment-complete
+
+4. Make deploy script executable:
+   chmod +x deploy-to-vps.sh
+
+5. Run deployment:
+   sudo ./deploy-to-vps.sh
+
+6. Clear browser cache:
+   - Chrome/Edge: Ctrl+Shift+Delete or Cmd+Shift+Delete
+   - Or hard refresh: Ctrl+F5 or Cmd+Shift+R
+
+METHOD 2: MANUAL DEPLOYMENT
+---------------------------
+1. Upload and extract package (same as above steps 1-3)
+
+2. Backup current admin:
+   cd /var/www/sunfoods
+   tar -czf backups/admin-backup-$(date +%Y%m%d_%H%M%S).tar.gz admin
+
+3. Deploy new admin build:
+   rm -rf /var/www/sunfoods/admin
+   cp -r /tmp/deployment-complete/admin /var/www/sunfoods/admin
+
+4. Set permissions:
+   chown -R www-data:www-data /var/www/sunfoods/admin
+   chmod -R 755 /var/www/sunfoods/admin
+
+5. Update Nginx config (if needed):
+   cp /tmp/deployment-complete/nginx-production.conf /etc/nginx/sites-available/sunfoods
+   ln -sf /etc/nginx/sites-available/sunfoods /etc/nginx/sites-enabled/sunfoods
+   nginx -t
+   systemctl reload nginx
+
+6. Update PM2 config (optional):
+   cp /tmp/deployment-complete/ecosystem.production.js /var/www/sunfoods/backend/
+   cd /var/www/sunfoods/backend
+   pm2 restart ecosystem.production.js --update-env
+   pm2 save
+
+7. Clear cache and verify:
+   - Touch files: find /var/www/sunfoods/admin -type f -exec touch {} +
+   - Clear browser cache
+
+================================================================================
+✅ VERIFICATION CHECKLIST
+================================================================================
+
+After deployment, verify the following:
+
+□ Admin dashboard loads: https://sunfoods.vn/adminhoang
+□ SidebarInset layout is correctly displayed
+□ No console errors in browser DevTools
+□ All navigation items work properly
+□ Sidebar toggle functions correctly
+□ Mobile responsive layout works
+□ API calls to backend working
+□ Authentication flow intact
+
+================================================================================
+🔧 TROUBLESHOOTING
+================================================================================
+
+ISSUE: Admin page shows old layout
+SOLUTION: 
+  - Clear browser cache completely (Ctrl+Shift+Delete)
+  - Hard refresh (Ctrl+F5 or Cmd+Shift+R)
+  - Try incognito/private browsing mode
+
+ISSUE: 404 errors for assets
+SOLUTION:
+  - Check Nginx config location /adminhoang alias is correct
+  - Verify file permissions: ls -la /var/www/sunfoods/admin
+  - Check Nginx error logs: tail -f /var/log/nginx/error.log
+
+ISSUE: Blank page or JS errors
+SOLUTION:
+  - Check browser console for errors
+  - Verify all files copied: ls -la /var/www/sunfoods/admin/assets/
+  - Check if index-C-bl5VG9.js exists and is 5.5 MB
+
+ISSUE: Backend API not responding
+SOLUTION:
+  - Check PM2 status: pm2 status
+  - View logs: pm2 logs sunfoods-backend
+  - Restart: pm2 restart sunfoods-backend
+
+================================================================================
+📝 IMPORTANT NOTES
+================================================================================
+
+1. LAYOUT FIX DETAILS:
+   - Fixed SidebarInset component rendering
+   - JS bundle: index-C-bl5VG9.js (5.5 MB)
+   - No affiliate portal routes in this build
+
+2. CACHE CONTROL:
+   - HTML files: no-cache headers
+   - JS/CSS assets: 1 year cache with immutable flag
+   - Browser cache must be cleared after deployment
+
+3. ROLLBACK PROCEDURE:
+   If issues occur, rollback using backup:
+   cd /var/www/sunfoods
+   tar -xzf backups/admin-backup-YYYYMMDD_HHMMSS.tar.gz
+   systemctl reload nginx
+
+4. PM2 CONFIGURATION:
+   - 2 cluster instances for load balancing
+   - Auto-restart on crashes
+   - Max memory: 1GB per instance
+   - Logs: /var/www/sunfoods/logs/
+
+================================================================================
+🔐 SECURITY CHECKLIST
+================================================================================
+
+□ SSL certificate is valid and not expired
+□ HTTPS redirect is working (HTTP → HTTPS)
+□ Security headers are set in Nginx
+□ File permissions are correct (755 for dirs, 644 for files)
+□ .env file is secure and not exposed
+□ Admin authentication is enabled
+
+================================================================================
+📞 SUPPORT
+================================================================================
+
+For deployment issues:
+1. Check deployment logs in /var/www/sunfoods/logs/
+2. Review Nginx logs: /var/log/nginx/
+3. Check PM2 logs: pm2 logs
+
+Admin URL: https://sunfoods.vn/adminhoang
+Backend API: https://sunfoods.vn/api
+
+================================================================================
+Deployment Package Created: $(date)
+Admin Build Version: index-C-bl5VG9.js (Layout Fixed with SidebarInset)
+================================================================================

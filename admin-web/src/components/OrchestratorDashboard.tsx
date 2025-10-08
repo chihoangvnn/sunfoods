@@ -9,13 +9,13 @@ import {
   Square, 
   Settings, 
   Users, 
-  Zap,
+  Bolt,
   TrendingUp,
   Activity,
   AlertTriangle,
   CheckCircle2,
   Clock,
-  BarChart3,
+  BarChart,
   Globe
 } from 'lucide-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -263,7 +263,7 @@ export default function OrchestratorDashboard() {
             disabled={quickStartMutation.isPending}
             className="bg-green-600 hover:bg-green-700"
           >
-            <Zap className="h-4 w-4 mr-2" />
+            <Bolt className="h-4 w-4 mr-2" />
             {quickStartMutation.isPending ? 'Đang khởi chạy...' : 'Quick Start'}
           </Button>
           
@@ -549,7 +549,7 @@ export default function OrchestratorDashboard() {
               disabled={quickStartMutation.isPending}
               className="bg-green-600 hover:bg-green-700"
             >
-              <Zap className="h-4 w-4 mr-2" />
+              <Bolt className="h-4 w-4 mr-2" />
               {quickStartMutation.isPending ? 'Đang khởi chạy...' : 'Khởi chạy ngay'}
             </Button>
           </div>

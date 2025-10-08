@@ -15,7 +15,7 @@ import {
   Globe,
   Eye,
   Trash2,
-  BarChart3,
+  BarChart,
   Activity,
   Clock,
   Plus,
@@ -520,7 +520,7 @@ export default function CookieManagement() {
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">Nhóm dự án</CardTitle>
-                <BarChart3 className="h-4 w-4 text-muted-foreground" />
+                <BarChart className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">{stats?.profilesByGroup?.length || 0}</div>
@@ -557,7 +557,7 @@ export default function CookieManagement() {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <BarChart3 className="h-5 w-5" />
+                  <BarChart className="h-5 w-5" />
                   Thống kê theo nhóm
                 </CardTitle>
               </CardHeader>

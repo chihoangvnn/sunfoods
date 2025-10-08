@@ -16,7 +16,7 @@ import {
   Trash2, 
   Users, 
   Settings, 
-  BarChart3,
+  BarChart,
   AlertCircle,
   CheckCircle,
   Clock,
@@ -780,7 +780,7 @@ export function GroupsManagerPanel() {
                     
                     <div>
                       <div className="flex items-center gap-1 text-gray-600 mb-1">
-                        <BarChart3 className="w-3 h-3" />
+                        <BarChart className="w-3 h-3" />
                         Today
                       </div>
                       <div className="font-medium">{group.todayPosts}</div>

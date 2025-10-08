@@ -1,0 +1,43 @@
+root@sunfoods:/var/www/sun/backend/public# cat /var/www/sun/backend/public/admin/index.html | grep -i "stylesheet"
+    <link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Fira+Code:wght@300..700&family=Geist+Mono:wght@100..900&family=Geist:wght@100..900&family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=IBM+Plex+Sans:ital,wght@0,100..700;1,100..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Lora:ital,wght@0,400..700;1,400..700&family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Outfit:wght@100..900&family=Oxanium:wght@200..800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&family=Roboto:ital,wght@0,100..900;1,100..900&family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&family=Space+Grotesk:wght@300..700&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" crossorigin href="/adminhoang/assets/index-WjAjsFk0.css">
+root@sunfoods:/var/www/sun/backend/public# ls -la /var/www/sun/backend/public/admin/assets/index-WjAjsFk0.css
+-rw-r--r-- 1 1000 1000 46332 Oct  8 17:03 /var/www/sun/backend/public/admin/assets/index-WjAjsFk0.css
+root@sunfoods:/var/www/sun/backend/public# curl -I http://localhost:3000/adminhoang/assets/index-WjAjsFk0.css
+HTTP/1.1 200 OK
+X-Powered-By: Express
+Vary: Origin
+Access-Control-Allow-Credentials: true
+Access-Control-Expose-Headers: X-Total-Count,X-Page-Count
+Accept-Ranges: bytes
+Cache-Control: public, max-age=31536000
+Last-Modified: Wed, 08 Oct 2025 10:03:48 GMT
+ETag: W/"b4fc-199c346ea56"
+Content-Type: text/css; charset=UTF-8
+Content-Length: 46332
+Date: Wed, 08 Oct 2025 10:25:31 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+root@sunfoods:/var/www/sun/backend/public# sudo tail -n 20 /var/log/nginx/sunfoods.vn-error.log
+2025/10/08 16:03:47 [error] 378104#378104: *7 directory index of "/var/www/sun/backend/public/" is forbidden, client: 209.97.180.8, server: sunfoods.vn, request: "GET / HTTP/1.1", host: "sunfoods.vn"
+2025/10/08 16:03:52 [error] 378104#378104: *20 directory index of "/var/www/sun/backend/public/" is forbidden, client: 107.172.195.39, server: sunfoods.vn, request: "GET / HTTP/1.1", host: "sunfoods.vn"
+2025/10/08 16:03:52 [error] 378104#378104: *33 directory index of "/var/www/sun/backend/public/" is forbidden, client: 209.97.180.8, server: sunfoods.vn, request: "GET / HTTP/1.1", host: "sunfoods.vn"
+2025/10/08 16:03:52 [error] 378104#378104: *22 directory index of "/var/www/sun/backend/public/" is forbidden, client: 104.164.173.92, server: sunfoods.vn, request: "GET / HTTP/1.1", host: "sunfoods.vn"
+2025/10/08 16:03:56 [error] 378105#378105: *51 connect() failed (111: Connection refused) while connecting to upstream, client: 116.110.161.200, server: sunfoods.vn, request: "GET /api/affiliate-auth/session HTTP/1.1", upstream: "http://[::1]:3000/api/affiliate-auth/session", host: "sunfoods.vn", referrer: "http://sunfoods.vn/"
+2025/10/08 16:04:00 [error] 378115#378115: *57 directory index of "/var/www/sun/backend/public/" is forbidden, client: 103.4.251.37, server: sunfoods.vn, request: "GET / HTTP/1.1", host: "sunfoods.vn"
+2025/10/08 16:04:01 [error] 378115#378115: *62 connect() failed (111: Connection refused) while connecting to upstream, client: 116.110.161.200, server: sunfoods.vn, request: "GET /api/affiliate-auth/session HTTP/1.1", upstream: "http://[::1]:3000/api/affiliate-auth/session", host: "sunfoods.vn", referrer: "http://sunfoods.vn/"
+2025/10/08 16:04:02 [error] 378115#378115: *66 directory index of "/var/www/sun/backend/public/" is forbidden, client: 160.22.161.3, server: sunfoods.vn, request: "HEAD / HTTP/1.1", host: "sunfoods.vn"
+2025/10/08 16:04:04 [error] 378115#378115: *70 directory index of "/var/www/sun/backend/public/" is forbidden, client: 209.97.180.8, server: sunfoods.vn, request: "GET /?rest_route=/wp/v2/users/ HTTP/1.1", host: "sunfoods.vn"
+2025/10/08 16:04:14 [error] 378115#378115: *72 directory index of "/var/www/sun/backend/public/" is forbidden, client: 195.211.77.140, server: sunfoods.vn, request: "HEAD / HTTP/1.1", host: "sunfoods.vn"
+2025/10/08 16:04:16 [error] 378115#378115: *73 directory index of "/var/www/sun/backend/public/" is forbidden, client: 160.22.161.3, server: sunfoods.vn, request: "HEAD / HTTP/1.1", host: "sunfoods.vn"
+2025/10/08 16:04:30 [error] 378115#378115: *62 connect() failed (111: Connection refused) while connecting to upstream, client: 116.110.161.200, server: sunfoods.vn, request: "GET /api/affiliate-auth/session HTTP/1.1", upstream: "http://[::1]:3000/api/affiliate-auth/session", host: "sunfoods.vn", referrer: "http://sunfoods.vn/"
+2025/10/08 16:05:43 [error] 378115#378115: *62 connect() failed (111: Connection refused) while connecting to upstream, client: 116.110.161.200, server: sunfoods.vn, request: "GET /api/affiliate-auth/session HTTP/1.1", upstream: "http://[::1]:3000/api/affiliate-auth/session", host: "sunfoods.vn", referrer: "http://sunfoods.vn/"
+2025/10/08 16:26:25 [warn] 378367#378367: *182 an upstream response is buffered to a temporary file /var/lib/nginx/proxy/1/00/0000000001 while reading upstream, client: 116.110.161.200, server: sunfoods.vn, request: "GET /adminhoang/assets/index-Er0XnHwT.js HTTP/2.0", upstream: "http://127.0.0.1:3000/adminhoang/assets/index-Er0XnHwT.js", host: "sunfoods.vn", referrer: "https://sunfoods.vn/adminhoang/login"
+2025/10/08 16:27:50 [error] 378367#378367: *196 access forbidden by rule, client: 45.144.212.235, server: sunfoods.vn, request: "GET /.git/HEAD HTTP/1.1", host: "160.22.161.3"
+2025/10/08 16:53:42 [warn] 378366#378366: *220 an upstream response is buffered to a temporary file /var/lib/nginx/proxy/2/00/0000000002 while reading upstream, client: 116.110.161.200, server: sunfoods.vn, request: "GET /adminhoang/assets/index-Er0XnHwT.js HTTP/2.0", upstream: "http://127.0.0.1:3000/adminhoang/assets/index-Er0XnHwT.js", host: "sunfoods.vn", referrer: "https://sunfoods.vn/adminhoang/login"
+2025/10/08 16:58:08 [warn] 378366#378366: *247 an upstream response is buffered to a temporary file /var/lib/nginx/proxy/3/00/0000000003 while reading upstream, client: 116.110.161.200, server: sunfoods.vn, request: "GET /adminhoang/assets/index-Er0XnHwT.js HTTP/2.0", upstream: "http://127.0.0.1:3000/adminhoang/assets/index-Er0XnHwT.js", host: "sunfoods.vn", referrer: "https://sunfoods.vn/adminhoang/login"
+2025/10/08 17:14:54 [warn] 378366#378366: *360 an upstream response is buffered to a temporary file /var/lib/nginx/proxy/4/00/0000000004 while reading upstream, client: 116.110.161.200, server: sunfoods.vn, request: "GET /adminhoang/assets/index-B3pwsqSg.js HTTP/2.0", upstream: "http://127.0.0.1:3000/adminhoang/assets/index-B3pwsqSg.js", host: "sunfoods.vn", referrer: "https://sunfoods.vn/adminhoang/login"
+2025/10/08 17:14:54 [warn] 378366#378366: *360 an upstream response is buffered to a temporary file /var/lib/nginx/proxy/5/00/0000000005 while reading upstream, client: 116.110.161.200, server: sunfoods.vn, request: "GET /adminhoang/assets/index-WjAjsFk0.css HTTP/2.0", upstream: "http://127.0.0.1:3000/adminhoang/assets/index-WjAjsFk0.css", host: "sunfoods.vn", referrer: "https://sunfoods.vn/adminhoang/login"
+2025/10/08 17:22:36 [warn] 378367#378367: *426 an upstream response is buffered to a temporary file /var/lib/nginx/proxy/6/00/0000000006 while reading upstream, client: 116.110.161.200, server: sunfoods.vn, request: "GET /adminhoang/assets/index-B3pwsqSg.js HTTP/2.0", upstream: "http://127.0.0.1:3000/adminhoang/assets/index-B3pwsqSg.js", host: "sunfoods.vn", referrer: "https://sunfoods.vn/adminhoang/login"
+root@sunfoods:/var/www/sun/backend/public#

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   Plus, RefreshCw, Trash2, Edit2, Power, PowerOff, 
-  Wifi, WifiOff, Activity, DollarSign, BarChart3,
+  Wifi, WifiOff, Activity, DollarSign, BarChart,
   Clock, CheckCircle2, XCircle, AlertCircle, Loader2,
   Settings, TrendingUp, Database, Cloud, Smartphone
 } from 'lucide-react';

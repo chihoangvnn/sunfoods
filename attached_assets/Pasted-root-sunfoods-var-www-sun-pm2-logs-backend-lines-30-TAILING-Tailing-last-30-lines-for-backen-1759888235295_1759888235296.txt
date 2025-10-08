@@ -1,0 +1,50 @@
+root@sunfoods:/var/www/sun# pm2 logs backend --lines 30
+[TAILING] Tailing last 30 lines for [backend] process (change the value with --lines option)
+/root/.pm2/logs/backend-error-0.log last 30 lines:
+0|backend  | ]
+0|backend  | 🚨 SYSTEM HEALTH CRITICAL: [
+0|backend  |   '🔴 WORKERS is unhealthy: Critical issue detected',
+0|backend  |   '🔴 CRITICAL: No workers are online - Auto-posting system is offline'
+0|backend  | ]
+0|backend  | 🚨 SYSTEM HEALTH CRITICAL: [
+0|backend  |   '🔴 WORKERS is unhealthy: Critical issue detected',
+0|backend  |   '🔴 CRITICAL: No workers are online - Auto-posting system is offline'
+0|backend  | ]
+0|backend  | ⚠️  VAPID keys not configured! Push notifications will not work.
+0|backend  |    Set VAPID_PUBLIC_KEY and VAPID_PRIVATE_KEY environment variables.
+0|backend  | ⚠️ THÔNG BÁO: Đang sử dụng TikTok credentials mẫu. Vui lòng thay thế bằng credentials thật từ TikTok Developer Portal để kết nối thực tế.
+0|backend  | ⚠️ Replit OAuth credentials not found. Set REPLIT_APP_ID and REPLIT_APP_SECRET environment variables.
+0|backend  | ⚠️ Campaign verifier: Redis not configured - running without queue-based verification
+0|backend  | 🚨 SYSTEM HEALTH CRITICAL: [
+0|backend  |   '🔴 WORKERS is unhealthy: Critical issue detected',
+0|backend  |   '🔴 CRITICAL: No workers are online - Auto-posting system is offline'
+0|backend  | ]
+0|backend  | 🚨 SYSTEM HEALTH CRITICAL: [
+0|backend  |   '🔴 WORKERS is unhealthy: Critical issue detected',
+0|backend  |   '🔴 CRITICAL: No workers are online - Auto-posting system is offline'
+0|backend  | ]
+0|backend  | 🚨 SYSTEM HEALTH CRITICAL: [
+0|backend  |   '🔴 WORKERS is unhealthy: Critical issue detected',
+0|backend  |   '🔴 CRITICAL: No workers are online - Auto-posting system is offline'
+0|backend  | ]
+0|backend  | 🚨 SYSTEM HEALTH CRITICAL: [
+0|backend  |   '🔴 WORKERS is unhealthy: Critical issue detected',
+0|backend  |   '🔴 CRITICAL: No workers are online - Auto-posting system is offline'
+0|backend  | ]
+
+/var/www/sun/backend/logs/backend-out-0.log last 30 lines:
+0|backend  |  as "total_orders", sum("total") as "total_spent", MAX("created_at")::text as "last_order_date" from "orders" where "orders"."status" in ($1, $2) group by "orders"."user_id") "order_stats" on "customers"."id" = "order_stats"."user_id" where "customers"."profile_status" = $3 order by "customers"."join_date" desc limit $4 -- params: ["delivered", "shipped", "complete", 1]
+0|backend  | ✅ Health report generated in 1837ms - Overall: unhealthy
+0|backend  | Query: select "id", "worker_id", "name", "description", "platforms", "capabilities", "specialties", "max_concurrent_jobs", "min_job_interval", "max_jobs_per_hour", "avg_execution_time", "region", "environment", "deployment_platform", "endpoint_url", "ip_address", "ip_country", "ip_region", "status", "is_online", "last_ping_at", "last_job_at", "current_load", "total_jobs_completed", "total_jobs_failed", "success_rate", "avg_response_time", "registration_secret", "auth_token", "token_expires_at", "tags", "priority", "is_enabled", "metadata", "created_at", "updated_at" from "workers" order by "workers"."created_at" desc
+0|backend  | Query: select "id", "worker_id", "name", "description", "platforms", "capabilities", "specialties", "max_concurrent_jobs", "min_job_interval", "max_jobs_per_hour", "avg_execution_time", "region", "environment", "deployment_platform", "endpoint_url", "ip_address", "ip_country", "ip_region", "status", "is_online", "last_ping_at", "last_job_at", "current_load", "total_jobs_completed", "total_jobs_failed", "success_rate", "avg_response_time", "registration_secret", "auth_token", "token_expires_at", "tags", "priority", "is_enabled", "metadata", "created_at", "updated_at" from "workers" order by "workers"."created_at" desc
+0|backend  | 🏥 Generating system health report...
+0|backend  | Query: select "id", "worker_id", "name", "description", "platforms", "capabilities", "specialties", "max_concurrent_jobs", "min_job_interval", "max_jobs_per_hour", "avg_execution_time", "region", "environment", "deployment_platform", "endpoint_url", "ip_address", "ip_country", "ip_region", "status", "is_online", "last_ping_at", "last_job_at", "current_load", "total_jobs_completed", "total_jobs_failed", "success_rate", "avg_response_time", "registration_secret", "auth_token", "token_expires_at", "tags", "priority", "is_enabled", "metadata", "created_at", "updated_at" from "workers" order by "workers"."created_at" desc
+0|backend  | Query: select "id", "worker_id", "name", "description", "platforms", "capabilities", "specialties", "max_concurrent_jobs", "min_job_interval", "max_jobs_per_hour", "avg_execution_time", "region", "environment", "deployment_platform", "endpoint_url", "ip_address", "ip_country", "ip_region", "status", "is_online", "last_ping_at", "last_job_at", "current_load", "total_jobs_completed", "total_jobs_failed", "success_rate", "avg_response_time", "registration_secret", "auth_token", "token_expires_at", "tags", "priority", "is_enabled", "metadata", "created_at", "updated_at" from "workers" order by "workers"."created_at" desc
+0|backend  | Query: select "id", "caption", "hashtags", "asset_ids", "social_account_id", "platform", "scheduled_time", "timezone", "status", "published_at", "platform_post_id", "platform_url", "error_message", "retry_count", "last_retry_at", "analytics", "created_at", "updated_at", "priority", "ip_pool_id", "ip_snapshot", "batch_id" from "scheduled_posts" where ("scheduled_posts"."status" = $1 and "scheduled_posts"."scheduled_time" <= $2) order by "scheduled_posts"."scheduled_time" -- params: ["scheduled", "2025-10-08T01:50:11.774Z"]
+0|backend  | Query: select "id", "caption", "hashtags", "asset_ids", "social_account_id", "platform", "scheduled_time", "timezone", "status", "published_at", "platform_post_id", "platform_url", "error_message", "retry_count", "last_retry_at", "analytics", "created_at", "updated_at", "priority", "ip_pool_id", "ip_snapshot", "batch_id" from "scheduled_posts" where ("scheduled_posts"."status" = $1 and "scheduled_posts"."scheduled_time" <= $2) order by "scheduled_posts"."scheduled_time" -- params: ["scheduled", "2025-10-08T01:50:11.902Z"]
+0|backend  | Query: select "customers"."id", "customers"."name", "customers"."email", "customers"."phone", "customers"."avatar", "customers"."status", "customers"."total_debt", "customers"."credit_limit", "customers"."join_date", "customers"."registration_source", "customers"."profile_status", "customers"."membership_tier", "customers"."points_balance", "customers"."points_earned", "customers"."last_tier_update", "customers"."auth_user_id", "customers"."membership_data", "customers"."social_account_ids", "customers"."social_data", "customers"."customer_role", "customers"."limits_data", "customers"."is_local_customer", "customers"."is_affiliate", "customers"."affiliate_code", "customers"."affiliate_status", "customers"."commission_rate", "customers"."affiliate_data", COALESCE("order_stats"."total_orders", 0) as "total_orders", COALESCE("order_stats"."total_spent", 0) as "order_total_spent", COALESCE("order_stats"."last_order_date", "customers"."join_date"::text) as "last_order_date" from "customers" left join (select "user_id", count("id") as "total_orders", sum("total") as "total_spent", MAX("created_at")::text as "last_order_date" from "orders" where "orders"."status" in ($1, $2) group by "orders"."user_id") "order_stats" on "customers"."id" = "order_stats"."user_id" where "customers"."profile_status" = $3 order by "customers"."join_date" desc limit $4 -- params: ["delivered", "shipped", "complete", 1]
+0|backend  | Query: select "id", "caption", "hashtags", "asset_ids", "social_account_id", "platform", "scheduled_time", "timezone", "status", "published_at", "platform_post_id", "platform_url", "error_message", "retry_count", "last_retry_at", "analytics", "created_at", "updated_at", "priority", "ip_pool_id", "ip_snapshot", "batch_id" from "scheduled_posts" where ("scheduled_posts"."status" = $1 and "scheduled_posts"."retry_count" <= $2) -- params: ["failed", 2]
+0|backend  | ✅ Health report generated in 1111ms - Overall: unhealthy
+0|backend  | 📭 No due posts at 2025-10-08T01:50:11.902Z
+
+pm2 status

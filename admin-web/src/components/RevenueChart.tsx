@@ -1,4 +1,4 @@
-import { TrendingUp, DollarSign, Target, BarChart3 } from "lucide-react";
+import { TrendingUp, DollarSign, Target, BarChart } from "lucide-react";
 import { Area, AreaChart, ResponsiveContainer, XAxis, YAxis, CartesianGrid, Tooltip } from "recharts";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -199,7 +199,7 @@ export function RevenueChart({
           <div className="group relative p-4 rounded-2xl bg-gradient-to-br from-[hsl(var(--activity-purple))]/5 to-[hsl(var(--activity-purple))]/10 border border-[hsl(var(--activity-purple))]/20 hover:scale-105 transition-all duration-300">
             <div className="flex items-center gap-2 mb-2">
               <div className="p-1.5 rounded-lg bg-[hsl(var(--activity-purple))]/20">
-                <BarChart3 className="h-3 w-3 text-[hsl(var(--activity-purple))]" />
+                <BarChart className="h-3 w-3 text-[hsl(var(--activity-purple))]" />
               </div>
               <p className="text-xs font-semibold text-foreground/60 uppercase tracking-wide">Đơn hàng</p>
             </div>

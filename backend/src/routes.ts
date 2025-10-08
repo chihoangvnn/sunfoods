@@ -100,6 +100,7 @@ import { affiliateManagementRouter } from './api/affiliate-management';
 import { affiliateLandingRouter } from './api/affiliate-landing';
 import customerDashboardRouter from './api/customer-dashboard';
 import adminAuthRouter from './api/admin-auth';
+import devLoginRouter from './api/dev-login';
 import adminVendorsRouter from './api/admin-vendors';
 import adminCampaignsRouter from './api/admin-campaigns';
 import adminOAuthRouter from './api/admin-oauth';
@@ -6839,6 +6840,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.use("/api/customer-dashboard", customerDashboardRouter);
   app.use("/api/campaigns", campaignsRouter); // 🎯 Customer Campaign Participation APIs
   app.use("/api/admin", adminAuthRouter); // 🔐 Admin Authentication & Management
+  app.use("/api/admin", devLoginRouter); // 🔓 DEV ONLY: Auto-login for testing
   app.use("/api/admin", adminVendorsRouter); // 🏭 Admin Vendor Management
   app.use("/api/admin", adminCampaignsRouter); // 🎯 Admin Campaign Management
   app.use("/api/admin", adminOAuthRouter); // 🔑 Admin OAuth Settings & Stats

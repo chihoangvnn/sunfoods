@@ -13,7 +13,7 @@ import {
   CheckCircle2,
   Clock,
   Pause,
-  Zap,
+  Bolt,
   Users,
   Play
 } from 'lucide-react';
@@ -449,7 +449,7 @@ function SatelliteCard({ satellite, viewMode, onStatusChange, onClick, onCreateC
                 }}
                 className="bg-green-50 hover:bg-green-100 border-green-200 text-green-700"
               >
-                <Zap className="w-3 h-3 mr-1" />
+                <Bolt className="w-3 h-3 mr-1" />
                 Campaign
               </Button>
             </div>
@@ -518,7 +518,7 @@ function SatelliteCard({ satellite, viewMode, onStatusChange, onClick, onCreateC
           }}
           className="w-full bg-green-50 hover:bg-green-100 border-green-200 text-green-700"
         >
-          <Zap className="w-4 h-4 mr-2" />
+          <Bolt className="w-4 h-4 mr-2" />
           Tạo Campaign với Trợ lý Giám đốc
         </Button>
       </CardContent>

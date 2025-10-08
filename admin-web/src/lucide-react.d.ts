@@ -18,13 +18,13 @@ declare module 'lucide-react' {
   export const ShoppingCart: LucideIcon;
   export const ShoppingBag: LucideIcon;
   export const Users: LucideIcon;
-  export const BarChart3: LucideIcon;
+  export const BarChart: LucideIcon;
   export const Facebook: LucideIcon;
   export const Instagram: LucideIcon;
   export const Twitter: LucideIcon;
   export const Settings: LucideIcon;
   export const Home: LucideIcon;
-  export const Zap: LucideIcon;
+  export const Bolt: LucideIcon;
   export const Store: LucideIcon;
   export const Tags: LucideIcon;
   export const Hash: LucideIcon;
@@ -68,4 +68,20 @@ declare module 'lucide-react' {
   export const Eye: LucideIcon;
   export const Plus: LucideIcon;
   export const Sparkles: LucideIcon;
+  export const TrendingDown: LucideIcon;
+  export const DollarSign: LucideIcon;
+  export const Target: LucideIcon;
+  export const MessageSquare: LucideIcon;
+  export const Webhook: LucideIcon;
+  export const Copy: LucideIcon;
+  export const Check: LucideIcon;
+  export const ExternalLink: LucideIcon;
+  export const Tag: LucideIcon;
+  export const Filter: LucideIcon;
+  export const Grid: LucideIcon;
+  export const List: LucideIcon;
+  export const Video: LucideIcon;
+  export const ArrowUpRight: LucideIcon;
+  export const ArrowDownRight: LucideIcon;
+  export const RefreshCw: LucideIcon;
 }

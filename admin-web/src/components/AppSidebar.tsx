@@ -8,13 +8,13 @@ const {
   ShoppingCart,
   ShoppingBag,
   Users,
-  BarChart3,
+  BarChart,
   Facebook,
   Instagram,
   Twitter,
   Settings,
   Home,
-  Zap,
+  Bolt,
   Store,
   Tags,
   Hash,
@@ -95,7 +95,7 @@ const overviewItems = [
   {
     title: "Analytics",
     url: "/analytics",
-    icon: BarChart3,
+    icon: BarChart,
     gradient: "gradient-mint",
     description: "Phân tích chi tiết và insights"
   },
@@ -400,7 +400,7 @@ const operationsItems = [
   {
     title: "API Management",
     url: "/api-management",
-    icon: Zap,
+    icon: Bolt,
     gradient: "gradient-purple",
     description: "Giám sát và quản lý API endpoints"
   },
@@ -447,7 +447,7 @@ const bookItems = [
   {
     title: "Dashboard Đơn Sách",
     url: "/book-orders-dashboard",
-    icon: BarChart3,
+    icon: BarChart,
     gradient: "gradient-blue",
     description: "Thống kê và phân tích đơn hàng sách"
   },
@@ -495,7 +495,7 @@ const deliveryItems = [
   {
     title: "Dashboard Giao hàng",
     url: "/delivery-dashboard",
-    icon: BarChart3,
+    icon: BarChart,
     gradient: "gradient-blue",
     description: "Tổng quan quản lý giao hàng và xe"
   },

@@ -5,13 +5,13 @@ import {
   TrendingUp, 
   Users, 
   Calendar, 
-  BarChart3,
+  BarChart,
   Settings,
   Play,
   Pause,
   RefreshCw,
   Target,
-  Zap,
+  Bolt,
   Activity
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
@@ -220,7 +220,7 @@ export default function BaseSatelliteTemplate({
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="overview" className="flex items-center gap-2">
-              <BarChart3 className="w-4 h-4" />
+              <BarChart className="w-4 h-4" />
               Overview
             </TabsTrigger>
             <TabsTrigger value="content" className="flex items-center gap-2">
@@ -286,7 +286,7 @@ export default function BaseSatelliteTemplate({
                 <CardContent className="p-4">
                   <div className="flex items-center gap-3">
                     <div className="p-2 rounded-lg bg-orange-100">
-                      <Zap className="w-4 h-4 text-orange-600" />
+                      <Bolt className="w-4 h-4 text-orange-600" />
                     </div>
                     <div>
                       <p className="text-2xl font-bold">{config.metrics.activeAccounts}</p>

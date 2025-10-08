@@ -66,8 +66,8 @@ export async function setupVite(app: Express, server: Server) {
 }
 
 export function serveStatic(app: Express) {
-  const adminDistPath = path.resolve(import.meta.dirname, "..", "public", "admin");
-  const mobileDistPath = path.resolve(import.meta.dirname, "..", "dist-mobile");
+  const adminDistPath = path.resolve(__dirname, "..", "public", "admin");
+  const mobileDistPath = path.resolve(__dirname, "..", "dist-mobile");
 
   if (!fs.existsSync(adminDistPath)) {
     throw new Error(
@@ -75,11 +75,7 @@ export function serveStatic(app: Express) {
     );
   }
 
-  if (!fs.existsSync(mobileDistPath)) {
-    throw new Error(
-      `Could not find the mobile build directory: ${mobileDistPath}, make sure to build the mobile client first`,
-    );
-  }
+  const hasMobile = fs.existsSync(mobileDistPath);
 
   // Serve admin frontend at /adminhoang
   app.use('/adminhoang', express.static(adminDistPath, {
@@ -91,15 +87,17 @@ export function serveStatic(app: Express) {
     }
   }));
 
-  // Serve mobile frontend at root
-  app.use(express.static(mobileDistPath, {
-    maxAge: '1y',
-    setHeaders: (res, filePath) => {
-      if (path.extname(filePath) === '.html') {
-        res.setHeader('Cache-Control', 'no-cache');
+  // Serve mobile frontend at root (only if exists)
+  if (hasMobile) {
+    app.use(express.static(mobileDistPath, {
+      maxAge: '1y',
+      setHeaders: (res, filePath) => {
+        if (path.extname(filePath) === '.html') {
+          res.setHeader('Cache-Control', 'no-cache');
+        }
       }
-    }
-  }));
+    }));
+  }
 
   // Admin SPA fallback
   app.get('/adminhoang/*', (_req, res) => {
@@ -107,11 +105,13 @@ export function serveStatic(app: Express) {
     res.sendFile(path.resolve(adminDistPath, "index.html"));
   });
 
-  // Mobile SPA fallback (must be LAST, after all API routes)
-  app.get('*', (req, res, next) => {
-    // Skip API routes
-    if (req.path.startsWith('/api/')) return next();
-    res.setHeader('Cache-Control', 'no-cache');
-    res.sendFile(path.resolve(mobileDistPath, "index.html"));
-  });
+  // Mobile SPA fallback (must be LAST, after all API routes) - only if exists
+  if (hasMobile) {
+    app.get('*', (req, res, next) => {
+      // Skip API routes
+      if (req.path.startsWith('/api/')) return next();
+      res.setHeader('Cache-Control', 'no-cache');
+      res.sendFile(path.resolve(mobileDistPath, "index.html"));
+    });
+  }
 }

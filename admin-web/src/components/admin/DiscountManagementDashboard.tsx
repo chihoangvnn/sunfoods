@@ -4,7 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DiscountForm } from "./DiscountForm";
 import { DiscountList } from "./DiscountList";
 import { DiscountAnalytics } from "./DiscountAnalytics";
-import { Plus, List, BarChart3 } from "lucide-react";
+import { Plus, List, BarChart } from "lucide-react";
 
 export function DiscountManagementDashboard() {
   const [activeTab, setActiveTab] = useState("list");
@@ -22,7 +22,7 @@ export function DiscountManagementDashboard() {
             Tạo mã mới
           </TabsTrigger>
           <TabsTrigger value="analytics" className="flex items-center gap-2">
-            <BarChart3 className="h-4 w-4" />
+            <BarChart className="h-4 w-4" />
             Thống kê
           </TabsTrigger>
         </TabsList>

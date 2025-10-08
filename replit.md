@@ -1,18 +1,10 @@
 # E-Commerce Admin Dashboard & Storefront
 
 ## Overview
-This project is a comprehensive e-commerce management system designed to streamline operations, enhance customer engagement, and automate social media presence. It includes features for managing products, orders, and customers, generating product landing pages and public storefronts, and integrating with chatbots. A key innovation is the "Bộ Não - Cánh Tay - Vệ Tinh" (Brain-Arms-Satellites) architecture for automated social media content distribution, particularly across Facebook. The system focuses on practical retail functionality with professional Vietnamese business compliance, aiming to be a robust solution for e-commerce management and customer engagement.
+This project is a comprehensive e-commerce management system designed to streamline operations, enhance customer engagement, and automate social media presence. It includes features for managing products, orders, and customers, generating product landing pages and public storefronts, and integrating with chatbots. A key innovation is the "Bộ Não - Cánh Tay - Vệ Tinh" (Brain-Arms-Satellites) architecture for automated social media content distribution, particularly across Facebook. The system focuses on practical retail functionality with professional Vietnamese business compliance, aiming to be a robust solution for e-commerce management and customer engagement with market potential in Vietnam.
 
 ## User Preferences
 Preferred communication style: Simple, everyday language.
-
-## Recent Changes
-**October 8, 2025** - Fixed Worker Platform Type System
-- ✅ Expanded WorkerPlatform type from 4 to 6 platforms (added YouTube, LinkedIn)
-- ✅ Created SUPPORTED_WORKER_PLATFORMS constant for validation logic
-- ✅ Fixed environment-aware health monitoring (development shows degraded/info, production shows critical alerts)
-- ✅ Resolved 142 LSP errors in schema.ts by completing WorkerPlatform type definition
-- 🔧 Architecture: Worker system now supports facebook, instagram, twitter, tiktok, youtube, linkedin platforms
 
 ## System Architecture
 
@@ -23,46 +15,34 @@ The frontend is a React-based Single Page Application (SPA) utilizing TypeScript
 The backend is an Express.js-based REST API written in TypeScript. It employs session-based authentication with PostgreSQL session storage. The data layer uses a multi-database approach, primarily Neon serverless PostgreSQL with Drizzle ORM, and optionally Firebase Firestore.
 
 ### Deployment Architecture
-**All-in-One VPS Deployment:** The project is configured for deployment on a single VPS server (Ubuntu, 2+ cores, 2GB+ RAM) with both backend and mobile frontend running on the same machine:
-- **Backend Express** (port 3000): Admin interface at `/adminhoang`, REST APIs at `/api/*`, RASA chatbot, background jobs
-- **Mobile Next.js SSR** (port 3001): Customer-facing storefront with server-side rendering
-- **PM2 Process Manager**: Manages both processes with auto-restart and clustering
-- **Nginx Reverse Proxy**: Routes traffic - `/adminhoang` and `/api/*` to backend (3000), all other routes to mobile (3001)
-- **Deployment Files**: `ecosystem.config.js` (PM2 config), `nginx.conf.template` (Nginx config), `.env.example` (environment variables), `DEPLOY.md` (step-by-step deployment guide)
-- **Build Commands**: `npm run build:all` builds both apps, `npm run start:prod` starts PM2 processes
+The project is configured for an all-in-one VPS deployment on a single Ubuntu server. It runs both the Express backend (port 3000) for admin interface, APIs, RASA chatbot, and background jobs, and a Next.js SSR mobile frontend (port 3001) for the customer-facing storefront. PM2 manages both processes, and Nginx acts as a reverse proxy to route traffic appropriately.
 
 ### Development Workflow (Replit)
-**Admin-Web Build & Dev Setup:** The admin interface uses a separate React app (admin-web) that builds to static files served by the backend:
-- **Production Build**: `cd admin-web && pnpm build` → outputs to `backend/public/admin/` with base path `/adminhoang`
-- **Dev Server**: `cd admin-web && pnpm dev` → runs Vite on port 5173 with proxy to backend (port 3000)
-- **Backend Workflow**: Express backend runs on port 3000 (Replit auto-binds to external port 80)
-- **Admin Dev Workflow**: Vite dev server on port 5173 (console output)
-- **Proxy Config**: Vite proxies `/api` and `/uploads` requests to `localhost:3000` during development
-- **Port Rules**: Backend uses port 3000, Admin Dev uses port 5173 (Replit enforces port 5000 for webview frontends only)
+The admin interface is a separate React app (`admin-web`). For development, `admin-web` runs a Vite dev server on port 5173, proxying API requests to the Express backend running on port 3000. Production builds of the admin-web are served statically by the backend.
 
 ### Feature Specifications
-- **Admin & Customer Authentication**: Role-based access control (RBAC) with Multi-OAuth 2.0 (Google, Facebook, Zalo, Replit) and CSRF protection.
+- **Admin & Customer Authentication**: Role-based access control with Multi-OAuth 2.0 and CSRF protection.
 - **Storefront & Landing Page Generation**: Dynamic storefronts and customizable product landing pages.
-- **Social Media Integration**: Multi-platform social media management, especially Facebook with "Bộ Não - Cánh Tay - Vệ Tinh" architecture for automated content distribution to over 1000 Facebook pages, including an Apps Manager and Auto-Posting System.
-- **Chatbot Integration**: RASA chatbot for customer support, product recommendations, optimized for Vietnamese, with automatic Facebook Messenger integration, multi-fanpage configuration, and order tagging.
-- **Intelligent Customer Profile Management**: Two-tier profile status ('incomplete'/'complete'), with admin-editable fields.
+- **Social Media Integration**: Multi-platform management, including the "Bộ Não - Cánh Tay - Vệ Tinh" architecture for automated Facebook content distribution.
+- **Chatbot Integration**: RASA chatbot optimized for Vietnamese, with automatic Facebook Messenger integration.
+- **Intelligent Customer Profile Management**: Two-tier profile status with admin-editable fields.
 - **Automatic Facebook Messenger Order Notifications**: Automated order status change notifications.
-- **Vietnamese Books Management System**: ISBN-based book tracking, price comparison, AbeBooks integration, and hierarchical category management.
-- **International Payment Gateway System**: Comprehensive multi-provider payment processing (Stripe, PayPal, Apple Pay, Google Pay, Klarna, Braintree/Venmo, Shopify Pay).
-- **POS Enhancement System**: Vietnamese retail POS features including keyboard shortcuts, barcode scanner integration, decimal quantity support, KPOS ZY307 receipt printing, and a 3-tab navigation.
+- **Vietnamese Books Management System**: ISBN-based tracking, price comparison, and hierarchical category management.
+- **International Payment Gateway System**: Comprehensive multi-provider payment processing.
+- **POS Enhancement System**: Vietnamese retail POS features including keyboard shortcuts, barcode scanner, decimal quantity, and receipt printing.
 - **Driver & Delivery Management System**: Complete driver and delivery operations platform.
 - **Shop Settings Management System**: Centralized configuration management with admin UI.
 - **Invoice Generation & Auto-Send System**: Automated invoice generation and delivery via Facebook Messenger, including QR banking codes.
-- **Invoice Designer System (Self-Service Customization)**: Visual invoice design interface for admins, allowing customization of appearance, including color schemes, fonts, layout, QR code settings, and logo upload with Cloudinary integration.
-- **Order Tagging & Source Tracking System**: Comprehensive order tagging with automatic source identification and universal decimal quantity support.
+- **Invoice Designer System**: Visual invoice design interface for admins with customization options and Cloudinary integration.
+- **Order Tagging & Source Tracking System**: Comprehensive order tagging with automatic source identification.
 - **Phone Number Normalization System**: Unified phone number normalization for Vietnamese formats.
-- **IP Pool Management System**: Manages multiple IP sources for the "Brain-Arms-Satellites" architecture, including health scoring and rotation.
-- **Vendor/Consignment Management System**: Platform for consignment sales, including automated order assignment, financial management, and masked customer data.
-- **Customer Voucher & Discount System**: Comprehensive voucher management and a Viral Marketing Campaign system with share-to-earn mechanics, Facebook Graph API verification, and an auto-reward system.
-- **Vendor Returns Management System**: Complete returns processing with financial refund logic and an admin approval workflow.
-- **Affiliate Portal System**: Tier-based commission platform with affiliate APIs, commission tiers, share rate limiting, and privacy protection.
-- **GHN Shipping Integration**: Complete integration with Giao Hàng Nhanh (GHN) for Vietnamese shipping, including API wrapper, webhook status updates, and label generation.
-- **Web Push Notifications System**: Real-time browser notifications for vendor alerts with VAPID authentication and subscription management.
+- **IP Pool Management System**: Manages multiple IP sources for the "Brain-Arms-Satellites" architecture.
+- **Vendor/Consignment Management System**: Platform for consignment sales, including automated order assignment and financial management.
+- **Customer Voucher & Discount System**: Comprehensive voucher management and a Viral Marketing Campaign system.
+- **Vendor Returns Management System**: Complete returns processing with financial refund logic.
+- **Affiliate Portal System**: Tier-based commission platform with affiliate APIs.
+- **GHN Shipping Integration**: Complete integration with Giao Hàng Nhanh (GHN) for Vietnamese shipping.
+- **Web Push Notifications System**: Real-time browser notifications for vendor alerts.
 
 ## External Dependencies
 
@@ -96,7 +76,7 @@ The backend is an Express.js-based REST API written in TypeScript. It employs se
 - **Google Fonts**: Typography loading.
 - **RASA Framework**: Open-source chatbot framework.
 - **ZXing library**: Barcode scanning.
-- **Cloudinary**: Image upload and management (for Invoice Designer).
-- **BullMQ**: Job queue for background processing (for Viral Marketing Campaign system).
+- **Cloudinary**: Image upload and management.
+- **BullMQ**: Job queue for background processing.
 - **web-push**: Library for sending web push notifications.
 - **Giao Hàng Nhanh (GHN)**: Vietnamese shipping provider.

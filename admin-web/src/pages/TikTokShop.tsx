@@ -7,7 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { apiRequest } from "@/lib/queryClient";
 import {
-  BarChart3,
+  BarChart,
   ShoppingCart,
   Package,
   Settings,
@@ -15,7 +15,7 @@ import {
   CheckCircle,
   AlertCircle,
   ExternalLink,
-  Zap
+  Bolt
 } from "lucide-react";
 import { TikTokShopSellerDashboard } from "@/components/TikTokShopSellerDashboard";
 import { TikTokShopOrdersPanel } from "@/components/TikTokShopOrdersPanel";
@@ -136,7 +136,7 @@ export default function TikTokShop() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-gray-900">
-                <Zap className="h-5 w-5 text-pink-600" />
+                <Bolt className="h-5 w-5 text-pink-600" />
                 Kết nối TikTok Business
               </CardTitle>
             </CardHeader>
@@ -210,7 +210,7 @@ export default function TikTokShop() {
               value="dashboard" 
               className="flex items-center gap-2 data-[state=active]:bg-pink-600 data-[state=active]:text-white"
             >
-              <BarChart3 className="h-4 w-4" />
+              <BarChart className="h-4 w-4" />
               Dashboard
             </TabsTrigger>
             <TabsTrigger 
@@ -241,7 +241,7 @@ export default function TikTokShop() {
               <Card className="lg:col-span-3">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-gray-900">
-                    <BarChart3 className="h-5 w-5 text-pink-600" />
+                    <BarChart className="h-5 w-5 text-pink-600" />
                     Analytics Dashboard
                   </CardTitle>
                 </CardHeader>

@@ -12,7 +12,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { apiRequest } from '@/lib/queryClient';
-import { Search, Plus, Settings, BarChart3, Power, PowerOff, Wrench, AlertTriangle, CheckCircle, XCircle, Timer, Users, Activity, RefreshCcw, Scan, Eye, Play, Code, TrendingUp, Shield, Clock, Database, Zap, FileText, Bug, Monitor } from 'lucide-react';
+import { Search, Plus, Settings, BarChart, Power, PowerOff, Wrench, AlertTriangle, CheckCircle, XCircle, Timer, Users, Activity, RefreshCcw, Scan, Eye, Play, Code, TrendingUp, Shield, Clock, Database, Bolt, FileText, Bug, Monitor } from 'lucide-react';
 
 // Types
 interface ApiConfiguration {
@@ -315,7 +315,7 @@ export default function ApiManagement() {
           <Card className="metric-card">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Total Requests</CardTitle>
-              <BarChart3 className="h-4 w-4 text-activity-pink" />
+              <BarChart className="h-4 w-4 text-activity-pink" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{stats.totalAccess.toLocaleString()}</div>
@@ -994,7 +994,7 @@ export default function ApiManagement() {
                       <Card>
                         <CardHeader>
                           <CardTitle className="flex items-center gap-2">
-                            <Zap className="h-5 w-5" />
+                            <Bolt className="h-5 w-5" />
                             Response
                             <Badge 
                               variant={testResult.status >= 200 && testResult.status < 300 ? "default" : "destructive"}

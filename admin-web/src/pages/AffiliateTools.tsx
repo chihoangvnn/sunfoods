@@ -35,7 +35,7 @@ import {
   Eye,
   TrendingUp,
   Facebook,
-  Zap,
+  Bolt,
   MessageCircle,
   Instagram
 } from 'lucide-react';
@@ -555,7 +555,7 @@ export default function AffiliateTools() {
                             onClick={() => shareToSocial(product.affiliateLink, product.productName, 'zalo')}
                             className="text-blue-500 hover:text-blue-600"
                           >
-                            <Zap className="h-4 w-4 mr-1" />
+                            <Bolt className="h-4 w-4 mr-1" />
                             Zalo
                           </Button>
 

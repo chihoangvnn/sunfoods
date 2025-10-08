@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Mail, MessageCircle, Code, CheckCircle2, XCircle, ExternalLink, Copy, Users, BarChart3, Clock, RefreshCw } from "lucide-react";
+import { Mail, MessageCircle, Code, CheckCircle2, XCircle, ExternalLink, Copy, Users, BarChart, Clock, RefreshCw } from "lucide-react";
 import { format } from "date-fns";
 import { vi } from "date-fns/locale";
 import { useToast } from "@/hooks/use-toast";
@@ -246,7 +246,7 @@ export default function AdminOAuthSettings() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <BarChart3 className="w-5 h-5" />
+              <BarChart className="w-5 h-5" />
               Thống Kê Sử Dụng
             </CardTitle>
             <CardDescription>

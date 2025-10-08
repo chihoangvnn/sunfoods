@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Gift, Plus, CreditCard, Users, BarChart3, Edit, Save, X } from "lucide-react";
+import { Gift, Plus, CreditCard, Users, BarChart, Edit, Save, X } from "lucide-react";
 import { GiftCheckoutForm } from "@/components/GiftCheckoutForm";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
@@ -159,7 +159,7 @@ export default function GiftManagement() {
             Phiếu Quà Tặng
           </TabsTrigger>
           <TabsTrigger value="analytics" className="flex items-center gap-2">
-            <BarChart3 className="h-4 w-4" />
+            <BarChart className="h-4 w-4" />
             Thống Kê
           </TabsTrigger>
         </TabsList>

@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
-import { Plus, Eye, Edit3, Trash2, Copy, BarChart3, ExternalLink } from "lucide-react";
+import { Plus, Eye, Edit3, Trash2, Copy, BarChart, ExternalLink } from "lucide-react";
 import { Link } from "wouter";
 
 interface ProductLandingPage {
@@ -105,7 +105,7 @@ export default function ProductLandingPageManager() {
         </div>
         <div className="flex gap-2">
           <Button onClick={() => refetch()} variant="outline" data-testid="button-refresh">
-            <BarChart3 className="h-4 w-4 mr-2" />
+            <BarChart className="h-4 w-4 mr-2" />
             Làm mới
           </Button>
           <Link href="/landing-page-editor">

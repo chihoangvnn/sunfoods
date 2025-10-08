@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
-import { Eye, MoreHorizontal, Search, Filter, Plus, Edit, Trash2, Store, ShoppingBag, Zap, UserPlus, RefreshCw } from "lucide-react";
+import { Eye, MoreHorizontal, Search, Filter, Plus, Edit, Trash2, Store, ShoppingBag, Bolt, UserPlus, RefreshCw } from "lucide-react";
 import { useResponsive, useTouchFriendly } from "@/hooks/use-mobile";
 import {
   Table,
@@ -588,7 +588,7 @@ export function OrderTable({ onViewOrder }: OrderTableProps) {
                   Storefront
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => setSourceFilter("tiktok-shop")}>
-                  <Zap className="h-4 w-4 mr-2" />
+                  <Bolt className="h-4 w-4 mr-2" />
                   TikTok Shop
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => setSourceFilter("landing-page")}>

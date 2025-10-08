@@ -1,0 +1,205 @@
+root@sunfoods:/var/www/sun/backend# pm2 logs backend --lines 100
+[TAILING] Tailing last 100 lines for [backend] process (change the value with --lines option)
+/root/.pm2/logs/backend-error-0.log last 100 lines:
+0|backend  |   '🟡 WORKERS is degraded: Performance issues detected',
+0|backend  |   'ℹ️ WORKERS: Workers are offline - Auto-posting requires deployed Vercel Functions'
+0|backend  | ]
+0|backend  | ⚠️ SYSTEM HEALTH DEGRADED: [
+0|backend  |   '🟡 WORKERS is degraded: Performance issues detected',
+0|backend  |   'ℹ️ WORKERS: Workers are offline - Auto-posting requires deployed Vercel Functions'
+0|backend  | ]
+0|backend  | ⚠️ SYSTEM HEALTH DEGRADED: [
+0|backend  |   '🟡 WORKERS is degraded: Performance issues detected',
+0|backend  |   'ℹ️ WORKERS: Workers are offline - Auto-posting requires deployed Vercel Functions'
+0|backend  | ]
+0|backend  | ⚠️ SYSTEM HEALTH DEGRADED: [
+0|backend  |   '🟡 WORKERS is degraded: Performance issues detected',
+0|backend  |   'ℹ️ WORKERS: Workers are offline - Auto-posting requires deployed Vercel Functions'
+0|backend  | ]
+0|backend  | ⚠️ SYSTEM HEALTH DEGRADED: [
+0|backend  |   '🟡 WORKERS is degraded: Performance issues detected',
+0|backend  |   'ℹ️ WORKERS: Workers are offline - Auto-posting requires deployed Vercel Functions'
+0|backend  | ]
+0|backend  | ⚠️ SYSTEM HEALTH DEGRADED: [
+0|backend  |   '🟡 WORKERS is degraded: Performance issues detected',
+0|backend  |   'ℹ️ WORKERS: Workers are offline - Auto-posting requires deployed Vercel Functions'
+0|backend  | ]
+0|backend  | ⚠️ SYSTEM HEALTH DEGRADED: [
+0|backend  |   '🟡 WORKERS is degraded: Performance issues detected',
+0|backend  |   'ℹ️ WORKERS: Workers are offline - Auto-posting requires deployed Vercel Functions'
+0|backend  | ]
+0|backend  | ⚠️ SYSTEM HEALTH DEGRADED: [
+0|backend  |   '🟡 WORKERS is degraded: Performance issues detected',
+0|backend  |   'ℹ️ WORKERS: Workers are offline - Auto-posting requires deployed Vercel Functions'
+0|backend  | ]
+0|backend  | ⚠️ SYSTEM HEALTH DEGRADED: [
+0|backend  |   '🟡 WORKERS is degraded: Performance issues detected',
+0|backend  |   'ℹ️ WORKERS: Workers are offline - Auto-posting requires deployed Vercel Functions'
+0|backend  | ]
+0|backend  | ⚠️ SYSTEM HEALTH DEGRADED: [
+0|backend  |   '🟡 WORKERS is degraded: Performance issues detected',
+0|backend  |   'ℹ️ WORKERS: Workers are offline - Auto-posting requires deployed Vercel Functions'
+0|backend  | ]
+0|backend  | ⚠️ SYSTEM HEALTH DEGRADED: [
+0|backend  |   '🟡 WORKERS is degraded: Performance issues detected',
+0|backend  |   'ℹ️ WORKERS: Workers are offline - Auto-posting requires deployed Vercel Functions'
+0|backend  | ]
+0|backend  | ⚠️  VAPID keys not configured! Push notifications will not work.
+0|backend  |    Set VAPID_PUBLIC_KEY and VAPID_PRIVATE_KEY environment variables.
+0|backend  | ⚠️ THÔNG BÁO: Đang sử dụng TikTok credentials mẫu. Vui lòng thay thế bằng credentials thật từ TikTok Developer Portal để kết nối thực tế.
+0|backend  | ⚠️ Replit OAuth credentials not found. Set REPLIT_APP_ID and REPLIT_APP_SECRET environment variables.
+0|backend  | ⚠️ Campaign verifier: Redis not configured - running without queue-based verification
+0|backend  | ⚠️ SYSTEM HEALTH DEGRADED: [
+0|backend  |   '🟡 WORKERS is degraded: Performance issues detected',
+0|backend  |   'ℹ️ WORKERS: Workers are offline - Auto-posting requires deployed Vercel Functions'
+0|backend  | ]
+0|backend  | Failed to compile pattern for GET /api/webhooks/facebook/:appId?: PathError [TypeError]: Unexpected ? at index 29, expected end: /api/webhooks/facebook/:appId?; visit https://git.new/pathToRegexpError for info
+0|backend  |     at consumeUntil (/var/www/sun/backend/dist/index.js:163579:17)
+0|backend  |     at parse (/var/www/sun/backend/dist/index.js:163583:28)
+0|backend  |     at pathToRegexp2 (/var/www/sun/backend/dist/index.js:163682:58)
+0|backend  |     at ApiConfigurationCache.getAllConfigs (/var/www/sun/backend/dist/index.js:163935:67)
+0|backend  |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+0|backend  |     at async ApiConfigurationCache.findMatchingConfig (/var/www/sun/backend/dist/index.js:163951:28)
+0|backend  |     at async /var/www/sun/backend/dist/index.js:163827:22 {
+0|backend  |   originalPath: '/api/webhooks/facebook/:appId?'
+0|backend  | }
+0|backend  | Failed to compile pattern for POST /api/webhooks/facebook/:appId?: PathError [TypeError]: Unexpected ? at index 29, expected end: /api/webhooks/facebook/:appId?; visit https://git.new/pathToRegexpError for info
+0|backend  |     at consumeUntil (/var/www/sun/backend/dist/index.js:163579:17)
+0|backend  |     at parse (/var/www/sun/backend/dist/index.js:163583:28)
+0|backend  |     at pathToRegexp2 (/var/www/sun/backend/dist/index.js:163682:58)
+0|backend  |     at ApiConfigurationCache.getAllConfigs (/var/www/sun/backend/dist/index.js:163935:67)
+0|backend  |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+0|backend  |     at async ApiConfigurationCache.findMatchingConfig (/var/www/sun/backend/dist/index.js:163951:28)
+0|backend  |     at async /var/www/sun/backend/dist/index.js:163827:22 {
+0|backend  |   originalPath: '/api/webhooks/facebook/:appId?'
+0|backend  | }
+0|backend  | Failed to compile pattern for GET /api/webhooks/facebook/:appId?: PathError [TypeError]: Unexpected ? at index 29, expected end: /api/webhooks/facebook/:appId?; visit https://git.new/pathToRegexpError for info
+0|backend  |     at consumeUntil (/var/www/sun/backend/dist/index.js:163579:17)
+0|backend  |     at parse (/var/www/sun/backend/dist/index.js:163583:28)
+0|backend  |     at pathToRegexp2 (/var/www/sun/backend/dist/index.js:163682:58)
+0|backend  |     at ApiConfigurationCache.getAllConfigs (/var/www/sun/backend/dist/index.js:163935:67)
+0|backend  |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+0|backend  |     at async ApiConfigurationCache.findMatchingConfig (/var/www/sun/backend/dist/index.js:163951:28)
+0|backend  |     at async /var/www/sun/backend/dist/index.js:163827:22 {
+0|backend  |   originalPath: '/api/webhooks/facebook/:appId?'
+0|backend  | }
+0|backend  | Failed to compile pattern for POST /api/webhooks/facebook/:appId?: PathError [TypeError]: Unexpected ? at index 29, expected end: /api/webhooks/facebook/:appId?; visit https://git.new/pathToRegexpError for info
+0|backend  |     at consumeUntil (/var/www/sun/backend/dist/index.js:163579:17)
+0|backend  |     at parse (/var/www/sun/backend/dist/index.js:163583:28)
+0|backend  |     at pathToRegexp2 (/var/www/sun/backend/dist/index.js:163682:58)
+0|backend  |     at ApiConfigurationCache.getAllConfigs (/var/www/sun/backend/dist/index.js:163935:67)
+0|backend  |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+0|backend  |     at async ApiConfigurationCache.findMatchingConfig (/var/www/sun/backend/dist/index.js:163951:28)
+0|backend  |     at async /var/www/sun/backend/dist/index.js:163827:22 {
+0|backend  |   originalPath: '/api/webhooks/facebook/:appId?'
+0|backend  | }
+0|backend  | ⚠️ SYSTEM HEALTH DEGRADED: [
+0|backend  |   '🟡 WORKERS is degraded: Performance issues detected',
+0|backend  |   'ℹ️ WORKERS: Workers are offline - Auto-posting requires deployed Vercel Functions'
+0|backend  | ]
+0|backend  | ⚠️ SYSTEM HEALTH DEGRADED: [
+0|backend  |   '🟡 WORKERS is degraded: Performance issues detected',
+0|backend  |   'ℹ️ WORKERS: Workers are offline - Auto-posting requires deployed Vercel Functions'
+0|backend  | ]
+
+/var/www/sun/backend/logs/backend-out-0.log last 100 lines:
+0|backend  | ✅ Compiled pattern for /api/rasa-industry: true - /^(?:\/api\/rasa-industry)(?:\/$)?$/i
+0|backend  | ✅ Compiled pattern for /api/rasa/products/search: true - /^(?:\/api\/rasa\/products\/search)(?:\/$)?$/i
+0|backend  | ✅ Compiled pattern for /api/customers: true - /^(?:\/api\/customers)(?:\/$)?$/i
+0|backend  | ✅ Compiled pattern for /api/products/:id: true - /^(?:\/api\/products\/([^\/]+))(?:\/$)?$/i
+0|backend  | ✅ Compiled pattern for /api/products/:id: true - /^(?:\/api\/products\/([^\/]+))(?:\/$)?$/i
+0|backend  | ✅ Compiled pattern for /api/books/:isbn/prices/:priceId: true - /^(?:\/api\/books\/([^\/]+)\/prices\/([^\/]+))(?:\/$)?$/i
+0|backend  | ✅ Compiled pattern for /api/books/:isbn: true - /^(?:\/api\/books\/([^\/]+))(?:\/$)?$/i
+0|backend  | ✅ Compiled pattern for /api/books/sources: true - /^(?:\/api\/books\/sources)(?:\/$)?$/i
+0|backend  | ✅ Compiled pattern for /api/api-configurations: true - /^(?:\/api\/api-configurations)(?:\/$)?$/i
+0|backend  | ✅ Compiled pattern for /api/api-configurations: true - /^(?:\/api\/api-configurations)(?:\/$)?$/i
+0|backend  | ✅ Compiled pattern for /api/workers/heartbeat: true - /^(?:\/api\/workers\/heartbeat)(?:\/$)?$/i
+0|backend  | ✅ Compiled pattern for /api/workers/status: true - /^(?:\/api\/workers\/status)(?:\/$)?$/i
+0|backend  | ✅ Compiled pattern for /api/orchestrator/overview: true - /^(?:\/api\/orchestrator\/overview)(?:\/$)?$/i
+0|backend  | ✅ Compiled pattern for /api/automation: true - /^(?:\/api\/automation)(?:\/$)?$/i
+0|backend  | ✅ Compiled pattern for /api/health/check: true - /^(?:\/api\/health\/check)(?:\/$)?$/i
+0|backend  | ✅ Compiled pattern for /api/analytics: true - /^(?:\/api\/analytics)(?:\/$)?$/i
+0|backend  | ✅ Compiled pattern for /api/ai/variations: true - /^(?:\/api\/ai\/variations)(?:\/$)?$/i
+0|backend  | ✅ Compiled pattern for /api/ai/generate-product-descriptions: true - /^(?:\/api\/ai\/generate-product-descriptions)(?:\/$)?$/i
+0|backend  | ✅ Compiled pattern for /api/posts: true - /^(?:\/api\/posts)(?:\/$)?$/i
+0|backend  | ✅ Compiled pattern for /api/rasa-management: true - /^(?:\/api\/rasa-management)(?:\/$)?$/i
+0|backend  | ✅ Compiled pattern for /api/rasa/chat: true - /^(?:\/api\/rasa\/chat)(?:\/$)?$/i
+0|backend  | ✅ Compiled pattern for /api/products/:id: true - /^(?:\/api\/products\/([^\/]+))(?:\/$)?$/i
+0|backend  | ✅ Compiled pattern for /api/books/:isbn/prices/bulk: true - /^(?:\/api\/books\/([^\/]+)\/prices\/bulk)(?:\/$)?$/i
+0|backend  | ✅ Compiled pattern for /api/books/:isbn/prices: true - /^(?:\/api\/books\/([^\/]+)\/prices)(?:\/$)?$/i
+0|backend  | ✅ Compiled pattern for /api/books: true - /^(?:\/api\/books)(?:\/$)?$/i
+0|backend  | ✅ Compiled pattern for /api/books/:isbn: true - /^(?:\/api\/books\/([^\/]+))(?:\/$)?$/i
+0|backend  | ✅ Compiled pattern for /api/books/stats: true - /^(?:\/api\/books\/stats)(?:\/$)?$/i
+0|backend  | ✅ Compiled pattern for /api/books: true - /^(?:\/api\/books)(?:\/$)?$/i
+0|backend  | ✅ Compiled pattern for /api/rasa-management/rate-limit/settings: true - /^(?:\/api\/rasa-management\/rate-limit\/settings)(?:\/$)?$/i
+0|backend  | ✅ Compiled pattern for /api/rasa-management/rate-limit/settings: true - /^(?:\/api\/rasa-management\/rate-limit\/settings)(?:\/$)?$/i
+0|backend  | ✅ Compiled pattern for /api/chatbot/settings: true - /^(?:\/api\/chatbot\/settings)(?:\/$)?$/i
+0|backend  | ✅ Compiled pattern for /api/shop-settings: true - /^(?:\/api\/shop-settings)(?:\/$)?$/i
+0|backend  | ✅ Compiled pattern for /api/product-landing-pages: true - /^(?:\/api\/product-landing-pages)(?:\/$)?$/i
+0|backend  | ✅ Compiled pattern for /api/storefront/config: true - /^(?:\/api\/storefront\/config)(?:\/$)?$/i
+0|backend  | ✅ Compiled pattern for /api/api-configurations/stats/summary: true - /^(?:\/api\/api-configurations\/stats\/summary)(?:\/$)?$/i
+0|backend  | ✅ Compiled pattern for /api/orders: true - /^(?:\/api\/orders)(?:\/$)?$/i
+0|backend  | ✅ Compiled pattern for /api/chatbot/stats: true - /^(?:\/api\/chatbot\/stats)(?:\/$)?$/i
+0|backend  | ✅ Compiled pattern for /api/categories: true - /^(?:\/api\/categories)(?:\/$)?$/i
+0|backend  | ✅ Compiled pattern for /api/rasa/catalogs: true - /^(?:\/api\/rasa\/catalogs)(?:\/$)?$/i
+0|backend  | ✅ Compiled pattern for /api/facebook/conversations/:id/messages: true - /^(?:\/api\/facebook\/conversations\/([^\/]+)\/messages)(?:\/$)?$/i
+0|backend  | ✅ Compiled pattern for /api/facebook/conversations: true - /^(?:\/api\/facebook\/conversations)(?:\/$)?$/i
+0|backend  | ✅ Compiled pattern for /api/industries: true - /^(?:\/api\/industries)(?:\/$)?$/i
+0|backend  | ✅ Compiled pattern for /api/dashboard/stats: true - /^(?:\/api\/dashboard\/stats)(?:\/$)?$/i
+0|backend  | ✅ Compiled pattern for /api/products: true - /^(?:\/api\/products)(?:\/$)?$/i
+0|backend  | ✅ Compiled pattern for /api/health: true - /^(?:\/api\/health)(?:\/$)?$/i
+0|backend  | ✅ Compiled pattern for /api/tags: true - /^(?:\/api\/tags)(?:\/$)?$/i
+0|backend  | ✅ Compiled pattern for /api/media/upload: true - /^(?:\/api\/media\/upload)(?:\/$)?$/i
+0|backend  | ✅ Compiled pattern for /api/facebook/webhook-config: true - /^(?:\/api\/facebook\/webhook-config)(?:\/$)?$/i
+0|backend  | ✅ Compiled pattern for /api/social-accounts: true - /^(?:\/api\/social-accounts)(?:\/$)?$/i
+0|backend  | ✅ Compiled pattern for /api/content/library: true - /^(?:\/api\/content\/library)(?:\/$)?$/i
+0|backend  | ✅ Compiled pattern for /api/facebook-apps: true - /^(?:\/api\/facebook-apps)(?:\/$)?$/i
+0|backend  | ✅ Compiled pattern for /api/customers: true - /^(?:\/api\/customers)(?:\/$)?$/i
+0|backend  | ✅ Compiled pattern for /api/orders: true - /^(?:\/api\/orders)(?:\/$)?$/i
+0|backend  | ✅ Compiled pattern for /api/products: true - /^(?:\/api\/products)(?:\/$)?$/i
+0|backend  | 📊 Unconfigured API: GET /api/affiliate-auth/session - 401 in 4ms
+0|backend  | Query: select COALESCE(SUM("total"::numeric), 0) from "orders" where "orders"."status" = $1 -- params: ["delivered"]
+0|backend  | GET /api/affiliate-auth/session 401 in 1060ms :: {"error":"Not authenticated as…
+0|backend  | Query: select count(*) from "orders"
+0|backend  | Query: select count(*) from "customers"
+0|backend  | Query: select count(*) from "products"
+0|backend  | Rate limit check: 100 requests per 60s for /api/orders
+0|backend  | Query: select "orders"."id", "orders"."user_id", "orders"."total", "orders"."status", "orders"."items", "orders"."created_at", "orders"."updated_at", "customers"."name", "customers"."email", "orders"."source", "orders"."source_order_id", "orders"."source_reference", "orders"."sync_status" from "orders" left join "customers" on "orders"."user_id" = "customers"."id" order by "orders"."created_at" desc limit $1 -- params: [50]
+0|backend  | GET /api/dashboard/stats 304 in 996ms :: {"totalRevenue":50000,"totalOrders":50…
+0|backend  | GET /api/orders 304 in 600ms :: [{"id":"098581fd-a253-4352-87c0-d12e14529dff","…
+0|backend  | Query: select "id", "worker_id", "name", "description", "platforms", "capabilities", "specialties", "max_concurrent_jobs", "min_job_interval", "max_jobs_per_hour", "avg_execution_time", "region", "environment", "deployment_platform", "endpoint_url", "ip_address", "ip_country", "ip_region", "status", "is_online", "last_ping_at", "last_job_at", "current_load", "total_jobs_completed", "total_jobs_failed", "success_rate", "avg_response_time", "registration_secret", "auth_token", "token_expires_at", "tags", "priority", "is_enabled", "metadata", "created_at", "updated_at" from "workers" order by "workers"."created_at" desc
+0|backend  | 🏥 Generating system health report...
+0|backend  | Query: select "id", "worker_id", "name", "description", "platforms", "capabilities", "specialties", "max_concurrent_jobs", "min_job_interval", "max_jobs_per_hour", "avg_execution_time", "region", "environment", "deployment_platform", "endpoint_url", "ip_address", "ip_country", "ip_region", "status", "is_online", "last_ping_at", "last_job_at", "current_load", "total_jobs_completed", "total_jobs_failed", "success_rate", "avg_response_time", "registration_secret", "auth_token", "token_expires_at", "tags", "priority", "is_enabled", "metadata", "created_at", "updated_at" from "workers" order by "workers"."created_at" desc
+0|backend  | Query: select "id", "worker_id", "name", "description", "platforms", "capabilities", "specialties", "max_concurrent_jobs", "min_job_interval", "max_jobs_per_hour", "avg_execution_time", "region", "environment", "deployment_platform", "endpoint_url", "ip_address", "ip_country", "ip_region", "status", "is_online", "last_ping_at", "last_job_at", "current_load", "total_jobs_completed", "total_jobs_failed", "success_rate", "avg_response_time", "registration_secret", "auth_token", "token_expires_at", "tags", "priority", "is_enabled", "metadata", "created_at", "updated_at" from "workers" order by "workers"."created_at" desc
+0|backend  | 🔍 Worker health check - NODE_ENV: development, isDevelopment: true
+0|backend  | 🔍 Workers: 4 total, 0 active (4 stale), 0 online
+0|backend  | 🔍 No workers - setting status to: degraded
+0|backend  | Query: select "customers"."id", "customers"."name", "customers"."email", "customers"."phone", "customers"."avatar", "customers"."status", "customers"."total_debt", "customers"."credit_limit", "customers"."join_date", "customers"."registration_source", "customers"."profile_status", "customers"."membership_tier", "customers"."points_balance", "customers"."points_earned", "customers"."last_tier_update", "customers"."auth_user_id", "customers"."membership_data", "customers"."social_account_ids", "customers"."social_data", "customers"."customer_role", "customers"."limits_data", "customers"."is_local_customer", "customers"."is_affiliate", "customers"."affiliate_code", "customers"."affiliate_status", "customers"."commission_rate", "customers"."affiliate_data", COALESCE("order_stats"."total_orders", 0) as "total_orders", COALESCE("order_stats"."total_spent", 0) as "order_total_spent", COALESCE("order_stats"."last_order_date", "customers"."join_date"::text) as "last_order_date" from "customers" left join (select "user_id", count("id") as "total_orders", sum("total") as "total_spent", MAX("created_at")::text as "last_order_date" from "orders" where "orders"."status" in ($1, $2) group by "orders"."user_id") "order_stats" on "customers"."id" = "order_stats"."user_id" where "customers"."profile_status" = $3 order by "customers"."join_date" desc limit $4 -- params: ["delivered", "shipped", "complete", 1]
+0|backend  | Query: select "id", "caption", "hashtags", "asset_ids", "social_account_id", "platform", "scheduled_time", "timezone", "status", "published_at", "platform_post_id", "platform_url", "error_message", "retry_count", "last_retry_at", "analytics", "created_at", "updated_at", "priority", "ip_pool_id", "ip_snapshot", "batch_id" from "scheduled_posts" where ("scheduled_posts"."status" = $1 and "scheduled_posts"."scheduled_time" <= $2) order by "scheduled_posts"."scheduled_time" -- params: ["scheduled", "2025-10-08T05:55:11.513Z"]
+0|backend  | Query: select "id", "caption", "hashtags", "asset_ids", "social_account_id", "platform", "scheduled_time", "timezone", "status", "published_at", "platform_post_id", "platform_url", "error_message", "retry_count", "last_retry_at", "analytics", "created_at", "updated_at", "priority", "ip_pool_id", "ip_snapshot", "batch_id" from "scheduled_posts" where ("scheduled_posts"."status" = $1 and "scheduled_posts"."scheduled_time" <= $2) order by "scheduled_posts"."scheduled_time" -- params: ["scheduled", "2025-10-08T05:55:11.641Z"]
+0|backend  | ✅ Health report generated in 471ms - Overall: degraded
+0|backend  | Query: select "id", "caption", "hashtags", "asset_ids", "social_account_id", "platform", "scheduled_time", "timezone", "status", "published_at", "platform_post_id", "platform_url", "error_message", "retry_count", "last_retry_at", "analytics", "created_at", "updated_at", "priority", "ip_pool_id", "ip_snapshot", "batch_id" from "scheduled_posts" where ("scheduled_posts"."status" = $1 and "scheduled_posts"."retry_count" <= $2) -- params: ["failed", 2]
+0|backend  | 📭 No due posts at 2025-10-08T05:55:11.641Z
+0|backend  | Query: select "id", "worker_id", "name", "description", "platforms", "capabilities", "specialties", "max_concurrent_jobs", "min_job_interval", "max_jobs_per_hour", "avg_execution_time", "region", "environment", "deployment_platform", "endpoint_url", "ip_address", "ip_country", "ip_region", "status", "is_online", "last_ping_at", "last_job_at", "current_load", "total_jobs_completed", "total_jobs_failed", "success_rate", "avg_response_time", "registration_secret", "auth_token", "token_expires_at", "tags", "priority", "is_enabled", "metadata", "created_at", "updated_at" from "workers" order by "workers"."created_at" desc
+0|backend  | Query: select "id", "worker_id", "name", "description", "platforms", "capabilities", "specialties", "max_concurrent_jobs", "min_job_interval", "max_jobs_per_hour", "avg_execution_time", "region", "environment", "deployment_platform", "endpoint_url", "ip_address", "ip_country", "ip_region", "status", "is_online", "last_ping_at", "last_job_at", "current_load", "total_jobs_completed", "total_jobs_failed", "success_rate", "avg_response_time", "registration_secret", "auth_token", "token_expires_at", "tags", "priority", "is_enabled", "metadata", "created_at", "updated_at" from "workers" order by "workers"."created_at" desc
+0|backend  | 🏥 Generating system health report...
+0|backend  | Query: select "id", "worker_id", "name", "description", "platforms", "capabilities", "specialties", "max_concurrent_jobs", "min_job_interval", "max_jobs_per_hour", "avg_execution_time", "region", "environment", "deployment_platform", "endpoint_url", "ip_address", "ip_country", "ip_region", "status", "is_online", "last_ping_at", "last_job_at", "current_load", "total_jobs_completed", "total_jobs_failed", "success_rate", "avg_response_time", "registration_secret", "auth_token", "token_expires_at", "tags", "priority", "is_enabled", "metadata", "created_at", "updated_at" from "workers" order by "workers"."created_at" desc
+0|backend  | Query: select "id", "worker_id", "name", "description", "platforms", "capabilities", "specialties", "max_concurrent_jobs", "min_job_interval", "max_jobs_per_hour", "avg_execution_time", "region", "environment", "deployment_platform", "endpoint_url", "ip_address", "ip_country", "ip_region", "status", "is_online", "last_ping_at", "last_job_at", "current_load", "total_jobs_completed", "total_jobs_failed", "success_rate", "avg_response_time", "registration_secret", "auth_token", "token_expires_at", "tags", "priority", "is_enabled", "metadata", "created_at", "updated_at" from "workers" order by "workers"."created_at" desc
+0|backend  | Query: select "id", "caption", "hashtags", "asset_ids", "social_account_id", "platform", "scheduled_time", "timezone", "status", "published_at", "platform_post_id", "platform_url", "error_message", "retry_count", "last_retry_at", "analytics", "created_at", "updated_at", "priority", "ip_pool_id", "ip_snapshot", "batch_id" from "scheduled_posts" where ("scheduled_posts"."status" = $1 and "scheduled_posts"."scheduled_time" <= $2) order by "scheduled_posts"."scheduled_time" -- params: ["scheduled", "2025-10-08T05:56:11.513Z"]
+0|backend  | Query: select "id", "caption", "hashtags", "asset_ids", "social_account_id", "platform", "scheduled_time", "timezone", "status", "published_at", "platform_post_id", "platform_url", "error_message", "retry_count", "last_retry_at", "analytics", "created_at", "updated_at", "priority", "ip_pool_id", "ip_snapshot", "batch_id" from "scheduled_posts" where ("scheduled_posts"."status" = $1 and "scheduled_posts"."scheduled_time" <= $2) order by "scheduled_posts"."scheduled_time" -- params: ["scheduled", "2025-10-08T05:56:11.642Z"]
+0|backend  | 🔍 Worker health check - NODE_ENV: development, isDevelopment: true
+0|backend  | 🔍 Workers: 4 total, 0 active (4 stale), 0 online
+0|backend  | 🔍 No workers - setting status to: degraded
+0|backend  | Query: select "customers"."id", "customers"."name", "customers"."email", "customers"."phone", "customers"."avatar", "customers"."status", "customers"."total_debt", "customers"."credit_limit", "customers"."join_date", "customers"."registration_source", "customers"."profile_status", "customers"."membership_tier", "customers"."points_balance", "customers"."points_earned", "customers"."last_tier_update", "customers"."auth_user_id", "customers"."membership_data", "customers"."social_account_ids", "customers"."social_data", "customers"."customer_role", "customers"."limits_data", "customers"."is_local_customer", "customers"."is_affiliate", "customers"."affiliate_code", "customers"."affiliate_status", "customers"."commission_rate", "customers"."affiliate_data", COALESCE("order_stats"."total_orders", 0) as "total_orders", COALESCE("order_stats"."total_spent", 0) as "order_total_spent", COALESCE("order_stats"."last_order_date", "customers"."join_date"::text) as "last_order_date" from "customers" left join (select "user_id", count("id") as "total_orders", sum("total") as "total_spent", MAX("created_at")::text as "last_order_date" from "orders" where "orders"."status" in ($1, $2) group by "orders"."user_id") "order_stats" on "customers"."id" = "order_stats"."user_id" where "customers"."profile_status" = $3 order by "customers"."join_date" desc limit $4 -- params: ["delivered", "shipped", "complete", 1]
+0|backend  | ✅ Health report generated in 1127ms - Overall: degraded
+0|backend  | Query: select "id", "caption", "hashtags", "asset_ids", "social_account_id", "platform", "scheduled_time", "timezone", "status", "published_at", "platform_post_id", "platform_url", "error_message", "retry_count", "last_retry_at", "analytics", "created_at", "updated_at", "priority", "ip_pool_id", "ip_snapshot", "batch_id" from "scheduled_posts" where ("scheduled_posts"."status" = $1 and "scheduled_posts"."retry_count" <= $2) -- params: ["failed", 2]
+0|backend  | 📭 No due posts at 2025-10-08T05:56:11.642Z
+0|backend  | GET /api/admin/me 401 in 3ms :: {"error":"Chưa đăng nhập"}
+0|backend  | 📊 Unconfigured API: GET /api/admin/me - 401 in 1ms
+0|backend  | ✅ CORS: Allowed origin http://sunfoods.vn (dev mode)
+0|backend  | GET /api/admin/me 401 in 1ms :: {"error":"Chưa đăng nhập"}
+0|backend  | 📊 Unconfigured API: GET /api/admin/me - 401 in 1ms
+0|backend  | ✅ CORS: Allowed origin http://sunfoods.vn (dev mode)
+0|backend  | GET /api/admin/me 401 in 2ms :: {"error":"Chưa đăng nhập"}
+0|backend  | 📊 Unconfigured API: GET /api/admin/me - 401 in 0ms
+0|backend  | Query: select "id", "worker_id", "name", "description", "platforms", "capabilities", "specialties", "max_concurrent_jobs", "min_job_interval", "max_jobs_per_hour", "avg_execution_time", "region", "environment", "deployment_platform", "endpoint_url", "ip_address", "ip_country", "ip_region", "status", "is_online", "last_ping_at", "last_job_at", "current_load", "total_jobs_completed", "total_jobs_failed", "success_rate", "avg_response_time", "registration_secret", "auth_token", "token_expires_at", "tags", "priority", "is_enabled", "metadata", "created_at", "updated_at" from "workers" order by "workers"."created_at" desc

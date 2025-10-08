@@ -3,11 +3,11 @@ import {
   Home,
   ShoppingCart,
   Users,
-  BarChart3,
+  BarChart,
   Facebook,
   Plus,
   Activity,
-  Zap,
+  Bolt,
   MessageSquare,
   Store,
   ShoppingBag

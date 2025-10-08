@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Facebook, MessageSquare, TrendingUp, Users, ShoppingBag, Video, Star, ArrowUpRight, ArrowDownRight, BarChart3, Calendar, Filter, RefreshCw } from "lucide-react";
+import { Facebook, MessageSquare, TrendingUp, Users, ShoppingBag, Video, Star, ArrowUpRight, ArrowDownRight, BarChart, Calendar, Filter, RefreshCw } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -83,7 +83,7 @@ const CrossPlatformMetrics: React.FC<CrossPlatformMetricsProps> = ({ accounts })
       <Card className="bg-gradient-to-br from-green-50 to-green-100 border-l-4 border-l-green-500">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">Tổng tài khoản</CardTitle>
-          <BarChart3 className="h-4 w-4 text-green-600" />
+          <BarChart className="h-4 w-4 text-green-600" />
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">{totalAccounts}</div>
@@ -161,7 +161,7 @@ const PlatformComparison: React.FC<PlatformComparisonProps> = ({ accounts }) => 
     <Card className="col-span-full">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <BarChart3 className="h-5 w-5" />
+          <BarChart className="h-5 w-5" />
           So sánh hiệu suất giữa các nền tảng
         </CardTitle>
       </CardHeader>
@@ -258,7 +258,7 @@ const QuickActions: React.FC<QuickActionsProps> = ({ onConnectAccount }) => {
             Quản lý tin nhắn
           </Button>
           <Button variant="outline" size="sm">
-            <BarChart3 className="h-4 w-4 mr-2" />
+            <BarChart className="h-4 w-4 mr-2" />
             Xem báo cáo
           </Button>
         </div>

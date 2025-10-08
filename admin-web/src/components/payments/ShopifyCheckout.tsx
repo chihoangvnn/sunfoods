@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ShoppingBag, Lock, Zap } from "lucide-react";
+import { ShoppingBag, Lock, Bolt } from "lucide-react";
 
 interface ShopifyCheckoutProps {
   amount: number;
@@ -49,7 +49,7 @@ export function ShopifyCheckout({ amount, onSuccess }: ShopifyCheckoutProps) {
       <CardContent className="space-y-4">
         <div className="bg-green-50 border border-green-200 rounded-lg p-4">
           <div className="flex items-center gap-2 mb-2">
-            <Zap className="h-5 w-5 text-green-600" />
+            <Bolt className="h-5 w-5 text-green-600" />
             <span className="font-semibold text-green-900">Express Checkout</span>
           </div>
           <p className="text-sm text-green-800">
@@ -103,7 +103,7 @@ export function ShopifyCheckout({ amount, onSuccess }: ShopifyCheckoutProps) {
             </>
           ) : (
             <>
-              <Zap className="h-5 w-5 mr-2" />
+              <Bolt className="h-5 w-5 mr-2" />
               Pay with Shopify
             </>
           )}

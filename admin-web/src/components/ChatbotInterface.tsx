@@ -5,7 +5,7 @@ import {
   Settings as SettingsIcon, 
   MessageSquare, 
   Users, 
-  Zap, 
+  Bolt, 
   Play, 
   Pause,
   Moon,
@@ -446,7 +446,7 @@ export function ChatbotInterface({
               <CardTitle className={`text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
                 Thời gian phản hồi
               </CardTitle>
-              <Zap className={`h-4 w-4 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`} />
+              <Bolt className={`h-4 w-4 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`} />
             </CardHeader>
             <CardContent>
               <div className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`} data-testid="stat-response-time">

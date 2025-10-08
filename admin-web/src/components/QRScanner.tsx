@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Scanner } from '@yudiel/react-qr-scanner';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Camera, X, RotateCcw, Zap, ZapOff } from 'lucide-react';
+import { Camera, X, RotateCcw, Bolt, ZapOff } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 interface QRScannerProps {
@@ -128,7 +128,7 @@ export function QRScanner({ onScan, isOpen, onClose }: QRScannerProps) {
                     onClick={toggleTorch}
                     className="h-8 w-8 p-0"
                   >
-                    {torchEnabled ? <ZapOff className="h-4 w-4" /> : <Zap className="h-4 w-4" />}
+                    {torchEnabled ? <ZapOff className="h-4 w-4" /> : <Bolt className="h-4 w-4" />}
                   </Button>
                 </div>
                 

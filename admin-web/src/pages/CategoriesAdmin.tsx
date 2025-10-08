@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from 'wouter';
-import { Search, Plus, ChevronDown, ChevronRight, Tag, Edit, Trash2, X, Upload, Package, TrendingUp, Users, Star, AlertTriangle, CheckCircle, Target, BarChart3 } from "lucide-react";
+import { Search, Plus, ChevronDown, ChevronRight, Tag, Edit, Trash2, X, Upload, Package, TrendingUp, Users, Star, AlertTriangle, CheckCircle, Target, BarChart } from "lucide-react";
 
 // Category Types (for general products, industry-based)
 interface Category {
@@ -579,7 +579,7 @@ export default function CategoriesAdmin() {
                   <p className="text-sm text-gray-600">Avg Products/Category</p>
                   <p className="text-2xl font-bold text-gray-900">{stats.avgProducts}</p>
                 </div>
-                <BarChart3 className="w-8 h-8 text-purple-600" />
+                <BarChart className="w-8 h-8 text-purple-600" />
               </div>
             </div>
           </div>

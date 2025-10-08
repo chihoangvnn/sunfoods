@@ -4,7 +4,7 @@ import {
   Plus, Search, Link, Unlink, Edit2, Trash2, 
   ArrowUpDown, MoreVertical, FileText, HelpCircle,
   Tag, Calendar, Users, CheckCircle2, AlertCircle,
-  Move, RefreshCw, Copy, Zap, Filter
+  Move, RefreshCw, Copy, Bolt, Filter
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
@@ -404,7 +404,7 @@ export function FAQAssignmentManagement({ className = "" }: FAQAssignmentManagem
           <Dialog open={showBulkModal} onOpenChange={setShowBulkModal}>
             <DialogTrigger asChild>
               <Button variant="outline" className="flex items-center gap-2">
-                <Zap className="w-4 h-4" />
+                <Bolt className="w-4 h-4" />
                 Bulk Assignment
               </Button>
             </DialogTrigger>
@@ -468,7 +468,7 @@ export function FAQAssignmentManagement({ className = "" }: FAQAssignmentManagem
                   onClick={handleBulkSubmit}
                   disabled={bulkAssignmentMutation.isPending}
                 >
-                  <Zap className="w-4 h-4 mr-2" />
+                  <Bolt className="w-4 h-4 mr-2" />
                   Tạo Bulk Assignments
                 </Button>
               </DialogFooter>

@@ -19,7 +19,7 @@ export default function POSProtectedRoute({ children }: POSProtectedRouteProps) 
 
       const allowedRoles = ["cashier", "staff", "admin", "superadmin"];
       if (admin && !allowedRoles.includes(admin.role)) {
-        setLocation("/admin/login");
+        setLocation("/login");
         return;
       }
     }

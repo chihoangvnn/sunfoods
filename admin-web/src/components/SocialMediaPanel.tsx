@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Facebook, Instagram, Twitter, MessageSquare, Settings, Plus, TrendingUp, Webhook, Copy, Check, ExternalLink, Tag, Palette, BarChart3, Users, Filter, Search, Grid, List, Store, Video, ShoppingBag, Package, DollarSign, Eye, Target } from "lucide-react";
+import { Facebook, Instagram, Twitter, MessageSquare, Settings, Plus, TrendingUp, Webhook, Copy, Check, ExternalLink, Tag, Palette, BarChart, Users, Filter, Search, Grid, List, Store, Video, ShoppingBag, Package, DollarSign, Eye, Target } from "lucide-react";
 import { useLocation } from "wouter";
 
 // TikTok Icon Component (since Lucide doesn't have TikTok)
@@ -982,7 +982,7 @@ export function SocialMediaPanel({
             <Tabs defaultValue="dashboard" className="w-full">
               <TabsList className="grid w-full grid-cols-5 bg-tiktok-black/10 backdrop-blur-sm p-1 rounded-xl border border-tiktok-pink/20">
                 <TabsTrigger value="dashboard" className="rounded-lg data-[state=active]:bg-tiktok-pink data-[state=active]:text-white data-[state=active]:shadow-sm font-medium hover:bg-tiktok-pink/10">
-                  <BarChart3 className="h-4 w-4 mr-2" />
+                  <BarChart className="h-4 w-4 mr-2" />
                   Dashboard
                 </TabsTrigger>
                 <TabsTrigger value="products" className="rounded-lg data-[state=active]:bg-tiktok-pink data-[state=active]:text-white data-[state=active]:shadow-sm font-medium hover:bg-tiktok-pink/10">
@@ -1107,7 +1107,7 @@ export function SocialMediaPanel({
                         <span className="text-purple-700">Live stream</span>
                       </Button>
                       <Button variant="outline" className="h-20 flex-col space-y-2 border-2 border-orange-200 hover:bg-orange-50">
-                        <BarChart3 className="h-6 w-6 text-orange-600" />
+                        <BarChart className="h-6 w-6 text-orange-600" />
                         <span className="text-orange-700">Báo cáo</span>
                       </Button>
                     </div>

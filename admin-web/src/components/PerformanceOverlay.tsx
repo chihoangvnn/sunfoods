@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { 
   Activity, 
-  Zap, 
+  Bolt, 
   Clock, 
   MemoryStick, 
   AlertTriangle, 
@@ -241,7 +241,7 @@ export const PerformanceOverlay: React.FC<PerformanceOverlayProps> = ({
           {/* Technical Goals Status */}
           <div>
             <h4 className="text-xs font-semibold text-gray-700 mb-2 flex items-center space-x-1">
-              <Zap className="h-3 w-3" />
+              <Bolt className="h-3 w-3" />
               <span>Technical Goals</span>
             </h4>
             

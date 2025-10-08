@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { 
-  BarChart3, Users, Calendar, AlertTriangle, Target, 
+  BarChart as BarChartIcon, Users, Calendar, AlertTriangle, Target, 
   Activity, TrendingUp, Clock, CheckCircle, XCircle,
-  Settings, Filter, RefreshCw, Download, Eye, Zap
+  Settings, Filter, RefreshCw, Download, Eye, Bolt
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -204,7 +204,7 @@ export function AnalyticsDashboard() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
-              <BarChart3 className="h-8 w-8 text-purple-600" />
+              <BarChartIcon className="h-8 w-8 text-purple-600" />
               📊 Analytics Dashboard
             </h1>
             <p className="text-gray-600 mt-1">
@@ -475,7 +475,7 @@ export function AnalyticsDashboard() {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Zap className="h-5 w-5" />
+                  <Bolt className="h-5 w-5" />
                   Platform Performance
                 </CardTitle>
               </CardHeader>

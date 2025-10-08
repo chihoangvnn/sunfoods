@@ -3,7 +3,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   Star, StarHalf, User, Calendar, MessageSquare, Eye, Trash2, Check, X,
   Settings, RefreshCw, Plus, Download, Upload, Filter, Search, ChevronDown,
-  Edit, Wand2, AlertTriangle, CheckCircle2, Clock, Users, BarChart3,
+  Edit, Wand2, AlertTriangle, CheckCircle2, Clock, Users, BarChart,
   MoreHorizontal, ShoppingBag, TrendingUp
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';

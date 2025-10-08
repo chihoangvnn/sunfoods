@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { 
   Brain, Calendar, Tag, Users, Image, Video, FileText, 
-  Settings, Clock, Zap, ChevronRight, ChevronDown, Eye,
-  Play, Shuffle, Target, BarChart3, AlertCircle, CheckCircle,
+  Settings, Clock, Bolt, ChevronRight, ChevronDown, Eye,
+  Play, Shuffle, Target, BarChart, AlertCircle, CheckCircle,
   X, Plus, Minus, Sparkles, TrendingUp, Filter, Grid3X3, Loader2
 } from 'lucide-react';
 import { SocialAccount, UnifiedTag, ContentLibrary, FanpageContentPreferences, SmartSchedulingRules } from '../../../shared/schema';
@@ -398,7 +398,7 @@ export function SmartScheduler({ isOpen, onClose }: SmartSchedulerProps) {
                   : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
               }`}
             >
-              <Zap className="w-4 h-4 inline mr-2" />
+              <Bolt className="w-4 h-4 inline mr-2" />
               Simple Mode (Auto)
             </button>
           </div>
@@ -435,7 +435,7 @@ export function SmartScheduler({ isOpen, onClose }: SmartSchedulerProps) {
             <div className="space-y-6">
               <div className="bg-green-50 border border-green-200 rounded-lg p-4">
                 <h3 className="text-lg font-semibold text-green-800 mb-2 flex items-center gap-2">
-                  <Zap className="w-5 h-5" />
+                  <Bolt className="w-5 h-5" />
                   Tự Động Lên Lịch Đăng Bài
                 </h3>
                 <p className="text-green-700 text-sm">
@@ -697,7 +697,7 @@ export function SmartScheduler({ isOpen, onClose }: SmartSchedulerProps) {
                   {simpleAutomationMutation.isPending ? (
                     <Loader2 className="w-5 h-5 animate-spin" />
                   ) : (
-                    <Zap className="w-5 h-5" />
+                    <Bolt className="w-5 h-5" />
                   )}
                   {simpleAutomationMutation.isPending ? 'Đang Tạo...' : 'Tạo Lịch Tự Động'}
                 </button>

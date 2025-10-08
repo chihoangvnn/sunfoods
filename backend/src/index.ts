@@ -29,6 +29,7 @@ import { createApiManagementMiddleware } from "./middleware/api-management";
 import { scheduler } from "./services/scheduler";
 import { startAnalyticsScheduler } from "./services/analytics-scheduler";
 import { startCampaignVerifier } from "./jobs/campaign-verifier";
+import { serveStatic } from "./vite";
 
 const app = express();
 
@@ -196,6 +197,9 @@ app.use((req, res, next) => {
   
   const server = await registerRoutes(app);
 
+  // Serve static files with SPA fallback routes (MUST be before error handler)
+  serveStatic(app);
+
   app.use((err: any, req: Request, res: Response, _next: NextFunction) => {
     const status = err.status || err.statusCode || 500;
     const message = err.message || "Internal Server Error";
@@ -209,11 +213,6 @@ app.use((req, res, next) => {
     res.status(status).json({ message });
     // Don't throw - just log and respond to prevent process crash
   });
-
-  // Serve admin static files from /adminhoang
-  const adminStaticPath = path.join(__dirname, "../public/admin");
-  app.use("/adminhoang", express.static(adminStaticPath));
-  log(`Serving admin static files from ${adminStaticPath}`);
 
   // ALWAYS serve the app on the port specified in the environment variable PORT
   // Other ports are firewalled. Default to 5000 if not specified.

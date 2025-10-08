@@ -43,9 +43,9 @@ import {
   Banknote,
   UserCheck,
   MessageSquare,
-  Zap,
+  Bolt,
   Activity,
-  BarChart3,
+  BarChart,
   Database,
   ChevronDown,
   Target,
@@ -763,7 +763,7 @@ export default function CustomerDetails() {
 
                     <div className="p-3 border rounded-lg bg-pink-50">
                       <div className="flex items-center gap-2 mb-1">
-                        <BarChart3 className="h-3 w-3 text-pink-600" />
+                        <BarChart className="h-3 w-3 text-pink-600" />
                         <span className="text-xs font-medium text-muted-foreground">Giá trị trung bình</span>
                       </div>
                       <div className="text-lg font-bold text-pink-600">
@@ -1538,7 +1538,7 @@ export default function CustomerDetails() {
               <CardHeader className="pb-2 hover:bg-muted/50 transition-colors">
                 <CardTitle className="text-base flex items-center justify-between gap-2">
                   <div className="flex items-center gap-2">
-                    <Zap className="h-4 w-4 text-blue-500" />
+                    <Bolt className="h-4 w-4 text-blue-500" />
                     ⚡ API & Tự động hóa
                   </div>
                   <ChevronDown className={`h-4 w-4 transition-transform ${apiOpen ? 'rotate-180' : ''}`} />
@@ -1602,7 +1602,7 @@ export default function CustomerDetails() {
               <CardHeader className="pb-2 hover:bg-muted/50 transition-colors">
                 <CardTitle className="text-base flex items-center justify-between gap-2">
                   <div className="flex items-center gap-2">
-                    <BarChart3 className="h-4 w-4 text-green-500" />
+                    <BarChart className="h-4 w-4 text-green-500" />
                     📈 Thống kê Đơn hàng
                   </div>
                   <ChevronDown className={`h-4 w-4 transition-transform ${orderAnalyticsOpen ? 'rotate-180' : ''}`} />

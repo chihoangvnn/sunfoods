@@ -21,7 +21,7 @@ import {
   DollarSign,
   TrendingUp,
   Users,
-  BarChart3,
+  BarChart,
   Clock,
   CheckCircle,
   Award,
@@ -349,7 +349,7 @@ export default function AffiliateDashboard() {
           <Card>
             <CardHeader>
               <CardTitle className="text-lg flex items-center gap-2">
-                <BarChart3 className="h-5 w-5 text-blue-600" />
+                <BarChart className="h-5 w-5 text-blue-600" />
                 Hiệu suất tháng này
               </CardTitle>
             </CardHeader>
@@ -548,7 +548,7 @@ export default function AffiliateDashboard() {
                 Tạo liên kết affiliate
               </Button>
               <Button variant="outline">
-                <BarChart3 className="h-4 w-4 mr-2" />
+                <BarChart className="h-4 w-4 mr-2" />
                 Xem thống kê chi tiết
               </Button>
             </div>

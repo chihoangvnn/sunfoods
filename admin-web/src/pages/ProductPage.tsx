@@ -24,7 +24,7 @@ import {
   Clock,
   Users,
   Heart,
-  Zap,
+  Bolt,
   Award,
   Lock,
   Eye,
@@ -736,7 +736,7 @@ export default function ProductPage() {
             {product.benefits && product.benefits.length > 0 && (
               <Card className="p-4">
                 <h3 className="font-semibold text-green-800 mb-3 flex items-center">
-                  <Zap className="w-5 h-5 mr-2" />
+                  <Bolt className="w-5 h-5 mr-2" />
                   Lợi ích chính
                 </h3>
                 <ul className="space-y-2">

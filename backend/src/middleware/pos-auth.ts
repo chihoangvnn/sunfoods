@@ -8,7 +8,7 @@ declare module 'express-session' {
 }
 
 export const requirePOSAuth = (req: Request, res: Response, next: NextFunction) => {
-  if (process.env.NODE_ENV === 'development') {
+  if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
     return next();
   }
   

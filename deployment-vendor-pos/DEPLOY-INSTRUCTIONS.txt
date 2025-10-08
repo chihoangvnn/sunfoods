@@ -1,0 +1,144 @@
+# DEPLOYMENT INSTRUCTIONS - Admin với Vendor Management & POS Link
+Build Date: October 8, 2025
+Version: Vendor Management System + POS Link (76 routes)
+
+## What's New in This Build:
+✅ 4 Vendor Management pages (Vendor Management, Orders, Returns, Financial)
+✅ POS link added to sidebar "Đơn hàng" group
+✅ "Vendors & Consignment" group with 4 menu items
+✅ Total: 76 routes (71 previous + 4 vendor + POS)
+
+## Package Contents:
+- backend/dist/         → Express backend (compiled)
+- backend/public/admin/ → Admin frontend (index-B2ZMBBzO.js with vendor pages)
+- ecosystem.production.js → PM2 config
+- nginx-production.conf   → Nginx reverse proxy config
+- deploy-to-vps.sh        → Deployment script
+
+## Deployment Steps:
+
+### 1. Upload to VPS
+```bash
+# Upload entire deployment-vendor-pos/ folder to VPS
+scp -r deployment-vendor-pos/ user@sunfoods.vn:/tmp/
+```
+
+### 2. On VPS - Stop Current Services
+```bash
+ssh user@sunfoods.vn
+cd /var/www/sunfoods  # Or your deployment path
+pm2 stop all
+```
+
+### 3. Backup Current Installation (Optional)
+```bash
+mv backend backend.backup-$(date +%Y%m%d)
+```
+
+### 4. Deploy New Version
+```bash
+cp -r /tmp/deployment-vendor-pos/backend /var/www/sunfoods/
+cd /var/www/sunfoods
+bash deploy-to-vps.sh
+```
+
+### 5. Configure Environment Variables
+Make sure these env vars are set in /var/www/sunfoods/.env:
+```
+DATABASE_URL=postgresql://...
+SESSION_SECRET=...
+FACEBOOK_APP_ID=...
+FACEBOOK_APP_SECRET=...
+GEMINI_API_KEY=...
+# ... other secrets
+```
+
+### 6. Start Services
+```bash
+pm2 start ecosystem.production.js
+pm2 save
+pm2 startup  # If first time
+```
+
+### 7. Configure Nginx (if not already)
+```bash
+sudo cp nginx-production.conf /etc/nginx/sites-available/sunfoods
+sudo ln -s /etc/nginx/sites-available/sunfoods /etc/nginx/sites-enabled/
+sudo nginx -t
+sudo systemctl reload nginx
+```
+
+### 8. Verify Deployment
+```bash
+# Check PM2 status
+pm2 status
+pm2 logs backend --lines 50
+
+# Check admin interface
+curl http://localhost:5000/adminhoang
+
+# Check vendor API
+curl http://localhost:5000/api/admin/vendors
+```
+
+## Admin Access:
+URL: https://sunfoods.vn/adminhoang
+Features:
+- Complete admin sidebar (76 routes)
+- Vendor Management (/vendors, /vendor-orders, /vendor-returns, /vendor-financial)
+- POS link (/pos)
+- All previous features maintained
+
+## New Sidebar Groups (11 total):
+1. Dashboard & Analytics (5)
+2. Sản phẩm & Kho (9)
+3. Frontend & Storefronts (7)
+4. Đơn hàng (3) ← POS added
+5. Vendors & Consignment (4) ← NEW
+6. Khách hàng & Membership (13)
+7. Social Media (10)
+8. Chatbot (7)
+9. Vận chuyển (6)
+10. Cài đặt (9)
+11. Admin (3)
+
+## Troubleshooting:
+
+### Backend won't start
+```bash
+pm2 logs backend --lines 100
+# Check for missing env vars or database connection issues
+```
+
+### Admin shows blank page
+```bash
+# Check Nginx logs
+sudo tail -f /var/log/nginx/error.log
+
+# Verify admin files
+ls -la /var/www/sunfoods/backend/public/admin/
+# Should see: index.html, assets/index-B2ZMBBzO.js, assets/index-BKGqzj3w.css
+```
+
+### Vendor pages show errors
+```bash
+# Check backend API logs
+pm2 logs backend | grep vendor
+
+# Test vendor API directly
+curl http://localhost:5000/api/admin/vendors
+```
+
+## Rollback (if needed):
+```bash
+pm2 stop all
+mv backend backend.failed
+mv backend.backup-YYYYMMDD backend
+pm2 start ecosystem.production.js
+```
+
+## Support:
+- Backend runs on port 5000
+- Admin: /adminhoang
+- API: /api/*
+- Database: PostgreSQL (Neon)

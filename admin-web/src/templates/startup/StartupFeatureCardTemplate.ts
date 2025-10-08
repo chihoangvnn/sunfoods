@@ -43,7 +43,7 @@ export const StartupFeatureCardTemplate: TemplateDefinition = {
   code: {
     react: {
       jsx: `import React, { useState } from 'react';
-import { ArrowRight, Check, Zap } from 'lucide-react';
+import { ArrowRight, Check, Bolt } from 'lucide-react';
 
 interface StartupFeatureCardProps {
   feature: {
@@ -88,7 +88,7 @@ export function StartupFeatureCard({
       >
         <div className="flex items-start gap-4">
           <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-gradient-to-br from-purple-500 to-cyan-500 flex items-center justify-center">
-            {feature.icon || <Zap className="w-6 h-6 text-white" />}
+            {feature.icon || <Bolt className="w-6 h-6 text-white" />}
           </div>
           
           <div className="flex-1">
@@ -131,7 +131,7 @@ export function StartupFeatureCard({
         <div className="flex items-start justify-between mb-6">
           <div className="flex items-center gap-4">
             <div className="w-14 h-14 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
-              {feature.icon || <Zap className="w-7 h-7 text-white" />}
+              {feature.icon || <Bolt className="w-7 h-7 text-white" />}
             </div>
             
             <div>

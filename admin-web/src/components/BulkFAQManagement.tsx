@@ -19,7 +19,7 @@ import {
   Users, 
   Settings, 
   Clock,
-  Zap,
+  Bolt,
   AlertTriangle,
   RefreshCw,
   Download,
@@ -333,7 +333,7 @@ export function BulkFAQManagement() {
         <Button 
           className="gap-2 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white shadow-lg"
         >
-          <Zap className="h-4 w-4" />
+          <Bolt className="h-4 w-4" />
           🚀 Tạo FAQ hàng loạt
         </Button>
       </DialogTrigger>
@@ -385,7 +385,7 @@ export function BulkFAQManagement() {
                       <SelectContent>
                         <SelectItem value="all">
                           <div className="flex items-center gap-2">
-                            <Zap className="h-4 w-4" />
+                            <Bolt className="h-4 w-4" />
                             Tất cả sản phẩm ({products.length})
                           </div>
                         </SelectItem>
@@ -631,7 +631,7 @@ export function BulkFAQManagement() {
                         </>
                       ) : (
                         <>
-                          <Zap className="h-5 w-5" />
+                          <Bolt className="h-5 w-5" />
                           🚀 Bắt đầu tạo FAQ
                         </>
                       )}

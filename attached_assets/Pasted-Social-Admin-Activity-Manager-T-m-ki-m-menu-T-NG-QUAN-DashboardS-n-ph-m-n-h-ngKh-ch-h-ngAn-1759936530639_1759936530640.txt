@@ -1,0 +1,373 @@
+Social Admin
+Activity Manager
+
+Tìm kiếm menu...
+TỔNG QUAN
+DashboardSản phẩmĐơn hàngKhách hàngAnalyticsPost AnalyticsBest Time to PostChatbotFacebook AppsSatellitesCài đặt
+AD
+Admin User
+
+admin@example.com
+
+Dashboard
+Theo dõi hiệu suất kinh doanh và quản lý mạng xã hội
+
+Kinh doanhSocial Media
+Doanh thu
+Tổng thu nhập tháng này
+
+75%
+50.060 ₫
++12%
+so với tháng trước
+Cập nhật real-time
+Đơn hàng
+Đơn hàng được xử lý
+
+60%
+55
++8%
+so với tháng trước
+Cập nhật real-time
+Khách hàng
+Khách hàng hoạt động
+
+85%
+29
++5%
+so với tháng trước
+Cập nhật real-time
+Sản phẩm
+Tổng sản phẩm trong kho
+
+90%
+57
++15%
+so với tháng trước
+Cập nhật real-time
+Doanh thu theo tháng
+Biểu đồ thể hiện xu hướng doanh thu trong 12 tháng gần nhất
+758 Tr ₫
+
+Tổng doanh thu
+
++19.7%
+
+Trung bình
+
+63 Tr ₫
+
+Mỗi tháng
+
+Hiện tại
+
+85 Tr ₫
+
+Tháng này
+
+Đơn hàng
+
+2081
+
+Tổng số
+
+Đơn hàng gần đây
+Tạo đơn hàng
+Tìm kiếm đơn hàng...
+Tất cả trạng tháiTất cả nguồnTất cả sync
+Mã đơn hàng	Cập nhật	Khách hàng	Nguồn	Ngày đặt	Sản phẩm	Tổng tiền	Trạng thái	
+#92728270	🔵 Xử lý	
+⚙️ Admin
+8/10/2025	1 sản phẩm	25 ₫	
+🟡 Chờ xử lý
+XemSửa
+#40318090	🚚 Gửi hàng	
+⚙️ Admin
+7/10/2025	1 sản phẩm	42 ₫	
+🔵 Đang xử lý
+XemSửa
+#76594829	🔴 Đã hủy	
+⚙️ Admin
+6/10/2025	1 sản phẩm	21 ₫	
+🔴 Đã hủy
+XemSửa
+#01214529	🔵 Xử lý	
+Khách hàng
+🤖 Chatbot
+6/10/2025	1 sản phẩm	59.700 ₫	
+🟡 Chờ xử lý
+XemSửa
+#00424004	🔵 Xử lý	
+Khách hàng
+🤖 Chatbot
+6/10/2025	1 sản phẩm	50.000 ₫	
+🟡 Chờ xử lý
+XemSửa
+#67490079	🔵 Xử lý	
+Khách hàng
+🤖 Chatbot
+6/10/2025	1 sản phẩm	59.700 ₫	
+🟡 Chờ xử lý
+XemSửa
+#34949138	🔵 Xử lý	
+Khách hàng
+🤖 Chatbot
+6/10/2025	1 sản phẩm	59.700 ₫	
+🟡 Chờ xử lý
+XemSửa
+#21796919	🔵 Xử lý	
+Khách hàng
+🤖 Chatbot
+6/10/2025	1 sản phẩm	59.700 ₫	
+🟡 Chờ xử lý
+XemSửa
+#05354711	🔵 Xử lý	
+Khách hàng
+🤖 Chatbot
+6/10/2025	1 sản phẩm	19.900 ₫	
+🟡 Chờ xử lý
+XemSửa
+#96571787	🔵 Xử lý	
+Khách hàng
+🤖 Chatbot
+6/10/2025	1 sản phẩm	50.000 ₫	
+🟡 Chờ xử lý
+XemSửa
+#68425625	🚚 Gửi hàng	
+Khách hàng
+🤖 Chatbot
+6/10/2025	1 sản phẩm	50.000 ₫	
+🔵 Đang xử lý
+XemSửa
+#74130604	✅ Hoàn thành	
+⚙️ Admin
+5/10/2025	2 sản phẩm	42 ₫	
+🟢 Đã gửi
+XemSửa
+#64544633	✅ Hoàn thành	
+Khách hàng
+🤖 Chatbot
+5/10/2025	1 sản phẩm	50.000 ₫	
+✅ Hoàn thành
+XemSửa
+#65581978	🔵 Xử lý	
+Khách hàng
+🤖 Chatbot
+5/10/2025	1 sản phẩm	59.700 ₫	
+🟡 Chờ xử lý
+XemSửa
+#74988679	✅ Hoàn thành	
+Khách hàng
+🤖 Chatbot
+5/10/2025	1 sản phẩm	59.700 ₫	
+🟢 Đã gửi
+XemSửa
+#19602589	🚚 Gửi hàng	
+Khách hàng
+🤖 Chatbot
+5/10/2025	1 sản phẩm	59.700 ₫	
+🔵 Đang xử lý
+XemSửa
+#74443264	🔵 Xử lý	
+Khách hàng
+🤖 Chatbot
+5/10/2025	1 sản phẩm	44.448 ₫	
+🟡 Chờ xử lý
+XemSửa
+#19606012	🔵 Xử lý	
+Khách hàng
+🤖 Chatbot
+5/10/2025	1 sản phẩm	59.700 ₫	
+🟡 Chờ xử lý
+XemSửa
+#77366304	🔵 Xử lý	
+Khách hàng
+🤖 Chatbot
+5/10/2025	1 sản phẩm	59.700 ₫	
+🟡 Chờ xử lý
+XemSửa
+#92492619	🔵 Xử lý	
+Khách hàng
+🤖 Chatbot
+5/10/2025	1 sản phẩm	59.700 ₫	
+🟡 Chờ xử lý
+XemSửa
+#42916189	🔵 Xử lý	
+Khách hàng
+🤖 Chatbot
+5/10/2025	1 sản phẩm	59.700 ₫	
+🟡 Chờ xử lý
+XemSửa
+#27374676	🔵 Xử lý	
+Khách hàng
+🤖 Chatbot
+5/10/2025	1 sản phẩm	59.700 ₫	
+🟡 Chờ xử lý
+XemSửa
+#22145341	🔵 Xử lý	
+Khách hàng
+🤖 Chatbot
+5/10/2025	1 sản phẩm	59.700 ₫	
+🟡 Chờ xử lý
+XemSửa
+#61270256	🔵 Xử lý	
+Khách hàng
+🤖 Chatbot
+5/10/2025	1 sản phẩm	59.700 ₫	
+🟡 Chờ xử lý
+XemSửa
+#82361342	🔵 Xử lý	
+Hoàng
+admin@example.com
+🤖 Chatbot
+4/10/2025	1 sản phẩm	59.700 ₫	
+🟡 Chờ xử lý
+XemSửa
+#31691712	🚚 Gửi hàng	
+Khách hàng
+🤖 Chatbot
+4/10/2025	1 sản phẩm	59.700 ₫	
+🔵 Đang xử lý
+XemSửa
+#98117967	🔵 Xử lý	
+Khách hàng
+🤖 Chatbot
+4/10/2025	1 sản phẩm	50.000 ₫	
+🟡 Chờ xử lý
+XemSửa
+#24374666	🔵 Xử lý	
+Khách hàng
+🤖 Chatbot
+4/10/2025	1 sản phẩm	150.000 ₫	
+🟡 Chờ xử lý
+XemSửa
+#59875438	🔵 Xử lý	
+Khách hàng
+🤖 Chatbot
+4/10/2025	1 sản phẩm	133.344 ₫	
+🟡 Chờ xử lý
+XemSửa
+#07686705	🔵 Xử lý	
+Khách hàng
+🤖 Chatbot
+4/10/2025	1 sản phẩm	300.000 ₫	
+🟡 Chờ xử lý
+XemSửa
+#56181372	🔵 Xử lý	
+Khách hàng
+🤖 Chatbot
+4/10/2025	1 sản phẩm	150.000 ₫	
+🟡 Chờ xử lý
+XemSửa
+#54826080	🔵 Xử lý	
+Khách hàng
+🤖 Chatbot
+4/10/2025	1 sản phẩm	59.700 ₫	
+🟡 Chờ xử lý
+XemSửa
+#35862191	🔵 Xử lý	
+Khách hàng
+🤖 Chatbot
+4/10/2025	1 sản phẩm	59.700 ₫	
+🟡 Chờ xử lý
+XemSửa
+#29359299	🔵 Xử lý	
+Khách hàng
+🤖 Chatbot
+4/10/2025	1 sản phẩm	59.700 ₫	
+🟡 Chờ xử lý
+XemSửa
+#48107448	🔵 Xử lý	
+Khách hàng
+🤖 Chatbot
+4/10/2025	1 sản phẩm	59.700 ₫	
+🟡 Chờ xử lý
+XemSửa
+#61634759	🔵 Xử lý	
+Khách hàng
+🤖 Chatbot
+4/10/2025	1 sản phẩm	59.700 ₫	
+🟡 Chờ xử lý
+XemSửa
+#64322161	🔵 Xử lý	
+Khách hàng
+🤖 Chatbot
+4/10/2025	1 sản phẩm	59.700 ₫	
+🟡 Chờ xử lý
+XemSửa
+#77498758	🔵 Xử lý	
+💳 POS
+4/10/2025	4 sản phẩm	258.655 ₫	
+🟡 Chờ xử lý
+XemSửa
+#82438043	🔵 Xử lý	
+Khách hàng
+🤖 Chatbot
+4/10/2025	1 sản phẩm	79.600 ₫	
+🟡 Chờ xử lý
+XemSửa
+#23785573	🔵 Xử lý	
+Khách hàng
+🤖 Chatbot
+4/10/2025	1 sản phẩm	59.700 ₫	
+🟡 Chờ xử lý
+XemSửa
+#89067231	🔵 Xử lý	
+Khách hàng
+🤖 Chatbot
+4/10/2025	1 sản phẩm	59.700 ₫	
+🟡 Chờ xử lý
+XemSửa
+#42134900	🔵 Xử lý	
+Hoàng
+admin@example.com
+🤖 Chatbot
+4/10/2025	1 sản phẩm	59.700 ₫	
+🟡 Chờ xử lý
+XemSửa
+#79469955	🔵 Xử lý	
+Khách hàng
+🤖 Chatbot
+4/10/2025	1 sản phẩm	597.000 ₫	
+🟡 Chờ xử lý
+XemSửa
+#01266976	🚚 Gửi hàng	
+Khách hàng
+🤖 Chatbot
+4/10/2025	1 sản phẩm	99.000 ₫	
+🔵 Đang xử lý
+XemSửa
+#53853112	🔵 Xử lý	
+Khách hàng
+🤖 Chatbot
+4/10/2025	1 sản phẩm	59.700 ₫	
+🟡 Chờ xử lý
+XemSửa
+#33428112	🔵 Xử lý	
+Khách hàng
+🤖 Chatbot
+4/10/2025	1 sản phẩm	59.700 ₫	
+🟡 Chờ xử lý
+XemSửa
+#34437619	🔵 Xử lý	
+Khách hàng
+🤖 Chatbot
+4/10/2025	1 sản phẩm	59.700 ₫	
+🟡 Chờ xử lý
+XemSửa
+#98870287	🔵 Xử lý	
+Khách hàng
+🤖 Chatbot
+4/10/2025	1 sản phẩm	59.700 ₫	
+🟡 Chờ xử lý
+XemSửa
+#83168731	🔵 Xử lý	
+💳 POS
+4/10/2025	1 sản phẩm	16.866 ₫	
+🟡 Chờ xử lý
+XemSửa
+#80715273	🔵 Xử lý	
+💳 POS
+4/10/2025	1 sản phẩm	19.638 ₫	
+🟡 Chờ xử lý
+XemSửa

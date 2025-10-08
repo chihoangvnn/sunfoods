@@ -24,7 +24,7 @@ import {
   Clock,
   Users,
   Heart,
-  Zap,
+  Bolt,
   Award,
   Lock,
   Eye,

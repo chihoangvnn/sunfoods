@@ -1,10 +1,11 @@
-import { Switch, Route } from "wouter";
+import { Switch, Route, Router } from "wouter";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { SidebarProvider, SidebarTrigger, SidebarInset } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
+import CompleteAdminSidebar from "@/components/CompleteAdminSidebar";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { useEffect } from "react";
 import { initializeGA4 } from "@/lib/analytics";
@@ -105,6 +106,12 @@ import CategoriesAdmin from "@/pages/CategoriesAdmin";
 import CookieManagement from "@/pages/CookieManagement";
 import InvoiceDesigner from "@/pages/InvoiceDesigner";
 
+// Vendor Management
+import VendorManagement from "@/pages/VendorManagement";
+import VendorOrders from "@/pages/VendorOrders";
+import VendorReturns from "@/pages/VendorReturns";
+import VendorFinancial from "@/pages/VendorFinancial";
+
 // Customer Role Dashboards
 import CustomerDashboard from "@/pages/CustomerDashboard";
 import CustomerAffiliateDashboard from "@/pages/CustomerAffiliateDashboard";
@@ -128,7 +135,7 @@ import AffiliateCreateOrder from "@/pages/AffiliateCreateOrder";
 import ProductCatalog from "@/pages/affiliate-portal/ProductCatalog";
 import ProductRequest from "@/pages/affiliate-portal/ProductRequest";
 import AffiliateProtectedRoute from "@/components/AffiliateProtectedRoute";
-import { AffiliateAuthProvider } from "@/contexts/AffiliateAuthContext";
+// import { AffiliateAuthProvider } from "@/contexts/AffiliateAuthContext"; // REMOVED: Admin doesn't need affiliate auth
 import { AdminAuthProvider } from "@/contexts/AdminAuthContext";
 import AdminProtectedRoute from "@/components/AdminProtectedRoute";
 import POSProtectedRoute from "@/components/POSProtectedRoute";
@@ -224,6 +231,10 @@ function AdminRouter() {
       <Route path="/member/vouchers" component={MyVouchers} />
       <Route path="/member/campaigns" component={Campaigns} />
       <Route path="/linked-accounts" component={LinkedAccounts} />
+      <Route path="/vendors" component={VendorManagement} />
+      <Route path="/vendor-orders" component={VendorOrders} />
+      <Route path="/vendor-returns" component={VendorReturns} />
+      <Route path="/vendor-financial" component={VendorFinancial} />
       <Route component={NotFound} />
     </Switch>
   );
@@ -243,10 +254,9 @@ function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <AdminAuthProvider>
-        <AffiliateAuthProvider>
-          <TooltipProvider>
-            {/* Public Routes (outside admin layout) */}
+        <TooltipProvider>
+          <Router base="/adminhoang">
+              {/* Public Routes (outside admin layout) */}
               <Switch>
               <Route path="/checkout" component={GuestCheckoutPage} />
               <Route path="/lp/:slug" component={PublicLandingPage} />
@@ -264,6 +274,7 @@ function App() {
               <Route path="/customer/driver-services/:customerId" component={CustomerDriverDashboard} />
               
               {/* Admin Login */}
+              <Route path="/login" component={AdminLogin} />
               <Route path="/admin/login" component={AdminLogin} />
               
               {/* POS Login */}
@@ -321,24 +332,24 @@ function App() {
               </Route>
               
               <Route path="/*">
-                {/* Admin Routes (inside sidebar layout) - Protected */}
-                <AdminProtectedRoute>
-                  <SidebarProvider style={style as React.CSSProperties}>
-                    <div className="flex h-svh w-full">
-                      <AppSidebar />
-                      <main className="flex-1 overflow-auto bg-background mobile-content-padding">
-                        <AdminRouter />
-                      </main>
-                    </div>
-                  </SidebarProvider>
-                </AdminProtectedRoute>
+                {/* Admin Routes (simple layout) - Auth disabled for testing */}
+                <div className="flex flex-row h-screen overflow-hidden bg-[#F5F5F5]" style={{ display: 'flex', flexDirection: 'row' }}>
+                  {/* Sidebar - Fixed Left */}
+                  <div className="w-64 bg-white border-r border-gray-200 overflow-y-auto flex-shrink-0" style={{ width: '256px', flexShrink: 0 }}>
+                    <CompleteAdminSidebar />
+                  </div>
+                  
+                  {/* Main Content Area - Flex Right */}
+                  <div className="flex-1 overflow-y-auto" style={{ flex: 1 }}>
+                    <AdminRouter />
+                  </div>
+                </div>
               </Route>
             </Switch>
+            </Router>
             
             <Toaster />
           </TooltipProvider>
-        </AffiliateAuthProvider>
-      </AdminAuthProvider>
     </QueryClientProvider>
   );
 }

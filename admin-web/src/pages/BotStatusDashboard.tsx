@@ -16,7 +16,7 @@ import {
   RefreshCw,
   Clock,
   Database,
-  Zap,
+  Bolt,
   Users,
   TrendingUp,
   Globe,
@@ -639,7 +639,7 @@ export default function BotStatusDashboard() {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Zap className="h-5 w-5" />
+                  <Bolt className="h-5 w-5" />
                   Response Times
                 </CardTitle>
               </CardHeader>

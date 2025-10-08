@@ -19,7 +19,7 @@ import {
   Filter,
   Download,
   Printer,
-  BarChart3
+  BarChart
 } from 'lucide-react';
 import {
   Dialog,
@@ -262,7 +262,7 @@ export function ShopeeFulfillmentPanel({ businessAccountId }: { businessAccountI
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-purple-500 rounded-lg">
-                <BarChart3 className="h-5 w-5 text-white" />
+                <BarChart className="h-5 w-5 text-white" />
               </div>
               <div>
                 <p className="text-sm text-gray-600">Hiệu suất</p>

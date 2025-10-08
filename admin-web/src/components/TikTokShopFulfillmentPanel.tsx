@@ -19,7 +19,7 @@ import {
   Filter,
   Download,
   Printer,
-  BarChart3
+  BarChart
 } from 'lucide-react';
 import {
   Dialog,
@@ -266,7 +266,7 @@ export function TikTokShopFulfillmentPanel({ businessAccountId }: { businessAcco
                   <p className="text-sm text-gray-600">Thời gian xử lý TB</p>
                   <p className="text-2xl font-bold">{analytics.averageProcessingTime.toFixed(1)}h</p>
                 </div>
-                <BarChart3 className="h-8 w-8 text-purple-600" />
+                <BarChart className="h-8 w-8 text-purple-600" />
               </div>
             </CardContent>
           </Card>

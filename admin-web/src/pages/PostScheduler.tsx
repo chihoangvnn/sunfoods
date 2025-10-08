@@ -4,7 +4,7 @@ import {
   Calendar, Clock, Plus, Edit, Trash2, Send, Pause, Play, 
   Facebook, Instagram, Image, Video, Tag, Eye, AlertCircle,
   CheckCircle, XCircle, Loader2, Filter, Search, LayoutList, Upload,
-  Users, Target, Settings, TrendingUp, Shield, Zap
+  Users, Target, Settings, TrendingUp, Shield, Bolt
 } from 'lucide-react';
 import { ScheduledPost, SocialAccount, ContentAsset, AccountGroup } from '../../../shared/schema';
 import { PostCalendarView } from '../components/PostCalendarView';

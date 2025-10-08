@@ -20,7 +20,7 @@ import {
   Menu,
   X,
   Award,
-  BarChart3,
+  BarChart,
   Link2,
   Settings,
   User,

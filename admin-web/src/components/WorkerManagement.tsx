@@ -5,7 +5,7 @@ import {
   Monitor, 
   Cloud, 
   Activity, 
-  Zap, 
+  Bolt, 
   AlertCircle, 
   CheckCircle, 
   Clock,
@@ -18,7 +18,7 @@ import {
   Send,
   Plus,
   TrendingUp,
-  BarChart3
+  BarChart
 } from 'lucide-react';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -666,7 +666,7 @@ export function WorkerManagement() {
           <Card>
             <CardHeader className="pb-3">
               <CardTitle className="text-sm font-medium flex items-center gap-2">
-                <BarChart3 className="h-4 w-4" />
+                <BarChart className="h-4 w-4" />
                 Jobs Processed
               </CardTitle>
             </CardHeader>
@@ -726,7 +726,7 @@ export function WorkerManagement() {
             Dispatch
           </TabsTrigger>
           <TabsTrigger value="stats" className="flex items-center gap-2">
-            <BarChart3 className="h-4 w-4" />
+            <BarChart className="h-4 w-4" />
             Statistics
           </TabsTrigger>
         </TabsList>

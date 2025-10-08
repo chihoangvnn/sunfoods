@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from 'wouter';
-import { Search, Plus, ChevronDown, ChevronRight, Tag, Edit, Trash2, X, Package, TrendingUp, Users, Star, AlertTriangle, CheckCircle, Target, BarChart3 } from "lucide-react";
+import { Search, Plus, ChevronDown, ChevronRight, Tag, Edit, Trash2, X, Package, TrendingUp, Users, Star, AlertTriangle, CheckCircle, Target, BarChart } from "lucide-react";
 
 // Book Category Types
 interface BookCategory {
@@ -604,7 +604,7 @@ export default function BookCategoriesAdmin() {
                   <p className="text-sm text-gray-600">Avg Books/Category</p>
                   <p className="text-2xl font-bold text-gray-900">{stats.avgBooks}</p>
                 </div>
-                <BarChart3 className="w-8 h-8 text-purple-600" />
+                <BarChart className="w-8 h-8 text-purple-600" />
               </div>
             </div>
           </div>

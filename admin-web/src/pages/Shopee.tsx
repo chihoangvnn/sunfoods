@@ -11,7 +11,7 @@ import { ShopeeFulfillmentPanel } from "@/components/ShopeeFulfillmentPanel";
 import { SocialMediaPanel } from "@/components/SocialMediaPanel";
 import { 
   ShoppingCart, 
-  BarChart3, 
+  BarChart, 
   Package, 
   Settings, 
   Store,
@@ -132,7 +132,7 @@ export default function Shopee() {
                     </div>
                     
                     <div className="flex items-center gap-3 p-3 bg-white rounded-lg border border-orange-200">
-                      <BarChart3 className="h-5 w-5 text-orange-600" />
+                      <BarChart className="h-5 w-5 text-orange-600" />
                       <div>
                         <p className="font-medium text-gray-800">Thống kê bán hàng</p>
                         <p className="text-sm text-gray-600">Báo cáo doanh thu chi tiết</p>
@@ -216,7 +216,7 @@ export default function Shopee() {
                 value="dashboard" 
                 className="flex items-center gap-2 data-[state=active]:bg-orange-500 data-[state=active]:text-white"
               >
-                <BarChart3 className="h-4 w-4" />
+                <BarChart className="h-4 w-4" />
                 Dashboard
               </TabsTrigger>
               <TabsTrigger 
@@ -247,7 +247,7 @@ export default function Shopee() {
                 <Card className="lg:col-span-3">
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2 text-gray-900">
-                      <BarChart3 className="h-5 w-5 text-orange-600" />
+                      <BarChart className="h-5 w-5 text-orange-600" />
                       Analytics Dashboard
                     </CardTitle>
                   </CardHeader>

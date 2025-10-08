@@ -5,7 +5,7 @@ import {
   Filter, 
   BookOpen, 
   DollarSign, 
-  BarChart3, 
+  BarChart, 
   Settings,
   Edit,
   Trash2,
@@ -435,7 +435,7 @@ const BookCatalogAdmin: React.FC = () => {
   const renderAnalyticsTab = () => (
     <div className="bg-white p-6 rounded-lg border">
       <div className="text-center py-12">
-        <BarChart3 className="w-16 h-16 text-purple-500 mx-auto mb-4" />
+        <BarChart className="w-16 h-16 text-purple-500 mx-auto mb-4" />
         <h3 className="text-xl font-semibold text-gray-900 mb-2">Analytics Dashboard</h3>
         <p className="text-gray-600">Analytics and reporting functionality will be implemented here</p>
       </div>
@@ -631,7 +631,7 @@ const BookCatalogAdmin: React.FC = () => {
             {[
               { id: 'books', label: 'Books', icon: BookOpen },
               { id: 'pricing', label: 'Pricing Rules', icon: DollarSign },
-              { id: 'analytics', label: 'Analytics', icon: BarChart3 }
+              { id: 'analytics', label: 'Analytics', icon: BarChart }
             ].map(tab => {
               const Icon = tab.icon;
               return (
