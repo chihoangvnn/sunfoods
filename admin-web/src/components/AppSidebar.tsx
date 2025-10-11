@@ -664,22 +664,7 @@ export function AppSidebar() {
   return (
     <Sidebar className="modern-sidebar border-r border-border/50 bg-surface/80 backdrop-blur-xl">
       {/* Modern Header với activity branding */}
-      <SidebarHeader className="p-6 border-b border-border/50 space-y-4">
-        <div className="flex items-center gap-4">
-          <div className="relative">
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-r from-teal-500 to-teal-600 shadow-lg">
-              <Activity className="h-6 w-6 text-white" />
-            </div>
-            <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-gradient-to-r from-emerald-400 to-emerald-500 rounded-full animate-pulse shadow-lg"></div>
-          </div>
-          <div>
-            <h2 className="text-xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 bg-clip-text text-transparent">
-              Social Admin
-            </h2>
-            <p className="text-sm text-muted-foreground/80">Activity Manager</p>
-          </div>
-        </div>
-        
+      <SidebarHeader className="p-4 border-b border-border/50">
         {/* Search Bar */}
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />

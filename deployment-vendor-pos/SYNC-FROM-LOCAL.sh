@@ -42,7 +42,7 @@ cp -r /tmp/deployment-vendor-pos/backend ./
 bash backend/deploy-to-vps.sh  # Or: bash /tmp/deployment-vendor-pos/deploy-to-vps.sh
 
 # Start services
-pm2 start ecosystem.production.js
+pm2 start ecosystem.config.js
 pm2 save
 pm2 logs backend
 

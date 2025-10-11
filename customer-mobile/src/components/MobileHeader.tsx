@@ -20,12 +20,12 @@ export function MobileHeader({
   onCartClick, 
   onProfileClick,
   cartCount = 0, 
-  storeName = "Nhang Sạch .Net" 
+  storeName = "SunFoods.vn" 
 }: MobileHeaderProps) {
   const { user, isAuthenticated } = useAuth();
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   return (
-    <div className="sticky top-0 z-50 bg-gradient-to-r from-green-600 to-green-700 shadow-lg">
+    <div className="sticky top-0 z-50 bg-forest-green shadow-lg lg:hidden">
       <div className="flex items-center justify-between p-4 text-white">
         {/* Left: Store name as home button */}
         <Button 

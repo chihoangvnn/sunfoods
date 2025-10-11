@@ -1,0 +1,16 @@
+run = "cd customer-tramhuong && npm install && npm run dev -- -p 3002 -H 0.0.0.0"
+modules = ["nodejs-20"]
+
+[nix]
+channel = "stable-24_05"
+
+[deployment]
+run = ["sh", "-c", "cd customer-tramhuong && npm install && npm start"]
+
+[[ports]]
+localPort = 3002
+externalPort = 80
+
+[env]
+NEXT_PUBLIC_STORE_ID = "tramhuong"
+NEXT_PUBLIC_STORE_NAME = "Trầm Hương Hoàng Ngân"

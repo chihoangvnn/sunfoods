@@ -9,34 +9,36 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
+import { useResponsive } from "@/hooks/use-mobile";
 import { 
-  Phone, 
   Mail, 
   MapPin, 
   Star, 
   Check, 
+  CheckCircle2,
   Plus, 
-  Minus, 
   ShoppingCart, 
   Shield,
   Truck,
   CreditCard,
   Clock,
   Users,
-  Heart,
-  Bolt,
-  Award,
-  Lock,
   Eye,
   TrendingUp,
   ChevronLeft,
   ChevronRight,
   X,
-  AlertCircle,
-  CheckCircle2,
-  Flame
+  Package
 } from "lucide-react";
 import ChatbotWidget from "@/components/ChatbotWidget";
+import { MobileHeader } from "@/components/MobileHeader";
+import { DesktopHeader } from "@/components/DesktopHeader";
+import { ImageSlider } from "@/components/ImageSlider";
+import { ProductModal } from "@/components/ProductModal";
+import { ProductReviews } from "@/components/ProductReviews";
+import { StorefrontBottomNav } from "@/components/StorefrontBottomNav";
+import { calculateMarketingBadges } from "@/utils/marketingBadges";
+import { formatVietnamPrice } from "@/utils/currency";
 
 interface OrderFormData {
   name: string;
@@ -68,6 +70,7 @@ const CHECKOUT_STEPS = [
 export default function PublicLandingPage() {
   const { slug } = useParams();
   const { toast } = useToast();
+  const { isMobile, isTablet, isDesktop } = useResponsive();
 
   const [orderForm, setOrderForm] = useState<OrderFormData>({
     name: "",
@@ -96,6 +99,34 @@ export default function PublicLandingPage() {
     availableStock: Math.floor(Math.random() * 20) + 5,
     urgencyHours: Math.floor(Math.random() * 12) + 1
   }));
+
+  // Affiliate tracking state
+  const [affiliateCode, setAffiliateCode] = useState<string | null>(null);
+
+  // Mobile navigation state
+  const [activeTab, setActiveTab] = useState('home');
+
+  // Product modal state
+  const [selectedProduct, setSelectedProduct] = useState<any>(null);
+  const [isProductModalOpen, setIsProductModalOpen] = useState(false);
+
+  // Parse URL parameters for affiliate code on component mount
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const refCode = urlParams.get('ref');
+    
+    if (refCode) {
+      localStorage.setItem('affiliateRef', refCode);
+      setAffiliateCode(refCode);
+      console.log(`🔗 Affiliate code captured: ${refCode}`);
+    } else {
+      const existingRef = localStorage.getItem('affiliateRef');
+      if (existingRef) {
+        setAffiliateCode(existingRef);
+        console.log(`🔗 Using existing affiliate code: ${existingRef}`);
+      }
+    }
+  }, []);
   
   // Simulate dynamic viewers count
   useEffect(() => {
@@ -104,8 +135,6 @@ export default function PublicLandingPage() {
     }, 10000);
     return () => clearInterval(interval);
   }, []);
-
-  
 
   // Fetch landing page data
   const { data: landingPage, isLoading, error } = useQuery<any>({
@@ -118,7 +147,10 @@ export default function PublicLandingPage() {
       const response = await fetch('/api/landing-orders', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(orderData),
+        body: JSON.stringify({
+          ...orderData,
+          affiliateCode: affiliateCode
+        }),
       });
       
       if (!response.ok) {
@@ -189,7 +221,6 @@ export default function PublicLandingPage() {
     setOrderForm(prev => ({ ...prev, [field]: value }));
     setTouchedFields(prev => new Set(prev).add(field));
     
-    // Real-time validation for touched fields
     if (touchedFields.has(field)) {
       const error = validateField(field, value);
       setValidationErrors(prev => ({ ...prev, [field]: error }));
@@ -262,89 +293,20 @@ export default function PublicLandingPage() {
     });
   };
 
-  // Define safe derived variables with fallbacks for when landingPage is undefined
+  // Define safe derived variables with fallbacks
   const isDarkTheme = (landingPage?.theme ?? 'light') === 'dark';
   const finalPrice = landingPage?.finalPrice ?? 0;
   const originalPrice = landingPage?.originalPrice ?? null;
   const hasDiscount = originalPrice != null && originalPrice > finalPrice;
   const discountPercent = hasDiscount ? Math.round(((originalPrice - finalPrice)/originalPrice)*100) : 0;
 
-  // Memoized color info calculation for performance
+  // Memoized color info calculation
   const colorInfo = useMemo(() => {
-    const primaryColor = landingPage?.primaryColor || '#007bff';
-    // Enhanced color normalization that handles all formats: hex, rgb(), hsl(), named colors
+    const primaryColor = landingPage?.primaryColor || '#22c55e';
     const normalizeColor = (color: string) => {
       try {
-        // Handle hex colors directly (most common case)
         if (color.startsWith('#')) {
           let hex = color.toLowerCase();
-          // Handle shorthand hex (#abc -> #aabbcc)
-          if (hex.length === 4) {
-            hex = '#' + hex[1] + hex[1] + hex[2] + hex[2] + hex[3] + hex[3];
-          }
-          
-          if (hex.length === 7) {
-            const r = parseInt(hex.slice(1, 3), 16);
-            const g = parseInt(hex.slice(3, 5), 16);
-            const b = parseInt(hex.slice(5, 7), 16);
-            
-            // Validate RGB values
-            if (!isNaN(r) && !isNaN(g) && !isNaN(b) && r >= 0 && r <= 255 && g >= 0 && g <= 255 && b >= 0 && b <= 255) {
-              return {
-                hex,
-                rgb: `${r}, ${g}, ${b}`
-              };
-            }
-          }
-        }
-        
-        // Handle rgb() format directly
-        const rgbMatch = color.match(/rgb\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)/i);
-        if (rgbMatch) {
-          const r = parseInt(rgbMatch[1], 10);
-          const g = parseInt(rgbMatch[2], 10);
-          const b = parseInt(rgbMatch[3], 10);
-          
-          if (!isNaN(r) && !isNaN(g) && !isNaN(b) && r >= 0 && r <= 255 && g >= 0 && g <= 255 && b >= 0 && b <= 255) {
-            // Convert RGB to hex
-            const hex = '#' + [r, g, b].map(c => c.toString(16).padStart(2, '0')).join('');
-            return {
-              hex,
-              rgb: `${r}, ${g}, ${b}`
-            };
-          }
-        }
-        
-        // Use canvas to normalize named colors, hsl(), and other complex formats
-        const canvas = document.createElement('canvas');
-        const context = canvas.getContext('2d');
-        if (!context) return { hex: '#007bff', rgb: '0, 123, 255' };
-        
-        // Clear and set the color - canvas will normalize it
-        context.clearRect(0, 0, 1, 1);
-        context.fillStyle = color;
-        const normalizedColor = context.fillStyle;
-        
-        // Parse canvas-normalized "rgb(r, g, b)" string format
-        const canvasRgbMatch = normalizedColor.match(/rgb\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)/i);
-        if (canvasRgbMatch) {
-          const r = parseInt(canvasRgbMatch[1], 10);
-          const g = parseInt(canvasRgbMatch[2], 10);
-          const b = parseInt(canvasRgbMatch[3], 10);
-          
-          if (!isNaN(r) && !isNaN(g) && !isNaN(b) && r >= 0 && r <= 255 && g >= 0 && g <= 255 && b >= 0 && b <= 255) {
-            // Convert RGB to hex
-            const hex = '#' + [r, g, b].map(c => c.toString(16).padStart(2, '0')).join('');
-            return {
-              hex,
-              rgb: `${r}, ${g}, ${b}`
-            };
-          }
-        }
-        
-        // Handle if canvas returns hex (for some browsers/inputs)
-        if (normalizedColor.startsWith('#')) {
-          let hex = normalizedColor.toLowerCase();
           if (hex.length === 4) {
             hex = '#' + hex[1] + hex[1] + hex[2] + hex[2] + hex[3] + hex[3];
           }
@@ -363,18 +325,39 @@ export default function PublicLandingPage() {
           }
         }
         
-        // Final fallback to default blue if all parsing failed
-        return { hex: '#007bff', rgb: '0, 123, 255' };
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+        if (!context) return { hex: '#22c55e', rgb: '34, 197, 94' };
+        
+        context.clearRect(0, 0, 1, 1);
+        context.fillStyle = color;
+        const normalizedColor = context.fillStyle;
+        
+        const rgbMatch = normalizedColor.match(/rgb\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)/i);
+        if (rgbMatch) {
+          const r = parseInt(rgbMatch[1], 10);
+          const g = parseInt(rgbMatch[2], 10);
+          const b = parseInt(rgbMatch[3], 10);
+          
+          if (!isNaN(r) && !isNaN(g) && !isNaN(b)) {
+            const hex = '#' + [r, g, b].map(c => c.toString(16).padStart(2, '0')).join('');
+            return {
+              hex,
+              rgb: `${r}, ${g}, ${b}`
+            };
+          }
+        }
+        
+        return { hex: '#22c55e', rgb: '34, 197, 94' };
       } catch (error) {
-        // Fallback to default blue on any error
-        return { hex: '#007bff', rgb: '0, 123, 255' };
+        return { hex: '#22c55e', rgb: '34, 197, 94' };
       }
     };
     
     return normalizeColor(primaryColor);
   }, [landingPage?.primaryColor]);
   
-  // Generate CSS custom properties for dynamic theming
+  // Generate CSS custom properties
   const themeStyles = useMemo(() => ({
     '--theme-primary': colorInfo.hex,
     '--theme-primary-rgb': colorInfo.rgb,
@@ -394,223 +377,144 @@ export default function PublicLandingPage() {
     textMuted: isDarkTheme ? 'text-gray-300' : 'text-muted-foreground',
   }), [isDarkTheme]);
   
-  // Dynamic hero gradient style - brand-aware for both light and dark themes
-  const heroGradientStyle = useMemo(() => {
-    if (isDarkTheme) {
-      // Dark theme: Use brand colors exclusively, no fixed gray colors
-      return { 
-        background: `linear-gradient(to right, var(--theme-primary-dark), rgba(${colorInfo.rgb}, 0.25), var(--theme-primary-light))` 
-      };
-    } else {
-      // Light theme: Use lighter brand color variants
-      return { 
-        background: `linear-gradient(to right, var(--theme-primary-lighter), var(--theme-primary-light))` 
-      };
-    }
-  }, [isDarkTheme, colorInfo.rgb]);
+  // Transform landing page product to ProductModal format
+  const transformedProduct = useMemo(() => {
+    if (!landingPage?.product) return null;
 
-  // SEO Meta Tags - Dynamic based on landing page data
+    const product = landingPage.product;
+    const reviews = landingPage.reviewsData;
+
+    return {
+      id: product.id || landingPage.productId,
+      name: product.name || landingPage.displayName,
+      price: finalPrice,
+      image: landingPage.displayImage || product.image,
+      category_id: product.category_id || 'general',
+      stock: landingPage.availableStock || stableStats.availableStock,
+      short_description: product.short_description || landingPage.displayDescription,
+      status: 'active',
+      benefits: product.benefits || landingPage.features,
+      rating: reviews?.averageRating || 4.8,
+      reviewCount: reviews?.totalReviews || 0,
+      totalReviews: reviews?.totalReviews || 0,
+      positivePercent: reviews?.totalReviews > 0 ? 85 : undefined,
+      createdAt: product.createdAt || new Date().toISOString(),
+      originalPrice: originalPrice || undefined,
+      isNew: false,
+      isBestseller: (reviews?.totalReviews || 0) > 50,
+      isFreeshipping: true,
+      isTopseller: (reviews?.averageRating || 0) >= 4.5
+    };
+  }, [landingPage, finalPrice, originalPrice, stableStats.availableStock]);
+
+  // Calculate marketing badges
+  const marketingBadges = useMemo(() => {
+    if (!transformedProduct) return { pricingBadges: [], reviewBadges: [] };
+
+    return calculateMarketingBadges(
+      {
+        rating: transformedProduct.rating || 4.8,
+        totalReviews: transformedProduct.totalReviews || 0,
+        positivePercent: transformedProduct.positivePercent
+      },
+      {
+        price: transformedProduct.price,
+        originalPrice: transformedProduct.originalPrice,
+        createdAt: transformedProduct.createdAt
+      }
+    );
+  }, [transformedProduct]);
+
+  // Prepare hero slider slides from product media
+  const heroSlides = useMemo(() => {
+    if (!landingPage?.displayImage) return [];
+
+    const isVideo = (url: string) => {
+      const videoExtensions = ['.mp4', '.webm', '.ogg', '.mov'];
+      return videoExtensions.some(ext => url.toLowerCase().endsWith(ext));
+    };
+
+    const slides = [];
+    
+    const displayImage = landingPage.displayImage;
+    slides.push({
+      url: displayImage,
+      type: isVideo(displayImage) ? 'video' as const : 'image' as const,
+      alt: landingPage.displayName
+    });
+
+    if (landingPage.product?.image && landingPage.product.image !== displayImage) {
+      slides.push({
+        url: landingPage.product.image,
+        type: isVideo(landingPage.product.image) ? 'video' as const : 'image' as const,
+        alt: landingPage.displayName
+      });
+    }
+
+    return slides;
+  }, [landingPage]);
+
+  // SEO Meta Tags
   useEffect(() => {
     if (!landingPage) return;
 
     const product = landingPage.product;
     const reviews = landingPage.reviewsData;
     
-    // Generate optimized title for SEO and social sharing
     const seoTitle = `${product?.name || landingPage.title} - Giá chỉ ${finalPrice.toLocaleString('vi-VN')}đ | Mua ngay`;
-    const seoDescription = landingPage.description || product?.description || `Mua ${product?.name} chính hãng, giá tốt nhất thị trường. ⭐ ${reviews?.averageRating?.toFixed(1) || '4.8'}/5 từ ${reviews?.totalReviews || 0} đánh giá. Giao hàng miễn phí, đổi trả 30 ngày.`;
-    const seoKeywords = `${product?.name}, mua ${product?.name}, ${product?.name} giá tốt, ${product?.name} chính hãng, đặt hàng online, giao hàng miễn phí`;
+    const seoDescription = landingPage.description || product?.description || `Mua ${product?.name} chính hãng, giá tốt nhất thị trường. ⭐ ${reviews?.averageRating?.toFixed(1) || '4.8'}/5 từ ${reviews?.totalReviews || 0} đánh giá.`;
     
-    // Basic SEO meta tags
     document.title = seoTitle;
     
-    // Remove existing meta tags to avoid duplicates
     const existingMetaTags = document.querySelectorAll('meta[data-seo="true"]');
     existingMetaTags.forEach(tag => tag.remove());
     
     const metaTags = [
       { name: 'description', content: seoDescription },
-      { name: 'keywords', content: seoKeywords },
-      { name: 'author', content: landingPage.contactInfo?.businessName || 'Shop Online' },
-      { name: 'robots', content: 'index, follow' },
-      { name: 'language', content: 'vi-VN' },
-      
-      // Open Graph tags for Facebook
       { property: 'og:type', content: 'product' },
       { property: 'og:title', content: seoTitle },
       { property: 'og:description', content: seoDescription },
       { property: 'og:image', content: landingPage.displayImage || product?.image || '' },
-      { property: 'og:url', content: window.location.href },
-      { property: 'og:site_name', content: landingPage.contactInfo?.businessName || 'Online Shop' },
-      { property: 'og:locale', content: 'vi_VN' },
-      { property: 'product:price:amount', content: finalPrice.toString() },
-      { property: 'product:price:currency', content: 'VND' },
-      
-      // Twitter Card tags
       { name: 'twitter:card', content: 'summary_large_image' },
-      { name: 'twitter:title', content: seoTitle },
-      { name: 'twitter:description', content: seoDescription },
-      { name: 'twitter:image', content: landingPage.displayImage || product?.image || '' },
-      
-      // Additional SEO tags
-      { name: 'theme-color', content: landingPage.primaryColor || '#007bff' },
-      { name: 'apple-mobile-web-app-capable', content: 'yes' },
-      { name: 'format-detection', content: 'telephone=yes' }
     ];
     
-    // Add meta tags to document head
     metaTags.forEach(({ name, property, content }) => {
       const meta = document.createElement('meta');
       if (name) meta.setAttribute('name', name);
       if (property) meta.setAttribute('property', property);
       meta.setAttribute('content', content);
-      meta.setAttribute('data-seo', 'true'); // Mark for easy removal
+      meta.setAttribute('data-seo', 'true');
       document.head.appendChild(meta);
     });
-    
-    // Add canonical URL (remove query parameters)
-    let canonical = document.querySelector('link[rel="canonical"]');
-    if (!canonical) {
-      canonical = document.createElement('link');
-      canonical.setAttribute('rel', 'canonical');
-      document.head.appendChild(canonical);
-    }
-    const cleanUrl = window.location.origin + window.location.pathname;
-    canonical.setAttribute('href', cleanUrl);
-    
-    // Get valid image URLs FIRST (before using in resource hints)
-    const productImages = [];
-    if (landingPage.displayImage) productImages.push(landingPage.displayImage);
-    if (product?.image && product.image !== landingPage.displayImage) productImages.push(product.image);
-    
-    // Add critical resource hints for performance
-    const addResourceHint = (rel: string, href: string, as?: string) => {
-      const existing = document.querySelector(`link[rel="${rel}"][href="${href}"]`);
-      if (!existing) {
-        const link = document.createElement('link');
-        link.setAttribute('rel', rel);
-        link.setAttribute('href', href);
-        if (as) {
-          link.setAttribute('as', as); // Use the actual 'as' parameter
-          if (as === 'font') {
-            link.setAttribute('crossorigin', 'anonymous');
-          }
-        }
-        // Critical: Add crossorigin for fonts.gstatic.com preconnect regardless of 'as'
-        if (rel === 'preconnect' && href.includes('fonts.gstatic.com')) {
-          link.setAttribute('crossorigin', 'anonymous');
-        }
-        document.head.appendChild(link);
-      }
-    };
-    
-    // Preconnect to Google Fonts for faster font loading
-    addResourceHint('preconnect', 'https://fonts.googleapis.com');
-    addResourceHint('preconnect', 'https://fonts.gstatic.com');
-    
-    // JSON-LD Structured Data for Google Rich Snippets
-    const existingJsonLd = document.querySelector('script[type="application/ld+json"][data-seo="true"]');
-    if (existingJsonLd) {
-      existingJsonLd.remove();
-    }
-    
-    const structuredData = {
-      "@context": "https://schema.org",
-      "@graph": [
-        // Product Schema
-        {
-          "@type": "Product",
-          "@id": cleanUrl + "#product",
-          "name": product?.name || landingPage.title,
-          "description": product?.description || landingPage.description,
-          // Only include image if we have valid URLs
-          ...(productImages.length > 0 && { "image": productImages }),
-          "brand": {
-            "@type": "Brand",
-            "name": landingPage.contactInfo?.businessName || "Online Shop"
-          },
-          "offers": {
-            "@type": "Offer",
-            "url": cleanUrl,
-            "priceCurrency": "VND",
-            "price": finalPrice.toString(), // Google prefers string format
-            "priceValidUntil": new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 30 days
-            // Only include availability if we have real stock data
-            ...(typeof landingPage.availableStock === 'number' && {
-              "availability": landingPage.availableStock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock"
-            }),
-            "seller": {
-              "@type": "Organization",
-              "name": landingPage.contactInfo?.businessName || "Online Shop"
-            }
-          },
-          "aggregateRating": reviews && reviews.totalReviews > 0 ? {
-            "@type": "AggregateRating",
-            "ratingValue": reviews.averageRating,
-            "reviewCount": reviews.totalReviews,
-            "bestRating": 5,
-            "worstRating": 1
-          } : undefined
-        },
-        // Organization Schema
-        {
-          "@type": "Organization",
-          "@id": cleanUrl + "#organization", 
-          "name": landingPage.contactInfo?.businessName || "Online Shop",
-          "url": cleanUrl,
-          // Only include logo if we have a valid image URL
-          ...(productImages.length > 0 && { "logo": productImages[0] }),
-          "contactPoint": landingPage.contactInfo?.phone ? {
-            "@type": "ContactPoint",
-            "telephone": landingPage.contactInfo.phone,
-            "contactType": "Customer Service"
-          } : undefined,
-          "address": landingPage.contactInfo?.address ? {
-            "@type": "PostalAddress",
-            "streetAddress": landingPage.contactInfo.address
-          } : undefined
-        },
-        // WebPage Schema
-        {
-          "@type": "WebPage",
-          "@id": cleanUrl + "#webpage",
-          "url": cleanUrl,
-          "name": seoTitle,
-          "description": seoDescription,
-          "isPartOf": {
-            "@type": "WebSite",
-            "name": landingPage.contactInfo?.businessName || "Online Shop",
-            "url": window.location.origin
-          },
-          "about": {
-            "@id": cleanUrl + "#product"
-          },
-          "potentialAction": {
-            "@type": "BuyAction",
-            "target": cleanUrl,
-            "object": {
-              "@id": cleanUrl + "#product"
-            }
-          }
-        }
-      ]
-    };
-    
-    // Remove undefined fields for cleaner JSON-LD
-    const cleanStructuredData = JSON.parse(JSON.stringify(structuredData, (key, value) => 
-      value === undefined ? undefined : value
-    ));
-    
-    // Add JSON-LD script to head
-    const jsonLdScript = document.createElement('script');
-    jsonLdScript.type = 'application/ld+json';
-    jsonLdScript.setAttribute('data-seo', 'true');
-    jsonLdScript.textContent = JSON.stringify(cleanStructuredData, null, 2);
-    document.head.appendChild(jsonLdScript);
-    
-  }, [landingPage, finalPrice, stableStats]);
+  }, [landingPage, finalPrice]);
 
-  // Early returns for loading and error states (after all hooks are defined)
+  // Handle product quick view
+  const handleProductQuickView = () => {
+    if (transformedProduct) {
+      setSelectedProduct(transformedProduct);
+      setIsProductModalOpen(true);
+    }
+  };
+
+  // Handle add to cart from ProductModal
+  const handleAddToCartFromModal = (product: any) => {
+    setShowOrderForm(true);
+    setIsProductModalOpen(false);
+  };
+
+  // Mobile navigation handlers
+  const handleCartClick = () => {
+    setShowOrderForm(true);
+  };
+
+  const handleProfileClick = () => {
+    toast({
+      title: "Tính năng đang phát triển",
+      description: "Trang cá nhân đang được phát triển"
+    });
+  };
+
+  // Early returns for loading and error states
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -633,239 +537,210 @@ export default function PublicLandingPage() {
     );
   }
 
+  const storeName = landingPage.contactInfo?.businessName || "Shop Online";
+
   return (
     <div 
-      className={`min-h-screen transition-colors duration-300 ${themeClasses.background}`}
+      className={`min-h-screen transition-colors duration-300 ${themeClasses.background} pb-20 lg:pb-0`}
       style={themeStyles}
     >
-      {/* Mobile-First Sticky Header */}
-      <header className={`sticky top-0 z-40 border-b backdrop-blur-sm transition-colors duration-300 ${themeClasses.header}`}>
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div>
-              {landingPage.contactInfo?.businessName && (
-                <h1 className="text-xl font-bold">{landingPage.contactInfo.businessName}</h1>
-              )}
-            </div>
-            <div className="flex items-center gap-2 md:gap-4 text-sm">
-              {/* Live Viewers Count */}
-              <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                <Eye className="h-3 w-3 text-green-500 animate-pulse" />
-                <span className="font-medium text-green-600">{viewersCount}</span>
-                <span className="hidden sm:inline">đang xem</span>
-              </div>
-              {/* Phone number (clickable) */}
-              {landingPage.contactInfo?.phone && (
-                <a href={`tel:${landingPage.contactInfo.phone}`} className="flex items-center gap-2 transition-colors duration-300 hover:text-primary">
-                  <Phone className="h-4 w-4" />
-                  <span className="hidden sm:inline text-sm">{landingPage.contactInfo.phone}</span>
-                  <span className="sm:hidden text-sm">Gọi</span>
-                </a>
-              )}
-            </div>
-          </div>
-        </div>
-      </header>
+      {/* Responsive Header */}
+      {isMobile || isTablet ? (
+        <MobileHeader
+          storeName={storeName}
+          cartCount={orderForm.quantity}
+          onCartClick={handleCartClick}
+          onProfileClick={handleProfileClick}
+        />
+      ) : (
+        <DesktopHeader
+          storeName={storeName}
+          cartCount={orderForm.quantity}
+          searchQuery=""
+          onSearchChange={() => {}}
+          onCartClick={handleCartClick}
+          onProfileClick={handleProfileClick}
+          onLogoClick={() => window.location.href = '/'}
+        />
+      )}
 
-      {/* Hero Section */}
-      <section 
-        className="py-12 transition-colors duration-300" 
-        style={heroGradientStyle}
-      >
+      {/* Hero Section with ImageSlider */}
+      <section className="bg-gradient-to-b from-green-50 to-white dark:from-gray-800 dark:to-gray-900 py-8 lg:py-12">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <h1 className="text-4xl md:text-5xl font-bold mb-6">
-                {landingPage.heroTitle || landingPage.title}
-              </h1>
-              {landingPage.heroSubtitle && (
-                <p className={`text-xl mb-8 transition-colors duration-300 ${themeClasses.textMuted}`}>
-                  {landingPage.heroSubtitle}
-                </p>
-              )}
-              
-              {/* Price */}
-              <div className="mb-8">
-                <div className="flex items-baseline gap-4">
-                  <span className="text-4xl font-bold transition-colors duration-300" style={{color: 'var(--theme-primary)'}}>
-                    {finalPrice.toLocaleString('vi-VN')}đ
-                  </span>
-                  {hasDiscount && (
-                    <>
-                      <span className={`text-2xl line-through transition-colors duration-300 ${themeClasses.textMuted}`}>
-                        {originalPrice.toLocaleString('vi-VN')}đ
-                      </span>
-                      <Badge variant="destructive" className="text-lg px-3 py-1">
-                        -{discountPercent}%
-                      </Badge>
-                    </>
-                  )}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+            {/* Product Image/Video Slider */}
+            <div className="order-1 lg:order-2">
+              {heroSlides.length > 0 ? (
+                <ImageSlider
+                  slides={heroSlides}
+                  className="rounded-lg shadow-2xl"
+                  autoplay={heroSlides.length > 1}
+                  autoplayDelay={5000}
+                />
+              ) : (
+                <div className="w-full aspect-video bg-gray-100 rounded-lg flex items-center justify-center">
+                  <Package className="h-24 w-24 text-gray-300" />
                 </div>
-                {hasDiscount && (
-                  <p className={`text-sm mt-2 transition-colors duration-300 ${themeClasses.textMuted}`}>
-                    Tiết kiệm: {(originalPrice - finalPrice).toLocaleString('vi-VN')}đ
+              )}
+            </div>
+
+            {/* Product Info */}
+            <div className="order-2 lg:order-1">
+              <div className="space-y-4">
+                {/* Marketing Badges */}
+                {marketingBadges.topRating && (
+                  <Badge variant="secondary" className="bg-amber-100 text-amber-800 border-amber-300">
+                    {marketingBadges.topRating}
+                  </Badge>
+                )}
+
+                <h1 className="text-3xl lg:text-4xl font-bold leading-tight">
+                  {landingPage.heroTitle || landingPage.title}
+                </h1>
+
+                {landingPage.heroSubtitle && (
+                  <p className="text-lg text-muted-foreground">
+                    {landingPage.heroSubtitle}
                   </p>
                 )}
-              </div>
 
-              {/* Trust Badges & Guarantees */}
-              <div className="mb-8">
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                  <div className="flex items-center gap-2 text-sm">
-                    <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
-                      <Shield className="h-4 w-4 text-green-600" />
-                    </div>
-                    <span className={`${themeClasses.textMuted} text-xs`}>Bảo hành<br/>chính hãng</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-sm">
-                    <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
-                      <Truck className="h-4 w-4 text-blue-600" />
-                    </div>
-                    <span className={`${themeClasses.textMuted} text-xs`}>Giao hàng<br/>miễn phí</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-sm">
-                    <div className="w-8 h-8 rounded-full bg-yellow-100 flex items-center justify-center">
-                      <Award className="h-4 w-4 text-yellow-600" />
-                    </div>
-                    <span className={`${themeClasses.textMuted} text-xs`}>Đổi trả<br/>30 ngày</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-sm">
-                    <div className="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center">
-                      <Lock className="h-4 w-4 text-purple-600" />
-                    </div>
-                    <span className={`${themeClasses.textMuted} text-xs`}>Thanh toán<br/>bảo mật</span>
-                  </div>
-                </div>
-                
-                {/* Review Summary Badge */}
-                {landingPage.reviewsData && landingPage.reviewsData.totalReviews > 0 && (
-                  <div className="flex items-center gap-2 mb-4 p-3 bg-amber-50 border border-amber-200 rounded-lg">
-                    <div className="flex items-center gap-1">
-                      {[...Array(5)].map((_, i) => (
-                        <Star
-                          key={i}
-                          className={`h-4 w-4 ${
-                            i < Math.round(landingPage.reviewsData.averageRating) 
-                              ? 'text-yellow-400 fill-current' 
-                              : 'text-gray-300'
-                          }`}
-                        />
-                      ))}
-                      <span className="font-semibold text-amber-700 ml-1">
-                        {landingPage.reviewsData.averageRating.toFixed(1)}
-                      </span>
-                    </div>
-                    <span className="text-sm text-amber-600">
-                      ({landingPage.reviewsData.totalReviews} đánh giá)
+                {/* Price */}
+                <div className="py-4">
+                  <div className="flex items-baseline gap-4 flex-wrap">
+                    <span className="text-4xl lg:text-5xl font-bold text-green-600">
+                      {formatVietnamPrice(finalPrice)}
                     </span>
-                    <Badge variant="secondary" className="bg-amber-100 text-amber-800 text-xs">
-                      Được tin tưởng
-                    </Badge>
+                    {hasDiscount && (
+                      <>
+                        <span className="text-2xl line-through text-muted-foreground">
+                          {formatVietnamPrice(originalPrice)}
+                        </span>
+                        <Badge variant="destructive" className="text-lg px-3 py-1">
+                          -{discountPercent}%
+                        </Badge>
+                      </>
+                    )}
                   </div>
-                )}
-              </div>
+                  {hasDiscount && (
+                    <p className="text-sm text-muted-foreground mt-2">
+                      Tiết kiệm: {formatVietnamPrice(originalPrice - finalPrice)}
+                    </p>
+                  )}
+                </div>
 
-              <Button 
-                size="lg" 
-                className="text-lg px-8 py-4 transition-colors duration-300 w-full md:w-auto"
-                style={{backgroundColor: 'var(--theme-primary)', borderColor: 'var(--theme-primary)'}}
-                onClick={() => setShowOrderForm(true)}
-                data-testid="button-order-now"
-              >
-                <ShoppingCart className="h-5 w-5 mr-2" />
-                {landingPage.callToAction || "Đặt hàng ngay"}
-              </Button>
-              
-              {/* Shopee-Style Social Proof */}
-              <div className="mt-6">
-                {/* Sales & Rating Stats */}
-                <div className="flex items-center gap-6 mb-4">
-                  <div className="flex items-center gap-2 bg-orange-50 px-3 py-2 rounded-lg border border-orange-200">
-                    <div className="flex items-center gap-1">
-                      <Star className="h-4 w-4 text-orange-400 fill-orange-400" />
-                      <span className="font-bold text-orange-600 text-lg">
-                        {landingPage.reviewsData?.averageRating?.toFixed(1) || '4.8'}
-                      </span>
-                    </div>
-                    <div className="text-xs text-orange-600">
+                {/* Marketing Badges Row */}
+                <div className="flex flex-wrap gap-2">
+                  {marketingBadges.pricingBadges.map((badge, idx) => (
+                    <Badge key={idx} variant="outline" className="border-green-300 text-green-700 bg-green-50">
+                      {badge}
+                    </Badge>
+                  ))}
+                  {marketingBadges.reviewBadges.map((badge, idx) => (
+                    <Badge key={idx} variant="outline" className="border-blue-300 text-blue-700 bg-blue-50">
+                      {badge}
+                    </Badge>
+                  ))}
+                </div>
+
+                {/* Social Proof Stats */}
+                <div className="flex flex-wrap items-center gap-4 py-4">
+                  <div className="flex items-center gap-2 bg-amber-50 px-3 py-2 rounded-lg border border-amber-200">
+                    <Star className="h-4 w-4 text-amber-400 fill-amber-400" />
+                    <span className="font-bold text-amber-700">
+                      {landingPage.reviewsData?.averageRating?.toFixed(1) || '4.8'}
+                    </span>
+                    <span className="text-xs text-amber-600">
                       ({landingPage.reviewsData?.totalReviews || 0} đánh giá)
-                    </div>
+                    </span>
                   </div>
-                  
+
                   <div className="flex items-center gap-2 bg-green-50 px-3 py-2 rounded-lg border border-green-200">
                     <TrendingUp className="h-4 w-4 text-green-600" />
-                    <div className="text-sm">
-                      <div className="font-bold text-green-700">{(landingPage.orderCount || 0) + stableStats.bonusSales}</div>
-                      <div className="text-xs text-green-600">Đã bán</div>
-                    </div>
+                    <span className="font-bold text-green-700">
+                      {(landingPage.orderCount || 0) + stableStats.bonusSales}
+                    </span>
+                    <span className="text-xs text-green-600">Đã bán</span>
                   </div>
-                  
-                  <div className="flex items-center gap-2 bg-blue-50 px-3 py-2 rounded-lg border border-blue-200">
-                    <Users className="h-4 w-4 text-blue-600" />
-                    <div className="text-sm">
-                      <div className="font-bold text-blue-700">{landingPage.viewCount || 0}+</div>
-                      <div className="text-xs text-blue-600">Lượt xem</div>
-                    </div>
-                  </div>
-                </div>
-                
-                {/* Trust Badges Row */}
-                <div className="flex flex-wrap items-center gap-3 text-xs">
-                  <div className="flex items-center gap-1 bg-red-50 text-red-600 px-2 py-1 rounded-full border border-red-200">
-                    <Flame className="h-3 w-3" />
-                    <span className="font-medium">Bán chạy nhất</span>
-                  </div>
-                  <div className="flex items-center gap-1 bg-purple-50 text-purple-600 px-2 py-1 rounded-full border border-purple-200">
-                    <Award className="h-3 w-3" />
-                    <span className="font-medium">Top đánh giá</span>
-                  </div>
-                  <div className="flex items-center gap-1 bg-green-50 text-green-600 px-2 py-1 rounded-full border border-green-200">
-                    <CheckCircle2 className="h-3 w-3" />
-                    <span className="font-medium">Còn {landingPage.availableStock || stableStats.availableStock}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
 
-            <div>
-              {landingPage.displayImage && (
-                <div className="w-full aspect-video bg-gray-100 rounded-lg overflow-hidden shadow-lg">
-                  <img
-                    src={landingPage.displayImage}
-                    alt={landingPage.displayName}
-                    className="w-full h-full object-cover"
-                    loading="eager"
-                    decoding="async"
-                    fetchPriority="high"
-                    width="600"
-                    height="337"
-                  />
+                  <div className="flex items-center gap-2 bg-blue-50 px-3 py-2 rounded-lg border border-blue-200">
+                    <Eye className="h-4 w-4 text-blue-600" />
+                    <span className="font-bold text-blue-700">{viewersCount}</span>
+                    <span className="text-xs text-blue-600">đang xem</span>
+                  </div>
                 </div>
-              )}
+
+                {/* Trust Badges */}
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                  {[
+                    { icon: Shield, text: 'Bảo hành chính hãng', color: 'text-green-600', emoji: '🛡️' },
+                    { icon: Truck, text: 'Giao hàng miễn phí', color: 'text-blue-600', emoji: '🚚' },
+                    { icon: null, text: 'Đổi trả 30 ngày', color: 'text-yellow-600', emoji: '🏆' },
+                    { icon: null, text: 'Thanh toán bảo mật', color: 'text-purple-600', emoji: '🔒' }
+                  ].map((item, idx) => (
+                    <div key={idx} className="flex items-center gap-2">
+                      {item.icon ? <item.icon className={`h-5 w-5 ${item.color}`} /> : <span className="text-lg">{item.emoji}</span>}
+                      <span className="text-xs lg:text-sm">{item.text}</span>
+                    </div>
+                  ))}
+                </div>
+
+                {/* CTA Buttons */}
+                <div className="flex flex-col sm:flex-row gap-3 pt-4">
+                  <Button 
+                    size="lg" 
+                    className="flex-1 bg-green-600 hover:bg-green-700 text-lg h-12"
+                    onClick={() => setShowOrderForm(true)}
+                  >
+                    <ShoppingCart className="h-5 w-5 mr-2" />
+                    {landingPage.callToAction || "Đặt hàng ngay"}
+                  </Button>
+                  
+                  <Button 
+                    size="lg" 
+                    variant="outline"
+                    className="flex-1 lg:flex-none border-green-600 text-green-600 hover:bg-green-50 h-12"
+                    onClick={handleProductQuickView}
+                  >
+                    <Eye className="h-5 w-5 mr-2" />
+                    Xem chi tiết
+                  </Button>
+                </div>
+
+                {/* Contact Info */}
+                {landingPage.contactInfo?.phone && (
+                  <a 
+                    href={`tel:${landingPage.contactInfo.phone}`}
+                    className="flex items-center gap-2 text-green-600 hover:text-green-700 transition-colors"
+                  >
+                    <span className="text-xl">📞</span>
+                    <span className="font-semibold">{landingPage.contactInfo.phone}</span>
+                  </a>
+                )}
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Social Proof & Urgency Strip */}
+      {/* Social Proof Strip */}
       <section className={`py-4 border-y transition-colors duration-300 ${themeClasses.socialProof}`}>
         <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-3">
-            {/* Recent Purchases */}
-            <div className="flex items-center gap-2 flex-wrap">
+          <div className="flex flex-col lg:flex-row items-center justify-between gap-3">
+            <div className="flex items-center gap-2 flex-wrap justify-center lg:justify-start">
               <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-              <span className={`text-sm font-semibold transition-colors duration-300 ${isDarkTheme ? 'text-green-300' : 'text-green-800'}`}>🔥 Hoạt động gần đây:</span>
-              <div className={`flex flex-col md:flex-row gap-1 md:gap-2 text-xs transition-colors duration-300 ${isDarkTheme ? 'text-green-400' : 'text-green-700'}`}>
+              <span className="text-sm font-semibold text-green-800 dark:text-green-300">
+                🔥 Hoạt động gần đây:
+              </span>
+              <div className="flex flex-wrap gap-2 text-xs text-green-700 dark:text-green-400">
                 {recentPurchases.slice(0, 2).map((purchase, i) => (
                   <span key={i} className="flex items-center gap-1">
-                    • {purchase} <Badge variant="outline" className="text-xs ml-1">✅</Badge>
+                    • {purchase}
                   </span>
                 ))}
               </div>
             </div>
             
-            {/* Urgency Timer */}
-            <div className={`flex items-center gap-2 transition-colors duration-300 ${isDarkTheme ? 'text-orange-400' : 'text-orange-600'}`}>
+            <div className="flex items-center gap-2 text-orange-600 dark:text-orange-400">
               <Clock className="h-4 w-4 animate-pulse" />
               <span className="text-sm font-medium">⏰ Còn {stableStats.urgencyHours}h!</span>
             </div>
@@ -875,14 +750,14 @@ export default function PublicLandingPage() {
 
       {/* Features Section */}
       {landingPage.features && landingPage.features.length > 0 && (
-        <section className={`py-16 transition-colors duration-300 ${themeClasses.card}`}>
+        <section className="py-16">
           <div className="container mx-auto px-4">
             <h2 className="text-3xl font-bold text-center mb-12">Điểm nổi bật</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {landingPage.features.map((feature: string, index: number) => (
                 <div key={index} className="flex items-start gap-3">
                   <div className="flex-shrink-0">
-                    <div className="w-6 h-6 rounded-full flex items-center justify-center transition-colors duration-300" style={{backgroundColor: 'var(--theme-primary)'}}>
+                    <div className="w-6 h-6 rounded-full bg-green-600 flex items-center justify-center">
                       <Check className="h-4 w-4 text-white" />
                     </div>
                   </div>
@@ -894,191 +769,60 @@ export default function PublicLandingPage() {
         </section>
       )}
 
-      {/* Customer Reviews - Real Data */}
-      {landingPage.reviewsData && landingPage.reviewsData.reviews.length > 0 && (
-        <section className="py-16">
+      {/* Customer Reviews Section */}
+      {transformedProduct?.id && (
+        <section className="py-16 bg-gray-50 dark:bg-gray-800">
           <div className="container mx-auto px-4">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold mb-4">Khách hàng nói gì về sản phẩm</h2>
-              <div className="flex items-center justify-center gap-4 mb-4">
-                <div className="flex items-center gap-2">
-                  {[...Array(5)].map((_, i) => (
-                    <Star
-                      key={i}
-                      className={`h-6 w-6 ${
-                        i < Math.round(landingPage.reviewsData.averageRating) 
-                          ? 'text-yellow-400 fill-current' 
-                          : 'text-gray-300'
-                      }`}
-                    />
-                  ))}
-                  <span className="text-2xl font-bold" style={{color: 'var(--theme-primary)'}}>
-                    {landingPage.reviewsData.averageRating.toFixed(1)}
-                  </span>
-                </div>
-                <div className={`text-lg ${themeClasses.textMuted}`}>
-                  ({landingPage.reviewsData.totalReviews} đánh giá)
-                </div>
-              </div>
-              
-              {/* Rating Distribution */}
-              <div className="max-w-md mx-auto mb-8">
-                {[5, 4, 3, 2, 1].map((rating) => {
-                  const count = landingPage.reviewsData.ratingCounts[rating] || 0;
-                  const percentage = landingPage.reviewsData.totalReviews > 0 
-                    ? Math.round((count / landingPage.reviewsData.totalReviews) * 100) 
-                    : 0;
-                  return (
-                    <div key={rating} className="flex items-center gap-2 mb-1">
-                      <span className="text-sm w-3">{rating}</span>
-                      <Star className="h-3 w-3 text-yellow-400 fill-current" />
-                      <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
-                        <div 
-                          className="h-full bg-yellow-400 transition-all duration-500"
-                          style={{width: `${percentage}%`}}
-                        />
-                      </div>
-                      <span className="text-xs text-muted-foreground w-8">{count}</span>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-            
-            {/* Shopee-Style Review Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {landingPage.reviewsData.reviews.map((review: any, index: number) => (
-                <div key={review.id} className="bg-white rounded-2xl border border-gray-100 shadow-md hover:shadow-xl transition-all duration-300 p-6">
-                  {/* Header with Avatar and Rating */}
-                  <div className="flex items-start gap-4 mb-4">
-                    <div className="flex-shrink-0">
-                      {review.customerAvatar ? (
-                        <img
-                          src={review.customerAvatar}
-                          alt={review.customerName}
-                          className="w-12 h-12 rounded-full border-3 border-orange-200 shadow-sm"
-                          loading="lazy"
-                          decoding="async"
-                          width="48"
-                          height="48"
-                        />
-                      ) : (
-                        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-orange-400 to-pink-400 flex items-center justify-center text-white font-semibold text-lg">
-                          {review.customerName?.charAt(0)?.toUpperCase()}
-                        </div>
-                      )}
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex items-center justify-between mb-2">
-                        <h4 className="font-semibold text-gray-900 text-base">{review.customerName}</h4>
-                        {review.isVerified && (
-                          <div className="flex items-center gap-1 bg-green-50 text-green-700 px-2 py-1 rounded-full text-xs font-medium">
-                            <CheckCircle2 className="h-3 w-3" />
-                            <span>Đã mua hàng</span>
-                          </div>
-                        )}
-                      </div>
-                      {/* Large Stars Like Shopee */}
-                      <div className="flex items-center gap-1 mb-2">
-                        {[...Array(5)].map((_, i) => (
-                          <Star
-                            key={i}
-                            className={`h-5 w-5 ${
-                              i < review.rating 
-                                ? 'text-orange-400 fill-orange-400' 
-                                : 'text-gray-200 fill-gray-200'
-                            }`}
-                          />
-                        ))}
-                        <span className="ml-2 text-sm font-medium text-orange-500">{review.rating}/5</span>
-                      </div>
-                      <p className="text-xs text-gray-500">
-                        {new Date(review.createdAt).toLocaleDateString('vi-VN', {
-                          year: 'numeric',
-                          month: 'long', 
-                          day: 'numeric'
-                        })}
-                      </p>
-                    </div>
-                  </div>
-                  
-                  {/* Review Title */}
-                  {review.title && (
-                    <h5 className="font-semibold text-gray-800 mb-3 text-base">{review.title}</h5>
-                  )}
-                  
-                  {/* Review Content */}
-                  <div className="mb-4">
-                    <p className="text-gray-700 leading-relaxed line-clamp-4 text-sm">
-                      {review.content}
-                    </p>
-                  </div>
-                  
-                  {/* Footer with Helpful Button */}
-                  <div className="flex items-center justify-between pt-4 border-t border-gray-50">
-                    <div className="flex items-center gap-4">
-                      <button className="flex items-center gap-1 text-gray-500 hover:text-orange-500 transition-colors text-sm">
-                        <Heart className="h-4 w-4" />
-                        <span>Hữu ích ({review.helpfulCount || 0})</span>
-                      </button>
-                    </div>
-                    <div className="flex items-center gap-2 text-xs text-gray-400">
-                      <Eye className="h-3 w-3" />
-                      <span>Đánh giá được xác thực</span>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
+            <h2 className="text-3xl font-bold text-center mb-12">Khách hàng nói gì</h2>
+            <ProductReviews productId={transformedProduct.id} />
           </div>
         </section>
       )}
 
-      {/* Trust Badges */}
-      <section className={`py-12 transition-colors duration-300 ${themeClasses.card}`}>
+      {/* Trust Section */}
+      <section className="py-12">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
             <div className="flex flex-col items-center">
-              <div className="w-16 h-16 rounded-full flex items-center justify-center mb-4 transition-colors duration-300" style={{backgroundColor: 'var(--theme-primary-light)'}}>
-                <Truck className="h-8 w-8 transition-colors duration-300" style={{color: 'var(--theme-primary)'}} />
+              <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mb-4">
+                <Truck className="h-8 w-8 text-green-600" />
               </div>
               <h3 className="font-semibold mb-2">Giao hàng tận nơi</h3>
-              <p className={`transition-colors duration-300 ${themeClasses.textMuted}`}>Giao hàng toàn quốc, nhanh chóng</p>
+              <p className="text-muted-foreground text-sm">Giao hàng toàn quốc, nhanh chóng</p>
             </div>
             <div className="flex flex-col items-center">
-              <div className="w-16 h-16 rounded-full flex items-center justify-center mb-4 transition-colors duration-300" style={{backgroundColor: 'var(--theme-primary-light)'}}>
-                <Shield className="h-8 w-8 transition-colors duration-300" style={{color: 'var(--theme-primary)'}} />
+              <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mb-4">
+                <Shield className="h-8 w-8 text-green-600" />
               </div>
               <h3 className="font-semibold mb-2">Bảo hành chính hãng</h3>
-              <p className={`transition-colors duration-300 ${themeClasses.textMuted}`}>Cam kết chất lượng 100%</p>
+              <p className="text-muted-foreground text-sm">Cam kết chất lượng 100%</p>
             </div>
             <div className="flex flex-col items-center">
-              <div className="w-16 h-16 rounded-full flex items-center justify-center mb-4 transition-colors duration-300" style={{backgroundColor: 'var(--theme-primary-light)'}}>
-                <CreditCard className="h-8 w-8 transition-colors duration-300" style={{color: 'var(--theme-primary)'}} />
+              <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mb-4">
+                <CreditCard className="h-8 w-8 text-green-600" />
               </div>
               <h3 className="font-semibold mb-2">Đa dạng thanh toán</h3>
-              <p className={`transition-colors duration-300 ${themeClasses.textMuted}`}>COD, chuyển khoản, online</p>
+              <p className="text-muted-foreground text-sm">COD, chuyển khoản, online</p>
             </div>
           </div>
         </div>
       </section>
 
       {/* Contact Section */}
-      <section className="py-16">
+      <section className="py-16 bg-gray-50 dark:bg-gray-800">
         <div className="container mx-auto px-4">
-          <Card className={`max-w-2xl mx-auto transition-colors duration-300 ${themeClasses.card}`}>
+          <Card className="max-w-2xl mx-auto">
             <CardHeader className="text-center">
-              <CardTitle className="text-2xl">Liên hệ ngay để được tư vấn</CardTitle>
+              <CardTitle className="text-2xl">Liên hệ với chúng tôi</CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
+            <CardContent className="space-y-4">
+              <div className="space-y-3">
                 {landingPage.contactInfo?.phone && (
                   <div className="flex items-center justify-center gap-3">
-                    <Phone className="h-5 w-5 transition-colors duration-300" style={{color: 'var(--theme-primary)'}} />
+                    <span className="text-xl">📞</span>
                     <a 
                       href={`tel:${landingPage.contactInfo.phone}`}
-                      className="text-lg font-semibold hover:underline transition-colors duration-300"
-                      style={{color: 'var(--theme-primary)'}}
+                      className="text-lg font-semibold text-green-600 hover:underline"
                     >
                       {landingPage.contactInfo.phone}
                     </a>
@@ -1086,11 +830,10 @@ export default function PublicLandingPage() {
                 )}
                 {landingPage.contactInfo?.email && (
                   <div className="flex items-center justify-center gap-3">
-                    <Mail className="h-5 w-5 transition-colors duration-300" style={{color: 'var(--theme-primary)'}} />
+                    <Mail className="h-5 w-5 text-green-600" />
                     <a 
                       href={`mailto:${landingPage.contactInfo.email}`}
-                      className="hover:underline transition-colors duration-300"
-                      style={{color: 'var(--theme-primary)'}}
+                      className="text-green-600 hover:underline"
                     >
                       {landingPage.contactInfo.email}
                     </a>
@@ -1102,9 +845,7 @@ export default function PublicLandingPage() {
                 <Button 
                   size="lg" 
                   onClick={() => setShowOrderForm(true)}
-                  className="text-lg px-8 py-4 transition-colors duration-300"
-                  style={{backgroundColor: 'var(--theme-primary)', borderColor: 'var(--theme-primary)'}}
-                  data-testid="button-order-contact"
+                  className="bg-green-600 hover:bg-green-700 text-lg px-8 py-4"
                 >
                   <ShoppingCart className="h-5 w-5 mr-2" />
                   {landingPage.callToAction || "Đặt hàng ngay"}
@@ -1114,6 +855,31 @@ export default function PublicLandingPage() {
           </Card>
         </div>
       </section>
+
+      {/* Mobile Bottom Navigation */}
+      {(isMobile || isTablet) && (
+        <StorefrontBottomNav
+          activeTab={activeTab}
+          onTabChange={(tab) => {
+            setActiveTab(tab);
+            if (tab === 'cart') {
+              handleCartClick();
+            }
+          }}
+          cartCount={orderForm.quantity}
+        />
+      )}
+
+      {/* Product Modal */}
+      {transformedProduct && (
+        <ProductModal
+          product={transformedProduct}
+          isOpen={isProductModalOpen}
+          onClose={() => setIsProductModalOpen(false)}
+          onAddToCart={handleAddToCartFromModal}
+          cart={[{ product: transformedProduct, quantity: orderForm.quantity }]}
+        />
+      )}
 
       {/* Multi-Step Checkout Modal */}
       {showOrderForm && (
@@ -1128,7 +894,6 @@ export default function PublicLandingPage() {
                   size="sm"
                   onClick={resetCheckoutForm}
                   className="h-8 w-8 p-0 hover:bg-destructive/10"
-                  data-testid="button-close-checkout"
                 >
                   <X className="h-4 w-4" />
                 </Button>
@@ -1175,17 +940,13 @@ export default function PublicLandingPage() {
                     <p className="text-sm text-muted-foreground">Kiểm tra thông tin sản phẩm và số lượng</p>
                   </div>
                   
-                  <div className={`p-4 rounded-lg border transition-colors duration-300 ${isDarkTheme ? 'bg-gray-800 border-gray-700' : 'bg-muted/50 border-border'}`}>
+                  <div className={`p-4 rounded-lg border ${isDarkTheme ? 'bg-gray-800 border-gray-700' : 'bg-muted/50 border-border'}`}>
                     <div className="flex gap-4 items-start">
                       {landingPage.displayImage && (
                         <img
                           src={landingPage.displayImage}
                           alt={landingPage.displayName}
                           className="w-20 h-20 object-cover rounded-lg flex-shrink-0"
-                          loading="lazy"
-                          decoding="async"
-                          width="80"
-                          height="80"
                         />
                       )}
                       <div className="flex-1 min-w-0">
@@ -1195,11 +956,11 @@ export default function PublicLandingPage() {
                         </p>
                         <div className="flex items-baseline gap-2 mt-2">
                           <span className="text-xl font-bold text-primary">
-                            {finalPrice.toLocaleString('vi-VN')}đ
+                            {formatVietnamPrice(finalPrice)}
                           </span>
                           {hasDiscount && (
                             <span className="text-sm line-through text-muted-foreground">
-                              {originalPrice.toLocaleString('vi-VN')}đ
+                              {formatVietnamPrice(originalPrice)}
                             </span>
                           )}
                         </div>
@@ -1207,7 +968,7 @@ export default function PublicLandingPage() {
                     </div>
                   </div>
 
-                  {/* Quantity Selector - Touch Optimized */}
+                  {/* Quantity Selector */}
                   <div className="space-y-3">
                     <Label className="text-base font-medium">Số lượng</Label>
                     <div className="flex items-center justify-center gap-4">
@@ -1218,11 +979,10 @@ export default function PublicLandingPage() {
                           ...prev, 
                           quantity: Math.max(1, prev.quantity - 1) 
                         }))}
-                        className="h-12 w-12 rounded-full transition-colors duration-300"
+                        className="h-12 w-12 rounded-full"
                         disabled={orderForm.quantity <= 1}
-                        data-testid="button-decrease-quantity"
                       >
-                        <Minus className="h-5 w-5" />
+                        <span className="text-xl font-bold">−</span>
                       </Button>
                       
                       <div className="bg-muted rounded-lg px-6 py-3 min-w-[80px] text-center">
@@ -1236,8 +996,7 @@ export default function PublicLandingPage() {
                           ...prev, 
                           quantity: prev.quantity + 1 
                         }))}
-                        className="h-12 w-12 rounded-full transition-colors duration-300"
-                        data-testid="button-increase-quantity"
+                        className="h-12 w-12 rounded-full"
                       >
                         <Plus className="h-5 w-5" />
                       </Button>
@@ -1245,11 +1004,11 @@ export default function PublicLandingPage() {
                   </div>
 
                   {/* Price Summary */}
-                  <div className={`p-4 rounded-lg border transition-colors duration-300 ${isDarkTheme ? 'bg-gray-800 border-gray-700' : 'bg-primary/5 border-primary/20'}`}>
+                  <div className={`p-4 rounded-lg border ${isDarkTheme ? 'bg-gray-800 border-gray-700' : 'bg-primary/5 border-primary/20'}`}>
                     <div className="flex justify-between items-center">
                       <span className="font-medium">Tổng cộng:</span>
                       <span className="text-2xl font-bold text-primary">
-                        {(finalPrice * orderForm.quantity).toLocaleString('vi-VN')}đ
+                        {formatVietnamPrice(finalPrice * orderForm.quantity)}
                       </span>
                     </div>
                   </div>
@@ -1265,114 +1024,90 @@ export default function PublicLandingPage() {
                   </div>
                   
                   <div className="space-y-4">
-                    {/* Name Field */}
                     <div className="space-y-2">
                       <Label htmlFor="orderName" className="text-base font-medium">
                         Họ và tên <span className="text-destructive">*</span>
                       </Label>
                       <Input
                         id="orderName"
-                        name="orderName"
                         value={orderForm.name}
                         onChange={(e) => handleFieldChange('name', e.target.value)}
                         onBlur={() => setTouchedFields(prev => new Set(prev).add('name'))}
                         placeholder="Nguyễn Văn A"
-                        className={`h-12 text-base transition-colors duration-300 ${
-                          validationErrors.name && touchedFields.has('name') ? 'border-destructive focus-visible:ring-destructive' : ''
+                        className={`h-12 text-base ${
+                          validationErrors.name && touchedFields.has('name') ? 'border-destructive' : ''
                         }`}
-                        autoComplete="name"
-                        autoCorrect="off"
-                        spellCheck={false}
-                        data-testid="input-order-name"
                       />
                       {validationErrors.name && touchedFields.has('name') && (
                         <div className="flex items-center gap-1 text-destructive text-sm">
-                          <AlertCircle className="h-4 w-4" />
+                          <span className="text-base">⚠️</span>
                           {validationErrors.name}
                         </div>
                       )}
                     </div>
 
-                    {/* Phone Field */}
                     <div className="space-y-2">
                       <Label htmlFor="orderPhone" className="text-base font-medium">
                         Số điện thoại <span className="text-destructive">*</span>
                       </Label>
                       <Input
                         id="orderPhone"
-                        name="orderPhone"
                         type="tel"
                         value={orderForm.phone}
                         onChange={(e) => handleFieldChange('phone', e.target.value)}
                         onBlur={() => setTouchedFields(prev => new Set(prev).add('phone'))}
                         placeholder="0123 456 789"
-                        className={`h-12 text-base transition-colors duration-300 ${
-                          validationErrors.phone && touchedFields.has('phone') ? 'border-destructive focus-visible:ring-destructive' : ''
+                        className={`h-12 text-base ${
+                          validationErrors.phone && touchedFields.has('phone') ? 'border-destructive' : ''
                         }`}
-                        autoComplete="tel"
-                        autoCorrect="off"
-                        spellCheck={false}
-                        data-testid="input-order-phone"
                       />
                       {validationErrors.phone && touchedFields.has('phone') && (
                         <div className="flex items-center gap-1 text-destructive text-sm">
-                          <AlertCircle className="h-4 w-4" />
+                          <span className="text-base">⚠️</span>
                           {validationErrors.phone}
                         </div>
                       )}
                     </div>
 
-                    {/* Email Field */}
                     <div className="space-y-2">
                       <Label htmlFor="orderEmail" className="text-base font-medium">Email</Label>
                       <Input
                         id="orderEmail"
-                        name="orderEmail"
                         type="email"
                         value={orderForm.email}
                         onChange={(e) => handleFieldChange('email', e.target.value)}
                         onBlur={() => setTouchedFields(prev => new Set(prev).add('email'))}
                         placeholder="email@example.com"
-                        className={`h-12 text-base transition-colors duration-300 ${
-                          validationErrors.email && touchedFields.has('email') ? 'border-destructive focus-visible:ring-destructive' : ''
+                        className={`h-12 text-base ${
+                          validationErrors.email && touchedFields.has('email') ? 'border-destructive' : ''
                         }`}
-                        autoComplete="email"
-                        autoCorrect="off"
-                        spellCheck={false}
-                        data-testid="input-order-email"
                       />
                       {validationErrors.email && touchedFields.has('email') && (
                         <div className="flex items-center gap-1 text-destructive text-sm">
-                          <AlertCircle className="h-4 w-4" />
+                          <span className="text-base">⚠️</span>
                           {validationErrors.email}
                         </div>
                       )}
                     </div>
 
-                    {/* Address Field */}
                     <div className="space-y-2">
                       <Label htmlFor="orderAddress" className="text-base font-medium">
                         Địa chỉ giao hàng <span className="text-destructive">*</span>
                       </Label>
                       <Textarea
                         id="orderAddress"
-                        name="orderAddress"
                         value={orderForm.address}
                         onChange={(e) => handleFieldChange('address', e.target.value)}
                         onBlur={() => setTouchedFields(prev => new Set(prev).add('address'))}
                         placeholder="Số nhà, đường, phường, quận, thành phố"
                         rows={3}
-                        className={`text-base transition-colors duration-300 resize-none ${
-                          validationErrors.address && touchedFields.has('address') ? 'border-destructive focus-visible:ring-destructive' : ''
+                        className={`text-base resize-none ${
+                          validationErrors.address && touchedFields.has('address') ? 'border-destructive' : ''
                         }`}
-                        autoComplete="street-address"
-                        autoCorrect="off"
-                        spellCheck={false}
-                        data-testid="input-order-address"
                       />
                       {validationErrors.address && touchedFields.has('address') && (
                         <div className="flex items-center gap-1 text-destructive text-sm">
-                          <AlertCircle className="h-4 w-4" />
+                          <span className="text-base">⚠️</span>
                           {validationErrors.address}
                         </div>
                       )}
@@ -1392,20 +1127,16 @@ export default function PublicLandingPage() {
                   <div className="space-y-3">
                     {landingPage.paymentMethods?.cod && (
                       <label 
-                        htmlFor="cod" 
-                        className={`flex items-start gap-4 p-4 border rounded-lg cursor-pointer transition-all duration-300 hover:bg-muted/50 ${
+                        className={`flex items-start gap-4 p-4 border rounded-lg cursor-pointer transition-all hover:bg-muted/50 ${
                           orderForm.paymentMethod === 'cod' ? 'border-primary bg-primary/5' : 'border-border'
                         }`}
                       >
                         <input
                           type="radio"
-                          id="cod"
-                          name="paymentMethod"
                           value="cod"
                           checked={orderForm.paymentMethod === 'cod'}
                           onChange={(e) => setOrderForm(prev => ({ ...prev, paymentMethod: e.target.value as any }))}
                           className="mt-1 w-4 h-4"
-                          data-testid="radio-payment-cod"
                         />
                         <div className="flex-1">
                           <div className="flex items-center gap-2 mb-1">
@@ -1421,20 +1152,16 @@ export default function PublicLandingPage() {
                     
                     {landingPage.paymentMethods?.bankTransfer && (
                       <label 
-                        htmlFor="bank_transfer"
-                        className={`flex items-start gap-4 p-4 border rounded-lg cursor-pointer transition-all duration-300 hover:bg-muted/50 ${
+                        className={`flex items-start gap-4 p-4 border rounded-lg cursor-pointer transition-all hover:bg-muted/50 ${
                           orderForm.paymentMethod === 'bank_transfer' ? 'border-primary bg-primary/5' : 'border-border'
                         }`}
                       >
                         <input
                           type="radio"
-                          id="bank_transfer"
-                          name="paymentMethod"
                           value="bank_transfer"
                           checked={orderForm.paymentMethod === 'bank_transfer'}
                           onChange={(e) => setOrderForm(prev => ({ ...prev, paymentMethod: e.target.value as any }))}
                           className="mt-1 w-4 h-4"
-                          data-testid="radio-payment-bank"
                         />
                         <div className="flex-1">
                           <div className="flex items-center gap-2 mb-1">
@@ -1450,20 +1177,16 @@ export default function PublicLandingPage() {
                     
                     {landingPage.paymentMethods?.online && (
                       <label 
-                        htmlFor="online"
-                        className={`flex items-start gap-4 p-4 border rounded-lg cursor-pointer transition-all duration-300 hover:bg-muted/50 ${
+                        className={`flex items-start gap-4 p-4 border rounded-lg cursor-pointer transition-all hover:bg-muted/50 ${
                           orderForm.paymentMethod === 'online' ? 'border-primary bg-primary/5' : 'border-border'
                         }`}
                       >
                         <input
                           type="radio"
-                          id="online"
-                          name="paymentMethod"
                           value="online"
                           checked={orderForm.paymentMethod === 'online'}
                           onChange={(e) => setOrderForm(prev => ({ ...prev, paymentMethod: e.target.value as any }))}
                           className="mt-1 w-4 h-4"
-                          data-testid="radio-payment-online"
                         />
                         <div className="flex-1">
                           <div className="flex items-center gap-2 mb-1">
@@ -1478,21 +1201,15 @@ export default function PublicLandingPage() {
                     )}
                   </div>
                   
-                  {/* Notes Field */}
                   <div className="space-y-2">
                     <Label htmlFor="orderNotes" className="text-base font-medium">Ghi chú</Label>
                     <Textarea
                       id="orderNotes"
-                      name="orderNotes"
                       value={orderForm.notes}
                       onChange={(e) => setOrderForm(prev => ({ ...prev, notes: e.target.value }))}
                       placeholder="Ghi chú thêm cho đơn hàng (không bắt buộc)..."
                       rows={3}
                       className="text-base resize-none"
-                      autoComplete="off"
-                      autoCorrect="off"
-                      spellCheck={false}
-                      data-testid="input-order-notes"
                     />
                   </div>
                 </div>
@@ -1507,22 +1224,19 @@ export default function PublicLandingPage() {
                     <p className="text-sm text-muted-foreground">Kiểm tra lại thông tin trước khi đặt hàng</p>
                   </div>
                   
-                  {/* Order Summary */}
                   <div className="space-y-4">
-                    {/* Product Info */}
-                    <div className={`p-4 border rounded-lg space-y-3 transition-colors duration-300 ${isDarkTheme ? 'bg-gray-800 border-gray-700' : 'bg-muted/30 border-border'}`}>
+                    <div className={`p-4 border rounded-lg space-y-3 ${isDarkTheme ? 'bg-gray-800 border-gray-700' : 'bg-muted/30 border-border'}`}>
                       <div className="flex items-center gap-3">
                         <ShoppingCart className="h-5 w-5 text-primary" />
                         <span className="font-medium">Sản phẩm</span>
                       </div>
                       <div className="flex justify-between items-center">
                         <span>{landingPage.displayName} x {orderForm.quantity}</span>
-                        <span className="font-semibold">{(finalPrice * orderForm.quantity).toLocaleString('vi-VN')}đ</span>
+                        <span className="font-semibold">{formatVietnamPrice(finalPrice * orderForm.quantity)}</span>
                       </div>
                     </div>
                     
-                    {/* Customer Info */}
-                    <div className={`p-4 border rounded-lg space-y-3 transition-colors duration-300 ${isDarkTheme ? 'bg-gray-800 border-gray-700' : 'bg-muted/30 border-border'}`}>
+                    <div className={`p-4 border rounded-lg space-y-3 ${isDarkTheme ? 'bg-gray-800 border-gray-700' : 'bg-muted/30 border-border'}`}>
                       <div className="flex items-center gap-3">
                         <Users className="h-5 w-5 text-primary" />
                         <span className="font-medium">Thông tin khách hàng</span>
@@ -1535,8 +1249,7 @@ export default function PublicLandingPage() {
                       </div>
                     </div>
                     
-                    {/* Payment Info */}
-                    <div className={`p-4 border rounded-lg space-y-3 transition-colors duration-300 ${isDarkTheme ? 'bg-gray-800 border-gray-700' : 'bg-muted/30 border-border'}`}>
+                    <div className={`p-4 border rounded-lg space-y-3 ${isDarkTheme ? 'bg-gray-800 border-gray-700' : 'bg-muted/30 border-border'}`}>
                       <div className="flex items-center gap-3">
                         <CreditCard className="h-5 w-5 text-primary" />
                         <span className="font-medium">Thanh toán</span>
@@ -1547,158 +1260,58 @@ export default function PublicLandingPage() {
                         {orderForm.paymentMethod === 'online' && 'Thanh toán online'}
                       </div>
                     </div>
-                    
-                    {orderForm.notes && (
-                      <div className={`p-4 border rounded-lg space-y-3 transition-colors duration-300 ${isDarkTheme ? 'bg-gray-800 border-gray-700' : 'bg-muted/30 border-border'}`}>
-                        <div className="flex items-center gap-3">
-                          <Eye className="h-5 w-5 text-primary" />
-                          <span className="font-medium">Ghi chú</span>
-                        </div>
-                        <p className="text-sm">{orderForm.notes}</p>
-                      </div>
-                    )}
                   </div>
                 </div>
               )}
             </CardContent>
 
-            {/* Navigation Buttons */}
-            <div className="border-t p-4 space-y-3">
-              {currentStep === 'product' && (
+            {/* Footer Navigation */}
+            <div className="p-6 border-t flex gap-3">
+              {currentStep !== 'product' && (
                 <Button
-                  onClick={handleNextStep}
-                  className="w-full h-12 text-base font-medium transition-colors duration-300"
-                  style={{backgroundColor: 'var(--theme-primary)', borderColor: 'var(--theme-primary)'}}
-                  data-testid="button-next-step"
+                  variant="outline"
+                  onClick={handlePrevStep}
+                  className="flex-1"
                 >
-                  Tiếp tục
-                  <ChevronRight className="h-5 w-5 ml-2" />
+                  <ChevronLeft className="h-4 w-4 mr-2" />
+                  Quay lại
                 </Button>
               )}
               
-              {(currentStep === 'customer' || currentStep === 'payment') && (
-                <div className="flex gap-3">
-                  <Button
-                    variant="outline"
-                    onClick={handlePrevStep}
-                    className="flex-1 h-12 text-base transition-colors duration-300"
-                    data-testid="button-prev-step"
-                  >
-                    <ChevronLeft className="h-5 w-5 mr-2" />
-                    Quay lại
-                  </Button>
-                  <Button
-                    onClick={handleNextStep}
-                    className="flex-1 h-12 text-base font-medium transition-colors duration-300"
-                    style={{backgroundColor: 'var(--theme-primary)', borderColor: 'var(--theme-primary)'}}
-                    data-testid="button-next-step"
-                  >
-                    Tiếp tục
-                    <ChevronRight className="h-5 w-5 ml-2" />
-                  </Button>
-                </div>
-              )}
-              
-              {currentStep === 'confirm' && (
-                <div className="space-y-3">
-                  <Button
-                    onClick={handleOrder}
-                    disabled={orderMutation.isPending}
-                    className="w-full h-12 text-base font-medium transition-colors duration-300"
-                    style={{backgroundColor: 'var(--theme-primary)', borderColor: 'var(--theme-primary)'}}
-                    data-testid="button-confirm-order"
-                  >
-                    {orderMutation.isPending ? (
-                      <>
-                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2" />
-                        Đang xử lý...
-                      </>
-                    ) : (
-                      <>
-                        <CheckCircle2 className="h-5 w-5 mr-2" />
-                        Xác nhận đặt hàng
-                      </>
-                    )}
-                  </Button>
-                  <Button
-                    variant="outline"
-                    onClick={handlePrevStep}
-                    disabled={orderMutation.isPending}
-                    className="w-full h-12 text-base transition-colors duration-300"
-                    data-testid="button-prev-step"
-                  >
-                    <ChevronLeft className="h-5 w-5 mr-2" />
-                    Quay lại chỉnh sửa
-                  </Button>
-                </div>
+              {currentStep !== 'confirm' ? (
+                <Button
+                  onClick={handleNextStep}
+                  className="flex-1 bg-green-600 hover:bg-green-700"
+                >
+                  Tiếp tục
+                  <ChevronRight className="h-4 w-4 ml-2" />
+                </Button>
+              ) : (
+                <Button
+                  onClick={handleOrder}
+                  disabled={orderMutation.isPending}
+                  className="flex-1 bg-green-600 hover:bg-green-700"
+                >
+                  {orderMutation.isPending ? (
+                    <>
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />
+                      Đang xử lý...
+                    </>
+                  ) : (
+                    <>
+                      <CheckCircle2 className="h-4 w-4 mr-2" />
+                      Xác nhận đặt hàng
+                    </>
+                  )}
+                </Button>
               )}
             </div>
           </Card>
         </div>
       )}
 
-      {/* Sticky Mobile Bottom Bar - Full Width Purchase */}
-      <div className={`fixed bottom-0 left-0 right-0 z-50 border-t p-4 md:hidden transition-colors duration-300 ${themeClasses.card}`}>
-        <div className="flex flex-col gap-2">
-          {/* Price and Call Info */}
-          <div className="flex items-center justify-between text-sm">
-            <div className="flex items-center gap-2 text-muted-foreground">
-              <Phone className="h-4 w-4" />
-              <span>{landingPage.contactInfo?.phone || 'Hotline'}</span>
-            </div>
-            <div className="font-bold text-lg" style={{color: 'var(--theme-primary)'}}>
-              {finalPrice.toLocaleString('vi-VN')}đ
-            </div>
-          </div>
-          {/* Full Width Purchase Button */}
-          <Button 
-            size="lg"
-            className="w-full h-12 text-lg font-semibold transition-all duration-300 hover:scale-[1.02]"
-            style={{background: `linear-gradient(135deg, var(--theme-primary), var(--theme-primary-dark))`}}
-            onClick={() => setShowOrderForm(true)}
-          >
-            <ShoppingCart className="h-5 w-5 mr-2" />
-            Đặt hàng ngay
-          </Button>
-        </div>
-      </div>
-      
-      {/* Add bottom padding for mobile sticky bar */}
-      <div className="h-20 md:h-0" />
-
       {/* Chatbot Widget */}
-      <ChatbotWidget 
-        pageType="landing_page"
-        pageContext={{
-          featuredProduct: landingPage?.product ? {
-            id: landingPage.product.id,
-            name: landingPage.product.name,
-            price: landingPage.product.price,
-            description: landingPage.product.description
-          } : undefined
-        }}
-        onAddToCart={(productId, quantity) => {
-          // For landing page, add to order form directly
-          setOrderForm(prev => ({
-            ...prev,
-            quantity: quantity
-          }));
-          setShowOrderForm(true);
-        }}
-        onCreateOrder={(orderData) => {
-          // Convert chatbot order to landing page order format
-          setOrderForm({
-            name: orderData.customerName || '',
-            phone: orderData.customerPhone || '',
-            email: orderData.customerEmail || '',
-            address: orderData.customerAddress || '',
-            quantity: orderData.quantity || 1,
-            paymentMethod: orderData.paymentMethod || 'cod',
-            notes: orderData.notes || ''
-          });
-          setShowOrderForm(true);
-        }}
-      />
+      <ChatbotWidget pageType="landing_page" />
     </div>
   );
 }

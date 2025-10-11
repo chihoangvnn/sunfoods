@@ -1,0 +1,75 @@
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Redirecting</title>
+</head>
+<body>
+<pre>Redirecting to /adminhoang/</pre>
+</body>
+</html>
+root@sunfoods:/var/www/sun/backend# cd /var/www/sun/backend
+root@sunfoods:/var/www/sun/backend# echo "PORT=5000" > .env
+m2 restaroot@sunfoods:/var/www/sun/backend# pm2 restart backend
+Use --update-env to update environment variables
+[PM2] Applying action restartProcessId on app [backend](ids: [ 0 ])
+[PM2] [backend](0) ✓
+┌────┬────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name       │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ backend    │ default     │ 1.0.0   │ fork    │ 392439   │ 0s     │ 1    │ online    │ 0%       │ 18.6mb   │ root     │ disabled │
+└────┴────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+root@sunfoods:/var/www/sun/backend# pm2 logs backend --lines 5
+[TAILING] Tailing last 5 lines for [backend] process (change the value with --lines option)
+/root/.pm2/logs/backend-error.log last 5 lines:
+0|backend  | ]
+0|backend  | ⚠️ SYSTEM HEALTH DEGRADED: [
+0|backend  |   '🟡 WORKERS is degraded: Performance issues detected',
+0|backend  |   'ℹ️ WORKERS: Workers are offline - Auto-posting requires deployed Vercel Functions'
+0|backend  | ]
+
+/root/.pm2/logs/backend-out.log last 5 lines:
+0|backend  | etry_at", "analytics", "created_at", "updated_at", "priority", "ip_pool_id", "ip_snapshot", "batch_id" from "scheduled_posts" where ("scheduled_posts"."status" = $1 and "scheduled_posts"."retry_count" <= $2) -- params: ["failed", 2]
+0|backend  | 📋 Found 0 participations to verify
+0|backend  | ✅ Health report generated in 1121ms - Overall: degraded
+0|backend  | 📭 No due posts at 2025-10-08T23:56:34.840Z
+0|backend  | Query: select "id", "worker_id", "name", "description", "platforms", "capabilities", "specialties", "max_concurrent_jobs", "min_job_interval", "max_jobs_per_hour", "avg_execution_time", "region", "environment", "deployment_platform", "endpoint_url", "ip_address", "ip_country", "ip_region", "status", "is_online", "last_ping_at", "last_job_at", "current_load", "total_jobs_completed", "total_jobs_failed", "success_rate", "avg_response_time", "registration_secret", "auth_token", "token_expires_at", "tags", "priority", "is_enabled", "metadata", "created_at", "updated_at" from "workers" order by "workers"."created_at" desc
+
+0|backend  | ⚠️  VAPID keys not configured! Push notifications will not work.
+0|backend  |    Set VAPID_PUBLIC_KEY and VAPID_PRIVATE_KEY environment variables.
+0|backend  | ⚠️ THÔNG BÁO: Đang sử dụng TikTok credentials mẫu. Vui lòng thay thế bằng credentials thật từ TikTok Developer Portal để kết nối thực tế.
+0|backend  | 📋 Hướng dẫn lấy credentials:
+0|backend  | 1. Truy cập: https://developers.tiktok.com/
+0|backend  | 2. Tạo ứng dụng mới hoặc chọn ứng dụng hiện tại
+0|backend  | 3. Sao chép Client Key và Client Secret
+0|backend  | 4. Thay thế trong file tiktok-auth.ts dòng 40-41
+0|backend  | 🏥 Started worker health monitoring
+0|backend  | ⚠️ Replit OAuth credentials not found. Set REPLIT_APP_ID and REPLIT_APP_SECRET environment variables.
+0|backend  | 🏥 Started system health monitoring
+0|backend  | 🧩 Initializing built-in template registry...
+0|backend  | ✅ Loaded 4 built-in templates
+0|backend  | ⚠️ Campaign verifier: Redis not configured - running without queue-based verification
+0|backend  | The CJS build of Vite's Node API is deprecated. See https://vite.dev/guide/troubleshooting.html#vite-cjs-node-api-deprecated for more details.
+0|backend  | 🚀 Registering API Management Middleware...
+0|backend  | ✅ API Management Middleware registered successfully
+0|backend  | 🚀 Starting Facebook post scheduler...
+0|backend  | 🚀 Starting post scheduler - checking every minute for scheduled posts
+0|backend  | Query: select "id", "caption", "hashtags", "asset_ids", "social_account_id", "platform", "scheduled_time", "timezone", "status", "published_at", "platform_post_id", "platform_url", "error_message", "retry_count", "last_retry_at", "analytics", "created_at", "updated_at", "priority", "ip_pool_id", "ip_snapshot", "batch_id" from "scheduled_posts" where ("scheduled_posts"."status" = $1 and "scheduled_posts"."scheduled_time" <= $2) order by "scheduled_posts"."scheduled_time" -- params: ["scheduled", "2025-10-08T23:57:35.274Z"]
+0|backend  | ✅ Shopee routes loaded successfully
+0|backend  | 🔧 API Management middleware initialized
+0|backend  | 🤖 Mounting Product FAQs Router...
+0|backend  | ✅ Product FAQs Router mounted successfully
+0|backend  | 🚚 Mounting ViettelPost routes...
+0|backend  | ✅ ViettelPost routes mounted successfully
+0|backend  | serving on port 5000
+0|backend  | 🚀 Starting post scheduler...
+0|backend  | ✅ Scheduler started - polling every 60s
+0|backend  | 🚀 Starting analytics scheduler (interval: 3600s)
+0|backend  | 📊 Starting analytics collection run...
+0|backend  | 🚀 Starting campaign verifier...
+0|backend  | 🚀 Starting campaign verifier worker...
+0|backend  | Query: select "id", "caption", "hashtags", "asset_ids", "social_account_id", "platform", "scheduled_time", "timezone", "status", "published_at", "platform_post_id", "platform_url", "error_message", "retry_count", "last_retry_at", "analytics", "created_at", "updated_at", "priority", "ip_pool_id", "ip_snapshot", "batch_id" from "scheduled_posts" where ("scheduled_posts"."status" = $1 and "scheduled_posts"."scheduled_time" <= $2) order by "scheduled_posts"."scheduled_time" -- params: ["scheduled", "2025-10-08T23:57:35.394Z"]
+0|backend  | Query: select "id", "caption", "hashtags", "asset_ids", "social_account_id", "platform", "scheduled_time", "timezone", "status", "published_at", "platform_post_id", "platform_url", "error_message", "retry_count", "last_retry_at", "analytics", "created_at", "updated_at", "priority", "ip_pool_id", "ip_snapshot", "batch_id" from "scheduled_posts" "scheduledPosts" where ("scheduledPosts"."status" = $1 and ("scheduledPosts"."analytics" is null or "scheduledPosts"."updated_at" < $2)) order by "scheduledPosts"."published_at" asc limit $3 -- params: ["posted", "2025-10-08T23:27:35.395Z", 50]
+0|backend  | Query: select "id", "campaign_id", "customer_id", "share_url", "submitted_at", "status", "verification_scheduled_at", "last_verified_at", "rewarded_at", "voucher_id", "rejection_reason", "verification_attempts", "metadata", "created_at", "updated_at" from "campaign_participations" where ("campaign_participations"."status" = $1 and "campaign_participations"."verification_scheduled_at" <= $2) order by "campaign_participations"."verification_scheduled_at" -- params: ["pending", "2025-10-08T23:57:35.396Z"]
+0|backend  | Query: select "id", "caption", "hashtags", "asset_ids", "social_account_id", "platform", "scheduled_time", "timezone", "status", "published_at", "platform_post_id", "platform_url", "error_message", "retry_count", "last_retry_at", "analytics", "created_at", "updated_at", "priority", "ip_pool_id", "ip_snapshot", "batch_id" from "scheduled_posts" where ("scheduled_posts"."status" = $1 and "scheduled_posts"."retry_count" <= $2) -- params: ["failed", 2]
+0|backend  | 📈 Found 0 posts to fetch analytics for
+0|backend  | ✅ Analytics collection complete: 0 success, 0 errors

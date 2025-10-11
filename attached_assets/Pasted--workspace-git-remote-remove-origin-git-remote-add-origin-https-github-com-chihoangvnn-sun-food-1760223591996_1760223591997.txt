@@ -1,0 +1,67 @@
+~/workspace$ git remote remove origin
+git remote add origin https://github.com/chihoangvnn/sun-foods-multi-store.git
+git add .
+git commit -m "Phase 4: Multi-Repl setup with CORS security fix"
+git push -u origin main
+error: could not lock config file .git/config: File exists
+fatal: could not unset 'branch.main.remote'
+error: remote origin already exists.
+fatal: Unable to create '/home/runner/workspace/.git/index.lock': File exists.
+
+Another git process seems to be running in this repository, e.g.
+an editor opened by 'git commit'. Please make sure all processes
+are terminated then try again. If it still fails, a git process
+may have crashed in this repository earlier:
+remove the file manually to continue.
+fatal: Unable to create '/home/runner/workspace/.git/index.lock': File exists.
+
+Another git process seems to be running in this repository, e.g.
+an editor opened by 'git commit'. Please make sure all processes
+are terminated then try again. If it still fails, a git process
+may have crashed in this repository earlier:
+remove the file manually to continue.
+error: could not lock config file .git/config: File exists
+error: unable to write upstream branch configuration
+hint:
+hint: After fixing the error cause you may try to fix up
+hint: the remote tracking information by invoking:
+hint:   git branch --set-upstream-to=origin/refs/heads/main
+Everything up-to-date
+flag provided but not defined: -x
+Usage: grep [-clFivnhqre] [FILE]...
+
+  -F    Match using fixed strings (shorthand)
+  -c    Just show counts
+  -count
+        Just show counts
+  -e string
+        Pattern to match (shorthand)
+  -files-with-matches
+        list only files
+  -fixed-strings
+        Match using fixed strings
+  -h    Suppress file name prefixes on output (shorthand)
+  -i    case-insensitive matching (shorthand)
+  -ignore-case
+        case-insensitive matching
+  -invert-match
+        Print only non-matching lines
+  -l    list only files (shorthand)
+  -line-number
+        Show line numbers
+  -n    Show line numbers (shorthand)
+  -no-filename
+        Suppress file name prefixes on output
+  -q    Don't print matches; exit on first match (shorthand)
+  -quiet
+        Don't print matches; exit on first match
+  -r    recursive
+  -recursive
+        recursive
+  -regexp string
+        Pattern to match
+  -s    Don't print matches; exit on first match (shorthand)
+  -silent
+        Don't print matches; exit on first match
+  -v    Print only non-matching lines (shorthand)
+~/workspace$ 

@@ -8,14 +8,6 @@ export default defineConfig({
   plugins: [
     react(),
     runtimeErrorOverlay(),
-    ...(process.env.NODE_ENV !== "production" &&
-    process.env.REPL_ID !== undefined
-      ? [
-          await import("@replit/vite-plugin-cartographer").then((m) =>
-            m.cartographer(),
-          ),
-        ]
-      : []),
   ],
   resolve: {
     alias: {
@@ -30,7 +22,7 @@ export default defineConfig({
     include: ['drizzle-orm', 'drizzle-zod', 'zod'],
   },
   build: {
-    outDir: path.resolve(import.meta.dirname, "..", "backend", "public", "admin"),
+    outDir: "dist",
     emptyOutDir: true,
     commonjsOptions: {
       include: [/node_modules/, /backend\/shared/],
@@ -40,10 +32,7 @@ export default defineConfig({
     host: "0.0.0.0",
     port: 5000,
     strictPort: false,
-    fs: {
-      strict: true,
-      deny: ["**/.*"],
-    },
+    allowedHosts: true,
     proxy: {
       '/api': {
         target: 'http://localhost:3000',

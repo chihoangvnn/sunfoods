@@ -1,0 +1,16 @@
+run = "cd customer-mobile && npm install && npm run dev -- -p 3001 -H 0.0.0.0"
+modules = ["nodejs-20"]
+
+[nix]
+channel = "stable-24_05"
+
+[deployment]
+run = ["sh", "-c", "cd customer-mobile && npm install && npm start"]
+
+[[ports]]
+localPort = 3001
+externalPort = 80
+
+[env]
+NEXT_PUBLIC_STORE_ID = "sunfoods"
+NEXT_PUBLIC_STORE_NAME = "SunFoods"

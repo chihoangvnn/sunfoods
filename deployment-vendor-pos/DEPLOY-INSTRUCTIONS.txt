@@ -11,8 +11,8 @@ Version: Vendor Management System + POS Link (76 routes)
 ## Package Contents:
 - backend/dist/         → Express backend (compiled)
 - backend/public/admin/ → Admin frontend (index-B2ZMBBzO.js with vendor pages)
-- ecosystem.production.js → PM2 config
-- nginx-production.conf   → Nginx reverse proxy config
+- ecosystem.config.js → PM2 config
+- nginx.conf   → Nginx reverse proxy config
 - deploy-to-vps.sh        → Deployment script
 
 ## Deployment Steps:
@@ -55,14 +55,14 @@ GEMINI_API_KEY=...
 
 ### 6. Start Services
 ```bash
-pm2 start ecosystem.production.js
+pm2 start ecosystem.config.js
 pm2 save
 pm2 startup  # If first time
 ```
 
 ### 7. Configure Nginx (if not already)
 ```bash
-sudo cp nginx-production.conf /etc/nginx/sites-available/sunfoods
+sudo cp nginx.conf /etc/nginx/sites-available/sunfoods
 sudo ln -s /etc/nginx/sites-available/sunfoods /etc/nginx/sites-enabled/
 sudo nginx -t
 sudo systemctl reload nginx
@@ -134,7 +134,7 @@ curl http://localhost:5000/api/admin/vendors
 pm2 stop all
 mv backend backend.failed
 mv backend.backup-YYYYMMDD backend
-pm2 start ecosystem.production.js
+pm2 start ecosystem.config.js
 ```
 
 ## Support:

@@ -6,7 +6,11 @@
   "scripts": {
     "dev": "npx vite",
     "build": "npx vite build",
-    "preview": "npx vite preview"
+    "preview": "npx vite preview",
+    "validate-tailwind": "npm run build && node -e \"const fs=require('fs'); const css=fs.readdirSync('dist/assets').find(f=>f.endsWith('.css')); const content=fs.readFileSync('dist/assets/'+css,'utf8'); const hasUtils=content.includes('.flex{')&&content.includes('.grid{'); console.log(hasUtils?'✅ Tailwind utilities found':'❌ No utilities - check config'); process.exit(hasUtils?0:1)\"",
+    "clean-install": "rm -R node_modules 2>/dev/null; rm package-lock.json 2>/dev/null; npm install",
+    "build:check": "npm run build && npm run validate-tailwind",
+    "build:verify": "npm run build && ls -lh dist/assets/*.css && echo '---' && echo 'Checking Tailwind utilities...' && grep -o '\\.flex{' dist/assets/*.css | wc -l | xargs -I {} echo 'Found {} .flex utilities'"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
@@ -52,8 +56,9 @@
     "lucide-react": "^0.453.0",
     "lucide-vue-next": "^0.453.0",
     "moment": "^2.30.1",
-    "papaparse": "^5.4.1",
     "next-themes": "^0.4.6",
+    "papaparse": "^5.4.1",
+    "pigeon-maps": "^0.22.1",
     "react": "^18.3.1",
     "react-big-calendar": "^1.15.0",
     "react-day-picker": "^8.10.1",
@@ -64,7 +69,6 @@
     "react-resizable-panels": "^2.1.7",
     "recharts": "^2.15.2",
     "tailwind-merge": "^2.6.0",
-    "tailwindcss-animate": "^1.0.7",
     "tw-animate-css": "^1.2.5",
     "vaul": "^1.1.2",
     "vue": "^3.5.13",
@@ -75,16 +79,16 @@
   "devDependencies": {
     "@replit/vite-plugin-cartographer": "^0.3.0",
     "@replit/vite-plugin-runtime-error-modal": "^0.0.3",
-    "@tailwindcss/typography": "^0.5.15",
-    "@tailwindcss/vite": "^4.1.3",
+    "@tailwindcss/typography": "^0.5.10",
     "@types/papaparse": "^5.3.15",
     "@types/react": "^18.3.11",
     "@types/react-dom": "^18.3.1",
     "@vitejs/plugin-react": "^4.3.2",
-    "autoprefixer": "^10.4.20",
-    "postcss": "^8.4.47",
-    "tailwindcss": "^3.4.17",
+    "autoprefixer": "^10.4.17",
+    "postcss": "^8.4.35",
+    "tailwindcss": "^3.4.1",
+    "tailwindcss-animate": "^1.0.7",
     "typescript": "5.6.3",
-    "vite": "^5.4.19"
+    "vite": "^5.0.12"
   }
 }

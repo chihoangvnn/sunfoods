@@ -61,7 +61,9 @@ import {
   Smartphone,
   Monitor,
   Tablet,
-  MapPin
+  MapPin,
+  Bird,
+  Car
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
@@ -77,7 +79,16 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Switch } from "@/components/ui/switch";
 import type { Customer, Order } from "@shared/schema";
+import { AddressMapPicker } from "@/components/AddressMapPicker";
 
 // Extended Customer type matching the CustomerList interface
 interface CustomerWithStats extends Customer {
@@ -133,6 +144,51 @@ interface AffiliateOrderType {
   commission: number;
   color: string;
 }
+
+// Field visibility settings interface
+interface FieldVisibility {
+  // Thông tin cơ bản
+  avatarNameEmail: boolean;
+  customerRole: boolean;
+  membershipTier: boolean;
+  phone: boolean;
+  joinDate: boolean;
+  registrationSource: boolean;
+  status: boolean;
+  lastOrderDate: boolean;
+  // Tài chính
+  totalSpent: boolean;
+  totalOrders: boolean;
+  totalDebt: boolean;
+  creditLimit: boolean;
+  pointsBalance: boolean;
+  pointsEarned: boolean;
+  // Địa chỉ
+  address: boolean;
+  address2: boolean;
+  distanceFromShop: boolean;
+}
+
+// Default visibility (all fields visible)
+const DEFAULT_FIELD_VISIBILITY: FieldVisibility = {
+  avatarNameEmail: true,
+  customerRole: true,
+  membershipTier: true,
+  phone: true,
+  joinDate: true,
+  registrationSource: true,
+  status: true,
+  lastOrderDate: true,
+  totalSpent: true,
+  totalOrders: true,
+  totalDebt: true,
+  creditLimit: true,
+  pointsBalance: true,
+  pointsEarned: true,
+  address: true,
+  address2: true,
+  distanceFromShop: true,
+};
 
 const formatPrice = (price: string | number) => {
   const numPrice = typeof price === 'string' ? parseFloat(price) : price;
@@ -196,6 +252,33 @@ export default function CustomerDetails() {
   
   const [isEditFormOpen, setIsEditFormOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isSettingsDialogOpen, setIsSettingsDialogOpen] = useState(false);
+  
+  // Field visibility state with localStorage persistence
+  const [fieldVisibility, setFieldVisibility] = useState<FieldVisibility>(() => {
+    const saved = localStorage.getItem('customerFieldsVisibility');
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch {
+        return DEFAULT_FIELD_VISIBILITY;
+      }
+    }
+    return DEFAULT_FIELD_VISIBILITY;
+  });
+
+  // Save to localStorage whenever visibility changes
+  useEffect(() => {
+    localStorage.setItem('customerFieldsVisibility', JSON.stringify(fieldVisibility));
+  }, [fieldVisibility]);
+
+  // Toggle field visibility
+  const toggleField = (field: keyof FieldVisibility) => {
+    setFieldVisibility(prev => ({
+      ...prev,
+      [field]: !prev[field]
+    }));
+  };
   
   // Collapsible section states (default collapsed)
   const [socialOpen, setSocialOpen] = useState(false);
@@ -438,6 +521,15 @@ export default function CustomerDetails() {
             <Button 
               variant="outline" 
               size="sm"
+              onClick={() => setIsSettingsDialogOpen(true)}
+              data-testid="button-field-settings"
+            >
+              <Settings className="h-3 w-3 mr-1" />
+              Cài đặt
+            </Button>
+            <Button 
+              variant="outline" 
+              size="sm"
               onClick={() => setIsEditFormOpen(true)}
               data-testid="button-edit-customer"
             >
@@ -466,214 +558,242 @@ export default function CustomerDetails() {
           </CardTitle>
         </CardHeader>
         <CardContent className="pt-2">
-          <div className="flex items-center gap-4">
-            <Avatar className="h-12 w-12">
-              <AvatarImage src={customer.avatar || ""} />
-              <AvatarFallback className="text-sm">
-                {getInitials(customer.name)}
-              </AvatarFallback>
-            </Avatar>
-            
-            <div className="flex-1">
-              <h2 className="text-lg font-bold">{customer.name}</h2>
-              <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                <div className="flex items-center gap-1">
-                  <Mail className="h-3 w-3" />
-                  {customer.email}
-                </div>
-                {customer.phone && (
+          {fieldVisibility.avatarNameEmail && (
+            <div className="flex items-center gap-4">
+              <Avatar className="h-12 w-12">
+                <AvatarImage src={customer.avatar || ""} />
+                <AvatarFallback className="text-sm">
+                  {getInitials(customer.name)}
+                </AvatarFallback>
+              </Avatar>
+              
+              <div className="flex-1">
+                <h2 className="text-lg font-bold">{customer.name}</h2>
+                <div className="flex items-center gap-4 text-sm text-muted-foreground">
                   <div className="flex items-center gap-1">
-                    <Phone className="h-3 w-3" />
-                    {customer.phone}
+                    <Mail className="h-3 w-3" />
+                    {customer.email}
                   </div>
-                )}
-                <div className="flex items-center gap-1">
-                  <Calendar className="h-3 w-3" />
-                  {formatShortDate(customer.joinDate)}
+                  {fieldVisibility.phone && customer.phone && (
+                    <div className="flex items-center gap-1">
+                      <Phone className="h-3 w-3" />
+                      {customer.phone}
+                    </div>
+                  )}
+                  {fieldVisibility.joinDate && (
+                    <div className="flex items-center gap-1">
+                      <Calendar className="h-3 w-3" />
+                      {formatShortDate(customer.joinDate)}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
-          </div>
+          )}
 
           {/* 💎 Hệ thống Membership - Moved into customer info */}
-          <Separator className="my-4" />
-          <div className="space-y-3 text-sm">
-            <div className="flex items-center gap-2 mb-3">
-              <Crown className="h-4 w-4 text-yellow-500" />
-              <span className="font-semibold">💎 Cấp thành viên</span>
-            </div>
-            
-            {/* Current Tier Display */}
-            <div className="flex items-center justify-between">
-              <span className="text-muted-foreground">Cấp hiện tại</span>
-              <Badge variant={
-                customer.membershipTier === 'diamond' ? 'default' :
-                customer.membershipTier === 'gold' ? 'secondary' : 
-                customer.membershipTier === 'silver' ? 'outline' : 'secondary'
-              } className="text-xs">
-                {customer.membershipTier === 'member' && '🥉 Thành viên'}
-                {customer.membershipTier === 'silver' && '🥈 Bạc'}
-                {customer.membershipTier === 'gold' && '🥇 Vàng'}
-                {customer.membershipTier === 'diamond' && '💎 Kim Cương'}
-              </Badge>
-            </div>
+          {fieldVisibility.membershipTier && (
+            <>
+              {fieldVisibility.avatarNameEmail && <Separator className="my-4" />}
+              <div className="space-y-3 text-sm">
+                <div className="flex items-center gap-2 mb-3">
+                  <Crown className="h-4 w-4 text-yellow-500" />
+                  <span className="font-semibold">💎 Cấp thành viên</span>
+                </div>
+                
+                {/* Current Tier Display */}
+                <div className="flex items-center justify-between">
+                  <span className="text-muted-foreground">Cấp hiện tại</span>
+                  <Badge variant={
+                    customer.membershipTier === 'diamond' ? 'default' :
+                    customer.membershipTier === 'gold' ? 'secondary' : 
+                    customer.membershipTier === 'silver' ? 'outline' : 'secondary'
+                  } className="text-xs">
+                    {customer.membershipTier === 'member' && '🥉 Thành viên'}
+                    {customer.membershipTier === 'silver' && '🥈 Bạc'}
+                    {customer.membershipTier === 'gold' && '🥇 Vàng'}
+                    {customer.membershipTier === 'diamond' && '💎 Kim Cương'}
+                  </Badge>
+                </div>
 
-            {/* Points Balance */}
-            <div className="flex items-center justify-between">
-              <span className="text-muted-foreground flex items-center gap-1">
-                <Coins className="h-3 w-3" />
-                Điểm tích lũy
-              </span>
-              <div className="text-right">
-                <div className="font-semibold">{customer.pointsBalance?.toLocaleString() || 0} điểm</div>
-                <div className="text-xs text-muted-foreground">
-                  Tổng tích: {customer.pointsEarned?.toLocaleString() || 0}
-                </div>
-              </div>
-            </div>
+                {/* Points Balance */}
+                {fieldVisibility.pointsBalance && (
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted-foreground flex items-center gap-1">
+                      <Coins className="h-3 w-3" />
+                      Điểm tích lũy
+                    </span>
+                    <div className="text-right">
+                      <div className="font-semibold">{customer.pointsBalance?.toLocaleString() || 0} điểm</div>
+                      {fieldVisibility.pointsEarned && (
+                        <div className="text-xs text-muted-foreground">
+                          Tổng tích: {customer.pointsEarned?.toLocaleString() || 0}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
 
-            {/* Tier Progress */}
-            {customer.membershipData?.tierProgressPercent && (
-              <div className="space-y-1">
-                <div className="flex justify-between text-xs">
-                  <span>Tiến độ lên hạng</span>
-                  <span>{customer.membershipData.tierProgressPercent}%</span>
-                </div>
-                <div className="w-full bg-gray-200 rounded-full h-2">
-                  <div 
-                    className="bg-green-500 h-2 rounded-full" 
-                    style={{ width: `${customer.membershipData.tierProgressPercent}%` }}
-                  ></div>
-                </div>
-                {customer.membershipData.nextTierThreshold && (
-                  <div className="text-xs text-muted-foreground">
-                    Cần thêm {formatPrice(customer.membershipData.nextTierThreshold)}
+                {/* Tier Progress */}
+                {customer.membershipData?.tierProgressPercent && (
+                  <div className="space-y-1">
+                    <div className="flex justify-between text-xs">
+                      <span>Tiến độ lên hạng</span>
+                      <span>{customer.membershipData.tierProgressPercent}%</span>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-2">
+                      <div 
+                        className="bg-green-500 h-2 rounded-full" 
+                        style={{ width: `${customer.membershipData.tierProgressPercent}%` }}
+                      ></div>
+                    </div>
+                    {customer.membershipData.nextTierThreshold && (
+                      <div className="text-xs text-muted-foreground">
+                        Cần thêm {formatPrice(customer.membershipData.nextTierThreshold)}
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
-            )}
-          </div>
+            </>
+          )}
         </CardContent>
       </Card>
 
       {/* Compact Statistics Grid */}
       <div className="grid gap-3 grid-cols-2 md:grid-cols-5 mb-4">
-        <Card data-testid="card-total-orders">
-          <CardContent className="p-3">
-            <div className="flex items-center gap-2 mb-1">
-              <ShoppingCart className="h-3 w-3 text-muted-foreground" />
-              <span className="text-xs font-medium text-muted-foreground">Đơn hàng</span>
-            </div>
-            <div className="text-lg font-bold">{stats.totalOrders}</div>
-          </CardContent>
-        </Card>
+        {fieldVisibility.totalOrders && (
+          <Card data-testid="card-total-orders">
+            <CardContent className="p-3">
+              <div className="flex items-center gap-2 mb-1">
+                <ShoppingCart className="h-3 w-3 text-muted-foreground" />
+                <span className="text-xs font-medium text-muted-foreground">Đơn hàng</span>
+              </div>
+              <div className="text-lg font-bold">{stats.totalOrders}</div>
+            </CardContent>
+          </Card>
+        )}
         
-        <Card data-testid="card-total-spent">
-          <CardContent className="p-3">
-            <div className="flex items-center gap-2 mb-1">
-              <DollarSign className="h-3 w-3 text-muted-foreground" />
-              <span className="text-xs font-medium text-muted-foreground">Chi tiêu</span>
-            </div>
-            <div className="text-lg font-bold">{formatPrice(stats.totalSpent)}</div>
-          </CardContent>
-        </Card>
+        {fieldVisibility.totalSpent && (
+          <Card data-testid="card-total-spent">
+            <CardContent className="p-3">
+              <div className="flex items-center gap-2 mb-1">
+                <DollarSign className="h-3 w-3 text-muted-foreground" />
+                <span className="text-xs font-medium text-muted-foreground">Chi tiêu</span>
+              </div>
+              <div className="text-lg font-bold">{formatPrice(stats.totalSpent)}</div>
+            </CardContent>
+          </Card>
+        )}
         
-        <Card data-testid="card-average-order">
-          <CardContent className="p-3">
-            <div className="flex items-center gap-2 mb-1">
-              <TrendingUp className="h-3 w-3 text-muted-foreground" />
-              <span className="text-xs font-medium text-muted-foreground">TB/đơn</span>
-            </div>
-            <div className="text-lg font-bold">{formatPrice(stats.averageOrderValue)}</div>
-          </CardContent>
-        </Card>
+        {fieldVisibility.lastOrderDate && (
+          <Card data-testid="card-average-order">
+            <CardContent className="p-3">
+              <div className="flex items-center gap-2 mb-1">
+                <TrendingUp className="h-3 w-3 text-muted-foreground" />
+                <span className="text-xs font-medium text-muted-foreground">TB/đơn</span>
+              </div>
+              <div className="text-lg font-bold">{formatPrice(stats.averageOrderValue)}</div>
+            </CardContent>
+          </Card>
+        )}
 
-        <Card data-testid="card-total-debt">
-          <CardContent className="p-3">
-            <div className="flex items-center gap-2 mb-1">
-              <Receipt className="h-3 w-3 text-muted-foreground" />
-              <span className="text-xs font-medium text-muted-foreground">Công nợ</span>
-            </div>
-            <div className={`text-lg font-bold ${parseFloat(customer.totalDebt || '0') > 0 ? 'text-red-600' : 'text-green-600'}`}>
-              {formatPrice(parseFloat(customer.totalDebt || '0'))}
-            </div>
-          </CardContent>
-        </Card>
+        {fieldVisibility.totalDebt && (
+          <Card data-testid="card-total-debt">
+            <CardContent className="p-3">
+              <div className="flex items-center gap-2 mb-1">
+                <Receipt className="h-3 w-3 text-muted-foreground" />
+                <span className="text-xs font-medium text-muted-foreground">Công nợ</span>
+              </div>
+              <div className={`text-lg font-bold ${parseFloat(customer.totalDebt || '0') > 0 ? 'text-red-600' : 'text-green-600'}`}>
+                {formatPrice(parseFloat(customer.totalDebt || '0'))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
-        <Card data-testid="card-credit-limit">
-          <CardContent className="p-3">
-            <div className="flex items-center gap-2 mb-1">
-              <CreditCard className="h-3 w-3 text-muted-foreground" />
-              <span className="text-xs font-medium text-muted-foreground">Hạn mức</span>
-            </div>
-            <div className="text-lg font-bold text-blue-600">
-              {formatPrice(parseFloat(customer.creditLimit || '0'))}
-            </div>
-          </CardContent>
-        </Card>
+        {fieldVisibility.creditLimit && (
+          <Card data-testid="card-credit-limit">
+            <CardContent className="p-3">
+              <div className="flex items-center gap-2 mb-1">
+                <CreditCard className="h-3 w-3 text-muted-foreground" />
+                <span className="text-xs font-medium text-muted-foreground">Hạn mức</span>
+              </div>
+              <div className="text-lg font-bold text-blue-600">
+                {formatPrice(parseFloat(customer.creditLimit || '0'))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
       </div>
 
       {/* Registration Info Card */}
-      <Card className="mb-4" data-testid="card-registration-info">
-        <CardHeader className="pb-2">
-          <CardTitle className="text-base flex items-center gap-2">
-            <UserPlus className="h-4 w-4" />
-            Thông tin đăng ký
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-2">
-          <div className="grid gap-3 text-sm">
-            {/* Registration Source */}
-            <div className="flex items-center justify-between">
-              <span className="text-muted-foreground">Nguồn đăng ký</span>
-              <Badge 
-                variant="outline"
-                className={`
-                  ${customer.registrationSource === 'admin' ? 'bg-purple-50 text-purple-700 border-purple-200' : ''}
-                  ${customer.registrationSource === 'bot' ? 'bg-cyan-50 text-cyan-700 border-cyan-200' : ''}
-                  ${customer.registrationSource === 'web' ? 'bg-blue-50 text-blue-700 border-blue-200' : ''}
-                  ${customer.registrationSource === 'app' ? 'bg-green-50 text-green-700 border-green-200' : ''}
-                  ${customer.registrationSource === 'pos' ? 'bg-orange-50 text-orange-700 border-orange-200' : ''}
-                `}
-              >
-                {customer.registrationSource === 'admin' && '⚙️ Admin'}
-                {customer.registrationSource === 'bot' && '🤖 Bot'}
-                {customer.registrationSource === 'web' && '🌐 Web'}
-                {customer.registrationSource === 'app' && '📱 App'}
-                {customer.registrationSource === 'pos' && '💳 POS'}
-                {!customer.registrationSource && '🌐 Web'}
-              </Badge>
-            </div>
-
-            {/* Join Date */}
-            <div className="flex items-center justify-between">
-              <span className="text-muted-foreground">Ngày tham gia</span>
-              <span className="font-medium">{formatDate(customer.joinDate)}</span>
-            </div>
-
-            {/* Customer Role(s) */}
-            {(customer.customerRole || (customer as any).customerRoles) && (
-              <div className="flex items-center justify-between">
-                <span className="text-muted-foreground">Vai trò</span>
-                <div className="flex gap-1 flex-wrap justify-end">
-                  {customer.customerRole && (
-                    <Badge variant="secondary" className="text-xs">
-                      {customer.customerRole}
-                    </Badge>
-                  )}
-                  {(customer as any).customerRoles && Array.isArray((customer as any).customerRoles) && (
-                    (customer as any).customerRoles.map((role: string) => (
-                      <Badge key={role} variant="secondary" className="text-xs">
-                        {role}
-                      </Badge>
-                    ))
-                  )}
+      {(fieldVisibility.registrationSource || fieldVisibility.joinDate || fieldVisibility.customerRole || fieldVisibility.status) && (
+        <Card className="mb-4" data-testid="card-registration-info">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base flex items-center gap-2">
+              <UserPlus className="h-4 w-4" />
+              Thông tin đăng ký
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="pt-2">
+            <div className="grid gap-3 text-sm">
+              {/* Registration Source */}
+              {fieldVisibility.registrationSource && (
+                <div className="flex items-center justify-between">
+                  <span className="text-muted-foreground">Nguồn đăng ký</span>
+                  <Badge 
+                    variant="outline"
+                    className={`
+                      ${customer.registrationSource === 'admin' ? 'bg-purple-50 text-purple-700 border-purple-200' : ''}
+                      ${customer.registrationSource === 'bot' ? 'bg-cyan-50 text-cyan-700 border-cyan-200' : ''}
+                      ${customer.registrationSource === 'web' ? 'bg-blue-50 text-blue-700 border-blue-200' : ''}
+                      ${customer.registrationSource === 'app' ? 'bg-green-50 text-green-700 border-green-200' : ''}
+                      ${customer.registrationSource === 'pos' ? 'bg-orange-50 text-orange-700 border-orange-200' : ''}
+                    `}
+                  >
+                    {customer.registrationSource === 'admin' && '⚙️ Admin'}
+                    {customer.registrationSource === 'bot' && '🤖 Bot'}
+                    {customer.registrationSource === 'web' && '🌐 Web'}
+                    {customer.registrationSource === 'app' && '📱 App'}
+                    {customer.registrationSource === 'pos' && '💳 POS'}
+                    {!customer.registrationSource && '🌐 Web'}
+                  </Badge>
                 </div>
-              </div>
-            )}
-          </div>
-        </CardContent>
-      </Card>
+              )}
+
+              {/* Join Date */}
+              {fieldVisibility.joinDate && (
+                <div className="flex items-center justify-between">
+                  <span className="text-muted-foreground">Ngày tham gia</span>
+                  <span className="font-medium">{formatDate(customer.joinDate)}</span>
+                </div>
+              )}
+
+              {/* Customer Role(s) */}
+              {fieldVisibility.customerRole && (customer.customerRole || (customer as any).customerRoles) && (
+                <div className="flex items-center justify-between">
+                  <span className="text-muted-foreground">Vai trò</span>
+                  <div className="flex gap-1 flex-wrap justify-end">
+                    {customer.customerRole && (
+                      <Badge variant="secondary" className="text-xs">
+                        {customer.customerRole}
+                      </Badge>
+                    )}
+                    {(customer as any).customerRoles && Array.isArray((customer as any).customerRoles) && (
+                      (customer as any).customerRoles.map((role: string) => (
+                        <Badge key={role} variant="secondary" className="text-xs">
+                          {role}
+                        </Badge>
+                      ))
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* 🎯 AFFILIATE DASHBOARD SECTION */}
       {customer.isAffiliate ? (
@@ -1034,6 +1154,119 @@ export default function CustomerDetails() {
           </CardContent>
         </Card>
       )}
+
+      {/* Address & Map Card - Always Visible */}
+      <Card className="mb-4" data-testid="card-address-map">
+        <CardHeader className="pb-2">
+          <CardTitle className="text-base flex items-center gap-2">
+            <MapPin className="h-4 w-4" />
+            Địa chỉ & Bản đồ
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="pt-2 space-y-4">
+          {/* Address Information */}
+          {customer.address && (
+            <div className="space-y-2">
+              <div className="flex items-start gap-2 text-sm">
+                <MapPin className="h-4 w-4 text-muted-foreground mt-0.5" />
+                <div>
+                  <div className="font-medium">Địa chỉ chính</div>
+                  <div className="text-muted-foreground">{customer.address}</div>
+                </div>
+              </div>
+              {customer.address2 && (
+                <div className="flex items-start gap-2 text-sm">
+                  <MapPin className="h-4 w-4 text-muted-foreground mt-0.5" />
+                  <div>
+                    <div className="font-medium">Địa chỉ phụ</div>
+                    <div className="text-muted-foreground">{customer.address2}</div>
+                  </div>
+                </div>
+              )}
+              {(customer.distanceFromShop || customer.routeDistanceFromShop) && (
+                <div className="space-y-2">
+                  <div className="text-sm font-medium text-muted-foreground mb-1">Khoảng cách từ cửa hàng:</div>
+                  <div className="flex flex-col gap-2">
+                    {customer.distanceFromShop && (
+                      <div className="flex items-center gap-2 text-sm">
+                        <Bird className="h-4 w-4 text-blue-500" />
+                        <span className="text-muted-foreground">Chim bay:</span>
+                        <span className="font-medium text-blue-600">
+                          {parseFloat(customer.distanceFromShop).toFixed(1)} km
+                        </span>
+                      </div>
+                    )}
+                    {customer.routeDistanceFromShop !== undefined && (
+                      <div className="flex items-center gap-2 text-sm">
+                        <Car className="h-4 w-4 text-green-500" />
+                        <span className="text-muted-foreground">Đường đi:</span>
+                        <span className="font-medium text-green-600">
+                          {customer.routeDistanceFromShop !== null 
+                            ? `${parseFloat(customer.routeDistanceFromShop).toFixed(1)} km`
+                            : 'Không tính được'}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Map Picker */}
+          <div>
+            <AddressMapPicker
+              initialLatitude={customer.latitude ? parseFloat(customer.latitude) : null}
+              initialLongitude={customer.longitude ? parseFloat(customer.longitude) : null}
+              onLocationSelect={async (address, latitude, longitude, distanceFromShop, district, routeDistanceFromShop) => {
+                try {
+                  // Clean payload: only send necessary fields, avoid spreading entire customer object
+                  const payload: any = {
+                    address,
+                    district,
+                  };
+                  
+                  // Only add numeric fields if they have valid values
+                  if (latitude !== null && latitude !== undefined) {
+                    payload.latitude = latitude.toString();
+                  }
+                  if (longitude !== null && longitude !== undefined) {
+                    payload.longitude = longitude.toString();
+                  }
+                  if (distanceFromShop !== null && distanceFromShop !== undefined) {
+                    payload.distanceFromShop = distanceFromShop.toString();
+                  }
+                  if (routeDistanceFromShop !== null && routeDistanceFromShop !== undefined) {
+                    payload.routeDistanceFromShop = routeDistanceFromShop.toString();
+                  }
+
+                  const response = await fetch(`/api/customers/${customer.id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify(payload),
+                  });
+
+                  if (!response.ok) throw new Error('Failed to update location');
+
+                  queryClient.invalidateQueries({ queryKey: ['/api/customers', id] });
+                  toast({
+                    title: "Thành công",
+                    description: "Vị trí khách hàng đã được cập nhật",
+                  });
+                } catch (error) {
+                  toast({
+                    title: "Lỗi",
+                    description: "Không thể cập nhật vị trí",
+                    variant: "destructive",
+                  });
+                }
+              }}
+              height="400px"
+            />
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Web Analytics & Tracking Collapsible Card */}
       <Collapsible open={webAnalyticsOpen} onOpenChange={setWebAnalyticsOpen}>
@@ -1780,6 +2013,245 @@ export default function CustomerDetails() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Field Visibility Settings Dialog */}
+      <Dialog open={isSettingsDialogOpen} onOpenChange={setIsSettingsDialogOpen}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Settings className="h-5 w-5" />
+              Cài đặt hiển thị trường thông tin
+            </DialogTitle>
+            <DialogDescription>
+              Tùy chỉnh các trường thông tin hiển thị trên trang chi tiết khách hàng
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-6 py-4">
+            {/* Thông tin cơ bản */}
+            <div className="space-y-4">
+              <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
+                <User className="h-4 w-4" />
+                Thông tin cơ bản
+              </h3>
+              <div className="space-y-3 pl-6">
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="avatarNameEmail" className="text-sm font-normal cursor-pointer">
+                    Avatar + Tên + Email
+                  </Label>
+                  <Switch
+                    id="avatarNameEmail"
+                    checked={fieldVisibility.avatarNameEmail}
+                    onCheckedChange={() => toggleField('avatarNameEmail')}
+                  />
+                </div>
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="customerRole" className="text-sm font-normal cursor-pointer">
+                    Vai trò
+                  </Label>
+                  <Switch
+                    id="customerRole"
+                    checked={fieldVisibility.customerRole}
+                    onCheckedChange={() => toggleField('customerRole')}
+                  />
+                </div>
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="membershipTier" className="text-sm font-normal cursor-pointer">
+                    Hạng thành viên
+                  </Label>
+                  <Switch
+                    id="membershipTier"
+                    checked={fieldVisibility.membershipTier}
+                    onCheckedChange={() => toggleField('membershipTier')}
+                  />
+                </div>
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="phone" className="text-sm font-normal cursor-pointer">
+                    Số điện thoại
+                  </Label>
+                  <Switch
+                    id="phone"
+                    checked={fieldVisibility.phone}
+                    onCheckedChange={() => toggleField('phone')}
+                  />
+                </div>
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="joinDate" className="text-sm font-normal cursor-pointer">
+                    Ngày tham gia
+                  </Label>
+                  <Switch
+                    id="joinDate"
+                    checked={fieldVisibility.joinDate}
+                    onCheckedChange={() => toggleField('joinDate')}
+                  />
+                </div>
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="registrationSource" className="text-sm font-normal cursor-pointer">
+                    Nguồn đăng ký
+                  </Label>
+                  <Switch
+                    id="registrationSource"
+                    checked={fieldVisibility.registrationSource}
+                    onCheckedChange={() => toggleField('registrationSource')}
+                  />
+                </div>
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="status" className="text-sm font-normal cursor-pointer">
+                    Trạng thái
+                  </Label>
+                  <Switch
+                    id="status"
+                    checked={fieldVisibility.status}
+                    onCheckedChange={() => toggleField('status')}
+                  />
+                </div>
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="lastOrderDate" className="text-sm font-normal cursor-pointer">
+                    Đơn hàng gần nhất
+                  </Label>
+                  <Switch
+                    id="lastOrderDate"
+                    checked={fieldVisibility.lastOrderDate}
+                    onCheckedChange={() => toggleField('lastOrderDate')}
+                  />
+                </div>
+              </div>
+            </div>
+
+            <Separator />
+
+            {/* Tài chính */}
+            <div className="space-y-4">
+              <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
+                <DollarSign className="h-4 w-4" />
+                Tài chính
+              </h3>
+              <div className="space-y-3 pl-6">
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="totalSpent" className="text-sm font-normal cursor-pointer">
+                    Tổng chi tiêu
+                  </Label>
+                  <Switch
+                    id="totalSpent"
+                    checked={fieldVisibility.totalSpent}
+                    onCheckedChange={() => toggleField('totalSpent')}
+                  />
+                </div>
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="totalOrders" className="text-sm font-normal cursor-pointer">
+                    Số đơn hàng
+                  </Label>
+                  <Switch
+                    id="totalOrders"
+                    checked={fieldVisibility.totalOrders}
+                    onCheckedChange={() => toggleField('totalOrders')}
+                  />
+                </div>
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="totalDebt" className="text-sm font-normal cursor-pointer">
+                    Công nợ
+                  </Label>
+                  <Switch
+                    id="totalDebt"
+                    checked={fieldVisibility.totalDebt}
+                    onCheckedChange={() => toggleField('totalDebt')}
+                  />
+                </div>
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="creditLimit" className="text-sm font-normal cursor-pointer">
+                    Hạn mức tín dụng
+                  </Label>
+                  <Switch
+                    id="creditLimit"
+                    checked={fieldVisibility.creditLimit}
+                    onCheckedChange={() => toggleField('creditLimit')}
+                  />
+                </div>
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="pointsBalance" className="text-sm font-normal cursor-pointer">
+                    Điểm tích lũy
+                  </Label>
+                  <Switch
+                    id="pointsBalance"
+                    checked={fieldVisibility.pointsBalance}
+                    onCheckedChange={() => toggleField('pointsBalance')}
+                  />
+                </div>
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="pointsEarned" className="text-sm font-normal cursor-pointer">
+                    Tổng điểm đã kiếm
+                  </Label>
+                  <Switch
+                    id="pointsEarned"
+                    checked={fieldVisibility.pointsEarned}
+                    onCheckedChange={() => toggleField('pointsEarned')}
+                  />
+                </div>
+              </div>
+            </div>
+
+            <Separator />
+
+            {/* Địa chỉ */}
+            <div className="space-y-4">
+              <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
+                <MapPin className="h-4 w-4" />
+                Địa chỉ
+              </h3>
+              <div className="space-y-3 pl-6">
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="address" className="text-sm font-normal cursor-pointer">
+                    Địa chỉ 1
+                  </Label>
+                  <Switch
+                    id="address"
+                    checked={fieldVisibility.address}
+                    onCheckedChange={() => toggleField('address')}
+                  />
+                </div>
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="address2" className="text-sm font-normal cursor-pointer">
+                    Địa chỉ 2
+                  </Label>
+                  <Switch
+                    id="address2"
+                    checked={fieldVisibility.address2}
+                    onCheckedChange={() => toggleField('address2')}
+                  />
+                </div>
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="distanceFromShop" className="text-sm font-normal cursor-pointer">
+                    Khoảng cách từ shop
+                  </Label>
+                  <Switch
+                    id="distanceFromShop"
+                    checked={fieldVisibility.distanceFromShop}
+                    onCheckedChange={() => toggleField('distanceFromShop')}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex justify-end gap-2 pt-4 border-t">
+            <Button
+              variant="outline"
+              onClick={() => {
+                setFieldVisibility(DEFAULT_FIELD_VISIBILITY);
+                toast({
+                  title: "Đã đặt lại",
+                  description: "Tất cả trường đã được hiển thị",
+                });
+              }}
+            >
+              Đặt lại mặc định
+            </Button>
+            <Button onClick={() => setIsSettingsDialogOpen(false)}>
+              Đóng
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

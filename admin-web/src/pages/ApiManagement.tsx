@@ -1,3 +1,4 @@
+// API Management Dashboard - Cache-bust v2
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -12,7 +13,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { apiRequest } from '@/lib/queryClient';
-import { Search, Plus, Settings, BarChart, Power, PowerOff, Wrench, AlertTriangle, CheckCircle, XCircle, Timer, Users, Activity, RefreshCcw, Scan, Eye, Play, Code, TrendingUp, Shield, Clock, Database, Bolt, FileText, Bug, Monitor } from 'lucide-react';
+import { Search, Plus, Settings, BarChart, Power, PowerOff, AlertTriangle, CheckCircle, XCircle, Timer, Users, Activity, RotateCw, Eye, Play, Code, TrendingUp, Shield, Clock, Database, Bolt, FileText } from 'lucide-react';
 
 // Types
 interface ApiConfiguration {
@@ -85,34 +86,34 @@ export default function ApiManagement() {
 
   // Fetch API configurations
   const { data: configsData, isLoading, error } = useQuery<ApiConfigurationsResponse>({
-    queryKey: ['/api/api-configurations'],
+    queryKey: ['/api/api-management'],
     refetchInterval: 30000, // Refresh every 30 seconds for real-time updates
   });
 
   // Fetch statistics
   const { data: stats } = useQuery<ApiStats>({
-    queryKey: ['/api/api-configurations/stats/summary'],
+    queryKey: ['/api/api-management/stats/summary'],
     refetchInterval: 30000,
   });
 
   // Toggle API mutation
   const toggleApiMutation = useMutation({
     mutationFn: async ({ id, enabled }: { id: string; enabled: boolean }) => {
-      await apiRequest('POST', `/api/api-configurations/${id}/toggle`, { enabled });
+      await apiRequest('POST', `/api/api-management/${id}/toggle`, { enabled });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/api-configurations'] });
-      queryClient.invalidateQueries({ queryKey: ['/api/api-configurations/stats/summary'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/api-management'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/api-management/stats/summary'] });
     },
   });
 
   // Clear cache mutation
   const clearCacheMutation = useMutation({
     mutationFn: async () => {
-      await apiRequest('POST', '/api/api-configurations/cache/clear');
+      await apiRequest('POST', '/api/api-management/cache/clear');
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/api-configurations'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/api-management'] });
     },
   });
 
@@ -125,8 +126,8 @@ export default function ApiManagement() {
     onSuccess: (data) => {
       setScanResults(data);
       setShowScanResults(true);
-      queryClient.invalidateQueries({ queryKey: ['/api/api-configurations'] });
-      queryClient.invalidateQueries({ queryKey: ['/api/api-configurations/stats/summary'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/api-management'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/api-management/stats/summary'] });
     },
   });
 
@@ -230,7 +231,7 @@ export default function ApiManagement() {
 
   const getStatusBadge = (config: ApiConfiguration) => {
     if (config.maintenanceMode) {
-      return <Badge variant="outline" className="bg-warning/10 text-warning border-warning/20"><Wrench className="w-3 h-3 mr-1" />Maintenance</Badge>;
+      return <Badge variant="outline" className="bg-warning/10 text-warning border-warning/20"><Settings className="w-3 h-3 mr-1" />Maintenance</Badge>;
     }
     if (!config.isEnabled) {
       return <Badge variant="outline" className="bg-destructive/10 text-destructive border-destructive/20"><XCircle className="w-3 h-3 mr-1" />Disabled</Badge>;
@@ -278,7 +279,7 @@ export default function ApiManagement() {
             disabled={scanApisMutation.isPending}
             className="bg-blue-50 hover:bg-blue-100 text-blue-600 border-blue-200"
           >
-            <Scan className="w-4 h-4 mr-2" />
+            <Search className="w-4 h-4 mr-2" />
             {scanApisMutation.isPending ? 'Scanning...' : 'Scan APIs'}
           </Button>
           <Button 
@@ -286,7 +287,7 @@ export default function ApiManagement() {
             onClick={() => clearCacheMutation.mutate()}
             disabled={clearCacheMutation.isPending}
           >
-            <RefreshCcw className="w-4 h-4 mr-2" />
+            <RotateCw className="w-4 h-4 mr-2" />
             Clear Cache
           </Button>
           <Button onClick={() => setShowCreateDialog(true)}>
@@ -341,7 +342,7 @@ export default function ApiManagement() {
           <Card className="metric-card">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Maintenance Mode</CardTitle>
-              <Wrench className="h-4 w-4 text-activity-coral" />
+              <Settings className="h-4 w-4 text-activity-coral" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{stats.maintenance}</div>
@@ -548,7 +549,7 @@ export default function ApiManagement() {
         <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <Scan className="w-5 h-5 text-blue-600" />
+              <Search className="w-5 h-5 text-blue-600" />
               API Discovery Results
             </DialogTitle>
             <DialogDescription>
@@ -684,7 +685,7 @@ export default function ApiManagement() {
                 {/* Tabs */}
                 <div className="flex gap-1 mt-4 bg-gray-100 rounded-lg p-1">
                   {[
-                    { id: 'overview', label: 'Overview', icon: Monitor },
+                    { id: 'overview', label: 'Overview', icon: Activity },
                     { id: 'testing', label: 'API Testing', icon: Play },
                     { id: 'metrics', label: 'Metrics', icon: TrendingUp },
                     { id: 'logs', label: 'Logs', icon: FileText },
@@ -735,7 +736,7 @@ export default function ApiManagement() {
                       <Card className="border border-red-200 bg-red-50">
                         <CardContent className="p-4">
                           <div className="flex items-center gap-3">
-                            <Bug className="h-8 w-8 text-red-600" />
+                            <AlertTriangle className="h-8 w-8 text-red-600" />
                             <div>
                               <div className="text-2xl font-bold text-red-900">
                                 {selectedApi.errorCount}

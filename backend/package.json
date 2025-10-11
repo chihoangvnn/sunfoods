@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "license": "MIT",
   "scripts": {
-    "start": "node -r dotenv/config dist/index.js",
-    "build": "npx esbuild src/index.ts --bundle --platform=node --format=cjs --outdir=dist --external:@neondatabase/serverless --external:@google/genai --external:canvas --external:firebase-admin --external:bullmq --external:ioredis --external:bcrypt --external:lightningcss --external:vite",
-    "dev": "npm run build && node dist/index.js",
+    "start": "node dist/index.js",
+    "build": "tsc",
+    "dev": "tsx src/index.ts",
     "db:push": "drizzle-kit push"
   },
   "dependencies": {
@@ -42,14 +42,14 @@
     "passport-local": "^1.0.0",
     "path-to-regexp": "^8.3.0",
     "qrcode": "^1.5.4",
+    "tsx": "^4.19.2",
     "uuid": "^13.0.0",
     "vietnamese-lunar-calendar": "^0.0.6",
     "vite": "^7.1.9",
     "web-push": "^3.6.7",
     "ws": "^8.18.0",
     "zod": "^3.24.2",
-    "zod-validation-error": "^3.4.0",
-    "esbuild": "^0.25.0"
+    "zod-validation-error": "^3.4.0"
   },
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",
@@ -66,6 +66,7 @@
     "@types/web-push": "^3.6.4",
     "@types/ws": "^8.5.13",
     "drizzle-kit": "^0.30.4",
+    "esbuild": "^0.25.10",
     "typescript": "5.6.3"
   },
   "optionalDependencies": {

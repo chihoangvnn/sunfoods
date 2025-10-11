@@ -49,12 +49,12 @@ echo -e "${GREEN}✓ Permissions set${NC}"
 
 # Step 4: Update Nginx configuration
 echo -e "\n${YELLOW}[4/7] Updating Nginx configuration...${NC}"
-if [ -f "./nginx-production.conf" ]; then
-    cp ./nginx-production.conf /etc/nginx/sites-available/sunfoods
+if [ -f "./nginx.conf" ]; then
+    cp ./nginx.conf /etc/nginx/sites-available/sunfoods
     ln -sf /etc/nginx/sites-available/sunfoods /etc/nginx/sites-enabled/sunfoods
     nginx -t && echo -e "${GREEN}✓ Nginx config validated${NC}"
 else
-    echo -e "${YELLOW}⚠ nginx-production.conf not found, skipping${NC}"
+    echo -e "${YELLOW}⚠ nginx.conf not found, skipping${NC}"
 fi
 
 # Step 5: Clear browser cache headers
@@ -70,9 +70,9 @@ echo -e "${GREEN}✓ Nginx reloaded${NC}"
 
 # Step 7: Restart PM2 (optional - only if backend changes)
 echo -e "\n${YELLOW}[7/7] PM2 status check...${NC}"
-if [ -f "./ecosystem.production.js" ]; then
+if [ -f "./ecosystem.config.js" ]; then
     cd $BACKEND_DIR
-    pm2 restart ecosystem.production.js --update-env
+    pm2 restart ecosystem.config.js --update-env
     pm2 save
     echo -e "${GREEN}✓ PM2 restarted${NC}"
 else

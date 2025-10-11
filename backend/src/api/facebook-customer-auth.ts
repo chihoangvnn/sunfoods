@@ -1,9 +1,10 @@
 import { Router } from 'express';
 import { db } from '../db';
-import { customers, oauthConnections } from '../../shared/schema';
+import { customers, oauthConnections, oauthProviderSettings } from '../../shared/schema';
 import { eq, and } from 'drizzle-orm';
 import crypto from 'crypto';
 import { storage } from '../storage';
+import { decrypt } from '../utils/encryption';
 
 const router = Router();
 
@@ -25,8 +26,36 @@ setInterval(() => {
   });
 }, 600000);
 
-const FACEBOOK_APP_ID = process.env.FACEBOOK_APP_ID;
-const FACEBOOK_APP_SECRET = process.env.FACEBOOK_APP_SECRET;
+async function getFacebookCredentials() {
+  try {
+    const dbSettings = await db
+      .select()
+      .from(oauthProviderSettings)
+      .where(and(
+        eq(oauthProviderSettings.provider, 'facebook_login'),
+        eq(oauthProviderSettings.isActive, true)
+      ))
+      .limit(1);
+
+    if (dbSettings.length > 0) {
+      const settings = dbSettings[0];
+      console.log('✅ Using Facebook OAuth credentials from database');
+      return {
+        clientId: decrypt(settings.clientId),
+        clientSecret: decrypt(settings.clientSecret),
+      };
+    }
+  } catch (error) {
+    console.error('⚠️  Error fetching Facebook credentials from database:', error);
+  }
+
+  console.log('ℹ️  Using Facebook OAuth credentials from environment variables');
+  return {
+    clientId: process.env.FACEBOOK_APP_ID,
+    clientSecret: process.env.FACEBOOK_APP_SECRET,
+  };
+}
+
 const BASE_URL = process.env.REPLIT_DOMAIN 
   ? `https://${process.env.REPLIT_DOMAIN}` 
   : 'http://localhost:5000';
@@ -60,11 +89,12 @@ interface FacebookProfile {
 async function exchangeCodeForToken(code: string): Promise<FacebookTokens> {
   try {
     const redirectUri = `${BASE_URL}/api/auth/facebook-login/callback`;
+    const credentials = await getFacebookCredentials();
     
     const params = new URLSearchParams({
       code,
-      client_id: FACEBOOK_APP_ID!,
-      client_secret: FACEBOOK_APP_SECRET!,
+      client_id: credentials.clientId!,
+      client_secret: credentials.clientSecret!,
       redirect_uri: redirectUri,
     });
 
@@ -331,7 +361,9 @@ async function fillEmptyCustomerFields(customer: any, profile: FacebookProfile):
 
 router.get('/facebook-login', async (req, res) => {
   try {
-    if (!FACEBOOK_APP_ID || !FACEBOOK_APP_SECRET) {
+    const credentials = await getFacebookCredentials();
+    
+    if (!credentials.clientId || !credentials.clientSecret) {
       return res.status(500).json({ 
         error: 'Facebook OAuth chưa được cấu hình. Vui lòng liên hệ quản trị viên.' 
       });
@@ -349,7 +381,7 @@ router.get('/facebook-login', async (req, res) => {
     const scope = 'email,public_profile';
 
     const authUrl = `${FACEBOOK_AUTH_URL}?` +
-      `client_id=${encodeURIComponent(FACEBOOK_APP_ID)}&` +
+      `client_id=${encodeURIComponent(credentials.clientId)}&` +
       `redirect_uri=${encodeURIComponent(redirectUri)}&` +
       `scope=${encodeURIComponent(scope)}&` +
       `response_type=code&` +

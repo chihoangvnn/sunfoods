@@ -121,7 +121,7 @@ export function CategoryFAQTemplatesManagement({ className = "" }: CategoryFAQTe
   // Create new FAQ mutation
   const createFAQMutation = useMutation({
     mutationFn: async (faqData: { question: string; answer: string; category: string; priority: 'high' | 'medium' | 'low' }) => {
-      const response = await fetch('/api/faq-library', {
+      const response = await fetch('/api/faq-library/faqs', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -135,7 +135,7 @@ export function CategoryFAQTemplatesManagement({ className = "" }: CategoryFAQTe
       }
       
       const result = await response.json();
-      return result.data;
+      return result;
     },
     onSuccess: (newFAQ) => {
       // Invalidate FAQ library cache to refresh the list
@@ -219,10 +219,10 @@ export function CategoryFAQTemplatesManagement({ className = "" }: CategoryFAQTe
   const { data: faqLibrary = [] } = useQuery({
     queryKey: ['faqLibrary', 'active'],
     queryFn: async () => {
-      const response = await fetch('/api/faq-library?isActive=true&limit=100');
+      const response = await fetch('/api/faq-library/faqs?isActive=true&limit=100');
       if (!response.ok) throw new Error('Failed to fetch FAQ library');
       const result = await response.json();
-      return result.data || [];
+      return Array.isArray(result) ? result : (result.data || []);
     }
   });
 

@@ -1,0 +1,74 @@
+
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+root@sunfoods:/var/www/sun# cd /var/www/sun/backend
+root@sunfoods:/var/www/sun/backend# npm run build
+npm warn config ignoring workspace config at /var/www/sun/backend/.npmrc
+
+> backend@1.0.0 build
+> npx esbuild src/index.ts --bundle --platform=node --format=cjs --outdir=dist --external:@neondatabase/serverless --external:@google/genai --external:canvas --external:firebase-admin --external:bullmq --external:ioredis --external:bcrypt --external:lightningcss --external:vite
+
+npm warn config ignoring workspace config at /var/www/sun/backend/.npmrc
+✘ [ERROR] Could not resolve "express"
+
+    src/index.ts:1:62:
+      1 │ import express, { type Request, Response, NextFunction } from "express";
+        ╵                                                               ~~~~~~~~~
+
+  You can mark the path "express" as external to exclude it from the bundle, which will remove this
+  error and leave the unresolved path in the bundle.
+
+✘ [ERROR] Could not resolve "express-session"
+
+    src/index.ts:2:20:
+      2 │ import session from "express-session";
+        ╵                     ~~~~~~~~~~~~~~~~~
+
+  You can mark the path "express-session" as external to exclude it from the bundle, which will
+  remove this error and leave the unresolved path in the bundle.
+
+✘ [ERROR] Could not resolve "connect-pg-simple"
+
+    src/index.ts:3:28:
+      3 │ import ConnectPGSimple from "connect-pg-simple";
+        ╵                             ~~~~~~~~~~~~~~~~~~~
+
+  You can mark the path "connect-pg-simple" as external to exclude it from the bundle, which will
+  remove this error and leave the unresolved path in the bundle.
+
+✘ [ERROR] Could not resolve "cors"
+
+    src/index.ts:4:17:
+      4 │ import cors from "cors";
+        ╵                  ~~~~~~
+
+  You can mark the path "cors" as external to exclude it from the bundle, which will remove this
+  error and leave the unresolved path in the bundle.
+
+✘ [ERROR] Could not resolve "drizzle-orm"
+
+    src/services/scheduler.ts:3:38:
+      3 │ import { eq, and, lte, inArray } from "drizzle-orm";
+        ╵                                       ~~~~~~~~~~~~~
+
+  You can mark the path "drizzle-orm" as external to exclude it from the bundle, which will remove
+  this error and leave the unresolved path in the bundle.
+
+✘ [ERROR] Could not resolve "drizzle-orm"
+
+    src/services/analytics-scheduler.ts:3:40:
+      3 │ import { eq, and, lt, isNull, or } from "drizzle-orm";
+        ╵                                         ~~~~~~~~~~~~~
+
+  You can mark the path "drizzle-orm" as external to exclude it from the bundle, which will remove
+  this error and leave the unresolved path in the bundle.
+
+0 of 5 warnings and 6 of 288 errors shown (disable the message limit with --log-limit=0)
+npm error Lifecycle script `build` failed with error:
+npm error code 1
+npm error path /var/www/sun/backend
+npm error workspace backend@1.0.0
+npm error location /var/www/sun/backend
+npm error command failed
+npm error command sh -c npx esbuild src/index.ts --bundle --platform=node --format=cjs --outdir=dist --external:@neondatabase/serverless --external:@google/genai --external:canvas --external:firebase-admin --external:bullmq --external:ioredis --external:bcrypt --external:lightningcss --external:vite
+root@sunfoods:/var/www/sun/backend#

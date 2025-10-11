@@ -1,0 +1,86 @@
+~/workspace$ mkdir -p ~/.ssh
+flag provided but not defined: -x
+Usage: grep [-clFivnhqre] [FILE]...
+
+  -F    Match using fixed strings (shorthand)
+  -c    Just show counts
+  -count
+        Just show counts
+  -e string
+        Pattern to match (shorthand)
+  -files-with-matches
+        list only files
+  -fixed-strings
+        Match using fixed strings
+  -h    Suppress file name prefixes on output (shorthand)
+  -i    case-insensitive matching (shorthand)
+  -ignore-case
+        case-insensitive matching
+  -invert-match
+        Print only non-matching lines
+  -l    list only files (shorthand)
+  -line-number
+        Show line numbers
+  -n    Show line numbers (shorthand)
+  -no-filename
+        Suppress file name prefixes on output
+  -q    Don't print matches; exit on first match (shorthand)
+  -quiet
+        Don't print matches; exit on first match
+  -r    recursive
+  -recursive
+        recursive
+  -regexp string
+        Pattern to match
+  -s    Don't print matches; exit on first match (shorthand)
+  -silent
+        Don't print matches; exit on first match
+  -v    Print only non-matching lines (shorthand)
+~/workspace$ nano ~/.ssh/id_rsa
+nano: command not installed, but was located via Nix.
+package: nano  8.4  Small, user-friendly console text editor
+Would you like to run nano from Nix and add it to your project? [Yn]: y
+nano  8.4  Small, user-friendly console text editor
+Adding nano to .replit
+flag provided but not defined: -x
+Usage: grep [-clFivnhqre] [FILE]...
+
+  -F    Match using fixed strings (shorthand)
+  -c    Just show counts
+  -count
+        Just show counts
+  -e string
+        Pattern to match (shorthand)
+  -files-with-matches
+        list only files
+  -fixed-strings
+        Match using fixed strings
+  -h    Suppress file name prefixes on output (shorthand)
+  -i    case-insensitive matching (shorthand)
+  -ignore-case
+        case-insensitive matching
+  -invert-match
+        Print only non-matching lines
+  -l    list only files (shorthand)
+  -line-number
+        Show line numbers
+  -n    Show line numbers (shorthand)
+  -no-filename
+        Suppress file name prefixes on output
+  -q    Don't print matches; exit on first match (shorthand)
+  -quiet
+        Don't print matches; exit on first match
+  -r    recursive
+  -recursive
+        recursive
+  -regexp string
+        Pattern to match
+  -s    Don't print matches; exit on first match (shorthand)
+  -silent
+        Don't print matches; exit on first match
+  -v    Print only non-matching lines (shorthand)
+~/workspace$ chmod 600 ~/.ssh/id_rsa
+~/workspace$ chmod 700 ~/.ssh
+~/workspace$ ssh root@sunfoods.vn
+2025/10/11 04:19:50 known hosts:open /home/runner/.ssh/known_hosts: no such file or directory
+~/workspace$ 

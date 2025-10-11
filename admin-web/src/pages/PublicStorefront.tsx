@@ -3,6 +3,11 @@ import { useParams } from "wouter";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Minus, Plus, ShoppingCart, Phone, Mail, MapPin, Star, Heart, X, Trash2, Truck, Package, Clock } from "lucide-react";
 import ChatbotWidget from "@/components/ChatbotWidget";
+import { MobileHeader } from "@/components/MobileHeader";
+import { DesktopHeader } from "@/components/DesktopHeader";
+import { ImageSlider } from "@/components/ImageSlider";
+import { ProductModal } from "@/components/ProductModal";
+import { StorefrontBottomNav } from "@/components/StorefrontBottomNav";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -11,6 +16,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/componen
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
+import { useResponsive } from "@/hooks/use-mobile";
 import { apiRequest } from "@/lib/queryClient";
 
 interface StorefrontData {
@@ -30,6 +36,9 @@ interface StorefrontData {
     price: string;
     image: string;
     category: string;
+    stock?: number;
+    short_description?: string;
+    status?: string;
   }>;
   storefrontConfigId: string;
 }
@@ -61,10 +70,23 @@ interface SearchResult {
   recentAddress: string | null;
 }
 
+interface ShopSettings {
+  heroSlider?: Array<{
+    type?: 'image' | 'video';
+    url: string;
+    alt?: string;
+    thumbnail?: string;
+    link?: string;
+    buttonText?: string;
+    showButton?: boolean;
+  }>;
+}
+
 export default function PublicStorefront() {
   const { name } = useParams<{ name: string }>();
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const { isMobile, isTablet, isDesktop } = useResponsive();
   
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -88,6 +110,13 @@ export default function PublicStorefront() {
   
   // Affiliate tracking state
   const [affiliateCode, setAffiliateCode] = useState<string | null>(null);
+  
+  // Mobile navigation state
+  const [activeTab, setActiveTab] = useState('home');
+  
+  // Product modal state
+  const [selectedProduct, setSelectedProduct] = useState<any>(null);
+  const [searchQuery, setSearchQuery] = useState('');
 
   // Parse URL parameters for affiliate code on component mount
   useEffect(() => {
@@ -95,12 +124,10 @@ export default function PublicStorefront() {
     const refCode = urlParams.get('ref');
     
     if (refCode) {
-      // Store in localStorage for session persistence
       localStorage.setItem('affiliateRef', refCode);
       setAffiliateCode(refCode);
       console.log(`🔗 Affiliate code captured: ${refCode}`);
     } else {
-      // Check if there's an existing affiliate code in localStorage
       const existingRef = localStorage.getItem('affiliateRef');
       if (existingRef) {
         setAffiliateCode(existingRef);
@@ -124,6 +151,22 @@ export default function PublicStorefront() {
     enabled: !!name
   });
 
+  // Fetch shop settings for hero slider
+  const { data: shopSettings } = useQuery({
+    queryKey: ['/api/shop-info/public'],
+    queryFn: async () => {
+      try {
+        const response = await fetch('/api/shop-info/public');
+        if (!response.ok) throw new Error('Failed to fetch shop settings');
+        const data = await response.json();
+        return data as ShopSettings;
+      } catch (error) {
+        console.error('Shop settings error:', error);
+        return null;
+      }
+    }
+  });
+
   // Cart functions
   const addToCart = (product: StorefrontData["products"][0]) => {
     const existingItem = cart.find(item => item.productId === product.id);
@@ -134,7 +177,6 @@ export default function PublicStorefront() {
           ? { ...item, quantity: Math.round((item.quantity + 0.1) * 100) / 100 }
           : item
       ));
-      // Show top notification instead of toast
       setCartNotification({
         show: true, 
         message: `Tăng ${product.name} lên ${Math.round((existingItem.quantity + 0.1) * 100) / 100}kg`
@@ -149,7 +191,6 @@ export default function PublicStorefront() {
         image: product.image,
         category: product.category
       }]);
-      // Show top notification instead of toast
       setCartNotification({
         show: true, 
         message: `Đã thêm ${product.name} - 0.1kg vào giỏ hàng`
@@ -200,8 +241,8 @@ export default function PublicStorefront() {
     
     if (deliveryType === 'local_delivery') {
       return {
-        title: '🚚 Giao hàng quanh thị trần',
-        description: 'Giao hàng trong ngày, khu vực thị trần và lân cận',
+        title: '🚚 Giao hàng quanh thị trấn',
+        description: 'Giao hàng trong ngày, khu vực thị trấn và lân cận',
         timeInfo: isFreeTime ? '🆓 FREE SHIP hiện tại!' : 'FREE SHIP vào lúc 11:00 và 17:00',
         isFree: isFreeTime,
         estimatedTime: '2-4 giờ'
@@ -231,7 +272,6 @@ export default function PublicStorefront() {
       const results: SearchResult[] = await response.json();
       setSearchResults(results);
       
-      // Auto-select if exactly one result
       if (results.length === 1) {
         setSelectedMember(results[0]);
         setCustomerInfo({
@@ -257,21 +297,17 @@ export default function PublicStorefront() {
   const handlePhoneChange = (value: string) => {
     setCustomerInfo({...customerInfo, phone: value});
     
-    // Clear existing timer
     if (searchDebounceTimer) {
       clearTimeout(searchDebounceTimer);
     }
     
-    // Reset member selection when phone changes
     if (selectedMember && selectedMember.phone !== value) {
       setSelectedMember(null);
       setSearchResults([]);
     }
     
-    // Normalize phone to digits only
     const phoneDigits = value.replace(/\D/g, '');
     
-    // Set new debounced timer
     const timer = setTimeout(() => {
       if (phoneDigits.length >= 3) {
         searchCustomers(phoneDigits);
@@ -381,6 +417,25 @@ export default function PublicStorefront() {
     orderMutation.mutate(orderData);
   };
 
+  // Handle tab changes from bottom nav
+  const handleTabChange = (tab: string) => {
+    setActiveTab(tab);
+    if (tab === 'cart') {
+      setIsCartOpen(true);
+    } else if (tab === 'home') {
+      setIsCartOpen(false);
+    }
+  };
+
+  // Filter products by search query
+  const filteredProducts = searchQuery.trim() 
+    ? (storefrontData as StorefrontData)?.products.filter(product => 
+        product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        product.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        product.category.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    : (storefrontData as StorefrontData)?.products;
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-green-50 to-white flex items-center justify-center">
@@ -410,60 +465,50 @@ export default function PublicStorefront() {
     );
   }
 
-  return (
-    <div className="min-h-screen bg-gradient-to-b from-green-50 to-white">
-      {/* Header */}
-      <header className="bg-white/95 backdrop-blur-sm sticky top-0 z-50 border-b border-green-100">
-        <div className="container mx-auto px-4 py-3">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-lg font-bold text-green-800" data-testid="text-storefront-name">
-                {(storefrontData as StorefrontData).contactInfo.businessName}
-              </h1>
-              <p className="text-sm text-green-600">Thực phẩm organic tươi ngon</p>
-            </div>
-            <div className="flex items-center gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                className="border-green-200 text-green-700 hover:bg-green-50"
-                data-testid="button-contact"
-              >
-                <Phone className="w-4 h-4 mr-1" />
-                {(storefrontData as StorefrontData).contactInfo.phone}
-              </Button>
-              <Button
-                onClick={() => setIsCartOpen(!isCartOpen)}
-                variant="outline"
-                size="sm"
-                className="border-green-200 text-green-700 hover:bg-green-50 relative"
-                data-testid="button-cart-toggle"
-              >
-                <ShoppingCart className="w-4 h-4 mr-1" />
-                Giỏ hàng
-                {getCartItemCount() > 0 && (
-                  <Badge className="absolute -top-2 -right-2 h-5 w-5 rounded-full p-0 text-xs bg-green-600">
-                    {getCartItemCount()}
-                  </Badge>
-                )}
-              </Button>
-            </div>
-          </div>
-        </div>
-      </header>
+  // Prepare hero slider images
+  const heroSlides = shopSettings?.heroSlider?.length 
+    ? shopSettings.heroSlider 
+    : [{
+        url: '',
+        type: 'image' as const,
+        alt: 'Storefront Banner'
+      }];
 
-      {/* Hero Section */}
-      <section className="bg-gradient-to-r from-green-500 to-green-600 text-white py-12">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-2xl md:text-3xl font-bold mb-4" data-testid="text-hero-title">
-            🌱 Thực phẩm Organic tươi ngon mỗi ngày
-          </h2>
-          <p className="text-green-100 mb-6 max-w-2xl mx-auto">
-            Chúng tôi cung cấp những sản phẩm organic chất lượng cao, 
-            an toàn cho sức khỏe và thân thiện với môi trường.
-          </p>
-        </div>
-      </section>
+  // Convert products to ProductModal format
+  const convertedProducts = (storefrontData as StorefrontData).products.map(product => ({
+    id: product.id,
+    name: product.name,
+    price: parseFloat(product.price),
+    image: product.image,
+    category_id: product.category,
+    stock: product.stock || 100,
+    short_description: product.description,
+    status: product.status || 'active',
+    isNew: false,
+    isTopseller: false,
+    isFreeshipping: true,
+    isBestseller: false
+  }));
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Responsive Header */}
+      {isMobile || isTablet ? (
+        <MobileHeader
+          storeName={(storefrontData as StorefrontData).contactInfo.businessName}
+          cartCount={cart.length}
+          onCartClick={() => setIsCartOpen(true)}
+        />
+      ) : (
+        <DesktopHeader
+          storeName={(storefrontData as StorefrontData).contactInfo.businessName}
+          cartCount={cart.length}
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+          onCartClick={() => setIsCartOpen(true)}
+          onLogoClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+        />
+      )}
 
       {/* Cart Notification - Top */}
       {cartNotification.show && (
@@ -475,71 +520,122 @@ export default function PublicStorefront() {
         </div>
       )}
 
-      {/* Products Section */}
-      <section className="py-8">
+      {/* Hero Section with ImageSlider */}
+      <section className="relative">
+        {shopSettings?.heroSlider?.length ? (
+          <ImageSlider
+            slides={heroSlides}
+            autoplay={true}
+            autoplayDelay={5000}
+            className="w-full"
+          />
+        ) : (
+          <div 
+            className="bg-gradient-to-r from-green-500 to-green-600 text-white py-16 lg:py-24"
+            style={{ 
+              backgroundColor: (storefrontData as StorefrontData).primaryColor || '#16a34a'
+            }}
+          >
+            <div className="container mx-auto px-4 text-center">
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-4" data-testid="text-hero-title">
+                🌱 Thực phẩm Organic tươi ngon mỗi ngày
+              </h2>
+              <p className="text-green-100 mb-6 max-w-2xl mx-auto text-sm md:text-base">
+                Chúng tôi cung cấp những sản phẩm organic chất lượng cao, 
+                an toàn cho sức khỏe và thân thiện với môi trường.
+              </p>
+            </div>
+          </div>
+        )}
+      </section>
+
+      {/* Products Section with Modern Card Layout */}
+      <section className={`py-6 lg:py-8 ${isMobile ? 'pb-24' : ''}`}>
         <div className="container mx-auto px-4">
-          <h3 className="text-xl font-semibold text-green-800 mb-6" data-testid="text-products-title">
+          <h3 className="text-xl lg:text-2xl font-semibold text-green-800 mb-6" data-testid="text-products-title">
             Sản phẩm nổi bật
           </h3>
           
-          {/* Product grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {(storefrontData as StorefrontData).products.map((product) => (
-              <Card 
-                key={product.id}
-                className="hover:shadow-lg transition-shadow border-green-100 hover-elevate"
-                data-testid={`card-product-${product.id}`}
-              >
-                <CardContent className="p-4">
-                  <div className="aspect-square mb-4 bg-green-50 rounded-lg overflow-hidden">
-                    <img
-                      src={product.image || '/placeholder-organic.jpg'}
-                      alt={product.name}
-                      className="w-full h-full object-cover"
-                      data-testid={`img-product-${product.id}`}
-                    />
-                  </div>
-                  
-                  <Badge 
-                    variant="secondary" 
-                    className="mb-2 bg-green-100 text-green-800"
-                    data-testid={`badge-category-${product.id}`}
-                  >
-                    {product.category}
-                  </Badge>
-                  
-                  <h4 className="font-semibold text-gray-800 mb-2" data-testid={`text-product-name-${product.id}`}>
-                    {product.name}
-                  </h4>
-                  
-                  <p className="text-sm text-gray-600 mb-3 line-clamp-2" data-testid={`text-product-description-${product.id}`}>
-                    {product.description}
-                  </p>
-                  
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="text-lg font-bold text-green-600" data-testid={`text-product-price-${product.id}`}>
-                      {parseInt(product.price).toLocaleString('vi-VN')}đ/kg
-                    </span>
-                    <div className="flex items-center text-yellow-500">
-                      <Star className="w-4 h-4 fill-current" />
-                      <span className="text-sm ml-1">4.8</span>
+          {/* Product grid - Mobile first responsive */}
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-4 lg:gap-6">
+            {filteredProducts?.map((product) => {
+              const convertedProduct = convertedProducts.find(p => p.id === product.id);
+              return (
+                <Card 
+                  key={product.id}
+                  className="group hover:shadow-xl transition-all duration-300 border-gray-200 hover:border-green-300 cursor-pointer overflow-hidden"
+                  data-testid={`card-product-${product.id}`}
+                  onClick={() => setSelectedProduct(convertedProduct)}
+                >
+                  <CardContent className="p-2 md:p-3 lg:p-4">
+                    <div className="relative aspect-square mb-2 md:mb-3 bg-gray-100 rounded-lg overflow-hidden">
+                      <img
+                        src={product.image || '/placeholder-organic.jpg'}
+                        alt={product.name}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                        data-testid={`img-product-${product.id}`}
+                      />
+                      <Badge 
+                        className="absolute top-2 left-2 bg-green-500 text-white text-xs"
+                      >
+                        Mới
+                      </Badge>
                     </div>
-                  </div>
-                  
-                  <Button
-                    onClick={() => addToCart(product)}
-                    className="w-full bg-green-600 hover:bg-green-700 text-white"
-                    data-testid={`button-add-cart-${product.id}`}
-                  >
-                    <ShoppingCart className="w-4 h-4 mr-2" />
-                    Thêm vào giỏ hàng
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
+                    
+                    <h4 className="font-semibold text-gray-800 mb-1 text-sm md:text-base line-clamp-2" data-testid={`text-product-name-${product.id}`}>
+                      {product.name}
+                    </h4>
+                    
+                    <p className="text-xs text-gray-500 mb-2 line-clamp-1">
+                      {product.category}
+                    </p>
+                    
+                    <div className="flex items-center justify-between mb-2 md:mb-3">
+                      <span className="text-base md:text-lg font-bold text-green-600" data-testid={`text-product-price-${product.id}`}>
+                        {parseInt(product.price).toLocaleString('vi-VN')}đ
+                      </span>
+                      <div className="flex items-center text-yellow-500">
+                        <Star className="w-3 h-3 md:w-4 md:h-4 fill-current" />
+                        <span className="text-xs md:text-sm ml-1">4.8</span>
+                      </div>
+                    </div>
+                    
+                    <Button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        addToCart(product);
+                      }}
+                      className="w-full bg-green-600 hover:bg-green-700 text-white text-xs md:text-sm py-2"
+                      data-testid={`button-add-cart-${product.id}`}
+                    >
+                      <ShoppingCart className="w-3 h-3 md:w-4 md:h-4 mr-1 md:mr-2" />
+                      <span className="hidden md:inline">Thêm vào giỏ</span>
+                      <span className="md:hidden">Thêm</span>
+                    </Button>
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
         </div>
       </section>
+
+      {/* Product Modal */}
+      <ProductModal
+        product={selectedProduct}
+        isOpen={!!selectedProduct}
+        onClose={() => setSelectedProduct(null)}
+        onAddToCart={(product) => {
+          const originalProduct = (storefrontData as StorefrontData).products.find(p => p.id === product.id);
+          if (originalProduct) {
+            addToCart(originalProduct);
+          }
+        }}
+        cart={cart.map(item => ({
+          product: convertedProducts.find(p => p.id === item.productId)!,
+          quantity: item.quantity
+        }))}
+      />
 
       {/* Cart Sidebar */}
       {isCartOpen && (
@@ -596,7 +692,7 @@ export default function PublicStorefront() {
 
               {/* Customer Info */}
               <div className="space-y-3">
-                {/* Phone Input - Always visible */}
+                {/* Phone Input */}
                 <div>
                   <Label htmlFor="customerPhoneSearch">Số điện thoại *</Label>
                   <Input
@@ -628,348 +724,206 @@ export default function PublicStorefront() {
                               <p className="text-xs text-blue-600">Thành viên VIP</p>
                             </div>
                           </div>
-                          
-                          <div className="space-y-1">
-                            <p className="text-xs text-blue-700">
-                              <span className="font-medium">SĐT:</span> {selectedMember.phone}
-                            </p>
-                            
+                          <div className="space-y-2">
+                            <div className="flex items-center gap-2 text-sm text-gray-600">
+                              <Phone className="w-4 h-4 text-blue-500" />
+                              <span>{selectedMember.phone}</span>
+                            </div>
+                            {selectedMember.email && (
+                              <div className="flex items-center gap-2 text-sm text-gray-600">
+                                <Mail className="w-4 h-4 text-blue-500" />
+                                <span>{selectedMember.email}</span>
+                              </div>
+                            )}
                             {selectedMember.recentAddress && (
-                              <p className="text-xs text-blue-700">
-                                <span className="font-medium">Địa chỉ:</span> ...{selectedMember.recentAddress.slice(-20)}
-                              </p>
+                              <div className="flex items-start gap-2 text-sm text-gray-600">
+                                <MapPin className="w-4 h-4 text-blue-500 mt-0.5" />
+                                <span className="flex-1">{selectedMember.recentAddress}</span>
+                              </div>
                             )}
                           </div>
                         </div>
-                        
-                        {selectedMember.recentAddress && (
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            className="text-xs ml-3 border-blue-300 text-blue-700 hover:bg-blue-100"
-                            onClick={() => setIsEditingAddress(!isEditingAddress)}
-                            data-testid="button-edit-address"
-                          >
-                            {isEditingAddress ? "Hủy" : "Sửa địa chỉ"}
-                          </Button>
-                        )}
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => {
+                            setSelectedMember(null);
+                            setCustomerInfo({
+                              ...customerInfo,
+                              name: '',
+                              email: '',
+                              address: ''
+                            });
+                          }}
+                          className="text-blue-600 hover:text-blue-800 hover:bg-blue-100"
+                        >
+                          <X className="w-4 h-4" />
+                        </Button>
                       </div>
-                      
-                      {!selectedMember.recentAddress && (
-                        <p className="text-xs text-blue-600 mt-2 bg-blue-100 p-2 rounded">
-                          Chưa có địa chỉ - vui lòng nhập địa chỉ giao hàng bên dưới
-                        </p>
-                      )}
                     </div>
                   )}
-                  {searchResults.length > 1 && (
-                    <div className="mt-2 p-2 bg-yellow-50 rounded-lg border border-yellow-200" data-testid="text-multiple-members">
-                      <p className="text-sm text-yellow-800">
-                        Tìm thấy {searchResults.length} member. Nhập thêm số để chính xác hơn.
-                      </p>
-                    </div>
-                  )}
-                  {searchResults.length === 0 && customerInfo.phone.replace(/\D/g, '').length >= 3 && !isSearching && (
-                    <div className="mt-2 p-4 bg-gradient-to-r from-emerald-50 to-green-50 rounded-xl border-2 border-emerald-200 shadow-sm" data-testid="card-new-customer">
-                      <div className="flex items-start gap-3">
-                        <div className="w-10 h-10 bg-gradient-to-r from-emerald-500 to-green-500 rounded-full flex items-center justify-center flex-shrink-0 shadow-md">
-                          <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                          </svg>
-                        </div>
-                        <div>
-                          <p className="text-lg font-bold text-emerald-800">
-                            Chào mừng khách hàng mới!
-                          </p>
-                          <p className="text-sm text-emerald-700 mt-1 font-medium">
-                            Điền thông tin để trở thành thành viên VIP
-                          </p>
-                          <p className="text-xs text-emerald-600 mt-1">
-                            Tự động tạo tài khoản thành viên sau khi hoàn tất đơn hàng
-                          </p>
-                        </div>
-                      </div>
+                  {!selectedMember && searchResults.length > 1 && (
+                    <div className="mt-2 max-h-48 overflow-y-auto border border-gray-200 rounded-lg">
+                      {searchResults.map(member => (
+                        <button
+                          key={member.id}
+                          onClick={() => {
+                            setSelectedMember(member);
+                            setCustomerInfo({
+                              ...customerInfo,
+                              name: member.name,
+                              email: member.email,
+                              phone: member.phone,
+                              address: member.recentAddress || customerInfo.address
+                            });
+                            setSearchResults([]);
+                          }}
+                          className="w-full p-3 hover:bg-gray-50 text-left border-b border-gray-100 last:border-0"
+                        >
+                          <p className="font-medium text-gray-800">{member.name}</p>
+                          <p className="text-sm text-gray-500">{member.phone}</p>
+                        </button>
+                      ))}
                     </div>
                   )}
                 </div>
 
-                {/* Name and Phone - Only show for new customers */}
-                {(searchResults.length === 0 && customerInfo.phone.replace(/\D/g, '').length >= 3 && !isSearching) && (
-                  <>
-                    <div>
-                      <Label htmlFor="customerName">Họ và tên *</Label>
-                      <Input
-                        id="customerName"
-                        name="customerName"
-                        value={customerInfo.name}
-                        onChange={(e) => setCustomerInfo({...customerInfo, name: e.target.value})}
-                        placeholder="Nhập họ và tên"
-                        autoComplete="name"
-                        autoCorrect="off"
-                        spellCheck={false}
-                        data-testid="input-customer-name"
-                      />
-                    </div>
-
-                    <div>
-                      <Label htmlFor="customerPhoneFull">Số điện thoại *</Label>
-                      <Input
-                        id="customerPhoneFull"
-                        name="customerPhoneFull"
-                        type="tel"
-                        value={customerInfo.phone}
-                        onChange={(e) => setCustomerInfo({...customerInfo, phone: e.target.value})}
-                        placeholder="Nhập số điện thoại đầy đủ"
-                        autoComplete="tel"
-                        autoCorrect="off"
-                        spellCheck={false}
-                        data-testid="input-customer-phone-full"
-                      />
-                    </div>
-                  </>
-                )}
-
-                {/* Address - Show if new customer OR member is editing OR member has no address */}
-                {((searchResults.length === 0 && customerInfo.phone.replace(/\D/g, '').length >= 3 && !isSearching) || 
-                  (selectedMember && (isEditingAddress || !selectedMember.recentAddress))) && (
-                  <div>
-                    <Label htmlFor="customerAddress">
-                      {selectedMember && selectedMember.recentAddress ? 'Nếu thay đổi địa chỉ vui lòng nhập thêm địa chỉ' : 'Địa chỉ giao hàng *'}
-                    </Label>
-                    <Textarea
-                      id="customerAddress"
-                      name="customerAddress"
-                      value={customerInfo.address}
-                      onChange={(e) => setCustomerInfo({...customerInfo, address: e.target.value})}
-                      placeholder={selectedMember ? "Nhập địa chỉ giao hàng mới" : "Nhập địa chỉ giao hàng"}
-                      rows={2}
-                      autoComplete="street-address"
-                      autoCorrect="off"
-                      spellCheck={false}
-                      data-testid="input-customer-address"
-                    />
-                    {selectedMember && isEditingAddress && (
-                      <p className="text-xs text-gray-500 mt-1">
-                        Địa chỉ cũ: {selectedMember.recentAddress}
-                      </p>
-                    )}
-                  </div>
-                )}
+                <div>
+                  <Label htmlFor="customerName">Họ và tên *</Label>
+                  <Input
+                    id="customerName"
+                    name="customerName"
+                    value={customerInfo.name}
+                    onChange={(e) => setCustomerInfo({...customerInfo, name: e.target.value})}
+                    placeholder="Nhập họ tên đầy đủ"
+                    data-testid="input-customer-name"
+                  />
+                </div>
 
                 <div>
-                  <Label htmlFor="notes">Ghi chú (tùy chọn)</Label>
+                  <Label htmlFor="customerEmail">Email</Label>
+                  <Input
+                    id="customerEmail"
+                    name="customerEmail"
+                    type="email"
+                    value={customerInfo.email}
+                    onChange={(e) => setCustomerInfo({...customerInfo, email: e.target.value})}
+                    placeholder="email@example.com"
+                    data-testid="input-customer-email"
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="customerAddress">Địa chỉ giao hàng *</Label>
                   <Textarea
-                    id="notes"
-                    name="orderNotes"
+                    id="customerAddress"
+                    name="customerAddress"
+                    value={customerInfo.address}
+                    onChange={(e) => setCustomerInfo({...customerInfo, address: e.target.value})}
+                    placeholder="Số nhà, đường, phường/xã, quận/huyện, tỉnh/thành phố"
+                    rows={3}
+                    data-testid="input-customer-address"
+                  />
+                </div>
+
+                <div>
+                  <Label>Hình thức giao hàng</Label>
+                  <div className="space-y-2 mt-2">
+                    <div
+                      onClick={() => setCustomerInfo({...customerInfo, deliveryType: 'local_delivery'})}
+                      className={`p-3 border rounded-lg cursor-pointer transition-colors ${
+                        customerInfo.deliveryType === 'local_delivery' 
+                          ? 'border-green-500 bg-green-50' 
+                          : 'border-gray-200 hover:border-green-300'
+                      }`}
+                    >
+                      <div className="flex items-start gap-3">
+                        <Truck className={`w-5 h-5 mt-0.5 ${
+                          customerInfo.deliveryType === 'local_delivery' ? 'text-green-600' : 'text-gray-500'
+                        }`} />
+                        <div className="flex-1">
+                          <p className="font-medium text-gray-800">{getDeliveryInfo('local_delivery').title}</p>
+                          <p className="text-sm text-gray-600">{getDeliveryInfo('local_delivery').description}</p>
+                          <p className="text-xs text-green-600 mt-1">{getDeliveryInfo('local_delivery').timeInfo}</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div
+                      onClick={() => setCustomerInfo({...customerInfo, deliveryType: 'cod_shipping'})}
+                      className={`p-3 border rounded-lg cursor-pointer transition-colors ${
+                        customerInfo.deliveryType === 'cod_shipping' 
+                          ? 'border-green-500 bg-green-50' 
+                          : 'border-gray-200 hover:border-green-300'
+                      }`}
+                    >
+                      <div className="flex items-start gap-3">
+                        <Package className={`w-5 h-5 mt-0.5 ${
+                          customerInfo.deliveryType === 'cod_shipping' ? 'text-green-600' : 'text-gray-500'
+                        }`} />
+                        <div className="flex-1">
+                          <p className="font-medium text-gray-800">{getDeliveryInfo('cod_shipping').title}</p>
+                          <p className="text-sm text-gray-600">{getDeliveryInfo('cod_shipping').description}</p>
+                          <p className="text-xs text-gray-500 mt-1">{getDeliveryInfo('cod_shipping').timeInfo}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <Label htmlFor="customerNotes">Ghi chú</Label>
+                  <Textarea
+                    id="customerNotes"
+                    name="customerNotes"
                     value={customerInfo.notes}
                     onChange={(e) => setCustomerInfo({...customerInfo, notes: e.target.value})}
-                    placeholder="Ghi chú đặc biệt..."
+                    placeholder="Thêm ghi chú cho đơn hàng (tùy chọn)"
                     rows={2}
-                    autoComplete="off"
-                    autoCorrect="off"
-                    spellCheck={false}
-                    data-testid="input-order-notes"
+                    data-testid="input-customer-notes"
                   />
                 </div>
               </div>
 
-              <Separator />
-
-              {/* Delivery Type Selection */}
-              <div>
-                <Label>Hình thức giao hàng</Label>
-                <div className="mt-3 space-y-3">
-                  {/* Local Delivery Option */}
-                  <div
-                    className={`relative p-4 border rounded-lg cursor-pointer transition-all hover-elevate ${
-                      customerInfo.deliveryType === 'local_delivery'
-                        ? 'border-green-500 bg-green-50 ring-2 ring-green-200'
-                        : 'border-gray-200 bg-white'
-                    }`}
-                    onClick={() => setCustomerInfo({...customerInfo, deliveryType: 'local_delivery'})}
-                    data-testid="button-delivery-local"
-                  >
-                    <div className="flex items-start gap-3">
-                      <div className="flex-shrink-0 mt-1">
-                        <div className={`w-4 h-4 rounded-full border-2 ${
-                          customerInfo.deliveryType === 'local_delivery'
-                            ? 'border-green-500 bg-green-500'
-                            : 'border-gray-300'
-                        }`}>
-                          {customerInfo.deliveryType === 'local_delivery' && (
-                            <div className="w-full h-full rounded-full bg-white scale-50"></div>
-                          )}
-                        </div>
-                      </div>
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-1">
-                          <Truck className="w-5 h-5 text-green-600" />
-                          <span className="font-semibold text-gray-800">
-                            {getDeliveryInfo('local_delivery').title}
-                          </span>
-                          {getDeliveryInfo('local_delivery').isFree && (
-                            <Badge className="bg-green-600 hover:bg-green-700 text-white text-xs px-2 py-1">
-                              FREE SHIP
-                            </Badge>
-                          )}
-                        </div>
-                        <p className="text-sm text-gray-600 mb-2">
-                          {getDeliveryInfo('local_delivery').description}
-                        </p>
-                        <div className="flex items-center gap-4 text-xs">
-                          <div className="flex items-center gap-1 text-green-600">
-                            <Clock className="w-3 h-3" />
-                            <span>Thời gian: {getDeliveryInfo('local_delivery').estimatedTime}</span>
-                          </div>
-                          <div className={`${
-                            getDeliveryInfo('local_delivery').isFree ? 'text-green-600 font-semibold' : 'text-gray-500'
-                          }`}>
-                            {getDeliveryInfo('local_delivery').timeInfo}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* COD Shipping Option */}
-                  <div
-                    className={`relative p-4 border rounded-lg cursor-pointer transition-all hover-elevate ${
-                      customerInfo.deliveryType === 'cod_shipping'
-                        ? 'border-green-500 bg-green-50 ring-2 ring-green-200'
-                        : 'border-gray-200 bg-white'
-                    }`}
-                    onClick={() => setCustomerInfo({...customerInfo, deliveryType: 'cod_shipping'})}
-                    data-testid="button-delivery-cod"
-                  >
-                    <div className="flex items-start gap-3">
-                      <div className="flex-shrink-0 mt-1">
-                        <div className={`w-4 h-4 rounded-full border-2 ${
-                          customerInfo.deliveryType === 'cod_shipping'
-                            ? 'border-green-500 bg-green-500'
-                            : 'border-gray-300'
-                        }`}>
-                          {customerInfo.deliveryType === 'cod_shipping' && (
-                            <div className="w-full h-full rounded-full bg-white scale-50"></div>
-                          )}
-                        </div>
-                      </div>
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-1">
-                          <Package className="w-5 h-5 text-blue-600" />
-                          <span className="font-semibold text-gray-800">
-                            {getDeliveryInfo('cod_shipping').title}
-                          </span>
-                        </div>
-                        <p className="text-sm text-gray-600 mb-2">
-                          {getDeliveryInfo('cod_shipping').description}
-                        </p>
-                        <div className="flex items-center gap-4 text-xs">
-                          <div className="flex items-center gap-1 text-blue-600">
-                            <Clock className="w-3 h-3" />
-                            <span>Thời gian: {getDeliveryInfo('cod_shipping').estimatedTime}</span>
-                          </div>
-                          <div className="text-gray-500">
-                            {getDeliveryInfo('cod_shipping').timeInfo}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  onClick={() => setIsCheckoutOpen(false)}
+                  className="flex-1"
+                  data-testid="button-cancel-checkout"
+                >
+                  Hủy
+                </Button>
+                <Button
+                  onClick={handleCheckout}
+                  disabled={orderMutation.isPending}
+                  className="flex-1 bg-green-600 hover:bg-green-700 text-white"
+                  data-testid="button-confirm-checkout"
+                >
+                  {orderMutation.isPending ? 'Đang xử lý...' : 'Xác nhận đặt hàng'}
+                </Button>
               </div>
             </CardContent>
-            <CardFooter className="flex gap-3">
-              <Button
-                variant="outline"
-                className="flex-1"
-                onClick={() => setIsCheckoutOpen(false)}
-                data-testid="button-cancel-checkout"
-              >
-                Hủy
-              </Button>
-              <Button
-                className="flex-1 bg-green-600 hover:bg-green-700"
-                onClick={handleCheckout}
-                disabled={orderMutation.isPending}
-                data-testid="button-submit-order"
-              >
-                {orderMutation.isPending ? 'Đang xử lý...' : 'Đặt hàng'}
-              </Button>
-            </CardFooter>
           </Card>
         </div>
       )}
 
-      {/* Contact Section */}
-      <section className="bg-green-600 text-white py-8 mt-12">
-        <div className="container mx-auto px-4">
-          <div className="text-center">
-            <h3 className="text-xl font-semibold mb-4" data-testid="text-contact-title">
-              Liên hệ với chúng tôi
-            </h3>
-            <div className="flex flex-col md:flex-row gap-4 justify-center items-center">
-              <div className="flex items-center gap-2">
-                <Phone className="w-5 h-5" />
-                <span data-testid="text-contact-phone">{(storefrontData as StorefrontData).contactInfo.phone}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Mail className="w-5 h-5" />
-                <span data-testid="text-contact-email">{(storefrontData as StorefrontData).contactInfo.email}</span>
-              </div>
-              {(storefrontData as StorefrontData).contactInfo.address && (
-                <div className="flex items-center gap-2">
-                  <MapPin className="w-5 h-5" />
-                  <span data-testid="text-contact-address">{(storefrontData as StorefrontData).contactInfo.address}</span>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* Mobile Bottom Navigation */}
+      {(isMobile || isTablet) && (
+        <StorefrontBottomNav
+          activeTab={activeTab}
+          onTabChange={handleTabChange}
+          cartCount={cart.length}
+        />
+      )}
 
       {/* Chatbot Widget */}
-      <ChatbotWidget 
-        pageType="storefront"
-        pageContext={{
-          storefrontName: (storefrontData as StorefrontData).name,
-          products: (storefrontData as StorefrontData).products.map(p => ({
-            id: p.id,
-            name: p.name,
-            price: p.price,
-            category: p.category
-          })),
-          cartItems: cart.map(item => ({
-            productId: item.productId,
-            name: item.name,
-            quantity: item.quantity
-          }))
-        }}
-        onAddToCart={(productId, quantity) => {
-          const product = (storefrontData as StorefrontData).products.find(p => p.id === productId);
-          if (product) {
-            addToCart(product);
-          }
-        }}
-        onCreateOrder={(orderData) => {
-          // Convert chatbot order to storefront order format
-          setCustomerInfo({
-            name: orderData.customerName || '',
-            phone: orderData.customerPhone || '',
-            email: orderData.customerEmail || '',
-            address: orderData.customerAddress || '',
-            notes: orderData.notes || '',
-            deliveryType: orderData.deliveryType || 'local_delivery'
-          });
-          
-          // Open checkout modal
-          setIsCheckoutOpen(true);
-        }}
-      />
+      <ChatbotWidget pageType="storefront" />
     </div>
   );
 }
 
-// Cart component
+// Cart Content Component
 interface CartContentProps {
   cart: CartItem[];
   updateCartQuantity: (productId: string, newQuantity: number) => void;

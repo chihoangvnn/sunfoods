@@ -1,0 +1,84 @@
+~/workspace$ touch ~/.ssh/known_hosts
+flag provided but not defined: -x
+Usage: grep [-clFivnhqre] [FILE]...
+
+  -F    Match using fixed strings (shorthand)
+  -c    Just show counts
+  -count
+        Just show counts
+  -e string
+        Pattern to match (shorthand)
+  -files-with-matches
+        list only files
+  -fixed-strings
+        Match using fixed strings
+  -h    Suppress file name prefixes on output (shorthand)
+  -i    case-insensitive matching (shorthand)
+  -ignore-case
+        case-insensitive matching
+  -invert-match
+        Print only non-matching lines
+  -l    list only files (shorthand)
+  -line-number
+        Show line numbers
+  -n    Show line numbers (shorthand)
+  -no-filename
+        Suppress file name prefixes on output
+  -q    Don't print matches; exit on first match (shorthand)
+  -quiet
+        Don't print matches; exit on first match
+  -r    recursive
+  -recursive
+        recursive
+  -regexp string
+        Pattern to match
+  -s    Don't print matches; exit on first match (shorthand)
+  -silent
+        Don't print matches; exit on first match
+  -v    Print only non-matching lines (shorthand)
+~/workspace$ chmod 644 ~/.ssh/known_hosts
+flag provided but not defined: -x
+Usage: grep [-clFivnhqre] [FILE]...
+
+  -F    Match using fixed strings (shorthand)
+  -c    Just show counts
+  -count
+        Just show counts
+  -e string
+        Pattern to match (shorthand)
+  -files-with-matches
+        list only files
+  -fixed-strings
+        Match using fixed strings
+  -h    Suppress file name prefixes on output (shorthand)
+  -i    case-insensitive matching (shorthand)
+  -ignore-case
+        case-insensitive matching
+  -invert-match
+        Print only non-matching lines
+  -l    list only files (shorthand)
+  -line-number
+        Show line numbers
+  -n    Show line numbers (shorthand)
+  -no-filename
+        Suppress file name prefixes on output
+  -q    Don't print matches; exit on first match (shorthand)
+  -quiet
+        Don't print matches; exit on first match
+  -r    recursive
+  -recursive
+        recursive
+  -regexp string
+        Pattern to match
+  -s    Don't print matches; exit on first match (shorthand)
+  -silent
+        Don't print matches; exit on first match
+  -v    Print only non-matching lines (shorthand)
+~/workspace$ ssh -v root@sunfoods.vn 2>&1 | head -50
+flag provided but not defined: -50
+Usage of head:
+  -c int
+        Print bytes of each of the specified files
+  -n int
+        Print count lines of each of the specified files
+~/workspace$ 

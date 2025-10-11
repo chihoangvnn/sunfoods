@@ -1,0 +1,32 @@
+root@sunfoods:/var/www/sun# pm2 restart backend-api
+Use --update-env to update environment variables
+[PM2] Applying action restartProcessId on app [backend-api](ids: [ 0 ])
+[PM2] [backend-api](0) ✓
+┌────┬────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name           │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ backend-api    │ default     │ 4.20.6  │ fork    │ 510846   │ 0s     │ 4    │ online    │ 0%       │ 18.6mb   │ root     │ disabled │
+└────┴────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+root@sunfoods:/var/www/sun# pm2 logs backend-api --lines 20
+[TAILING] Tailing last 20 lines for [backend-api] process (change the value with --lines option)
+/var/www/sun/logs/backend-error-0.log last 20 lines:
+0|backend- | 2025-10-11 16:40:02 +07:00: 🚨 SYSTEM HEALTH CRITICAL: [
+0|backend- | 2025-10-11 16:40:02 +07:00:   '🔴 WORKERS is unhealthy: Critical issue detected',
+0|backend- | 2025-10-11 16:40:02 +07:00:   '🔴 CRITICAL: No workers are online - Auto-posting system is offline'
+0|backend- | 2025-10-11 16:40:02 +07:00: ]
+0|backend- | 2025-10-11 16:41:02 +07:00: 🚨 SYSTEM HEALTH CRITICAL: [
+0|backend- | 2025-10-11 16:41:02 +07:00:   '🔴 WORKERS is unhealthy: Critical issue detected',
+0|backend- | 2025-10-11 16:41:02 +07:00:   '🔴 CRITICAL: No workers are online - Auto-posting system is offline'
+0|backend- | 2025-10-11 16:41:02 +07:00: ]
+0|backend- | 2025-10-11 16:42:02 +07:00: 🚨 SYSTEM HEALTH CRITICAL: [
+0|backend- | 2025-10-11 16:42:02 +07:00:   '🔴 WORKERS is unhealthy: Critical issue detected',
+0|backend- | 2025-10-11 16:42:02 +07:00:   '🔴 CRITICAL: No workers are online - Auto-posting system is offline'
+0|backend- | 2025-10-11 16:42:02 +07:00: ]
+0|backend- | 2025-10-11 16:43:02 +07:00: 🚨 SYSTEM HEALTH CRITICAL: [
+0|backend- | 2025-10-11 16:43:02 +07:00:   '🔴 WORKERS is unhealthy: Critical issue detected',
+0|backend- | 2025-10-11 16:43:02 +07:00:   '🔴 CRITICAL: No workers are online - Auto-posting system is offline'
+0|backend- | 2025-10-11 16:43:02 +07:00: ]
+0|backend- | 2025-10-11 16:44:02 +07:00: 🚨 SYSTEM HEALTH CRITICAL: [
+0|backend- | 2025-10-11 16:44:02 +07:00:   '🔴 WORKERS is unhealthy: Critical issue detected',
+0|backend- | 2025-10-11 16:44:02 +07:00:   '🔴 CRITICAL: No workers are online - Auto-posting system is offline'
+0|backend- | 2025-10-11 16:44:02 +07:00: ]

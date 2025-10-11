@@ -1,0 +1,71 @@
+curl http://localhost:5000/adminhoang
+^C
+root@sunfoods:/var/www/sun# curl http://localhost:5000/adminhoang
+curl: (7) Failed to connect to localhost port 5000 after 0 ms: Couldn't connect to server
+root@sunfoods:/var/www/sun# pm2 status
+┌────┬─────────────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name                    │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼─────────────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ backend                 │ default     │ 1.0.0   │ cluster │ 0        │ 0      │ 71   │ stopped   │ 0%       │ 0b       │ root     │ disabled │
+│ 3  │ ecosystem.production    │ default     │ 1.0.0   │ fork    │ 385786   │ 69s    │ 0    │ online    │ 0%       │ 49.4mb   │ root     │ disabled │
+│ 2  │ mobile                  │ default     │ 0.39.7  │ fork    │ 0        │ 0      │ 3    │ stopped   │ 0%       │ 0b       │ root     │ disabled │
+└────┴─────────────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+root@sunfoods:/var/www/sun# pm2 logs backend --lines 50 --nostream
+[TAILING] Tailing last 50 lines for [backend] process (change the value with --lines option)
+/root/.pm2/logs/backend-error-0.log last 50 lines:
+0|backend  |   'ℹ️ WORKERS: Workers are offline - Auto-posting requires deployed Vercel Functions'
+0|backend  | ]
+0|backend  | ⚠️ SYSTEM HEALTH DEGRADED: [
+0|backend  |   '🟡 WORKERS is degraded: Performance issues detected',
+0|backend  |   'ℹ️ WORKERS: Workers are offline - Auto-posting requires deployed Vercel Functions'
+0|backend  | ]
+0|backend  | ⚠️ SYSTEM HEALTH DEGRADED: [
+0|backend  |   '🟡 WORKERS is degraded: Performance issues detected',
+0|backend  |   'ℹ️ WORKERS: Workers are offline - Auto-posting requires deployed Vercel Functions'
+0|backend  | ]
+0|backend  | ⚠️ SYSTEM HEALTH DEGRADED: [
+0|backend  |   '🟡 WORKERS is degraded: Performance issues detected',
+0|backend  |   'ℹ️ WORKERS: Workers are offline - Auto-posting requires deployed Vercel Functions'
+0|backend  | ]
+0|backend  | ⚠️ SYSTEM HEALTH DEGRADED: [
+0|backend  |   '🟡 WORKERS is degraded: Performance issues detected',
+0|backend  |   'ℹ️ WORKERS: Workers are offline - Auto-posting requires deployed Vercel Functions'
+0|backend  | ]
+0|backend  | ⚠️ SYSTEM HEALTH DEGRADED: [
+0|backend  |   '🟡 WORKERS is degraded: Performance issues detected',
+0|backend  |   'ℹ️ WORKERS: Workers are offline - Auto-posting requires deployed Vercel Functions'
+0|backend  | ]
+0|backend  | ⚠️ SYSTEM HEALTH DEGRADED: [
+0|backend  |   '🟡 WORKERS is degraded: Performance issues detected',
+0|backend  |   'ℹ️ WORKERS: Workers are offline - Auto-posting requires deployed Vercel Functions'
+0|backend  | ]
+0|backend  | ⚠️ SYSTEM HEALTH DEGRADED: [
+0|backend  |   '🟡 WORKERS is degraded: Performance issues detected',
+0|backend  |   'ℹ️ WORKERS: Workers are offline - Auto-posting requires deployed Vercel Functions'
+0|backend  | ]
+0|backend  | ⚠️ SYSTEM HEALTH DEGRADED: [
+0|backend  |   '🟡 WORKERS is degraded: Performance issues detected',
+0|backend  |   'ℹ️ WORKERS: Workers are offline - Auto-posting requires deployed Vercel Functions'
+0|backend  | ]
+0|backend  | ⚠️ SYSTEM HEALTH DEGRADED: [
+0|backend  |   '🟡 WORKERS is degraded: Performance issues detected',
+0|backend  |   'ℹ️ WORKERS: Workers are offline - Auto-posting requires deployed Vercel Functions'
+0|backend  | ]
+0|backend  | ⚠️ SYSTEM HEALTH DEGRADED: [
+0|backend  |   '🟡 WORKERS is degraded: Performance issues detected',
+0|backend  |   'ℹ️ WORKERS: Workers are offline - Auto-posting requires deployed Vercel Functions'
+0|backend  | ]
+0|backend  | ⚠️ SYSTEM HEALTH DEGRADED: [
+0|backend  |   '🟡 WORKERS is degraded: Performance issues detected',
+0|backend  |   'ℹ️ WORKERS: Workers are offline - Auto-posting requires deployed Vercel Functions'
+0|backend  | ]
+0|backend  | ⚠️ SYSTEM HEALTH DEGRADED: [
+0|backend  |   '🟡 WORKERS is degraded: Performance issues detected',
+0|backend  |   'ℹ️ WORKERS: Workers are offline - Auto-posting requires deployed Vercel Functions'
+0|backend  | ]
+
+root@sunfoods:/var/www/sun# netstat -tlnp | grep node
+Could not find command-not-found database. Run 'sudo apt update' to populate it.
+netstat: command not found
+root@sunfoods:/var/www/sun# lsof -i -P -n | grep LISTEN | grep node
+root@sunfoods:/var/www/sun#

@@ -37,6 +37,7 @@ import { getHealthService } from './services/ipPoolHealthService';
 import { getRotationService } from './services/ipRotationService';
 import { getAssignmentService } from './services/ipAssignmentService';
 import bulkUploadRoutes from './routes/bulk-upload';
+import storeRoutes from './routes/stores';
 import facebookAppsRouter from './api/facebook-apps';
 import { requireAuth as requireReplitAuth, getCurrentUser, logout, replitAuth, upsertAuthUser } from './replitAuth';
 import productsRouter from './api/products';
@@ -47,6 +48,7 @@ import recommendationsRouter from './api/recommendations';
 import limitManagementRouter from './api/limit-management';
 import { cacheMiddleware, CacheKeys } from './middleware/cache';
 import { requirePOSAuth } from './middleware/pos-auth';
+import { requireAdminAuth as requireAdminAuthMiddleware } from './middleware/admin-auth';
 import automationRouter from './api/automation';
 import satellitesRouter from './api/satellites';
 import postsRouter from './api/posts';
@@ -104,6 +106,7 @@ import devLoginRouter from './api/dev-login';
 import adminVendorsRouter from './api/admin-vendors';
 import adminCampaignsRouter from './api/admin-campaigns';
 import adminOAuthRouter from './api/admin-oauth';
+import oauthProviderSettingsRouter from './api/oauth-provider-settings';
 import campaignsRouter from './api/campaigns';
 import vendorAuthRouter from './api/vendor-auth';
 import vendorDashboardRouter from './api/vendor-dashboard';
@@ -210,6 +213,7 @@ import templatesRouter from './api/templates';
 import rasaManagementRouter from './api/rasa-management';
 import rasaConversationsRouter from './api/rasa-conversations';
 import rasaIndustryRouter from './api/rasa-industry';
+import chatLogsRouter from './api/chat-logs';
 import pushNotificationsRouter from './api/push-notifications';
 import contentPreviewRouter from './api/content-preview';
 import scheduledPostsRouter from './api/scheduled-posts';
@@ -220,6 +224,9 @@ import fanpageMatchingRouter from './api/fanpage-matching';
 import invoiceRouter from './api/invoice';
 import invoiceTemplatesRouter from './api/invoice-templates';
 import { autoSendInvoiceIfNeeded } from './utils/auto-send-invoice';
+import contentLibraryRouter from './api/content-library';
+import vehiclesRouter from './api/vehicles';
+import apiManagementRouter from './api/api-management';
 
 // Facebook webhook event processing functions
 
@@ -249,7 +256,7 @@ async function callRasaAPI(message: string, sender: string, rasaUrl: string): Pr
       throw new Error(`RASA returned non-JSON response (${contentType}): ${text.substring(0, 200)}`);
     }
 
-    const data = await response.json();
+    const data = await response.json() as any[];
     console.log('✅ RASA response:', data);
     return data;
   } catch (error) {
@@ -368,7 +375,7 @@ async function sendFacebookMessage(
       throw new Error(`Facebook Send API error: ${response.status} - ${error}`);
     }
 
-    const result = await response.json();
+    const result = await response.json() as any;
     console.log('✅ Message sent to Facebook:', result);
     
     // Return Facebook message_id from API response
@@ -1330,7 +1337,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       res.json({
-        success: true,
         message: "CSV parsed successfully",
         extraHeaders: headerValidation.extra,
         ...result,
@@ -1515,7 +1521,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (!validation.success) {
         return res.status(400).json({
           error: "Invalid query parameters",
-          details: validation.error.errors
+          details: validation.error.issues
         });
       }
       
@@ -1569,7 +1575,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (!validation.success) {
         return res.status(400).json({
           error: "Invalid request body",
-          details: validation.error.errors
+          details: validation.error.issues
         });
       }
 
@@ -1633,7 +1639,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (!validation.success) {
         return res.status(400).json({
           error: "Invalid request body",
-          details: validation.error.errors
+          details: validation.error.issues
         });
       }
 
@@ -1695,7 +1701,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (!validation.success) {
         return res.status(400).json({
           error: "Invalid request body - itemIds must be a non-empty array of UUIDs",
-          details: validation.error.errors
+          details: validation.error.issues
         });
       }
 
@@ -1990,12 +1996,41 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Products API with role-based filtering
+  // Products API with role-based filtering and multi-store support
   app.get("/api/products", async (req, res) => {
     try {
       const { limit, categoryId, withCategories, search, offset } = req.query;
       const limitNum = limit ? parseInt(limit as string) : undefined;
       const offsetNum = offset ? parseInt(offset as string) : 0;
+      
+      // 🏪 Check if request has store context (multi-store filtering)
+      if ((req as any).store?.storeId) {
+        const { db } = await import('./db');
+        const { products, storeProducts } = await import('../shared/schema');
+        const { eq, and } = await import('drizzle-orm');
+        
+        const storeProductsList = await db
+          .select({
+            product: products,
+            storeProduct: storeProducts,
+          })
+          .from(storeProducts)
+          .innerJoin(products, eq(products.id, storeProducts.productId))
+          .where(
+            and(
+              eq(storeProducts.storeId, (req as any).store.storeId),
+              eq(storeProducts.isActive, true)
+            )
+          )
+          .orderBy(storeProducts.sortOrder);
+
+        const result = storeProductsList.map(({ product, storeProduct }) => ({
+          ...product,
+          price: storeProduct.priceOverride || product.price,
+        }));
+
+        return res.json(result);
+      }
       
       // 👥 Check customer role for VIP access to local products
       let isLocalAccess = false;
@@ -2345,6 +2380,96 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error deleting customer:", error);
       res.status(500).json({ error: "Internal server error" });
+    }
+  });
+
+  // 📍 Customer Profile Update with Location Fields
+  app.patch("/api/customer/profile", async (req, res) => {
+    try {
+      // Check authentication
+      if (!req.session || !req.session.userId) {
+        return res.status(401).json({ error: "Not authenticated" });
+      }
+
+      // Define validation schema for customer profile update
+      const customerProfileUpdateSchema = z.object({
+        phone: z.string().regex(/^0[0-9]{9}$/, "Phone must be valid Vietnamese format (10 digits starting with 0)").optional(),
+        address: z.string().optional(),
+        latitude: z.number().min(-90).max(90, "Latitude must be between -90 and 90").optional(),
+        longitude: z.number().min(-180).max(180, "Longitude must be between -180 and 180").optional(),
+        distanceFromShop: z.number().optional(),
+        routeDistanceFromShop: z.number().optional(),
+        district: z.string().optional(),
+      });
+
+      // Validate request body
+      const validatedData = customerProfileUpdateSchema.parse(req.body);
+
+      // Get customer by auth user ID
+      const customer = await storage.getCustomerByAuthUser(req.session.userId);
+      if (!customer) {
+        return res.status(404).json({ error: "Customer not found" });
+      }
+
+      // Prepare update data
+      const updateData: any = { ...validatedData };
+
+      // If latitude/longitude are provided, calculate route distance via ORS
+      if (validatedData.latitude && validatedData.longitude) {
+        const customerLat = validatedData.latitude;
+        const customerLon = validatedData.longitude;
+
+        const shopSettings = await storage.getShopSettings();
+        if (shopSettings?.shopLatitude && shopSettings?.shopLongitude) {
+          try {
+            // Create abort controller for 5s timeout
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 5000);
+
+            const orsResponse = await fetch('http://localhost:5000/api/admin/calculate-route-distance', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                lat1: parseFloat(shopSettings.shopLatitude),
+                lon1: parseFloat(shopSettings.shopLongitude),
+                lat2: customerLat,
+                lon2: customerLon,
+              }),
+              signal: controller.signal,
+            });
+
+            clearTimeout(timeoutId);
+
+            if (orsResponse.ok) {
+              const orsData = await orsResponse.json() as { distance: number | null };
+              updateData.routeDistanceFromShop = orsData.distance;
+            } else {
+              console.warn('ORS API returned error status:', orsResponse.status);
+              updateData.routeDistanceFromShop = null;
+            }
+          } catch (orsError) {
+            console.warn('Failed to calculate route distance via ORS:', orsError);
+            updateData.routeDistanceFromShop = null;
+          }
+        } else {
+          // Shop coordinates not configured, skip ORS calculation
+          updateData.routeDistanceFromShop = null;
+        }
+      }
+
+      // Update customer record
+      const updatedCustomer = await storage.updateCustomer(customer.id, updateData);
+      if (!updatedCustomer) {
+        return res.status(500).json({ error: "Failed to update profile" });
+      }
+
+      res.json(updatedCustomer);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ error: "Validation error", details: error.errors });
+      }
+      console.error("Error updating customer profile:", error);
+      res.status(500).json({ error: "Failed to update profile" });
     }
   });
 
@@ -2989,8 +3114,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post("/api/frontend-categories", async (req, res) => {
     try {
-      const { insertFrontendCategoryAssignmentSchema } = await import("@shared/schema");
-      const validation = insertFrontendCategoryAssignmentSchema.safeParse(req.body);
+      const { insertFrontendCategoryAssignmentsSchema } = await import("@shared/schema");
+      const validation = insertFrontendCategoryAssignmentsSchema.safeParse(req.body);
       
       if (!validation.success) {
         return res.status(400).json({ error: "Validation error", details: validation.error.errors });
@@ -3006,8 +3131,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.put("/api/frontend-categories/:id", async (req, res) => {
     try {
-      const { insertFrontendCategoryAssignmentSchema } = await import("@shared/schema");
-      const partialSchema = insertFrontendCategoryAssignmentSchema.partial();
+      const { insertFrontendCategoryAssignmentsSchema } = await import("@shared/schema");
+      const partialSchema = insertFrontendCategoryAssignmentsSchema.partial();
       const validation = partialSchema.safeParse(req.body);
       
       if (!validation.success) {
@@ -4297,7 +4422,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const updatedApp = await db.update(facebookApps)
         .set({ 
           groupId: groupId || null,
-          updatedAt: new Date()
+          updatedAt: new Date().toISOString()
         })
         .where(eq(facebookApps.id, id))
         .returning();
@@ -4382,12 +4507,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
 
       if (!fbResponse.ok) {
-        const error = await fbResponse.json();
+        const error = await fbResponse.json() as any;
         console.error('Facebook API error:', error);
         return res.status(400).json({ error: "Failed to send message" });
       }
 
-      const fbResult = await fbResponse.json();
+      const fbResult = await fbResponse.json() as any;
 
       // Store message in database
       const message = await storage.createFacebookMessage({
@@ -4451,12 +4576,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
 
       if (!fbResponse.ok) {
-        const error = await fbResponse.json();
+        const error = await fbResponse.json() as any;
         console.error('Facebook API error:', error);
         return res.status(400).json({ error: "Failed to send message" });
       }
 
-      const fbResult = await fbResponse.json();
+      const fbResult = await fbResponse.json() as any;
 
       // Store message in database
       const messageRecord = await storage.createFacebookMessage({
@@ -4546,7 +4671,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
 
       if (!fbResponse.ok) {
-        const error = await fbResponse.json();
+        const error = await fbResponse.json() as any;
         console.error('Facebook API error:', error);
         return res.status(400).json({ 
           error: "Failed to send message",
@@ -4554,7 +4679,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
 
-      const fbResult = await fbResponse.json();
+      const fbResult = await fbResponse.json() as any;
 
       // Find or create conversation
       let conversation = await storage.getFacebookConversationByParticipant(pageId, recipientId);
@@ -5550,7 +5675,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Facebook Webhook Verification (GET) and Event Processing (POST) - With App ID support
-  app.get("/api/webhooks/facebook/:appId?", async (req, res) => {
+  app.get("/api/webhooks/facebook/:appId", async (req, res) => {
     try {
       const { appId } = req.params;
       let VERIFY_TOKEN = process.env.FACEBOOK_VERIFY_TOKEN || "fb_webhook_verify_2024";
@@ -5604,7 +5729,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/webhooks/facebook/:appId?", async (req, res) => {
+  app.post("/api/webhooks/facebook/:appId", async (req, res) => {
     try {
       const { appId } = req.params;
       
@@ -5651,6 +5776,105 @@ export async function registerRoutes(app: Express): Promise<Server> {
               if (entry.messaging) {
                 for (const event of entry.messaging) {
                   processFacebookMessage(event, appId).catch(err => {
+                    console.error('❌ Async message processing failed:', err);
+                  });
+                }
+              }
+              
+              // Handle feed events (posts, comments)
+              if (entry.changes) {
+                for (const change of entry.changes) {
+                  processFacebookFeedEvent(change).catch(err => {
+                    console.error('❌ Async feed event processing failed:', err);
+                  });
+                }
+              }
+            }
+          }
+        } catch (error) {
+          console.error('❌ Async webhook processing error:', error);
+        }
+      });
+
+    } catch (error) {
+      console.error("Error processing Facebook webhook:", error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  });
+
+  // Fallback routes without appId (backward compatibility)
+  app.get("/api/webhooks/facebook", async (req, res) => {
+    try {
+      let VERIFY_TOKEN = process.env.FACEBOOK_VERIFY_TOKEN || "fb_webhook_verify_2024";
+      
+      // Fallback to old method (backward compatibility)
+      const facebookAccount = await storage.getSocialAccountByPlatform('facebook');
+      const webhookConfig = facebookAccount?.webhookSubscriptions?.[0];
+      // TEMP FIX: Use correct verify token until database logic is fixed
+      VERIFY_TOKEN = "verify_1758480641086";
+      
+      const mode = req.query['hub.mode'];
+      const token = req.query['hub.verify_token'];
+      const challenge = req.query['hub.challenge'];
+      
+      console.log('Webhook verification attempt (legacy):', { 
+        mode, 
+        token: token ? 'provided' : 'missing',
+        expectedToken: VERIFY_TOKEN ? 'found' : 'missing'
+      });
+
+      if (mode && token) {
+        if (mode === 'subscribe' && token === VERIFY_TOKEN) {
+          console.log('Facebook webhook verified successfully (legacy)');
+          res.status(200).send(challenge);
+        } else {
+          console.error('Facebook webhook verification failed. Token mismatch');
+          res.sendStatus(403);
+        }
+      } else {
+        console.error('Missing webhook verification parameters');
+        res.sendStatus(400);
+      }
+    } catch (error) {
+      console.error('Error during webhook verification:', error);
+      res.sendStatus(500);
+    }
+  });
+
+  app.post("/api/webhooks/facebook", async (req, res) => {
+    try {
+      console.log('Facebook webhook POST (legacy, no appId)');
+      
+      // Temporarily disable signature verification for testing
+      console.warn('Facebook webhook signature verification DISABLED for testing');
+      const signature = req.headers['x-hub-signature-256'] as string;
+      console.log('Signature received:', signature ? 'present' : 'missing');
+
+      // Parse the JSON body - handle both Buffer (from express.raw) and Object (from express.json)
+      let body;
+      if (Buffer.isBuffer(req.body)) {
+        // Body is raw Buffer from express.raw middleware
+        body = JSON.parse(req.body.toString());
+      } else if (typeof req.body === 'object') {
+        // Body is already parsed object from express.json middleware
+        body = req.body;
+      } else {
+        throw new Error('Invalid body format received');
+      }
+      console.log('Facebook webhook received (legacy):', JSON.stringify(body, null, 2));
+
+      // ⚡ ASYNC PROCESSING: Return 200 OK immediately, process in background
+      res.status(200).json({ status: "received" });
+
+      // Process webhook events asynchronously (non-blocking)
+      setImmediate(async () => {
+        try {
+          if (body.object === 'page') {
+            for (const entry of body.entry || []) {
+              // Handle messaging events
+              if (entry.messaging) {
+                for (const event of entry.messaging) {
+                  processFacebookMessage(event).catch(err => {
                     console.error('❌ Async message processing failed:', err);
                   });
                 }
@@ -5811,13 +6035,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { landingPageId, customerInfo, productInfo, deliveryType } = req.body;
       
-      // Create guest customer for the order
-      const guestCustomer = await storage.createCustomer({
-        name: customerInfo.name,
-        email: customerInfo.email || `guest-${Date.now()}@landing.local`,
-        phone: customerInfo.phone,
-        status: 'active'
-      });
+      // Check if customer with phone number already exists, otherwise create new
+      let guestCustomer = await storage.getCustomerByPhone(customerInfo.phone);
+      
+      if (!guestCustomer) {
+        // Customer doesn't exist, create new one
+        guestCustomer = await storage.createCustomer({
+          name: customerInfo.name,
+          email: customerInfo.email || `guest-${Date.now()}@landing.local`,
+          phone: customerInfo.phone,
+          status: 'active'
+        });
+      } else {
+        // Customer exists, optionally update their info if provided and different
+        if (customerInfo.name && customerInfo.name !== guestCustomer.name) {
+          await storage.updateCustomer(guestCustomer.id, { name: customerInfo.name });
+          guestCustomer.name = customerInfo.name;
+        }
+        if (customerInfo.email && customerInfo.email !== guestCustomer.email) {
+          await storage.updateCustomer(guestCustomer.id, { email: customerInfo.email });
+          guestCustomer.email = customerInfo.email;
+        }
+      }
       
       // 💼 Affiliate tracking: Check for tracking cookie and assign commission
       let affiliateId = null;
@@ -6005,7 +6244,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (!validation.success) {
         return res.status(400).json({ 
           error: 'Invalid data format',
-          details: validation.error.errors 
+          details: validation.error.issues 
         });
       }
 
@@ -6121,13 +6360,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Create new customer order (public)
   app.post("/api/storefront/orders", async (req, res) => {
     try {
-      const { insertStorefrontOrderSchema } = await import("@shared/schema");
-      const validation = insertStorefrontOrderSchema.safeParse(req.body);
+      const { insertStorefrontOrdersSchema } = await import("@shared/schema");
+      const validation = insertStorefrontOrdersSchema.safeParse(req.body);
       
       if (!validation.success) {
         return res.status(400).json({ 
           error: 'Thông tin đơn hàng không hợp lệ',
-          details: validation.error.errors 
+          details: validation.error.issues 
         });
       }
 
@@ -6259,6 +6498,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Shop Settings API
+  
+  // Shop Settings Location API - Get shop coordinates (must be before general /api/shop-settings)
+  app.get("/api/shop-settings/location", async (req, res) => {
+    try {
+      const defaultSettings = await storage.getDefaultShopSettings();
+      
+      if (!defaultSettings) {
+        return res.json({ lat: null, lon: null });
+      }
+
+      const lat = defaultSettings.shopLatitude ? Number(defaultSettings.shopLatitude) : null;
+      const lon = defaultSettings.shopLongitude ? Number(defaultSettings.shopLongitude) : null;
+
+      res.json({ lat, lon });
+    } catch (error) {
+      console.error('Shop settings location API error:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  });
+
   app.get("/api/shop-settings", async (req, res) => {
     try {
       const { id } = req.query;
@@ -6294,7 +6553,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (!validation.success) {
         return res.status(400).json({ 
           error: 'Invalid data format',
-          details: validation.error.errors 
+          details: validation.error.issues 
         });
       }
 
@@ -6344,7 +6603,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         if (!validation.success) {
           return res.status(400).json({ 
             error: 'Invalid data format',
-            details: validation.error.errors 
+            details: validation.error.issues 
           });
         }
 
@@ -6551,6 +6810,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.use("/api/rasa-management", rasaManagementRouter);
   app.use("/api/rasa", rasaConversationsRouter);
   app.use("/api/rasa-industry", rasaIndustryRouter);
+  app.use("/api/chat-logs", chatLogsRouter);
 
   // ==========================================
   // CONTENT MANAGEMENT API ROUTES
@@ -6573,6 +6833,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
   
   app.use("/api/products", productsRouter);
+  
+  // ==========================================
+  // 🏪 MULTI-STORE MANAGEMENT API ROUTES
+  // ==========================================
+  app.use("/api/stores", storeRoutes);
   
   // 🤖 PRODUCT FAQs AI GENERATION ROUTES
   console.log("🤖 Mounting Product FAQs Router...");
@@ -6844,6 +7109,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.use("/api/admin", adminVendorsRouter); // 🏭 Admin Vendor Management
   app.use("/api/admin", adminCampaignsRouter); // 🎯 Admin Campaign Management
   app.use("/api/admin", adminOAuthRouter); // 🔑 Admin OAuth Settings & Stats
+  app.use("/api/admin/oauth-providers", oauthProviderSettingsRouter); // 🔐 OAuth Provider Settings Management
   app.use("/api/vendor/auth", vendorAuthRouter); // 🏭 Vendor Authentication
   app.use("/api/vendor/dashboard", vendorDashboardRouter); // 📊 Vendor Dashboard Statistics
   app.use("/api/vendor/products", vendorProductsRouter); // 📦 Vendor Products Management
@@ -6879,8 +7145,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.use("/api/lunar-calendar", lunarCalendarHandler);
 
   // ==========================================
-  // API CONFIGURATIONS MANAGEMENT ROUTES
+  // CONTENT LIBRARY, VEHICLES & API CONFIGURATIONS
   // ==========================================
+  app.use("/api/content-library", contentLibraryRouter);
+  app.use("/api/vehicles", vehiclesRouter);
+  app.use("/api/api-management", apiManagementRouter);
+  
+  // Legacy route for api-configurations (keeping for backward compatibility)
   const apiConfigurationsRouter = await import("./api/api-configurations");
   app.use("/api/api-configurations", apiConfigurationsRouter.default);
 
@@ -7082,8 +7353,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
             avgResponseTime: '0',
             requiresAuth: false,
             adminOnly: false,
-            createdAt: new Date(),
-            updatedAt: new Date()
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
           }));
           
           await db.insert(apiConfigurations).values(newConfigs);
@@ -7120,6 +7391,77 @@ export async function registerRoutes(app: Express): Promise<Server> {
         message: 'Failed to scan for APIs',
         error: error.message
       });
+    }
+  });
+
+  // ==========================================
+  // 🛡️ SECURE ORS (OpenRouteService) PROXY
+  // ==========================================
+  app.post("/api/admin/calculate-route-distance", async (req, res) => {
+    try {
+      const { lat1, lon1, lat2, lon2 } = req.body;
+
+      // Validate coordinates
+      if (typeof lat1 !== 'number' || typeof lon1 !== 'number' || 
+          typeof lat2 !== 'number' || typeof lon2 !== 'number') {
+        return res.status(400).json({ 
+          error: "Invalid coordinates. All values must be numbers.",
+          distance: null 
+        });
+      }
+
+      // Get ORS API key from environment
+      const ORS_API_KEY = process.env.ORS_API_KEY;
+      if (!ORS_API_KEY) {
+        console.error('[ORS] API key not configured in environment');
+        return res.status(500).json({ 
+          error: "ORS API key not configured",
+          distance: null 
+        });
+      }
+
+      // Call OpenRouteService API server-side
+      const url = `https://api.openrouteservice.org/v2/directions/driving-car?start=${lon1},${lat1}&end=${lon2},${lat2}`;
+      
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000); // 5s timeout
+      
+      const response = await fetch(url, {
+        signal: controller.signal,
+        headers: {
+          'Authorization': ORS_API_KEY,
+          'Accept': 'application/geo+json'
+        }
+      });
+      
+      clearTimeout(timeoutId);
+      
+      if (!response.ok) {
+        console.warn('[ORS] API request failed:', response.status);
+        return res.json({ distance: null });
+      }
+      
+      const data: any = await response.json();
+      
+      if (!data.features || data.features.length === 0) {
+        console.warn('[ORS] No route found');
+        return res.json({ distance: null });
+      }
+      
+      // Extract distance from GeoJSON response
+      const distanceMeters = data.features[0].properties.summary.distance;
+      const distanceKm = distanceMeters / 1000;
+      const roundedDistance = Math.round(distanceKm * 10) / 10;
+      
+      res.json({ distance: roundedDistance });
+      
+    } catch (error) {
+      if (error instanceof Error && error.name === 'AbortError') {
+        console.warn('[ORS] Request timeout');
+      } else {
+        console.warn('[ORS] Failed to calculate route distance:', error);
+      }
+      res.json({ distance: null });
     }
   });
 

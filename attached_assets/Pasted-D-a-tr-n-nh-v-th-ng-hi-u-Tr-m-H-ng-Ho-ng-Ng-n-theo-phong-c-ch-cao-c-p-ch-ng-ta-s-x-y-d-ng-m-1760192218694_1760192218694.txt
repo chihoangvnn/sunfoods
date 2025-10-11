@@ -1,0 +1,93 @@
+Dựa trên định vị thương hiệu "Trầm Hương Hoàng Ngân" theo phong cách cao cấp, chúng ta sẽ xây dựng một bảng màu không chỉ đẹp, mà còn kể được câu chuyện về sự Tĩnh Lặng, Sang Trọng và Đáng Tin Cậy.
+
+I. Triết lý màu sắc chủ đạo
+Màu sắc của website cần gợi lên cảm giác:
+
+Tự nhiên & Mộc mạc: Gợi nhớ đến nguồn gốc của gỗ trầm.
+
+Huyền bí & Sâu lắng: Thể hiện giá trị tinh thần và sự quý hiếm.
+
+Sang trọng & Đẳng cấp: Xứng tầm với một thương hiệu cao cấp.
+
+Ấm áp & An yên: Tạo cảm giác thư thái cho người xem.
+
+II. Bảng màu đề xuất chi tiết
+Chúng ta sẽ xây dựng bảng màu theo cấu trúc: Màu chủ đạo (dùng nhiều nhất), Màu phụ trợ (tạo điểm nhấn) và Màu chữ/nền.
+
+1. Màu chủ đạo (Primary Colors)
+Đây là linh hồn của website, tạo nên nhận diện chính.
+
+Nâu Trầm Đậm (Deep Agarwood Brown)
+
+Hex Code: #3D2B1F
+
+Ý nghĩa: Tượng trưng cho đất, gỗ, sự ổn định, ấm áp và cổ điển. Đây là màu sắc cốt lõi, kết nối trực tiếp đến sản phẩm.
+
+Ứng dụng: Dùng cho thanh điều hướng (navigation bar), chân trang (footer), các khối thông tin quan trọng hoặc làm nền cho các banner chính.
+
+Đen Mờ (Matte Black)
+
+Hex Code: #222222 (Không nên dùng màu đen tuyền #000000 vì nó quá gắt)
+
+Ý nghĩa: Biểu tượng của sự sang trọng, quyền lực, huyền bí và tinh tế. Màu đen làm nền tuyệt vời để tôn vinh hình ảnh sản phẩm và màu vàng gold.
+
+Ứng dụng: Dùng cho các khu vực nền cần tạo độ sâu, tiêu đề lớn, hoặc các khối giới thiệu đặc biệt.
+
+2. Màu phụ trợ & Điểm nhấn (Secondary & Accent Colors)
+Đây là những màu sắc tạo sự khác biệt, thu hút sự chú ý vào những vị trí quan trọng.
+
+Vàng Đồng Thau (Muted Gold / Brass)
+
+Hex Code: #C1A875
+
+Ý nghĩa: Tượng trưng cho sự quý phái ("Hoàng Ngân"), chất lượng cao và giá trị bền vững. Ta chọn tông vàng trầm, không quá chói để giữ vẻ thanh lịch.
+
+Ứng dụng: Dùng cho logo, các icon quan trọng, đường viền, giá sản phẩm, và các nút kêu gọi hành động (CTA) đặc biệt. Lưu ý: Dùng màu này một cách tiết chế như một "gia vị" để tạo sự đắt giá.
+
+Xanh Rêu Đậm (Deep Moss Green)
+
+Hex Code: #3A5F0B
+
+Ý nghĩa: Gợi nhớ đến thiên nhiên, núi rừng, sự tươi mới và tĩnh tại. Đây là một màu sắc độc đáo, tạo sự khác biệt so với các đối thủ, thể hiện chiều sâu của thương hiệu.
+
+Ứng dụng: Dùng cho các nút kêu gọi hành động chính ("Thêm vào giỏ", "Mua ngay"), các thẻ tag (ví dụ: "Sản phẩm mới"), hoặc nền cho các khu vực kể chuyện thương hiệu.
+
+3. Màu nền & Chữ viết (Background & Typography)
+Đây là nền tảng đảm bảo sự dễ đọc và trải nghiệm người dùng tốt.
+
+Màu Nền - Trắng Ngà (Off-White / Cream)
+
+Hex Code: #F5F5DC hoặc #FAF3E0
+
+Ý nghĩa: Tạo cảm giác nhẹ nhàng, sạch sẽ, sang trọng và không gây mỏi mắt như màu trắng tinh. Đây là màu nền hoàn hảo cho các khu vực có nhiều chữ.
+
+Ứng dụng: Nền chính cho toàn bộ website, đặc biệt là phần thân trang, mô tả sản phẩm.
+
+Màu Chữ - Xám Than (Charcoal Gray)
+
+Hex Code: #444444
+
+Ý nghĩa: Dễ đọc hơn màu đen tuyền trên nền sáng, tạo cảm giác chuyên nghiệp và mềm mại cho văn bản.
+
+Ứng dụng: Dùng cho toàn bộ các đoạn văn bản mô tả, thông tin chi tiết.
+
+III. Cách phối màu trên thực tế website
+Trang chủ:
+
+Banner chính: Sử dụng hình ảnh sản phẩm chất lượng cao trên nền Nâu Trầm Đậm hoặc Đen Mờ. Tiêu đề lớn có thể dùng màu Trắng Ngà.
+
+Các khối giới thiệu: Nền Trắng Ngà, tiêu đề màu Xám Than hoặc Nâu Trầm.
+
+Nút "Xem thêm": Dùng màu Xanh Rêu Đậm để nổi bật.
+
+Trang sản phẩm:
+
+Nền chính: Trắng Ngà để tập trung vào hình ảnh và thông tin.
+
+Tên sản phẩm: Màu Đen Mờ.
+
+Giá sản phẩm: Màu Vàng Đồng Thau.
+
+Nút "Thêm vào giỏ hàng": Màu Nâu Trầm Đậm hoặc Xanh Rêu Đậm để thu hút nhất.
+
+Chân trang (Footer): Nền Nâu Trầm Đậm, chữ màu Trắng Ngà, các đường link có thể có hiệu ứng chuyển sang màu Vàng Đồng Thau khi di chuột qua.

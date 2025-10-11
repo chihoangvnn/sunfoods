@@ -4,8 +4,8 @@
 
 📦 PACKAGE NÀY BAO GỒM:
   ✓ admin/                    - Admin dashboard đã build sẵn
-  ✓ nginx-production.conf     - Nginx config với SSL, caching, security
-  ✓ ecosystem.production.js   - PM2 config với clustering
+  ✓ nginx.conf     - Nginx config với SSL, caching, security
+  ✓ ecosystem.config.js   - PM2 config với clustering
   ✓ deploy-to-vps.sh          - Script tự động deploy
   ✓ DEPLOY-INSTRUCTIONS.txt   - File này
 
@@ -87,7 +87,7 @@ Nếu đây là lần đầu deploy hoặc cần update Nginx config:
 
 1. Copy Nginx config:
    
-   sudo cp nginx-production.conf /etc/nginx/sites-available/sunfoods.vn
+   sudo cp nginx.conf /etc/nginx/sites-available/sunfoods.vn
 
 2. Update SSL certificate paths trong file (nếu cần):
    
@@ -114,7 +114,7 @@ Nếu cần update PM2 config:
 
 1. Copy PM2 ecosystem config:
    
-   sudo cp ecosystem.production.js /var/www/sun/
+   sudo cp ecosystem.config.js /var/www/sun/
 
 2. Stop các processes cũ (nếu có):
    
@@ -123,7 +123,7 @@ Nếu cần update PM2 config:
 3. Start với config mới:
    
    cd /var/www/sun
-   pm2 start ecosystem.production.js
+   pm2 start ecosystem.config.js
 
 4. Save PM2 config để auto-start khi reboot:
    

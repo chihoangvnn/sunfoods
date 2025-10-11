@@ -1,0 +1,16 @@
+run = "cd backend && npm install && npm run dev"
+modules = ["nodejs-20"]
+
+[nix]
+channel = "stable-24_05"
+
+[deployment]
+run = ["sh", "-c", "cd backend && npm install && npm start"]
+
+[[ports]]
+localPort = 5000
+externalPort = 80
+
+[env]
+NODE_ENV = "development"
+PORT = "5000"

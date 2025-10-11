@@ -601,6 +601,45 @@ export const categoryPriceRules = pgTable("category_price_rules", {
   updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
 });
 
+export const stores = pgTable("stores", {
+  id: varchar().default(sql`gen_random_uuid()`).primaryKey(),
+  domain: varchar().notNull().unique(),
+  name: varchar().notNull(),
+  industry: varchar().default('food'),
+  themeConfig: jsonb("theme_config").default({}),
+  isActive: boolean("is_active").default(true),
+  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+});
+
+export const storeProducts = pgTable("store_products", {
+  id: varchar().default(sql`gen_random_uuid()`).primaryKey(),
+  storeId: varchar("store_id").notNull().references(() => stores.id, { onDelete: 'cascade' }),
+  productId: varchar("product_id").notNull().references(() => products.id, { onDelete: 'cascade' }),
+  priceOverride: numeric("price_override", { precision: 15, scale: 2 }),
+  isFeatured: boolean("is_featured").default(false),
+  sortOrder: integer("sort_order").default(0),
+  isActive: boolean("is_active").default(true),
+  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+}, (table) => [
+  unique("store_products_store_product").on(table.storeId, table.productId),
+  index("store_products_store_id_idx").on(table.storeId),
+  index("store_products_product_id_idx").on(table.productId),
+]);
+
+export const storeCategories = pgTable("store_categories", {
+  id: varchar().default(sql`gen_random_uuid()`).primaryKey(),
+  storeId: varchar("store_id").notNull().references(() => stores.id, { onDelete: 'cascade' }),
+  categoryId: varchar("category_id").notNull().references(() => categories.id, { onDelete: 'cascade' }),
+  sortOrder: integer("sort_order").default(0),
+  isActive: boolean("is_active").default(true),
+  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
+}, (table) => [
+  unique("store_categories_store_category").on(table.storeId, table.categoryId),
+  index("store_categories_store_id_idx").on(table.storeId),
+]);
+
 export const chatbotConversations = pgTable("chatbot_conversations", {
   id: varchar().default(sql`gen_random_uuid()`).primaryKey(),
   customerId: varchar("customer_id"),
@@ -902,9 +941,11 @@ export const customers = pgTable("customers", {
   latitude: numeric({ precision: 10, scale: 8 }),
   longitude: numeric({ precision: 11, scale: 8 }),
   distanceFromShop: numeric("distance_from_shop", { precision: 10, scale: 3 }),
+  routeDistanceFromShop: numeric("route_distance_from_shop", { precision: 10, scale: 3 }),
   geocodingStatus: text("geocoding_status").default('not_geocoded'),
   lastGeocodedAt: timestamp("last_geocoded_at", { mode: 'string' }),
   address2: text(),
+  district: text(),
 }, (table) => [
   unique("customers_email_unique").on(table.email),
   unique("customers_phone_unique").on(table.phone),
@@ -1442,6 +1483,22 @@ export const oauthConnections = pgTable("oauth_connections", {
   unique("unique_provider_user").on(table.provider, table.providerUserId),
 ]);
 
+export const oauthProviderSettings = pgTable("oauth_provider_settings", {
+  id: varchar().default(sql`gen_random_uuid()`).primaryKey(),
+  provider: text().notNull(),
+  displayName: text("display_name").notNull(),
+  clientId: text("client_id").notNull(),
+  clientSecret: text("client_secret").notNull(),
+  redirectUri: text("redirect_uri"),
+  scopes: text(),
+  isActive: boolean("is_active").default(true).notNull(),
+  metadata: jsonb().default({}),
+  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+}, (table) => [
+  unique("unique_provider_oauth_settings").on(table.provider),
+]);
+
 export const orderItems = pgTable("order_items", {
   id: varchar().default(sql`gen_random_uuid()`).primaryKey(),
   orderId: varchar("order_id").notNull(),
@@ -1696,16 +1753,19 @@ export const productPolicyAssociations = pgTable("product_policy_associations", 
 export const productReviews = pgTable("product_reviews", {
   id: varchar().default(sql`gen_random_uuid()`).primaryKey(),
   productId: varchar("product_id").notNull(),
-  customerId: varchar("customer_id"),
-  customerName: text("customer_name").notNull(),
-  customerAvatar: text("customer_avatar"),
+  userId: varchar("user_id"),
   rating: integer().notNull(),
-  title: text(),
-  content: text().notNull(),
-  isVerified: boolean("is_verified").default(false).notNull(),
-  isApproved: boolean("is_approved").default(true).notNull(),
+  title: varchar(),
+  comment: text().notNull(),
+  verifiedPurchase: boolean("verified_purchase").default(false),
   helpfulCount: integer("helpful_count").default(0).notNull(),
-  images: jsonb().default([]),
+  notHelpfulCount: integer("not_helpful_count").default(0).notNull(),
+  reviewerName: varchar("reviewer_name").notNull(),
+  reviewerLocation: varchar("reviewer_location"),
+  reviewerAvatar: varchar("reviewer_avatar"),
+  reviewImages: jsonb("review_images").default([]),
+  status: varchar().default('pending').notNull(),
+  adminNotes: text("admin_notes"),
   createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
   updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
 });
@@ -2850,6 +2910,13 @@ export const insertFaqGenerationResultsSchema = createInsertSchema(faqGeneration
 export const selectFaqGenerationResultsSchema = createSelectSchema(faqGenerationResults);
 export const insertFaqLibrarySchema = createInsertSchema(faqLibrary);
 export const selectFaqLibrarySchema = createSelectSchema(faqLibrary);
+export const updateFaqLibrarySchema = createInsertSchema(faqLibrary).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+  usageCount: true,
+  lastUsed: true,
+}).partial();
 export const insertFrontendCategoryAssignmentsSchema = createInsertSchema(frontendCategoryAssignments);
 export const selectFrontendCategoryAssignmentsSchema = createSelectSchema(frontendCategoryAssignments);
 export const insertGeneralCategoriesSchema = createInsertSchema(generalCategories);
@@ -2890,6 +2957,8 @@ export const insertMarketTrendsSchema = createInsertSchema(marketTrends);
 export const selectMarketTrendsSchema = createSelectSchema(marketTrends);
 export const insertOauthConnectionsSchema = createInsertSchema(oauthConnections);
 export const selectOauthConnectionsSchema = createSelectSchema(oauthConnections);
+export const insertOauthProviderSettingsSchema = createInsertSchema(oauthProviderSettings);
+export const selectOauthProviderSettingsSchema = createSelectSchema(oauthProviderSettings);
 export const insertOrderItemsSchema = createInsertSchema(orderItems);
 export const selectOrderItemsSchema = createSelectSchema(orderItems);
 export const insertOrdersSchema = createInsertSchema(orders);
@@ -3160,6 +3229,8 @@ export type InsertMarketTrends = z.infer<typeof insertMarketTrendsSchema>;
 export type MarketTrends = typeof marketTrends.$inferSelect;
 export type InsertOauthConnections = z.infer<typeof insertOauthConnectionsSchema>;
 export type OauthConnections = typeof oauthConnections.$inferSelect;
+export type InsertOauthProviderSettings = z.infer<typeof insertOauthProviderSettingsSchema>;
+export type OauthProviderSettings = typeof oauthProviderSettings.$inferSelect;
 export type InsertOrderItems = z.infer<typeof insertOrderItemsSchema>;
 export type OrderItems = typeof orderItems.$inferSelect;
 export type InsertOrders = z.infer<typeof insertOrdersSchema>;

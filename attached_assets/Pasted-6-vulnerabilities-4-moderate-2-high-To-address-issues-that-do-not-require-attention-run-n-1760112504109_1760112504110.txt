@@ -1,0 +1,59 @@
+6 vulnerabilities (4 moderate, 2 high)
+
+To address issues that do not require attention, run:
+  npm audit fix
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+Run `npm audit` for details.
+root@sunfoods:/var/www/sun/backend# npm run build
+
+> backend@1.0.0 build
+> npx esbuild src/index.ts --bundle --platform=node --format=cjs --outdir=dist --external:@neondatabase/serverless --external:@google/genai --external:canvas --external:firebase-admin --external:bullmq --external:ioredis --external:bcrypt --external:lightningcss --external:vite
+
+✘ [ERROR] Could not resolve "./db"
+
+    src/index.ts:27:21:
+      27 │ import { pool } from "./db";
+         ╵                      ~~~~~~
+
+✘ [ERROR] Could not resolve "./middleware/api-management"
+
+    src/index.ts:28:46:
+      28 │ import { createApiManagementMiddleware } from "./middleware/api-management";
+         ╵                                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+✘ [ERROR] Could not resolve "./services/scheduler"
+
+    src/index.ts:29:26:
+      29 │ import { scheduler } from "./services/scheduler";
+         ╵                           ~~~~~~~~~~~~~~~~~~~~~~
+
+✘ [ERROR] Could not resolve "./services/analytics-scheduler"
+
+    src/index.ts:30:40:
+      30 │ import { startAnalyticsScheduler } from "./services/analytics-scheduler";
+         ╵                                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+✘ [ERROR] Could not resolve "./jobs/campaign-verifier"
+
+    src/index.ts:31:38:
+      31 │ import { startCampaignVerifier } from "./jobs/campaign-verifier";
+         ╵                                       ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+✘ [ERROR] Could not resolve "./storage"
+
+    src/routes.ts:3:24:
+      3 │ import { storage } from "./storage";
+        ╵                         ~~~~~~~~~~~
+
+6 of 147 errors shown (disable the message limit with --log-limit=0)
+npm error Lifecycle script `build` failed with error:
+npm error code 1
+npm error path /var/www/sun/backend
+npm error workspace backend@1.0.0
+npm error location /var/www/sun/backend
+npm error command failed
+npm error command sh -c npx esbuild src/index.ts --bundle --platform=node --format=cjs --outdir=dist --external:@neondatabase/serverless --external:@google/genai --external:canvas --external:firebase-admin --external:bullmq --external:ioredis --external:bcrypt --external:lightningcss --external:vite
+root@sunfoods:/var/www/sun/backend#

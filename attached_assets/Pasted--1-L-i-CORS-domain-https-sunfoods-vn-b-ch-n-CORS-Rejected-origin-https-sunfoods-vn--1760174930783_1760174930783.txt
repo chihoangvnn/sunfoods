@@ -1,0 +1,114 @@
+⚠️ 1️⃣ Lỗi CORS – domain https://sunfoods.vn bị chặn
+🚫 CORS: Rejected origin https://sunfoods.vn
+
+📌 Nguyên nhân:
+
+Backend chỉ cho phép một vài domain:
+
+Allowed: http://localhost:3000, http://localhost:5000, ...
+
+
+Không có https://sunfoods.vn.
+
+✅ Cách sửa:
+
+Mở file /var/www/sun/backend/src/index.ts
+(tầm dòng 85 trong log có nhắc tới)
+
+Tìm đoạn như:
+
+const allowedOrigins = [
+  'http://localhost:3000',
+  'http://localhost:5000',
+  'https://your-storefront.vercel.app',
+  ...
+];
+
+
+👉 Thêm domain của bạn vào:
+
+const allowedOrigins = [
+  'http://localhost:3000',
+  'http://localhost:5000',
+  'https://sunfoods.vn',
+  'https://www.sunfoods.vn',
+];
+
+
+Sau đó restart backend:
+
+pm2 restart backend-api
+
+⚠️ 2️⃣ Lỗi “Failed to compile pattern for /api/webhooks/facebook/:appId?”
+PathError [TypeError]: Unexpected ? at index 29
+
+📌 Nguyên nhân:
+
+Cú pháp /api/webhooks/facebook/:appId? trong path-to-regexp mới không còn hỗ trợ ? ở cuối như thế này nữa.
+
+✅ Cách sửa:
+
+Thay các route kiểu:
+
+router.get('/api/webhooks/facebook/:appId?', handler)
+
+
+bằng:
+
+router.get('/api/webhooks/facebook/:appId', handler)
+
+
+và nếu muốn appId là tùy chọn, dùng middleware check thủ công:
+
+router.get('/api/webhooks/facebook/:appId', (req, res) => {
+  const appId = req.params.appId || null;
+  ...
+});
+
+
+Hoặc dùng phiên bản path-to-regexp cũ (v7 trở xuống):
+
+npm install path-to-regexp@0.1.7
+
+
+⚠️ Cách này chỉ nên dùng nếu bạn chưa muốn sửa code, vì bản cũ đã deprecated.
+
+⚠️ 3️⃣ SYSTEM HEALTH CRITICAL – No workers online
+'🔴 CRITICAL: No workers are online - Auto-posting system is offline'
+
+📌 Nguyên nhân:
+
+Module “workers” (ví dụ: queue xử lý tự động / auto-posting job) bị crash hoặc không khởi động khi backend start.
+
+✅ Cách kiểm tra:
+pm2 list
+
+
+Nếu không có process nào tên workers hoặc backend-worker → cần start lại:
+
+pm2 start /var/www/sun/backend/src/workers.ts --name backend-worker
+
+
+Hoặc nếu bạn dùng cron hay Bull queue, kiểm tra Redis:
+
+systemctl status redis
+
+⚠️ 4️⃣ Cảnh báo cấu hình môi trường (Environment)
+⚠️  VAPID keys not configured!
+⚠️  TikTok credentials mẫu!
+⚠️  Replit OAuth credentials not found.
+⚠️  Redis not configured.
+
+
+→ Đây là cảnh báo, không phải lỗi, nhưng bạn nên thêm biến môi trường thực tế trong file .env:
+
+VAPID_PUBLIC_KEY=xxx
+VAPID_PRIVATE_KEY=xxx
+TIKTOK_APP_ID=xxx
+TIKTOK_APP_SECRET=xxx
+REDIS_URL=redis://127.0.0.1:6379
+
+
+Rồi restart:
+
+pm2 restart backend-api

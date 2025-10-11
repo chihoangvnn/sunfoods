@@ -1,9 +1,10 @@
 import { Router } from 'express';
 import { db } from '../db';
-import { customers, oauthConnections } from '../../shared/schema';
+import { customers, oauthConnections, oauthProviderSettings } from '../../shared/schema';
 import { eq, and } from 'drizzle-orm';
 import crypto from 'crypto';
 import { storage } from '../storage';
+import { decrypt } from '../utils/encryption';
 
 const router = Router();
 
@@ -28,9 +29,36 @@ setInterval(() => {
   });
 }, 600000);
 
-// Environment variables
-const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
-const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
+async function getGoogleCredentials() {
+  try {
+    const dbSettings = await db
+      .select()
+      .from(oauthProviderSettings)
+      .where(and(
+        eq(oauthProviderSettings.provider, 'google'),
+        eq(oauthProviderSettings.isActive, true)
+      ))
+      .limit(1);
+
+    if (dbSettings.length > 0) {
+      const settings = dbSettings[0];
+      console.log('✅ Using Google OAuth credentials from database');
+      return {
+        clientId: decrypt(settings.clientId),
+        clientSecret: decrypt(settings.clientSecret),
+      };
+    }
+  } catch (error) {
+    console.error('⚠️  Error fetching Google credentials from database:', error);
+  }
+
+  console.log('ℹ️  Using Google OAuth credentials from environment variables');
+  return {
+    clientId: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+  };
+}
+
 const BASE_URL = process.env.REPLIT_DOMAIN 
   ? `https://${process.env.REPLIT_DOMAIN}` 
   : 'http://localhost:5000';
@@ -67,11 +95,12 @@ interface GoogleProfile {
 async function exchangeCodeForToken(code: string): Promise<GoogleTokens> {
   try {
     const redirectUri = `${BASE_URL}/api/auth/google/callback`;
+    const credentials = await getGoogleCredentials();
     
     const params = new URLSearchParams({
       code,
-      client_id: GOOGLE_CLIENT_ID!,
-      client_secret: GOOGLE_CLIENT_SECRET!,
+      client_id: credentials.clientId!,
+      client_secret: credentials.clientSecret!,
       redirect_uri: redirectUri,
       grant_type: 'authorization_code',
     });
@@ -344,7 +373,9 @@ async function fillEmptyCustomerFields(customer: any, profile: GoogleProfile): P
  */
 router.get('/google', async (req, res) => {
   try {
-    if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET) {
+    const credentials = await getGoogleCredentials();
+    
+    if (!credentials.clientId || !credentials.clientSecret) {
       return res.status(500).json({ 
         error: 'Google OAuth chưa được cấu hình. Vui lòng liên hệ quản trị viên.' 
       });
@@ -366,7 +397,7 @@ router.get('/google', async (req, res) => {
 
     // Build Google OAuth authorization URL
     const authUrl = `${GOOGLE_AUTH_URL}?` +
-      `client_id=${encodeURIComponent(GOOGLE_CLIENT_ID)}&` +
+      `client_id=${encodeURIComponent(credentials.clientId)}&` +
       `redirect_uri=${encodeURIComponent(redirectUri)}&` +
       `response_type=code&` +
       `scope=${encodeURIComponent(scope)}&` +
@@ -478,7 +509,8 @@ router.get('/google/callback', async (req, res) => {
 router.get('/google/status', async (req, res) => {
   try {
     // Check if Google OAuth is configured
-    const configured = !!(GOOGLE_CLIENT_ID && GOOGLE_CLIENT_SECRET);
+    const credentials = await getGoogleCredentials();
+    const configured = !!(credentials.clientId && credentials.clientSecret);
     
     if (!configured) {
       return res.json({

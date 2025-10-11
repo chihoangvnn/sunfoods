@@ -15,14 +15,14 @@
 - `admin/*.png` - Hero images
 
 ### 2. Nginx Configuration (Fixed)
-- `nginx-production.conf` - **CRITICAL FIX APPLIED:**
+- `nginx.conf` - **CRITICAL FIX APPLIED:**
   * `location ^~ /adminhoang/assets/` placed FIRST (line 91)
   * Admin assets get: `Cache-Control: public, max-age=31536000, immutable`
   * Admin HTML/API get: `Cache-Control: no-cache, no-store, must-revalidate`
   * SSL termination, security headers, gzip/brotli compression
 
 ### 3. PM2 Configuration
-- `ecosystem.production.js`:
+- `ecosystem.config.js`:
   * Backend: port 3000, cluster mode (2 instances)
   * Mobile: port 3001, cluster mode (2 instances)
   * NODE_ENV=production, auto-restart, logging

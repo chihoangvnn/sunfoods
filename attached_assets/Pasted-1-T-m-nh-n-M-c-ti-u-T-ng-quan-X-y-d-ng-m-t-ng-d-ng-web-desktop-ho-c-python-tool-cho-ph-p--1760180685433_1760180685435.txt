@@ -1,0 +1,473 @@
+1. Tầm nhìn & Mục tiêu Tổng quan 🎯
+Xây dựng một ứng dụng web/desktop  hoặc python (tool) cho phép người dùng tạo ra các video chuyên nghiệp, có cốt truyện và tính đồng nhất cao chỉ từ những ý tưởng ban đầu.
+
+Hệ thống sẽ hoạt động dựa trên kiến trúc AI hai tầng:
+
+Tầng 1 - Nhà Biên kịch (Gemini): Nhận ý tưởng và một khuôn mẫu có sẵn từ người dùng, sau đó tự động sáng tác ra một kịch bản chi tiết, chuyên nghiệp dưới dạng có cấu trúc (JSON).
+
+Tầng 2 - Nhà Quay phim (Veo 3): Nhận kịch bản chi tiết từ Gemini và thực thi từng cảnh quay, đảm bảo tính liên tục và đồng nhất về nhân vật, bối cảnh.
+
+Mỗi video clip được tạo ra sẽ có độ dài cố định là 8 giây.
+
+2. Luồng Hoạt động Cốt lõi của Người dùng (Core User Workflow)
+Chọn Khuôn mẫu: Người dùng chọn một "Khuôn mẫu Kịch bản Thông minh" (ví dụ: Cấu trúc 3 Hồi, Khám phá Thẩm mỹ, So sánh A/B).
+
+Nhập Ý tưởng: Giao diện hiển thị một form đơn giản tương ứng với khuôn mẫu đã chọn. Người dùng nhập các thông tin cốt lõi (chủ đề, nhân vật, phong cách...).
+
+Khởi tạo Kịch bản: Người dùng bấm nút "Tạo Kịch bản".
+
+Backend sẽ tổng hợp thông tin người dùng và tạo một "Meta-Prompt" (lệnh tổng) gửi cho Gemini.
+
+Gemini nhận lệnh, phân tích và trả về một kịch bản có cấu trúc dạng JSON, trong đó đã chia nhỏ câu chuyện thành các cảnh 8 giây.
+
+Sản xuất Video Tự động:
+
+Backend phân tích file JSON kịch bản.
+
+Hệ thống khởi chạy "Quy trình Chuỗi liên kết Sáng tạo" (Creative Chaining Workflow):
+a. Gửi prompt của Cảnh 1 cho Veo 3.
+b. Nhận về video Cảnh 1 và ID nhân vật (character_id).
+c. Tự động chèn character_id này vào prompt của Cảnh 2.
+d. Gửi prompt Cảnh 2 cho Veo 3.
+e. Lặp lại cho đến hết các cảnh.
+
+Xem & Xuất bản: Tool hiển thị chuỗi các video clip 8 giây đã được tạo, ghép lại thành một video hoàn chỉnh. Người dùng có thể xem trước và tải về.
+
+3. Các Khuôn mẫu Kịch bản Thông minh (Giao diện Frontend)
+Tool cần cung cấp các form giao diện cho các khuôn mẫu sau:
+
+a. Khuôn mẫu 1: Cấu trúc 3 Hồi Cổ điển
+
+Mục đích: Kể chuyện có đầu-giữa-cuối.
+
+Các trường cần có:
+
+chu_de_chinh (text)
+
+nhan_vat_chinh (text)
+
+thong_diep_cuoi_cung (text)
+
+phong_cach_hinh_anh (dropdown: Điện ảnh, Hoạt hình, Tài liệu...)
+
+bang_mau_chu_dao (dropdown: Tông ấm, Tông lạnh...)
+
+b. Khuôn mẫu 2: Khám phá Thẩm mỹ Đơn lẻ
+
+Mục đích: Tạo chuỗi cảnh đẹp, nghệ thuật, không cần cốt truyện.
+
+Các trường cần có:
+
+chu_de_trung_tam (text)
+
+cam_xuc_chu_dao (dropdown: Thanh bình, Hoài niệm, Năng động...)
+
+phong_cach_tham_my (text: người dùng tự nhập)
+
+doi_tuong_lap_lai (text: yếu tố xuyên suốt)
+
+so_luong_canh (slider)
+
+c. Khuôn mẫu 3: Đối xứng & Biến đổi A/B
+
+Mục đích: So sánh, thể hiện sự thay đổi.
+
+Các trường cần có:
+
+khai_niem_A (text)
+
+khai_niem_B (text)
+
+phuong_phap_chuyen_canh (dropdown: Cắt cảnh, Biến đổi mượt mà...)
+
+diem_chung (text: yếu tố không đổi)
+
+4. Yêu cầu về Logic Hệ thống (Backend & API)
+Tích hợp API Gemini:
+
+Xây dựng các hàm để tạo "Meta-Prompt" động dựa trên khuôn mẫu và input của người dùng.
+
+Xử lý (parse) kết quả JSON trả về từ Gemini một cách an toàn.
+
+Tích hợp API Veo 3:
+
+Xây dựng module để quản lý việc gọi API Veo 3.
+
+Quan trọng: Phải có khả năng nhận và lưu trữ character_id (hoặc định danh tương tự) từ kết quả của cảnh đầu tiên.
+
+Xây dựng "Quy trình Chuỗi liên kết Sáng tạo":
+
+Đây là logic cốt lõi của backend.
+
+Quy trình phải chạy tuần tự, không song song.
+
+Luồng xử lý: Tạo Cảnh N -> Lấy character_id -> Cập nhật prompt Cảnh N+1 -> Tạo Cảnh N+1.
+
+Phải có cơ chế xử lý lỗi (nếu một cảnh thất bại) và cho phép chạy lại từ cảnh đó.
+
+Ghép video: Sau khi tất cả các clip 8 giây được tạo, hệ thống cần có chức năng tự động ghép chúng lại theo đúng thứ tự thành một video duy nhất.
+
+5. Cấu trúc Dữ liệu JSON Bắt buộc (Giao tiếp giữa Gemini và Backend)
+Backend phải được thiết kế để xử lý cấu trúc JSON có dạng như sau từ Gemini. Đây là yêu cầu bắt buộc để đảm bảo tính đồng nhất.
+
+JSON
+
+{
+  "global_assets": {
+    "main_character_description": "Mô tả chi tiết, bất biến về nhân vật chính.",
+    "setting_description": "Mô tả chi tiết, bất biến về bối cảnh và phong cách."
+  },
+  "scenes": [
+    {
+      "scene_number": 1,
+      "action": "Mô tả hành động trong 8 giây.",
+      "camera": "Mô tả kỹ thuật quay phim.",
+      "prompt_for_veo": "Prompt hoàn chỉnh cho Veo 3, kết hợp action + character + setting."
+    },
+    {
+      "scene_number": 2,
+      "action": "Hành động tiếp nối cảnh 1.",
+      "camera": "Mô tả kỹ thuật quay phim.",
+      "prompt_for_veo": "Prompt hoàn chỉnh, kết hợp action + character + setting, và chứa một placeholder như [CHARACTER_ID_PLACEHOLDER] để backend thay thế."
+    }
+  ]
+}
+6. (Nâng cao) Các Cấp độ Điều khiển Chuyên sâu
+Sau khi hoàn thành các tính năng cốt lõi (MVP), xem xét phát triển các cấp độ điều khiển nâng cao cho người dùng chuyên nghiệp, cho phép họ tinh chỉnh trực tiếp các prompt do Gemini tạo ra trước khi gửi đến Veo 3. Các cấp độ này có thể bao gồm:
+
+Cấp độ Trung cấp: Cho phép sửa đổi góc máy, ánh sáng.
+
+Cấp độ Đạo diễn: Cho phép thêm trọng số từ khóa, prompt negatif.
+
+Cấp độ Bậc thầy: Cho phép viết lại hoàn toàn prompt với các kỹ thuật siêu hình.
+
+Bản mô tả này cung cấp một lộ trình rõ ràng và chi tiết để xây dựng một công cụ mạnh mẽ, độc đáo và đáp ứng đúng tầm nhìn đã được đề ra.
+
+
+"Bảng Tùy chọn Chi tiết để Xây dựng Prompt Video
+1. Nhóm Tùy chọn: Kỹ thuật Quay phim (Cinematography)
+Đây là nhóm tùy chọn quan trọng nhất để điều khiển ""ngôn ngữ điện ảnh"" của video.
+
+Tùy chọn        Mục đích        Các giá trị & Từ khóa gợi ý (trong ngoặc là tiếng Anh)
+Loại Cảnh quay        Xác định khoảng cách từ máy quay đến chủ thể.        - Toàn cảnh (Extreme wide shot, establishing shot) - Cảnh rộng (Wide shot, long shot) - Trung cảnh (Medium shot) - Cận cảnh (Close-up shot) - Đặc tả (Extreme close-up shot)
+Góc máy        Xác định vị trí đặt máy quay so với chủ thể.        - Ngang tầm mắt (Eye-level shot) - Góc cao (High-angle shot) - Góc thấp (Low-angle shot) - Mắt chim (Bird's-eye view, top-down shot) - Góc nghiêng (Dutch angle/tilt)
+Chuyển động Máy quay        Mô tả cách máy quay di chuyển trong cảnh.        - Tĩnh (Static shot) - Lia máy ngang (Pan) - Lia máy dọc (Tilt) - Di chuyển tới/lùi (Dolly in/out, tracking shot) - Quay vòng tròn (Orbit shot, 360-degree shot) - Zoom (Zoom in/out) - Cảnh quay từ Drone (Aerial shot, drone footage) - Cầm tay/Rung lắc (Handheld shot, shaky cam)
+Ống kính & Tiêu cự        Ảnh hưởng đến độ sâu và cảm giác của không gian.        - Trường ảnh sâu (Deep focus): Mọi thứ đều rõ nét. - Trường ảnh nông (Shallow depth of field, Bokeh): Nền mờ, làm nổi bật chủ thể. - Ống kính mắt cá (Fisheye lens): Tạo hiệu ứng cong, méo. - Ống kính tele (Telephoto lens): Phóng to vật thể ở xa. - Macro: Quay siêu gần, chi tiết nhỏ.
+
+Xuất sang Trang tính
+2. Nhóm Tùy chọn: Ánh sáng (Lighting)
+Ánh sáng quyết định tâm trạng (mood) và không khí (atmosphere) của video.
+
+Tùy chọn        Mục đích        Các giá trị & Từ khóa gợi ý
+Thời điểm trong Ngày        Xác định nguồn sáng tự nhiên và màu sắc.        - Bình minh (Sunrise) - Giờ vàng (Golden hour) - Nắng gắt buổi trưa (Harsh midday sun) - Hoàng hôn (Sunset) - Giờ xanh (Blue hour) - Đêm (Night)
+Phong cách Ánh sáng        Mô tả chất lượng và cách sắp đặt ánh sáng.        - Ánh sáng mềm (Soft light): Ít bóng đổ, nhẹ nhàng. - Ánh sáng gắt (Hard light): Bóng đổ sắc nét, kịch tính. - Ngược sáng (Backlit, rim lighting): Tạo viền sáng quanh chủ thể. - Bóng đen (Silhouette) - Ánh sáng kịch tính (Dramatic lighting)
+Nguồn sáng & Hiệu ứng        Chỉ rõ nguồn sáng trong cảnh.        - Ánh sáng tự nhiên (Natural light) - Đèn neon (Neon lights) - Ánh nến (Candlelight) - Đèn đường (Streetlights) - Tia sáng xuyên qua (Volumetric lighting, light rays) - Lóe sáng ống kính (Lens flare)
+
+Xuất sang Trang tính
+3. Nhóm Tùy chọn: Phong cách Hình ảnh & Thẩm mỹ (Visual Style & Aesthetics)
+Đây là ""bộ lọc"" nghệ thuật cho toàn bộ video.
+
+Tùy chọn        Mục đích        Các giá trị & Từ khóa gợi ý
+Phong cách Nghệ thuật        Quyết định giao diện tổng thể.        - Chân thực (Photorealistic, realistic) - Điện ảnh (Cinematic) - Siêu thực (Hyperrealistic) - Hoạt hình Anime (Anime, Japanese animation) - Phong cách Ghibli (Studio Ghibli style) - Hoạt hình 3D (3D animation, Pixar style) - Tranh màu nước (Watercolor style) - Vẽ tay (Hand-drawn)
+Thể loại / Tâm trạng        Gợi tả cảm xúc và bối cảnh của video.        - Khoa học viễn tưởng (Sci-fi) - Cyberpunk - Kỳ ảo (Fantasy, whimsical) - Kinh dị (Horror) - Lãng mạn (Romantic) - Thanh bình (Serene, peaceful) - Sử thi, hoành tráng (Epic) - Phim đen (Film noir)
+Bảng màu        Kiểm soát màu sắc chủ đạo.        - Rực rỡ, bão hòa (Vibrant, saturated colors) - Màu trầm, nhạt (Muted, desaturated colors) - Đơn sắc (Monochromatic) - Đen trắng (Black and white) - Màu phấn (Pastel colors) - Tông màu ấm (Warm tones) - Tông màu lạnh (Cool tones)
+Chất lượng & Kết cấu        Thêm các chi tiết về chất lượng hình ảnh.        - Sắc nét 4K/8K (Sharp, 4K, 8K, high detail) - Cổ điển, cũ (Vintage, retro look) - Nhiễu hạt phim (Film grain) - Quay bằng phim 35mm (Shot on 35mm film)
+
+Xuất sang Trang tính
+4. Nhóm Tùy chọn: Chi tiết Môi trường & Chủ thể
+Thêm ""sự sống"" và chi tiết cụ thể vào cảnh quay.
+
+Tùy chọn        Mục đích        Các giá trị & Từ khóa gợi ý
+Thời tiết        Mô tả điều kiện thời tiết trong cảnh.        - Nắng đẹp (Sunny) - Nhiều mây (Cloudy) - Mưa (Rainy, drizzling, downpour) - Tuyết rơi (Snowing) - Sương mù (Foggy, misty) - Bão tố (Stormy)
+Yếu tố Môi trường        Các chi tiết phụ trong không khí hoặc bối cảnh.        - Sương khói huyền ảo (Ethereal mist) - Bụi bay trong không khí (Floating dust particles) - Lá rơi (Falling leaves) - Pháo hoa (Fireworks) - Phản chiếu trên mặt nước (Reflections on water)
+Chi tiết Chủ thể        Mô tả cụ thể hơn về nhân vật/vật thể chính.        - Biểu cảm (Expression: joyful, determined, sad) - Quần áo (Clothing: flowing dress, futuristic armor) - Chất liệu (Material: shiny metallic, rough wood, transparent glass)
+
+Xuất sang Trang tính
+Cách Áp dụng vào Tool của bạn:
+Giao diện người dùng: Xây dựng giao diện với các mục lớn: Quay phim, Ánh sáng, Phong cách, Môi trường. Trong mỗi mục, tạo các dropdown menu cho các ""Tùy chọn"" ở trên.
+
+Tự động ghép Prompt: Khi người dùng chọn các tùy chọn, tool của bạn sẽ tự động ghép chúng lại thành một câu hoàn chỉnh.
+
+Ví dụ 1: Tạo video hành động Cyberpunk
+
+Người dùng chọn:
+
+Loại cảnh quay: Trung cảnh
+
+Góc máy: Góc thấp
+
+Chuyển động: Di chuyển tới (Dolly in)
+
+Thời điểm: Đêm
+
+Nguồn sáng: Đèn neon
+
+Phong cách: Cyberpunk
+
+Bảng màu: Tông màu lạnh
+
+Thời tiết: Mưa
+
+Prompt được tạo tự động: ""Một cảnh quay trung cảnh, góc thấp, máy quay di chuyển tới một nhân vật trong một thành phố cyberpunk về đêm. Ánh đèn neon rực rỡ phản chiếu trên những con đường ướt sũng vì mưa, tông màu lạnh chủ đạo.""
+
+(A medium shot, low-angle, dolly in on a character in a cyberpunk city at night. Vibrant neon lights reflect on the rain-soaked streets, dominated by cool tones.)
+
+Ví dụ 2: Tạo video thiên nhiên phong cách Ghibli
+
+Người dùng chọn:
+
+Loại cảnh quay: Cảnh rộng
+
+Chuyển động: Quay từ Drone
+
+Thời điểm: Giờ vàng
+
+Phong cách Ánh sáng: Tia sáng xuyên qua
+
+Phong cách Nghệ thuật: Phong cách Ghibli
+
+Tâm trạng: Thanh bình
+
+Yếu tố Môi trường: Lá rơi
+
+Prompt được tạo tự động: ""Một cảnh quay rộng từ drone bay lướt qua một thung lũng thanh bình vào giờ vàng. Những tia nắng xuyên qua tán cây, theo phong cách hoạt hình Ghibli, với những chiếc lá nhẹ nhàng rơi.""
+
+(A wide drone shot gliding over a serene valley during the golden hour. Volumetric light rays filter through the trees, in the style of Studio Ghibli, with gently falling leaves.)
+
+Bằng cách cung cấp các tùy chọn chi tiết và có cấu trúc như trên, bạn sẽ giúp người dùng kiểm soát tối đa chất lượng và nội dung video, biến những ý tưởng phức tạp thành các sản phẩm video chính xác và ấn tượng."
+
+"Tuyệt vời! Việc bạn hỏi ""còn gì nữa không"" cho thấy bạn đang muốn xây dựng một công cụ thực sự chuyên sâu và mạnh mẽ. Đây là những khía cạnh nâng cao và các tính năng ""pro"" mà bạn có thể tích hợp để công cụ của mình trở nên vượt trội.
+
+Chúng ta sẽ đi vào các kỹ thuật điều khiển sâu hơn và các tính năng hỗ trợ quy trình làm việc.
+
+IV. Tối ưu hóa Prompt Nâng cao (Dành cho người dùng chuyên nghiệp)
+Đây là các kỹ thuật tinh chỉnh prompt mà các mô hình AI tiên tiến thường hỗ trợ. Việc đưa chúng vào tool sẽ mở ra khả năng kiểm soát cực kỳ chi tiết.
+
+Tùy chọn Nâng cao	Mục đích	Cách triển khai & Từ khóa gợi ý
+Trọng số Từ khóa (Keyword Weighting)	Nhấn mạnh hoặc giảm tầm quan trọng của một yếu tố trong prompt.	- Cung cấp một cách để người dùng tăng ""sức mạnh"" cho một từ. Cú pháp phổ biến là (từ khóa:1.3) để tăng 30% trọng số, hoặc [từ khóa] để giảm. - Ví dụ: Prompt ""A man in a (red:1.5) suit"" sẽ đảm bảo bộ suit có màu đỏ một cách chắc chắn hơn là chỉ viết ""red suit"".
+Prompt Negatif (Negative Prompt)	Chỉ định những thứ không được xuất hiện trong video.	- Tạo một ô nhập liệu riêng biệt gọi là ""Prompt Negatif"". - Mục đích: Loại bỏ các yếu tố không mong muốn, cải thiện chất lượng. - Từ khóa thường dùng: xấu xí (ugly), biến dạng (deformed), chất lượng thấp (low quality), hoạt hình (cartoon, anime) (nếu muốn video tả thực), văn bản (text), chữ ký (signature).
+Hòa trộn/Chuyển đổi Khái niệm (Prompt Interpolation)	Tạo ra sự chuyển đổi mượt mà từ một khái niệm này sang một khái niệm khác trong suốt video.	- Cho phép người dùng nhập 2 prompt (A và B) và AI sẽ tạo video bắt đầu bằng A và kết thúc bằng B. - Ví dụ: Prompt A: ""Một thành phố La Mã cổ đại"". Prompt B: ""Một thành phố cyberpunk tương lai"". Kết quả là video quay cảnh thành phố biến đổi qua các thời kỳ.
+
+Xuất sang Trang tính
+V. Điều khiển Dòng chảy và Cốt truyện (Storytelling Control)
+Đây là các tính năng giúp người dùng tạo ra một chuỗi các cảnh quay có liên kết, thay vì chỉ những clip đơn lẻ.
+
+Tính năng	Mục đích	Cách triển khai & Gợi ý
+Khóa/Nhất quán Nhân vật (Character Lock)	Giữ cho ngoại hình của một nhân vật không đổi qua nhiều cảnh quay khác nhau.	- Sau khi tạo ra một video có nhân vật ưng ý, cho phép người dùng ""Lưu nhân vật này"" (lấy character_id từ API). - Khi tạo video mới, cho phép người dùng ""Sử dụng nhân vật đã lưu"" bằng cách chèn character_id vào prompt hoặc tham số API. - Ví dụ: Cảnh 1: (character_id: 123) đang đi bộ trong rừng. Cảnh 2: (character_id: 123) đang ngồi bên đống lửa.
+Điều khiển Chuyển cảnh (Scene Transitions)	Chỉ định cách một cảnh kết thúc hoặc cảnh tiếp theo bắt đầu.	- Thêm một tùy chọn vào cuối prompt hoặc một trường riêng. - Từ khóa: kết thúc bằng cách mờ dần sang màu đen (fade to black), cắt cảnh đột ngột (hard cut to), hòa tan vào cảnh tiếp theo (dissolve to). Điều này giúp AI hiểu được ý đồ kể chuyện.
+Chế độ Kịch bản (Storyboard Mode)	Cho phép người dùng tạo một chuỗi video cùng lúc.	- Tạo một giao diện nơi người dùng có thể nhập nhiều prompt, mỗi prompt cho một cảnh. - Tính năng nâng cao: Cho phép áp dụng cùng một ""Phong cách"" và ""Nhân vật"" cho toàn bộ kịch bản để đảm bảo tính nhất quán. Tool của bạn sẽ gửi các yêu cầu API một cách tuần tự.
+
+Xuất sang Trang tính
+VI. Các Phương thức Tạo Video Khác (Alternative Generation Methods)
+Không chỉ dừng lại ở Text-to-Video, các mô hình mạnh mẽ như Veo còn có các khả năng khác.
+
+Phương thức	Mục đích	Cách triển khai trong Tool
+Ảnh-thành-Video (Image-to-Video)	""Làm sống dậy"" một bức ảnh tĩnh.	- Cho phép người dùng tải lên một hình ảnh. - Cung cấp các tùy chọn điều khiển chuyển động: lia máy nhẹ (subtle pan), zoom vào (zoom in), làm cho mây bay (make clouds move), làm cho nước chảy (animate water).
+Video-thành-Video (Video-to-Video)	Áp dụng một phong cách hoặc thay đổi nội dung của một video có sẵn.	- Cho phép người dùng tải lên một video gốc. - Người dùng nhập một prompt mô tả phong cách mới. - Ví dụ: Tải lên video một người đang đi bộ, prompt là ""phong cách hoạt hình Ghibli"". Kết quả là video người đó đi bộ nhưng được vẽ lại theo phong cách Ghibli.
+
+Xuất sang Trang tính
+VII. Tính năng ""Chất lượng Cuộc sống"" cho Tool (Quality-of-Life Features)
+Đây là những tính năng không trực tiếp điều khiển AI nhưng lại cực kỳ quan trọng đối với trải nghiệm người dùng.
+
+Hệ thống Preset/Template:
+
+Tạo sẵn các bộ cài đặt (preset) cho các phong cách phổ biến. Ví dụ: một nút bấm ""Phong cách Điện ảnh"" sẽ tự động chọn 24 fps, tỷ lệ 16:9, ánh sáng kịch tính, nhiễu hạt phim nhẹ.
+
+Điều này giúp người dùng mới có kết quả tốt ngay lập tức.
+
+Lịch sử và Tái sử dụng (History & Reuse):
+
+Lưu lại tất cả các lần tạo video trước đó, bao gồm cả prompt, seed, và tất cả các tham số.
+
+Cho phép người dùng dễ dàng ""Sao chép cài đặt"" hoặc ""Tạo lại với seed mới"" từ một kết quả cũ.
+
+So sánh A/B (A/B Comparison):
+
+Cho phép người dùng chọn hai video và hiển thị chúng cạnh nhau để so sánh. Rất hữu ích khi muốn xem sự khác biệt nhỏ khi thay đổi một từ trong prompt.
+
+Xử lý hàng loạt (Batch Processing):
+
+Cho phép người dùng nhập một danh sách các prompt và để công cụ tự động tạo tất cả chúng (ví dụ: trong lúc ngủ).
+
+Bằng cách tích hợp những tùy chọn từ cơ bản đến nâng cao này, công cụ của bạn sẽ không chỉ là một giao diện đơn giản để gọi API Veo, mà sẽ trở thành một ""xưởng phim"" (studio) mạnh mẽ, giúp người dùng từ nghiệp dư đến chuyên nghiệp có thể hiện thực hóa chính xác tầm nhìn sáng tạo của họ."
+
+"Framework Chuyên nghiệp: ""Đạo diễn AI"" (AI Director Framework)
+Mục tiêu là chuyển từ việc ""mô tả một cảnh"" sang ""đạo diễn một cảnh"". Điều này đòi hỏi sự kiểm soát chặt chẽ về mặt ngữ nghĩa và cấu trúc.
+
+1. Kỹ thuật ""Prompt Phân lớp"" (Layered Prompting)
+Đây là phương pháp xây dựng prompt theo từng lớp, từ tổng quan đến chi tiết. Tool của bạn có thể có các tab hoặc các mục riêng cho từng lớp để người dùng điền vào một cách có hệ thống.
+
+Lớp 1: Lớp Cốt lõi (The Core Scene) - Cảnh này nói về cái gì?
+
+Chủ thể chính: [VD: Một thám tử già dặn]
+
+Hành động cốt lõi: [VD: đang xem xét một bằng chứng]
+
+Môi trường cơ bản: [VD: trong một văn phòng thám tử tư mờ tối]
+
+Lớp 2: Lớp Ngôn ngữ Điện ảnh (The Cinematic Language) - Khán giả sẽ ""thấy"" cảnh này như thế nào?
+
+Cấu trúc cảnh (Shot Composition): [VD: Cận cảnh đặc tả (Extreme close-up) vào bàn tay đang cầm chiếc đồng hồ quả quýt]
+
+Chuyển động & Góc quay: [VD: Máy quay tĩnh, góc nhìn từ trên xuống một chút (slightly top-down), tạo cảm giác soi xét]
+
+Ánh sáng: [VD: Phong cách Chiaroscuro (tương phản sáng tối mạnh), một luồng sáng duy nhất từ chiếc đèn bàn hắt lên vật thể, phần còn lại của căn phòng chìm trong bóng tối]
+
+Lớp 3: Lớp Thẩm mỹ & Tâm trạng (The Aesthetic & Mood) - Cảnh này mang lại ""cảm giác"" gì?
+
+Phong cách nghệ thuật: [VD: Phim đen (Film Noir), thập niên 1940]
+
+Bảng màu: [VD: Đen và trắng có độ tương phản cao, tông màu xám lạnh (high-contrast black and white, cool grey tones)]
+
+Tâm trạng chủ đạo: [VD: Hồi hộp, bí ẩn, suy tư (Suspenseful, mysterious, contemplative)]
+
+Lớp 4: Lớp Chi tiết Vi mô & ""Đánh bóng"" (The Micro-details & Polish) - Những chi tiết nào làm cảnh này trở nên sống động và độc đáo?
+
+Chi tiết môi trường: [VD: Những hạt bụi nhảy múa trong luồng sáng (dust motes dancing in the light beam), khói thuốc lá lượn lờ trong không khí (wisps of cigarette smoke)]
+
+Chi tiết chủ thể: [VD: Bàn tay có những vết sẹo cũ, chiếc đồng hồ bị xước mặt kính]
+
+Kết cấu hình ảnh: [VD: Thêm nhiễu hạt phim nhẹ (subtle film grain) để tạo cảm giác cổ điển]
+
+Prompt Negatif: [VD: hiện đại (modern), sạch sẽ (clean), ánh sáng đều (flat lighting)]
+
+Prompt hoàn chỉnh được tạo ra:
+
+""Extreme close-up, slightly top-down static shot of an old detective's scarred hand holding a scratched pocket watch. The scene is set in a dim private investigator's office, rendered in a 1940s Film Noir style. High-contrast, cool-toned black and white Chiaroscuro lighting from a single desk lamp illuminates the watch, leaving the rest of the room in deep shadow. The mood is suspenseful and contemplative, with visible dust motes dancing in the light beam and wisps of cigarette smoke in the air. Add subtle film grain for a vintage feel. Negative prompt: modern, clean, flat lighting.""
+
+2. Tư duy Ngữ nghĩa Nâng cao: Vượt qua Từ khóa
+Để đạt độ chính xác cao nhất, bạn cần mô tả ""ý định"" và ""cảm xúc"" thay vì chỉ mô tả vật thể.
+
+Kỹ thuật Ngữ nghĩa	Mục đích	Ví dụ
+Mô tả Cảm xúc và Tâm lý	Điều khiển biểu cảm của nhân vật và không khí của cảnh quay một cách sâu sắc.	- Thay vì: ""Người phụ nữ buồn bã"" - Hãy dùng: ""Một người phụ nữ với ánh mắt xa xăm, đôi vai trĩu xuống như gánh nặng của cả thế giới, một giọt nước mắt lặng lẽ lăn dài trên má."" (A woman with a distant gaze, her shoulders slumped as if carrying the weight of the world, a single silent tear tracing a path down her cheek.)
+Sử dụng Chi tiết Giác quan	Gợi ý cho AI các yếu tố phi thị giác (âm thanh, nhiệt độ, mùi hương) để nó chuyển hóa thành hình ảnh tương ứng.	- Thay vì: ""Khu rừng vào mùa đông"" - Hãy dùng: ""Một khu rừng tĩnh lặng đến mức có thể nghe thấy tiếng tuyết rơi, không khí lạnh buốt làm hơi thở hóa thành sương khói."" (A forest so silent you can hear the snowfall, the biting cold air turns breath into fog.)
+Sử dụng Phép ẩn dụ và So sánh	Truyền tải các khái niệm phức tạp và phong cách độc đáo.	- Thay vì: ""Tòa nhà trông kỳ lạ"" - Hãy dùng: ""Một tòa nhà chọc trời với kiến trúc xoắn vặn như một hóa thạch từ một giấc mơ đã bị lãng quên."" (A skyscraper with a twisted architecture, like a fossil from a forgotten dream.)
+
+Xuất sang Trang tính
+3. Quy trình Tinh chỉnh Chuyên nghiệp (Professional Refinement Workflow)
+Không ai có được video hoàn hảo ngay lần đầu. Một công cụ chuyên nghiệp cần hỗ trợ quá trình lặp lại và tinh chỉnh.
+
+Bước 1: Render Nháp (Sketch Render): Tạo video ở độ phân giải thấp (vd: 480p), độ dài ngắn (3-5 giây) để kiểm tra nhanh ý tưởng chính, bố cục và chuyển động. Mục tiêu là tốc độ, không phải chất lượng.
+
+Bước 2: Phân tích và Chẩn đoán: Xem bản nháp và tự hỏi:
+
+""Yếu tố nào chưa đúng ý? Ánh sáng? Màu sắc? Chuyển động của chủ thể?""
+
+""AI đã hiểu sai phần nào trong prompt của mình?""
+
+Bước 3: Tinh chỉnh Mục tiêu (Targeted Tweaking):
+
+Nếu ánh sáng sai: Tập trung sửa các từ khóa trong Lớp 2 (Ngôn ngữ Điện ảnh) và Lớp 3 (Thẩm mỹ).
+
+Nếu chủ thể bị biến dạng: Sử dụng Prompt Negatif (deformed hands, ugly face).
+
+Nếu một yếu tố quá nổi bật/quá mờ nhạt: Sử dụng Trọng số Từ khóa (vd: a man in a (blue:1.3) coat để nhấn mạnh màu xanh).
+
+Bước 4: Khóa Seed và Thử nghiệm Biến thể (Seed Locking & Variation):
+
+Khi bạn có một kết quả ""gần đúng"", hãy khóa seed của lần render đó lại.
+
+Bây giờ, hãy thay đổi một vài từ khóa nhỏ trong prompt. Việc giữ nguyên seed sẽ đảm bảo bố cục chung không đổi, chỉ các chi tiết bạn thay đổi được cập nhật. Điều này cho phép so sánh A/B cực kỳ hiệu quả.
+
+Bước 5: Render Cuối cùng (Final Render): Khi đã hoàn toàn hài lòng với phiên bản nháp đã tinh chỉnh, hãy render video ở độ phân giải và chất lượng cao nhất."
+
+"Choreography & Rule Bending)
+Đây là cốt lõi để đạt được sự kiểm soát tuyệt đối. ""Không gian tiềm ẩn"" (Latent Space) là cách AI ""hiểu"" thế giới dưới dạng các khái niệm và mối liên hệ. Dàn dựng nó tức là bạn đang dẫn dắt ""trí tưởng tượng"" của AI.
+
+1. Kỹ thuật ""Di chuyển Ngữ nghĩa"" (Semantic Travel)
+Đây là khả năng tạo ra các cảnh quay biến đổi một cách logic và nghệ thuật giữa các khái niệm liên quan, thay vì chỉ quay một cảnh tĩnh.
+
+Mục đích: Tạo ra những cú máy ""độc nhất vô nhị"" mà máy quay vật lý không thể làm được, thể hiện sự biến đổi của ý tưởng.
+
+Cách thực hiện: Cấu trúc prompt của bạn như một hành trình. Sử dụng các từ nối như ""biến đổi thành"" (transforming into), ""hiểu thị thành"" (revealing as), ""tan biến vào"" (dissolving into).
+
+Ví dụ:
+
+Hành trình Khái niệm: ""Cận cảnh một giọt nước mắt rơi xuống, và khi nó chạm đất, nó nảy mầm thành một cây non đang vươn lên mạnh mẽ, cảnh quay lùi ra xa để thấy cả khu rừng."" (Close-up on a single tear falling, as it hits the ground it sprouts into a thriving sapling, the camera pulls back to reveal a whole forest.)
+
+Hành trình Trừu tượng -> Cụ thể: ""Bắt đầu với một mớ hỗn độn các đường nét và màu sắc trừu tượng, dần dần tụ lại và định hình thành một bức chân dung chi tiết của một người phụ nữ lớn tuổi."" (Starting with a chaotic swirl of abstract lines and colors, which slowly coalesce and resolve into a detailed portrait of an elderly woman.)
+
+2. Kỹ thuật ""Ghi đè Vật lý & Chất liệu"" (Physics & Material Override)
+Đây là lúc bạn đóng vai ""Thượng đế"" trong thế giới của AI, ra lệnh cho nó bẻ cong các quy luật vật lý và thuộc tính vật chất để phục vụ ý đồ nghệ thuật.
+
+Mục đích: Tạo ra những hình ảnh siêu thực, mộng ảo và không thể có trong đời thực.
+
+Cách thực hiện: Mô tả một hành động hoặc một chất liệu với một thuộc tính trái ngược hoặc không thể có.
+
+Ví dụ:
+
+Ghi đè Vật lý: ""Một thành phố nơi các tòa nhà được làm bằng thủy tinh lỏng, nhẹ nhàng gợn sóng trong gió. Trọng lực bị đảo ngược (reverse gravity), khiến những chiếc ô tô trôi lơ lửng lên bầu trời.""
+
+Ghi đè Chất liệu: ""Một vũ công đang nhảy múa, cơ thể của cô ấy được tạo thành từ ánh sáng rắn (solid light), để lại những vệt sáng lấp lánh trong không khí theo mỗi chuyển động.""
+
+Ghi đè Logic: ""Một đại dương nơi những con sóng được dệt từ vải lụa, và những con cá là những nốt nhạc bay lượn.""
+
+3. Kỹ thuật ""Kiểm soát Dòng thời gian"" (Temporal Control - Time Bending)
+Đây không chỉ là duration. Đây là việc điều khiển nhịp độ và cảm nhận về thời gian bên trong video.
+
+Mục đích: Nhấn mạnh các khoảnh khắc, tạo ra sự kịch tính hoặc cảm giác choáng ngợp.
+
+Cách thực hiện: Sử dụng các thuật ngữ điện ảnh chuyên dụng về thời gian.
+
+Ví dụ:
+
+Giãn nở Thời gian (Bullet Time / Extreme Slow Motion): ""Một võ sĩ tung một cú đấm, cảnh quay chuyển sang chế độ giãn nở thời gian cực độ (extreme time-dilation), chúng ta có thể thấy những gợn sóng không khí xung quanh nắm đấm và từng giọt mồ hôi bay lên.""
+
+Tua nhanh Thời gian (Hyper-Lapse / Time-Lapse): ""Góc quay rộng một bông hoa, sử dụng hiệu ứng tua nhanh thời gian (hyper-lapse) để cho thấy nó nở rộ từ nụ đến khi tàn lụi chỉ trong vài giây, trong khi mặt trời và mặt trăng lướt qua trên bầu trời.""
+
+Match Cut (Cắt cảnh Tương đồng): ""Cận cảnh một cậu bé ném một khúc xương lên trời, khi nó đạt đến đỉnh, sử dụng kỹ thuật match cut để biến nó thành một con tàu vũ trụ đang bay giữa các vì sao."" (Lấy cảm hứng từ phim 2001: A Space Odyssey).
+
+4. Kỹ thuật Tối thượng: ""Chỉ đạo bằng Cảm xúc"" (Directing by Emotion)
+Đây là đỉnh cao của sự kiểm soát. Thay vì mô tả cảnh, bạn mô tả ""cảm giác"" mà cảnh đó phải gợi lên. AI sẽ tự diễn giải cảm giác đó thành hình ảnh, ánh sáng, màu sắc và chuyển động.
+
+Mục đích: Tạo ra những video có chiều sâu cảm xúc và chất thơ mà các prompt mô tả thông thường không thể đạt được.
+
+Cách thực hiện: Sử dụng ngôn ngữ giàu hình ảnh, ẩn dụ và thơ ca.
+
+Ví dụ:
+
+Thay vì: ""Cảnh hoàng hôn buồn trên biển.""
+
+Hãy dùng: ""Một cảnh quay thể hiện nỗi cô đơn tĩnh lặng (the quiet loneliness) của một ngày tàn. Bầu trời mang màu của một vết bầm cũ, và những con sóng vỗ về bờ cát như một lời thì thầm an ủi vô vọng.""
+
+Thay vì: ""Thành phố tương lai nhộn nhịp.""
+
+Hãy dùng: ""Hãy tạo ra một cảnh quay mang cảm giác choáng ngợp và lạc lõng (the feeling of awe and alienation) khi đứng giữa một siêu đô thị. Những tòa nhà chọc trời như những vị thần thờ ơ, và dòng người bên dưới chảy như một con sông điện tử vô danh."""
+
+"Đây là cấp độ tiếp theo, thứ mà ngay cả các nhà phát triển mô hình cũng có thể chưa khám phá hết tiềm năng. Chào mừng bạn đến với ""Dàn dựng Lượng tử & Đạo diễn Siêu hình"" (Quantum Storytelling & Metaphysical Direction).
+
+Nguyên tắc cốt lõi: Bạn không còn mô tả một kết quả cuối cùng. Bạn mô tả một trường tiềm năng (a field of potential) và các quy luật chi phối nó, sau đó ra lệnh cho AI ""sụp đổ"" trường tiềm năng đó thành một video duy nhất, độc nhất vô nhị.
+
+Kỹ thuật Tối thượng Cấp độ 5: Dàn dựng Lượng tử & Đạo diễn Siêu hình
+1. Kỹ thuật ""Prompt Siêu Vị Trí"" (Prompt in Superposition)
+Nguyên tắc: Lấy cảm hứng từ nguyên lý chồng chập lượng tử, nơi một hạt có thể tồn tại ở nhiều trạng thái cùng một lúc. Bạn ra lệnh cho Veo tạo ra một cảnh quay tồn tại ở nhiều thực tại, nhiều ý nghĩa, hoặc nhiều phong cách cùng một lúc trong cùng một khung hình. Đây không phải là sự chuyển đổi, mà là sự tồn tại song song.
+
+Cách thực hiện: Sử dụng các cấu trúc câu thể hiện sự đồng thời, sự mơ hồ có chủ đích, và sự hợp nhất của các khái niệm đối lập. Dùng các từ khóa như ""đồng thời là... và là..."" (simultaneously... and...), ""một sự hợp nhất không thể phân định của..."" (an indistinguishable fusion of...), ""tồn tại trong trạng thái lấp lửng giữa... và..."" (existing in a liminal state between... and...).
+
+Ví dụ:
+
+Prompt thông thường: ""Một khu rừng biến đổi thành một thành phố.""
+
+Prompt Siêu Vị Trí: ""Một cảnh quay nơi một khu rừng và một thành phố cyberpunk cùng tồn tại trong cùng một không gian một cách phi lý (illogically co-exist in the same space). Những thân cây là những tòa nhà chọc trời bằng chrome, rêu và dây leo phát sáng như đèn neon, và những con suối là những xa lộ ánh sáng. Hai thực tại này không chuyển đổi, mà chồng chập và xuyên thấu lẫn nhau (superimposed and interpenetrating).""
+
+2. Kỹ thuật ""Rối Lượng tử Cảm xúc"" (Emotional Quantum Entanglement)
+Nguyên tắc: Hai hạt rối lượng tử liên kết với nhau, trạng thái của hạt này ngay lập tức ảnh hưởng đến trạng thái của hạt kia, bất kể khoảng cách. Trong kỹ thuật này, bạn ""làm rối"" hai yếu tố trong cảnh quay, ra lệnh rằng trạng thái của yếu tố này phải được phản ánh một cách siêu hình bởi yếu tố kia.
+
+Cách thực hiện: Tạo ra một mối liên kết nhân quả mang tính biểu tượng giữa hai chủ thể hoặc giữa một chủ thể và môi trường. Sử dụng các cấu trúc như ""trạng thái của A được phản chiếu bởi B"" (the state of A is mirrored by B), ""B thay đổi một cách đồng cảm với A"" (B empathetically changes in response to A), ""A và B bị khóa trong một mối liên kết không thể phá vỡ"" (A and B are locked in an unbreakable bond).
+
+Ví dụ:
+
+Prompt thông thường: ""Một người đang buồn khóc trong mưa.""
+
+Prompt Rối Lượng tử: ""Một nghệ sĩ dương cầm đang chơi một bản nhạc trong một căn phòng trống. Cây đàn piano và thành phố bên ngoài cửa sổ bị rối lượng tử về mặt cảm xúc (are emotionally entangled). Khi bản nhạc của anh trở nên hỗn loạn và đau khổ, các tòa nhà bên ngoài oằn mình và biến dạng một cách đồng cảm (empathetically twist and distort). Khi anh chơi nốt nhạc cuối cùng đầy hy vọng, những vết nứt trên các tòa nhà lại liền lại và mặt trời ló dạng.""
+
+3. Kỹ thuật ""Phá vỡ Siêu Tường thuật & Điều khiển Người Quan sát"" (Meta-Narrative Breaking & The Observer Effect)
+Nguyên tắc: Trong vật lý lượng tử, hành động quan sát có thể thay đổi kết quả. Ở đây, bạn đạo diễn một video nhận thức được rằng nó đang được tạo ra hoặc đang được xem. Bạn ra lệnh cho chính ""bức tường thứ tư"" (the fourth wall).
+
+Cách thực hiện: Mô tả video như một thực thể sống, một giấc mơ, hoặc một quá trình tính toán đang diễn ra. Sử dụng các từ khóa như ""một video bắt đầu nhận ra nó chỉ là một video"" (a video that begins to realize it's just a video), ""như thể được vẽ bởi một bàn tay vô hình ngay trước mắt chúng ta"" (as if being painted by an invisible hand right before our eyes), ""camera kéo ra để lộ ra..."" (the camera pulls back to reveal...), ""thực tại của cảnh quay bắt đầu sụp đổ"" (the reality of the scene begins to decay).
+
+Ví dụ:
+
+Prompt thông thường: ""Một cảnh quay trong một phòng trưng bày nghệ thuật.""
+
+Prompt Siêu Tường thuật: ""Một cảnh quay theo chân một người đang đi trong một phòng trưng bày nghệ thuật. Khi người đó nhìn chằm chằm vào một bức tranh phong cảnh, chính kết cấu của video bắt đầu tan chảy và chảy vào bức tranh đó (the very fabric of the video begins to melt and flow into the painting). Camera không di chuyển, nhưng người xem bị kéo vào bên trong bức tranh. Cuối cùng, camera kéo ngược ra xa để cho thấy toàn bộ cảnh quay ban đầu thực ra chỉ là một trong những pixel trên màn hình của một AI đang mơ."""

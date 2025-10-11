@@ -10,7 +10,7 @@
   "scripts": {
     "install:all": "npm install",
     "build:admin": "cd admin-web && npm run build",
-    "build:backend": "cd backend && npm run build", 
+    "build:backend": "cd backend && npm run build",
     "build:mobile": "cd customer-mobile && npm run build",
     "build:all": "npm run build:admin && npm run build:backend && npm run build:mobile",
     "dev:backend": "cd backend && npm run dev",
@@ -21,5 +21,22 @@
   },
   "engines": {
     "node": ">=18.0.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.28.4",
+    "browserslist": "^4.26.3",
+    "caniuse-lite": "^1.0.30001749",
+    "drizzle-orm": "^0.44.6",
+    "tailwindcss": "^4.1.14",
+    "use-callback-ref": "^1.3.3",
+    "use-sidecar": "^1.1.3",
+    "vite": "^7.1.9",
+    "zod": "^4.1.12"
+  },
+  "dependencies": {
+    "esbuild": "^0.25.10",
+    "node-ssh": "^13.2.1",
+    "pigeon-maps": "^0.22.1",
+    "tsx": "^4.20.6"
   }
 }

@@ -1,4 +1,5 @@
 import { Switch, Route, Router } from "wouter";
+import { useHashLocation } from "wouter/use-hash-location";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
@@ -88,6 +89,7 @@ import AffiliateManagement from "@/pages/AffiliateManagement";
 import AffiliateProductAssignment from "@/pages/AffiliateProductAssignment";
 import AffiliateProductManagement from "@/pages/AffiliateProductManagement";
 import AffiliateProductRequestApproval from "@/pages/AffiliateProductRequestApproval";
+import StoreProductAssignment from "@/pages/StoreProductAssignment";
 import VIPManagement from "@/pages/VIPManagement";
 import VIPRegister from "@/pages/VIPRegister";
 import DriverApprovalManagement from "@/pages/DriverApprovalManagement";
@@ -171,6 +173,7 @@ function AdminRouter() {
       <Route path="/affiliate-products" component={AffiliateProductAssignment} />
       <Route path="/affiliate-product-management" component={AffiliateProductManagement} />
       <Route path="/affiliate-product-requests" component={AffiliateProductRequestApproval} />
+      <Route path="/store-products" component={StoreProductAssignment} />
       <Route path="/vip-approvals" component={VIPManagement} />
       <Route path="/driver-approvals" component={DriverApprovalManagement} />
       <Route path="/affiliate-approvals" component={AffiliateApprovalManagement} />
@@ -255,7 +258,7 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
         <TooltipProvider>
-          <Router base="/adminhoang">
+          <Router hook={useHashLocation}>
               {/* Public Routes (outside admin layout) */}
               <Switch>
               <Route path="/checkout" component={GuestCheckoutPage} />

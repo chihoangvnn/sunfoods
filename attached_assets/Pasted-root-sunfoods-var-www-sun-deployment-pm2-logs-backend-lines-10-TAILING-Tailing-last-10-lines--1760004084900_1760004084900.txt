@@ -1,0 +1,24 @@
+root@sunfoods:/var/www/sun/deployment# pm2 logs backend --lines 10
+[TAILING] Tailing last 10 lines for [backend] process (change the value with --lines option)
+/root/.pm2/logs/backend-error.log last 10 lines:
+0|backend  |     at Module._load (node:internal/modules/cjs/loader:1091:12)
+0|backend  |     at Object.<anonymous> (/usr/local/lib/node_modules/pm2/lib/ProcessContainerFork.js:33:23)
+0|backend  |     at Module._compile (node:internal/modules/cjs/loader:1521:14)
+0|backend  |     at Module._extensions..js (node:internal/modules/cjs/loader:1623:10)
+0|backend  |     at Module.load (node:internal/modules/cjs/loader:1266:32)
+0|backend  | ⚠️  VAPID keys not configured! Push notifications will not work.
+0|backend  |    Set VAPID_PUBLIC_KEY and VAPID_PRIVATE_KEY environment variables.
+0|backend  | ⚠️ THÔNG BÁO: Đang sử dụng TikTok credentials mẫu. Vui lòng thay thế bằng credentials thật từ TikTok Developer Portal để kết nối thực tế.
+0|backend  | ⚠️ Replit OAuth credentials not found. Set REPLIT_APP_ID and REPLIT_APP_SECRET environment variables.
+0|backend  | ⚠️ Campaign verifier: Redis not configured - running without queue-based verification
+
+/root/.pm2/logs/backend-out.log last 10 lines:
+0|backend  | ated_at", "priority", "ip_pool_id", "ip_snapshot", "batch_id" from "scheduled_posts" where ("scheduled_posts"."status" = $1 and "scheduled_posts"."scheduled_time" <= $2) order by "scheduled_posts"."scheduled_time" -- params: ["scheduled", "2025-10-09T10:01:17.325Z"]
+0|backend  | Query: select "id", "caption", "hashtags", "asset_ids", "social_account_id", "platform", "scheduled_time", "timezone", "status", "published_at", "platform_post_id", "platform_url", "error_message", "retry_count", "last_retry_at", "analytics", "created_at", "updated_at", "priority", "ip_pool_id", "ip_snapshot", "batch_id" from "scheduled_posts" "scheduledPosts" where ("scheduledPosts"."status" = $1 and ("scheduledPosts"."analytics" is null or "scheduledPosts"."updated_at" < $2)) order by "scheduledPosts"."published_at" asc limit $3 -- params: ["posted", "2025-10-09T09:31:17.326Z", 50]
+0|backend  | Query: select "id", "campaign_id", "customer_id", "share_url", "submitted_at", "status", "verification_scheduled_at", "last_verified_at", "rewarded_at", "voucher_id", "rejection_reason", "verification_attempts", "metadata", "created_at", "updated_at" from "campaign_participations" where ("campaign_participations"."status" = $1 and "campaign_participations"."verification_scheduled_at" <= $2) order by "campaign_participations"."verification_scheduled_at" -- params: ["pending", "2025-10-09T10:01:17.326Z"]
+0|backend  | Query: select "id", "caption", "hashtags", "asset_ids", "social_account_id", "platform", "scheduled_time", "timezone", "status", "published_at", "platform_post_id", "platform_url", "error_message", "retry_count", "last_retry_at", "analytics", "created_at", "updated_at", "priority", "ip_pool_id", "ip_snapshot", "batch_id" from "scheduled_posts" where ("scheduled_posts"."status" = $1 and "scheduled_posts"."retry_count" <= $2) -- params: ["failed", 2]
+0|backend  | 📈 Found 0 posts to fetch analytics for
+0|backend  | ✅ Analytics collection complete: 0 success, 0 errors
+0|backend  | 📋 Found 0 participations to verify
+0|backend  | 📭 No due posts at 2025-10-09T10:01:17.325Z
+

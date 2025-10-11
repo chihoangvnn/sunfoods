@@ -1,0 +1,92 @@
+root@sunfoods:/var/www/sun/backend# curl http://localhost:5000/adminhoang
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Redirecting</title>
+</head>
+<body>
+<pre>Redirecting to /adminhoang/</pre>
+</body>
+</html>
+root@sunfoods:/var/www/sun/backend# sudo nginx -t
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+root@sunfoods:/var/www/sun/backend# sudo systemctl reload nginx
+root@sunfoods:/var/www/sun/backend# cat /etc/nginx/sites-available/sunfoods.vn | grep -A 10 "adminhoang"
+    location ^~ /adminhoang/ {
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header Host $host;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $http_connection;
+        proxy_pass http://127.0.0.1:3000;
+        proxy_read_timeout 90s;
+        proxy_connect_timeout 10s;
+root@sunfoods:/var/www/sun/backend# sudo nginx -t
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+root@sunfoods:/var/www/sun/backend# sudo nano /etc/nginx/sites-available/sunfoods.vn
+root@sunfoods:/var/www/sun/backend# sudo nginx -t
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+root@sunfoods:/var/www/sun/backend# sudo systemctl reload nginx
+root@sunfoods:/var/www/sun/backend# curl http://localhost:5000/adminhoang
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Redirecting</title>
+</head>
+<body>
+<pre>Redirecting to /adminhoang/</pre>
+</body>
+</html>
+root@sunfoods:/var/www/sun/backend# cd ..
+root@sunfoods:/var/www/sun# cd deployment/
+root@sunfoods:/var/www/sun/deployment# chmod +x INSTALL_ON_VPS.sh
+root@sunfoods:/var/www/sun/deployment# ./INSTALL_ON_VPS.sh
+🚀 Installing pre-built application...
+▶ Installing PM2...
+
+changed 133 packages in 16s
+
+13 packages are looking for funding
+  run `npm fund` for details
+▶ Installing Certbot...
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+certbot is already the newest version (2.9.0-1).
+python3-certbot-nginx is already the newest version (2.9.0-1).
+0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
+▶ Setting up application...
+▶ Installing backend dependencies...
+npm warn config production Use `--omit=dev` instead.
+npm error code EUSAGE
+npm error
+npm error The `npm ci` command can only install with an existing package-lock.json or
+npm error npm-shrinkwrap.json with lockfileVersion >= 1. Run an install with npm@5 or
+npm error later to generate a package-lock.json file, then try again.
+npm error
+npm error Clean install a project
+npm error
+npm error Usage:
+npm error npm ci
+npm error
+npm error Options:
+npm error [--install-strategy <hoisted|nested|shallow|linked>] [--legacy-bundling]
+npm error [--global-style] [--omit <dev|optional|peer> [--omit <dev|optional|peer> ...]]
+npm error [--include <prod|dev|optional|peer> [--include <prod|dev|optional|peer> ...]]
+npm error [--strict-peer-deps] [--foreground-scripts] [--ignore-scripts] [--no-audit]
+npm error [--no-bin-links] [--no-fund] [--dry-run]
+npm error [-w|--workspace <workspace-name> [-w|--workspace <workspace-name> ...]]
+npm error [-ws|--workspaces] [--include-workspace-root] [--install-links]
+npm error
+npm error aliases: clean-install, ic, install-clean, isntall-clean
+npm error
+npm error Run "npm help ci" for more info
+npm error A complete log of this run can be found in: /root/.npm/_logs/2025-10-09T09_24_25_177Z-debug-0.log
+root@sunfoods:/var/www/sun/deployment#

@@ -1,24 +1,29 @@
-import { useState } from "react";
+import { useState, lazy, Suspense } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { insertCustomersSchema, type InsertCustomers, type Customers } from "@shared/schema";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Camera, Upload, X } from "lucide-react";
+import { Camera as CameraIcon, Upload as UploadIcon, X } from "lucide-react";
 import { z } from "zod";
 
-// Form schema that extends the base insert schema with additional validation
-const customerFormSchema = insertCustomersSchema.extend({
+// Lazy-load AddressMapPicker to avoid Leaflet bundling issues
+const AddressMapPicker = lazy(() => import("./AddressMapPicker").then(module => ({ default: module.AddressMapPicker })));
+
+// Local schema definition to avoid import issues from backend
+const customerFormSchema = z.object({
+  name: z.string().min(1, "Tên là bắt buộc"),
   email: z.string().min(1, "Email là bắt buộc").email("Email không hợp lệ"),
   phone: z.string().optional().refine((val) => {
-    if (!val) return true; // Optional field
-    // Vietnamese phone number validation
+    if (!val) return true;
     return /^(\+84|0)[3-9][0-9]{8}$/.test(val);
   }, "Số điện thoại không hợp lệ"),
+  status: z.string().default("active"),
+  avatar: z.string().optional(),
+  customerRole: z.string().default("customer"),
   gender: z.string().optional(),
   address: z.string().min(1, "Địa chỉ chính là bắt buộc"),
   address2: z.string().optional(),
@@ -26,10 +31,19 @@ const customerFormSchema = insertCustomersSchema.extend({
     if (!val) return true;
     const num = parseFloat(val);
     return !isNaN(num) && num >= 0;
-  }, "Hạn mức phải lớn hơn hoặc bằng 0")
+  }, "Hạn mức phải lớn hơn hoặc bằng 0"),
+  latitude: z.number().optional(),
+  longitude: z.number().optional(),
+  distanceFromShop: z.number().optional(),
+  routeDistanceFromShop: z.number().optional().nullable(),
+  district: z.string().optional()
 });
 
 type CustomerFormData = z.infer<typeof customerFormSchema>;
+
+// Local types to avoid backend import issues
+type Customers = any;
+type InsertCustomers = any;
 
 interface CustomerFormProps {
   customer?: Customers;
@@ -66,6 +80,11 @@ export function CustomerForm({
       address: customer?.address || "",
       address2: customer?.address2 || "",
       creditLimit: customer?.creditLimit ? customer.creditLimit.toString() : "0",
+      latitude: customer?.latitude ? parseFloat(customer.latitude) : undefined,
+      longitude: customer?.longitude ? parseFloat(customer.longitude) : undefined,
+      distanceFromShop: customer?.distanceFromShop ? parseFloat(customer.distanceFromShop) : undefined,
+      routeDistanceFromShop: customer?.routeDistanceFromShop ? parseFloat(customer.routeDistanceFromShop) : undefined,
+      district: customer?.district || "",
     },
   });
 
@@ -112,6 +131,12 @@ export function CustomerForm({
         address: data.address.trim(),
         address2: data.address2?.trim() || undefined,
         creditLimit: data.creditLimit ? data.creditLimit : "0",
+        // Only include lat/long if they have valid values (not undefined)
+        ...(data.latitude !== undefined && { latitude: data.latitude.toString() }),
+        ...(data.longitude !== undefined && { longitude: data.longitude.toString() }),
+        ...(data.distanceFromShop !== undefined && { distanceFromShop: data.distanceFromShop.toString() }),
+        ...(data.routeDistanceFromShop !== undefined && data.routeDistanceFromShop !== null && { routeDistanceFromShop: data.routeDistanceFromShop.toString() }),
+        district: data.district?.trim() || undefined,
         socialData: {
           ...(customer?.socialData || {}),
           gender: data.gender || undefined,
@@ -164,7 +189,7 @@ export function CustomerForm({
                 onClick={() => document.getElementById("avatar-input")?.click()}
                 data-testid="button-upload-avatar"
               >
-                <Upload className="h-4 w-4 mr-2" />
+                <UploadIcon className="h-4 w-4 mr-2" />
                 {avatarPreview ? "Thay đổi ảnh" : "Tải ảnh lên"}
               </Button>
               <Button
@@ -179,7 +204,7 @@ export function CustomerForm({
                 }}
                 data-testid="button-take-photo"
               >
-                <Camera className="h-4 w-4 mr-2" />
+                <CameraIcon className="h-4 w-4 mr-2" />
                 Chụp ảnh
               </Button>
             </div>
@@ -319,6 +344,32 @@ export function CustomerForm({
               </FormItem>
             )}
           />
+
+          {/* Map Picker for Location */}
+          <div className="pt-2">
+            <Suspense fallback={
+              <div className="flex items-center justify-center h-[350px] border rounded-md">
+                <div className="text-center">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-2"></div>
+                  <p className="text-sm text-muted-foreground">Đang tải bản đồ...</p>
+                </div>
+              </div>
+            }>
+              <AddressMapPicker
+                initialLatitude={form.watch("latitude") || null}
+                initialLongitude={form.watch("longitude") || null}
+                onLocationSelect={(address, latitude, longitude, distanceFromShop, district, routeDistanceFromShop) => {
+                  form.setValue("address", address);
+                  form.setValue("latitude", latitude);
+                  form.setValue("longitude", longitude);
+                  form.setValue("distanceFromShop", distanceFromShop);
+                  form.setValue("district", district);
+                  form.setValue("routeDistanceFromShop", routeDistanceFromShop);
+                }}
+                height="350px"
+              />
+            </Suspense>
+          </div>
 
           {/* Credit Limit Field */}
           <FormField

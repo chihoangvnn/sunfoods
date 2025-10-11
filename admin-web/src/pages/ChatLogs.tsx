@@ -36,6 +36,7 @@ interface Conversation {
   customerAvatar?: string;
   isVIP?: boolean;
   status: 'active' | 'closed';
+  source: 'facebook' | 'webchat';
   messages: ConversationMessage[];
   createdAt: string;
   updatedAt: string;
@@ -44,7 +45,7 @@ interface Conversation {
 }
 
 const fetchConversations = async (): Promise<Conversation[]> => {
-  const response = await fetch('/api/rasa/conversations');
+  const response = await fetch('/api/chat-logs/merged');
   if (!response.ok) {
     throw new Error('Failed to fetch conversations');
   }
@@ -60,6 +61,17 @@ const ConversationCard: React.FC<{
   const lastMessage = conversation.messages?.[conversation.messages.length - 1];
   const userMessages = conversation.messages?.filter(m => m.senderType === 'user') || [];
   const previewMessage = lastMessage?.content || 'Chưa có tin nhắn';
+
+  const getDisplayName = () => {
+    if (conversation.customerName) return conversation.customerName;
+    
+    if (conversation.sessionId.startsWith('guest_')) {
+      const uuid = conversation.sessionId.substring(6);
+      return `Guest #${uuid.slice(-6)}`;
+    }
+    
+    return `Khách #${conversation.sessionId.slice(-6)}`;
+  };
 
   return (
     <Card className="hover:shadow-sm transition-shadow">
@@ -89,8 +101,17 @@ const ConversationCard: React.FC<{
             <div className="flex-1 min-w-0">
               <div className="flex items-center space-x-2">
                 <h3 className="font-medium text-sm truncate">
-                  {conversation.customerName || `Khách #${conversation.sessionId.slice(-6)}`}
+                  {getDisplayName()}
                 </h3>
+                {conversation.source === 'facebook' ? (
+                  <Badge className="text-xs px-1.5 py-0.5 bg-blue-500 hover:bg-blue-600">
+                    🔵 Facebook
+                  </Badge>
+                ) : (
+                  <Badge className="text-xs px-1.5 py-0.5 bg-green-500 hover:bg-green-600">
+                    🟢 Web Chat
+                  </Badge>
+                )}
                 {conversation.isVIP && (
                   <Badge variant="secondary" className="text-xs px-1.5 py-0.5">
                     <Star className="w-3 h-3 mr-1 fill-yellow-400 text-yellow-400" />

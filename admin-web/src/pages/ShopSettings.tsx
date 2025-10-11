@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, lazy, Suspense } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
 import { useForm } from "react-hook-form";
@@ -27,6 +27,9 @@ import {
   Save,
   Loader2
 } from "lucide-react";
+
+// Lazy-load AddressMapPicker to avoid Leaflet bundling issues
+const AddressMapPicker = lazy(() => import("@/components/AddressMapPicker").then(module => ({ default: module.AddressMapPicker })));
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -70,6 +73,9 @@ interface HeroSliderItem {
   url: string;
   alt?: string;
   thumbnail?: string;
+  link?: string;
+  buttonText?: string;
+  showButton?: boolean;
 }
 
 interface ShopSettingsData {
@@ -88,6 +94,8 @@ interface ShopSettingsData {
   workingHours?: string;
   workingDays?: string;
   support247?: boolean;
+  shopLatitude?: string;
+  shopLongitude?: string;
   footerMenuProducts?: FooterMenuItem[];
   footerMenuSupport?: FooterMenuItem[];
   footerMenuConnect?: FooterMenuItem[];
@@ -118,6 +126,8 @@ const shopSettingsSchema = z.object({
   workingHours: z.string().optional(),
   workingDays: z.string().optional(),
   support247: z.boolean().optional(),
+  shopLatitude: z.string().optional(),
+  shopLongitude: z.string().optional(),
   appStoreUrl: z.string().optional(),
   googlePlayUrl: z.string().optional(),
   copyrightMain: z.string().optional(),
@@ -170,6 +180,8 @@ export default function ShopSettings() {
       workingHours: "",
       workingDays: "",
       support247: false,
+      shopLatitude: "",
+      shopLongitude: "",
       appStoreUrl: "",
       googlePlayUrl: "",
       copyrightMain: "",
@@ -197,6 +209,8 @@ export default function ShopSettings() {
         workingHours: settings.workingHours || "",
         workingDays: settings.workingDays || "",
         support247: settings.support247 || false,
+        shopLatitude: settings.shopLatitude || "",
+        shopLongitude: settings.shopLongitude || "",
         appStoreUrl: settings.appStoreUrl || "",
         googlePlayUrl: settings.googlePlayUrl || "",
         copyrightMain: settings.copyrightMain || "",
@@ -217,8 +231,15 @@ export default function ShopSettings() {
 
   const saveMutation = useMutation({
     mutationFn: async (data: ShopSettingsData) => {
+      // Clean payload: remove empty strings for optional fields
+      const cleanedData = { ...data };
+      if (cleanedData.rating === "") delete cleanedData.rating;
+      if (cleanedData.totalReviews === 0) delete cleanedData.totalReviews;
+      if (cleanedData.shopLatitude === "") delete cleanedData.shopLatitude;
+      if (cleanedData.shopLongitude === "") delete cleanedData.shopLongitude;
+      
       const payload = {
-        ...data,
+        ...cleanedData,
         footerMenuProducts: footerProducts,
         footerMenuSupport: footerSupport,
         footerMenuConnect: footerConnect,
@@ -496,6 +517,53 @@ export default function ShopSettings() {
                 />
                 <Label htmlFor="support247">Hỗ trợ 24/7</Label>
               </div>
+            </AccordionContent>
+          </AccordionItem>
+
+          {/* Shop Location */}
+          <AccordionItem value="location" className="border rounded-lg px-4">
+            <AccordionTrigger className="hover:no-underline">
+              <div className="flex items-center gap-2">
+                <MapPin className="h-5 w-5" />
+                <span className="font-semibold">Vị trí cửa hàng</span>
+              </div>
+            </AccordionTrigger>
+            <AccordionContent className="pt-4 space-y-4">
+              <div className="text-sm text-muted-foreground mb-2">
+                Đánh dấu vị trí cửa hàng trên bản đồ để tính khoảng cách đến khách hàng
+              </div>
+              
+              {form.watch("shopLatitude") && form.watch("shopLongitude") && (
+                <div className="flex items-center gap-2 text-sm p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                  <MapPin className="h-4 w-4 text-blue-600" />
+                  <span className="text-blue-800">
+                    Vị trí: {parseFloat(form.watch("shopLatitude") || "0").toFixed(6)}, {parseFloat(form.watch("shopLongitude") || "0").toFixed(6)}
+                  </span>
+                </div>
+              )}
+
+              <Suspense fallback={
+                <div className="flex items-center justify-center h-[400px] border rounded-md">
+                  <div className="text-center">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-2"></div>
+                    <p className="text-sm text-muted-foreground">Đang tải bản đồ...</p>
+                  </div>
+                </div>
+              }>
+                <AddressMapPicker
+                  initialLatitude={form.watch("shopLatitude") ? parseFloat(form.watch("shopLatitude") || "0") : null}
+                  initialLongitude={form.watch("shopLongitude") ? parseFloat(form.watch("shopLongitude") || "0") : null}
+                  onLocationSelect={(address, latitude, longitude) => {
+                    form.setValue("shopLatitude", latitude.toString());
+                    form.setValue("shopLongitude", longitude.toString());
+                    if (!form.watch("address")) {
+                      form.setValue("address", address);
+                    }
+                  }}
+                  height="400px"
+                  isShopLocation={true}
+                />
+              </Suspense>
             </AccordionContent>
           </AccordionItem>
 
@@ -950,6 +1018,38 @@ export default function ShopSettings() {
                         placeholder="Thumbnail URL (cho video)"
                       />
                     )}
+                    <div className="space-y-3 pt-2 border-t">
+                      <Label className="text-sm font-medium">Link & Call-to-Action</Label>
+                      <Input
+                        value={slide.link || ""}
+                        onChange={(e) => {
+                          const updated = [...heroSlider];
+                          updated[idx].link = e.target.value;
+                          setHeroSlider(updated);
+                        }}
+                        placeholder="Link URL (VD: /products hoặc https://...)"
+                      />
+                      <Input
+                        value={slide.buttonText || ""}
+                        onChange={(e) => {
+                          const updated = [...heroSlider];
+                          updated[idx].buttonText = e.target.value;
+                          setHeroSlider(updated);
+                        }}
+                        placeholder="Button Text (mặc định: Shop Now)"
+                      />
+                      <div className="flex items-center gap-2">
+                        <Switch
+                          checked={slide.showButton ?? true}
+                          onCheckedChange={(checked) => {
+                            const updated = [...heroSlider];
+                            updated[idx].showButton = checked;
+                            setHeroSlider(updated);
+                          }}
+                        />
+                        <Label className="text-sm">Hiện nút Call-to-Action</Label>
+                      </div>
+                    </div>
                   </CardContent>
                 </Card>
               ))}
@@ -957,7 +1057,7 @@ export default function ShopSettings() {
                 <Button
                   type="button"
                   variant="outline"
-                  onClick={() => setHeroSlider([...heroSlider, { type: 'image', url: '' }])}
+                  onClick={() => setHeroSlider([...heroSlider, { type: 'image', url: '', showButton: true }])}
                 >
                   <Plus className="h-4 w-4 mr-2" />
                   Thêm slide ({heroSlider.length}/3)

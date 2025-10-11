@@ -66,6 +66,7 @@ const menuGroups: MenuGroup[] = [
     icon: <Package className="w-5 h-5" />,
     items: [
       { path: "/products", label: "Products", icon: <ShoppingBag className="w-4 h-4" /> },
+      { path: "/store-products", label: "Store Products", icon: <Store className="w-4 h-4" /> },
       { path: "/categories", label: "Categories", icon: <FolderKanban className="w-4 h-4" /> },
       { path: "/general-categories-admin", label: "General Categories", icon: <Grid className="w-4 h-4" /> },
       { path: "/categories-admin", label: "Product Categories", icon: <FolderKanban className="w-4 h-4" /> },
@@ -244,19 +245,6 @@ export default function CompleteAdminSidebar() {
 
   return (
     <div className="flex flex-col h-full bg-white">
-      {/* Header */}
-      <div className="p-6 border-b border-gray-200">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
-            <Package className="w-6 h-6 text-white" />
-          </div>
-          <div>
-            <h1 className="text-lg font-bold text-gray-900">Admin Panel</h1>
-            <p className="text-xs text-gray-500">Management Dashboard</p>
-          </div>
-        </div>
-      </div>
-
       {/* Menu Groups */}
       <div className="flex-1 overflow-y-auto py-4">
         <nav className="px-3 space-y-1">

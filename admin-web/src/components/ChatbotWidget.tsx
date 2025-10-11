@@ -440,29 +440,54 @@ export default function ChatbotWidget({
   const [isNetworkError, setIsNetworkError] = useState(false);
   const [lastSeenMessageId, setLastSeenMessageId] = useState<string | null>(null);
   
-  // 🔥 FIXED: Persistent conversation ID with localStorage guards
-  const [conversationId] = useState(() => {
+  // Helper function to generate UUID v4
+  const generateUUID = (): string => {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+      const r = Math.random() * 16 | 0;
+      const v = c === 'x' ? r : (r & 0x3 | 0x8);
+      return v.toString(16);
+    });
+  };
+  
+  // 🔥 NEW: Get chat identifier based on customer authentication status
+  // Returns either web_${customerId} for authenticated customers or guest_${uuid} for anonymous visitors
+  const getChatIdentifier = useCallback((): string => {
+    // 🔥 CUSTOMER ID PERSISTENCE: Check for stored customer ID first
+    const createGuestId = () => `guest_${generateUUID()}`;
+    
     // Guard against SSR and Safari private mode localStorage issues
     if (typeof window === 'undefined') {
-      // SSR fallback - generate UUID
-      return `web_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      return createGuestId();
     }
     
     try {
-      // Check for stored conversation ID in localStorage
-      const stored = localStorage.getItem('rasa_conversation_id');
+      // 🔥 STEP 1: Check for stored customer ID (persisted after backend detection)
+      const storedCustomerId = localStorage.getItem('stored_customer_id');
+      if (storedCustomerId) {
+        console.log(`🔄 Using stored customer ID: web_${storedCustomerId}`);
+        return `web_${storedCustomerId}`;
+      }
+      
+      // 🔥 STEP 2: Fallback to guest identifier with persistent UUID
+      // Check for stored guest ID in localStorage (key: rasa_guest_id)
+      const stored = localStorage.getItem('rasa_guest_id');
       if (stored) return stored;
       
-      // Generate new persistent conversation ID (web format)  
-      const newId = `web_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-      localStorage.setItem('rasa_conversation_id', newId);
+      // Generate new persistent guest ID with UUID format
+      // Format: guest_a1b2c3d4-5678-90ab-cdef-1234567890ab
+      const newId = createGuestId();
+      localStorage.setItem('rasa_guest_id', newId);
       return newId;
     } catch (error) {
       // Safari private mode or storage blocked - use session-only fallback
-      console.warn('LocalStorage unavailable, using session-only conversation ID:', error);
-      return `web_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      console.warn('LocalStorage unavailable, using session-only guest ID:', error);
+      return createGuestId();
     }
-  });
+  }, []);
+  
+  // 🔥 REACTIVE: Chat identifier that updates when customer auth changes
+  // This will automatically switch from guest_xxx to web_xxx when customer logs in
+  const [conversationId, setConversationId] = useState(() => getChatIdentifier());
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -520,8 +545,24 @@ export default function ChatbotWidget({
       }
       
       const customerData = await customerResponse.json();
-      if (customerData.success) {
+      if (customerData.success && customerData.data?.customerId) {
         setCustomerContext(customerData.data);
+        
+        // 🔥 CUSTOMER ID PERSISTENCE: Save customerId to localStorage for next visit
+        try {
+          localStorage.setItem('stored_customer_id', customerData.data.customerId);
+          console.log(`💾 Saved customer ID to localStorage: ${customerData.data.customerId}`);
+          
+          // 🔥 SESSION MIGRATION: Switch from guest_xxx to web_${customerId}
+          const newConversationId = `web_${customerData.data.customerId}`;
+          if (conversationId !== newConversationId) {
+            setConversationId(newConversationId);
+            console.log(`🔄 Session migrated: ${conversationId} → ${newConversationId}`);
+          }
+        } catch (storageError) {
+          console.warn('Failed to save customer ID to localStorage:', storageError);
+        }
+        
         console.log(`✅ Loaded customer context for: ${customerData.data.name} (${customerData.data.isVip ? 'VIP' : 'Regular'})`);
       }
     } catch (error) {
@@ -532,7 +573,69 @@ export default function ChatbotWidget({
     }
   }, []);
 
+  // 🔥 CUSTOMER LOGOUT HANDLER: Clear stored customer ID and reset to guest mode
+  const handleCustomerLogout = useCallback(() => {
+    try {
+      // Clear stored customer ID from localStorage
+      localStorage.removeItem('stored_customer_id');
+      console.log('🔓 Cleared stored customer ID - resetting to guest mode');
+      
+      // Clear customer context state
+      setCustomerContext(null);
+      
+      // Reset to guest mode with new guest ID
+      const newGuestId = getChatIdentifier(); // Will generate new guest_xxx since stored_customer_id is cleared
+      setConversationId(newGuestId);
+      
+      // Clear messages to start fresh conversation
+      setMessages([]);
+      setHasAttemptedCustomerFetch(false);
+      
+      console.log(`🔄 Logged out - switched to: ${newGuestId}`);
+    } catch (error) {
+      console.warn('Failed to clear customer session:', error);
+    }
+  }, [getChatIdentifier]);
+
   const positioning = getSmartPositioning();
+
+  // 🔥 NEW: Reactive customer authentication listener
+  // Updates conversationId when customer logs in/out (e.g., guest_xxx → web_123 → guest_xxx)
+  useEffect(() => {
+    // 🎯 FUTURE: When CustomerAuthContext is added, listen to auth changes here:
+    //
+    // Example integration:
+    // const checkAuthAndUpdateId = () => {
+    //   const newId = getChatIdentifier();
+    //   if (newId !== conversationId) {
+    //     console.log(`🔄 Chat ID updated: ${conversationId} → ${newId}`);
+    //     setConversationId(newId);
+    //     setMessages([]); // Clear messages when switching between guest/customer
+    //     setHasAttemptedCustomerFetch(false); // Allow customer context refetch
+    //   }
+    // };
+    //
+    // // Listen to customer auth state changes
+    // window.addEventListener('customer-login', checkAuthAndUpdateId);
+    // window.addEventListener('customer-logout', checkAuthAndUpdateId);
+    //
+    // // Or use localStorage events for cross-tab sync:
+    // const handleStorageChange = (e: StorageEvent) => {
+    //   if (e.key === 'customer_session') {
+    //     checkAuthAndUpdateId();
+    //   }
+    // };
+    // window.addEventListener('storage', handleStorageChange);
+    //
+    // return () => {
+    //   window.removeEventListener('customer-login', checkAuthAndUpdateId);
+    //   window.removeEventListener('customer-logout', checkAuthAndUpdateId);
+    //   window.removeEventListener('storage', handleStorageChange);
+    // };
+    
+    // CURRENT: No customer auth yet - this is just a placeholder for future integration
+    // When customer auth is added, uncomment the above code
+  }, [conversationId, getChatIdentifier]);
 
   // Enhanced visibility entrance animation
   useEffect(() => {

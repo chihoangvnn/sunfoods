@@ -1,38 +1,67 @@
 module.exports = {
   apps: [
     {
-      name: 'backend',
-      script: './dist/index.js',
+      name: 'backend-api',
       cwd: './backend',
-      interpreter: 'node',
-      interpreter_args: '-r dotenv/config',
-      exec_mode: 'fork',
-      env: {
-        NODE_ENV: 'production',
-        PORT: 3000
-      },
-      error_log: './logs/backend-error.log',
-      out_log: './logs/backend-out.log',
-      watch: false,
-      max_memory_restart: '1G',
-      autorestart: true,
-      max_restarts: 10
-    },
-    {
-      name: 'mobile',
       script: 'npm',
       args: 'start',
-      cwd: './customer-mobile',
       env: {
         NODE_ENV: 'production',
-        PORT: 3001
+        PORT: '5000'
       },
-      error_log: './logs/mobile-error.log',
-      out_log: './logs/mobile-out.log',
-      watch: false,
-      max_memory_restart: '1G',
+      instances: 1,
+      exec_mode: 'fork',
       autorestart: true,
-      max_restarts: 10
+      watch: false,
+      max_memory_restart: '1G'
+    },
+    {
+      name: 'sunfoods-storefront',
+      cwd: './customer-mobile',
+      script: 'npm',
+      args: 'start',
+      env: {
+        NODE_ENV: 'production',
+        PORT: '3001',
+        NEXT_PUBLIC_API_URL: 'https://sunfoods.vn/api'
+      },
+      instances: 1,
+      exec_mode: 'fork',
+      autorestart: true,
+      watch: false,
+      max_memory_restart: '512M'
+    },
+    {
+      name: 'tramhuong-storefront',
+      cwd: './customer-tramhuong',
+      script: 'npm',
+      args: 'start',
+      env: {
+        NODE_ENV: 'production',
+        PORT: '3002',
+        NEXT_PUBLIC_API_URL: 'https://tramhuonghoangngan.com/api'
+      },
+      instances: 1,
+      exec_mode: 'fork',
+      autorestart: true,
+      watch: false,
+      max_memory_restart: '512M'
+    },
+    {
+      name: 'nhangsach-storefront',
+      cwd: './customer-nhangsach',
+      script: 'npm',
+      args: 'start',
+      env: {
+        NODE_ENV: 'production',
+        PORT: '3003',
+        NEXT_PUBLIC_API_URL: 'https://nhangsach.net/api'
+      },
+      instances: 1,
+      exec_mode: 'fork',
+      autorestart: true,
+      watch: false,
+      max_memory_restart: '512M'
     }
   ]
 };

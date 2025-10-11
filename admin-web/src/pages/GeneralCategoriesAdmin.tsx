@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Link } from 'wouter';
-import { Search, Plus, ChevronDown, ChevronRight, Tag, Edit, Trash2, X, Package, TrendingUp, Users, Star, AlertTriangle, CheckCircle, Target, BarChart } from "lucide-react";
+import { Search, Plus, Tag, X, Package, CheckCircle, Target, BarChart } from "lucide-react";
+import { useDebounce } from "@/hooks/use-debounce";
 
-// Book Category Types
-interface BookCategory {
+// Product Category Types
+interface ProductCategory {
   id: string;
   name: string;
   slug: string;
@@ -13,7 +14,7 @@ interface BookCategory {
   description: string | null;
   icon: string | null;
   color: string;
-  bookCount: number; // Changed from productCount to bookCount
+  productCount: number;
   isActive: boolean;
   isFeatured: boolean;
   metaTitle: string | null;
@@ -22,7 +23,7 @@ interface BookCategory {
   updatedAt: string;
 }
 
-interface BookCategoryFormData {
+interface ProductCategoryFormData {
   name: string;
   slug: string;
   parentId: string;
@@ -35,7 +36,7 @@ interface BookCategoryFormData {
   metaDescription: string;
 }
 
-const DEFAULT_FORM_DATA: BookCategoryFormData = {
+const DEFAULT_FORM_DATA: ProductCategoryFormData = {
   name: '',
   slug: '',
   parentId: '',
@@ -48,40 +49,37 @@ const DEFAULT_FORM_DATA: BookCategoryFormData = {
   metaDescription: ''
 };
 
-export default function BookCategoriesAdmin() {
+export default function GeneralCategoriesAdmin() {
   // State Management
-  const [categories, setCategories] = useState<BookCategory[]>([]);
+  const [categories, setCategories] = useState<ProductCategory[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   
   // Search & Filter States
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState(''); // Direct search without debounce
   const [levelFilter, setLevelFilter] = useState('all');
   const [statusFilter, setStatusFilter] = useState('active');
   
   // Form States
   const [showCategoryForm, setShowCategoryForm] = useState(false);
-  const [editingCategory, setEditingCategory] = useState<BookCategory | null>(null);
-  const [categoryFormData, setCategoryFormData] = useState<BookCategoryFormData>(DEFAULT_FORM_DATA);
+  const [editingCategory, setEditingCategory] = useState<ProductCategory | null>(null);
+  const [categoryFormData, setCategoryFormData] = useState<ProductCategoryFormData>(DEFAULT_FORM_DATA);
   
   // Tree States
   const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set());
   const [expandAll, setExpandAll] = useState(false);
 
-  // Fetch categories
+  // Fetch all categories once (no search filter on API)
   const fetchCategories = async () => {
     try {
       setLoading(true);
       const params = new URLSearchParams({
-        includeStats: 'true',
-        search: searchQuery,
-        level: levelFilter === 'all' ? '' : levelFilter,
-        isActive: statusFilter === 'all' ? 'all' : (statusFilter === 'active' ? 'true' : 'false')
+        includeStats: 'true'
       });
       
       const response = await fetch(`/api/general-categories?${params}`);
       if (!response.ok) {
-        throw new Error('Failed to fetch book categories');
+        throw new Error('Failed to fetch categories');
       }
       const data = await response.json();
       setCategories(data);
@@ -94,17 +92,46 @@ export default function BookCategoriesAdmin() {
 
   useEffect(() => {
     fetchCategories();
-  }, [searchQuery, levelFilter, statusFilter]);
+  }, []); // Load once on mount
+
+  // Client-side filtering (like CategoriesAdmin)
+  const getFilteredCategories = () => {
+    return categories.filter(cat => {
+      let matches = true;
+      
+      // Search filter
+      if (searchQuery) {
+        matches = matches && (
+          cat.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          (cat.description && cat.description.toLowerCase().includes(searchQuery.toLowerCase()))
+        );
+      }
+      
+      // Level filter
+      if (levelFilter !== 'all') {
+        matches = matches && cat.level === Number(levelFilter);
+      }
+      
+      // Status filter
+      if (statusFilter === 'active') {
+        matches = matches && cat.isActive === true;
+      } else if (statusFilter === 'inactive') {
+        matches = matches && cat.isActive === false;
+      }
+      
+      return matches;
+    });
+  };
 
   // CategoryTreeNode Component
   const CategoryTreeNode: React.FC<{
-    category: BookCategory;
+    category: ProductCategory;
     level: number;
     expanded: boolean;
     onToggleExpand: () => void;
     onEdit: () => void;
     onDelete: () => void;
-    allCategories: BookCategory[];
+    allCategories: ProductCategory[];
   }> = ({ category, level, expanded, onToggleExpand, onEdit, onDelete, allCategories }) => {
     const children = allCategories.filter(cat => cat.parentId === category.id);
     const hasChildren = children.length > 0;
@@ -119,13 +146,9 @@ export default function BookCategoriesAdmin() {
             {hasChildren && (
               <button
                 onClick={onToggleExpand}
-                className="p-1 hover:bg-gray-200 rounded"
+                className="p-1 hover:bg-gray-200 rounded text-gray-500"
               >
-                {expanded ? (
-                  <ChevronDown className="w-4 h-4 text-gray-500" />
-                ) : (
-                  <ChevronRight className="w-4 h-4 text-gray-500" />
-                )}
+                {expanded ? '▼' : '▶'}
               </button>
             )}
             {!hasChildren && <div className="w-6" />}
@@ -152,7 +175,7 @@ export default function BookCategoriesAdmin() {
                 )}
               </div>
               <p className="text-sm text-gray-500 mt-1">
-                {category.slug} • {category.bookCount} books
+                {category.slug} • {category.productCount} sản phẩm
               </p>
             </div>
           </div>
@@ -160,17 +183,17 @@ export default function BookCategoriesAdmin() {
           <div className="flex items-center space-x-2">
             <button
               onClick={onEdit}
-              className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded"
-              title="Edit Category"
+              className="px-3 py-1 text-sm text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded"
+              title="Sửa"
             >
-              <Edit className="w-4 h-4" />
+              ✏️
             </button>
             <button
               onClick={onDelete}
-              className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded"
-              title="Delete Category"
+              className="px-3 py-1 text-sm text-gray-600 hover:text-red-600 hover:bg-red-50 rounded"
+              title="Xóa"
             >
-              <Trash2 className="w-4 h-4" />
+              🗑️
             </button>
           </div>
         </div>
@@ -218,7 +241,7 @@ export default function BookCategoriesAdmin() {
   };
 
   // Category operations
-  const handleEditCategory = (category: BookCategory) => {
+  const handleEditCategory = (category: ProductCategory) => {
     setEditingCategory(category);
     setCategoryFormData({
       name: category.name,
@@ -235,8 +258,8 @@ export default function BookCategoriesAdmin() {
     setShowCategoryForm(true);
   };
 
-  const handleDeleteCategory = async (category: BookCategory) => {
-    if (!confirm(`Are you sure you want to delete "${category.name}"?`)) {
+  const handleDeleteCategory = async (category: ProductCategory) => {
+    if (!confirm(`Bạn có chắc muốn xóa danh mục "${category.name}"?`)) {
       return;
     }
 
@@ -292,11 +315,12 @@ export default function BookCategoriesAdmin() {
     total: categories.length,
     active: categories.filter(cat => cat.isActive).length,
     root: categories.filter(cat => cat.level === 0).length,
-    avgBooks: categories.length > 0 ? Math.round(categories.reduce((sum, cat) => sum + cat.bookCount, 0) / categories.length) : 0
+    avgProducts: categories.length > 0 ? Math.round(categories.reduce((sum, cat) => sum + cat.productCount, 0) / categories.length) : 0
   };
 
-  // Filter and sort categories for display
-  const rootCategories = categories.filter(cat => cat.parentId === null);
+  // Get filtered categories and extract root ones
+  const filteredCategories = getFilteredCategories();
+  const rootCategories = filteredCategories.filter(cat => cat.parentId === null);
 
   // Category Form Modal
   const CategoryFormModal = () => (
@@ -305,7 +329,7 @@ export default function BookCategoriesAdmin() {
         <div className="bg-white rounded-lg p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-semibold">
-              {editingCategory ? 'Edit Category' : 'Add New Category'}
+              {editingCategory ? 'Sửa Danh Mục' : 'Thêm Danh Mục Mới'}
             </h3>
             <button 
               onClick={() => setShowCategoryForm(false)}
@@ -317,13 +341,13 @@ export default function BookCategoriesAdmin() {
           
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Category Name *</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Tên Danh Mục *</label>
               <input
                 type="text"
                 value={categoryFormData.name}
                 onChange={(e) => setCategoryFormData({ ...categoryFormData, name: e.target.value })}
                 className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-500"
-                placeholder="e.g., Fiction, Non-fiction, Academic"
+                placeholder="VD: Nến thơm, Quà tặng, Trang trí"
               />
             </div>
 
@@ -334,37 +358,37 @@ export default function BookCategoriesAdmin() {
                 value={categoryFormData.slug}
                 onChange={(e) => setCategoryFormData({ ...categoryFormData, slug: e.target.value })}
                 className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-500"
-                placeholder="Auto-generated from name if empty"
+                placeholder="Tự động tạo từ tên nếu để trống"
               />
-              <p className="text-xs text-gray-500 mt-1">URL-friendly version (e.g., huong-nen)</p>
+              <p className="text-xs text-gray-500 mt-1">URL thân thiện (VD: nen-thom, qua-tang)</p>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Parent Category</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Danh Mục Cha</label>
               <select
                 value={categoryFormData.parentId}
                 onChange={(e) => setCategoryFormData({ ...categoryFormData, parentId: e.target.value })}
                 className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-500"
               >
-                <option value="">No Parent (Root Category)</option>
+                <option value="">Không có (Danh mục gốc)</option>
                 {categories
-                  .filter(cat => cat.id !== editingCategory?.id) // Don't allow self as parent
+                  .filter(cat => cat.id !== editingCategory?.id)
                   .map(cat => (
                     <option key={cat.id} value={cat.id}>
-                      {'  '.repeat(cat.level)}{cat.name} (Level {cat.level})
+                      {'  '.repeat(cat.level)}{cat.name} (Cấp {cat.level})
                     </option>
                   ))}
               </select>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Mô tả</label>
               <textarea
                 value={categoryFormData.description}
                 onChange={(e) => setCategoryFormData({ ...categoryFormData, description: e.target.value })}
                 className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-500"
                 rows={3}
-                placeholder="Category description..."
+                placeholder="Mô tả danh mục..."
               />
             </div>
 
@@ -381,7 +405,7 @@ export default function BookCategoriesAdmin() {
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Color</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Màu sắc</label>
                 <input
                   type="color"
                   value={categoryFormData.color}
@@ -399,7 +423,7 @@ export default function BookCategoriesAdmin() {
                   onChange={(e) => setCategoryFormData({ ...categoryFormData, isActive: e.target.checked })}
                   className="mr-2"
                 />
-                <span className="text-sm text-gray-700">Active</span>
+                <span className="text-sm text-gray-700">Kích hoạt</span>
               </label>
               
               <label className="flex items-center">
@@ -409,7 +433,7 @@ export default function BookCategoriesAdmin() {
                   onChange={(e) => setCategoryFormData({ ...categoryFormData, isFeatured: e.target.checked })}
                   className="mr-2"
                 />
-                <span className="text-sm text-gray-700">Featured</span>
+                <span className="text-sm text-gray-700">Nổi bật</span>
               </label>
             </div>
 
@@ -420,7 +444,7 @@ export default function BookCategoriesAdmin() {
                 value={categoryFormData.metaTitle}
                 onChange={(e) => setCategoryFormData({ ...categoryFormData, metaTitle: e.target.value })}
                 className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-500"
-                placeholder="SEO title for category page"
+                placeholder="Tiêu đề SEO cho trang danh mục"
               />
             </div>
 
@@ -431,7 +455,7 @@ export default function BookCategoriesAdmin() {
                 onChange={(e) => setCategoryFormData({ ...categoryFormData, metaDescription: e.target.value })}
                 className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-500"
                 rows={2}
-                placeholder="SEO description for category page"
+                placeholder="Mô tả SEO cho trang danh mục"
               />
             </div>
           </div>
@@ -447,13 +471,13 @@ export default function BookCategoriesAdmin() {
               onClick={() => setShowCategoryForm(false)}
               className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg"
             >
-              Cancel
+              Hủy
             </button>
             <button
               onClick={handleSaveCategory}
               className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
             >
-              {editingCategory ? 'Update Category' : 'Create Category'}
+              {editingCategory ? 'Cập Nhật' : 'Tạo Mới'}
             </button>
           </div>
         </div>
@@ -485,12 +509,12 @@ export default function BookCategoriesAdmin() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Book Categories</h1>
-              <p className="text-gray-600 mt-1">Manage book categories for classification and organization</p>
+              <h1 className="text-2xl font-bold text-gray-900">Danh Mục Sản Phẩm</h1>
+              <p className="text-gray-600 mt-1">Quản lý danh mục sản phẩm chính (nến, quà tặng, trang trí...)</p>
             </div>
             <Link href="/admin">
               <button className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg">
-                Back to Admin
+                Về Admin
               </button>
             </Link>
           </div>
@@ -504,8 +528,8 @@ export default function BookCategoriesAdmin() {
           <div className="bg-white p-6 rounded-lg border">
             <div className="flex items-center justify-between mb-4">
               <div>
-                <h2 className="text-xl font-semibold text-gray-900">Category Management</h2>
-                <p className="text-sm text-gray-600 mt-1">Manage book categories with hierarchical organization</p>
+                <h2 className="text-xl font-semibold text-gray-900">Quản Lý Danh Mục</h2>
+                <p className="text-sm text-gray-600 mt-1">Quản lý danh mục sản phẩm theo cấu trúc phân cấp</p>
               </div>
               
               <div className="flex items-center space-x-3">
@@ -518,7 +542,7 @@ export default function BookCategoriesAdmin() {
                   className="flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
                 >
                   <Plus className="w-4 h-4 mr-2" />
-                  Add Category
+                  Thêm Danh Mục
                 </button>
               </div>
             </div>
@@ -529,7 +553,7 @@ export default function BookCategoriesAdmin() {
                 <Search className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
                 <input
                   type="text"
-                  placeholder="Search categories..."
+                  placeholder="Tìm danh mục..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500"
@@ -541,10 +565,10 @@ export default function BookCategoriesAdmin() {
                 onChange={(e) => setLevelFilter(e.target.value)}
                 className="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500"
               >
-                <option value="all">All Levels</option>
-                <option value="0">Root Categories</option>
-                <option value="1">Level 1</option>
-                <option value="2">Level 2</option>
+                <option value="all">Tất cả cấp</option>
+                <option value="0">Danh mục gốc</option>
+                <option value="1">Cấp 1</option>
+                <option value="2">Cấp 2</option>
               </select>
               
               <select 
@@ -552,16 +576,16 @@ export default function BookCategoriesAdmin() {
                 onChange={(e) => setStatusFilter(e.target.value)}
                 className="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500"
               >
-                <option value="all">All Status</option>
-                <option value="active">Active Only</option>
-                <option value="inactive">Inactive Only</option>
+                <option value="all">Tất cả</option>
+                <option value="active">Đang hoạt động</option>
+                <option value="inactive">Không hoạt động</option>
               </select>
               
               <button
                 onClick={toggleExpandAll}
                 className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200"
               >
-                {expandAll ? 'Collapse All' : 'Expand All'}
+                {expandAll ? 'Thu gọn' : 'Mở rộng'}
               </button>
             </div>
           </div>
@@ -571,7 +595,7 @@ export default function BookCategoriesAdmin() {
             <div className="bg-white p-6 rounded-lg border">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600">Total Categories</p>
+                  <p className="text-sm text-gray-600">Tổng Danh Mục</p>
                   <p className="text-2xl font-bold text-gray-900">{stats.total}</p>
                 </div>
                 <Tag className="w-8 h-8 text-blue-600" />
@@ -581,7 +605,7 @@ export default function BookCategoriesAdmin() {
             <div className="bg-white p-6 rounded-lg border">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600">Root Categories</p>
+                  <p className="text-sm text-gray-600">Danh Mục Gốc</p>
                   <p className="text-2xl font-bold text-gray-900">{stats.root}</p>
                 </div>
                 <Target className="w-8 h-8 text-green-600" />
@@ -591,7 +615,7 @@ export default function BookCategoriesAdmin() {
             <div className="bg-white p-6 rounded-lg border">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600">Active Categories</p>
+                  <p className="text-sm text-gray-600">Đang Hoạt Động</p>
                   <p className="text-2xl font-bold text-gray-900">{stats.active}</p>
                 </div>
                 <CheckCircle className="w-8 h-8 text-emerald-600" />
@@ -601,8 +625,8 @@ export default function BookCategoriesAdmin() {
             <div className="bg-white p-6 rounded-lg border">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600">Avg Books/Category</p>
-                  <p className="text-2xl font-bold text-gray-900">{stats.avgBooks}</p>
+                  <p className="text-sm text-gray-600">TB Sản Phẩm/Danh Mục</p>
+                  <p className="text-2xl font-bold text-gray-900">{stats.avgProducts}</p>
                 </div>
                 <BarChart className="w-8 h-8 text-purple-600" />
               </div>
@@ -610,66 +634,51 @@ export default function BookCategoriesAdmin() {
           </div>
 
           {/* Category Tree */}
-          <div className="bg-white rounded-lg border">
-            <div className="p-6 border-b">
-              <h3 className="text-lg font-semibold text-gray-900">Category Hierarchy</h3>
-            </div>
+          <div className="bg-white p-6 rounded-lg border">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Cây Danh Mục</h3>
             
-            <div className="p-6">
-              {rootCategories.length === 0 ? (
-                <div className="text-center py-12">
-                  <Tag className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">No categories found</h3>
-                  <p className="text-gray-500 mb-4">Get started by creating your first category</p>
-                  <button
-                    onClick={() => {
-                      setEditingCategory(null);
-                      setCategoryFormData(DEFAULT_FORM_DATA);
-                      setShowCategoryForm(true);
-                    }}
-                    className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
-                  >
-                    Create Category
-                  </button>
-                </div>
-              ) : (
-                <div className="space-y-2">
-                  {rootCategories.map((category) => (
-                    <CategoryTreeNode
-                      key={category.id}
-                      category={category}
-                      level={0}
-                      expanded={expandedCategories.has(category.id)}
-                      onToggleExpand={() => toggleExpandedCategory(category.id)}
-                      onEdit={() => handleEditCategory(category)}
-                      onDelete={() => handleDeleteCategory(category)}
-                      allCategories={categories}
-                    />
-                  ))}
-                </div>
-              )}
-            </div>
+            {categories.length === 0 ? (
+              <div className="text-center py-12">
+                <Tag className="w-12 h-12 text-gray-300 mx-auto mb-4" />
+                <p className="text-gray-500">Chưa có danh mục nào</p>
+                <button
+                  onClick={() => {
+                    setEditingCategory(null);
+                    setCategoryFormData(DEFAULT_FORM_DATA);
+                    setShowCategoryForm(true);
+                  }}
+                  className="mt-4 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+                >
+                  Tạo danh mục đầu tiên
+                </button>
+              </div>
+            ) : filteredCategories.length === 0 ? (
+              <div className="text-center py-12">
+                <Tag className="w-12 h-12 text-gray-300 mx-auto mb-4" />
+                <p className="text-gray-500">Không tìm thấy danh mục phù hợp</p>
+              </div>
+            ) : (
+              <div className="space-y-1">
+                {rootCategories.map((category) => (
+                  <CategoryTreeNode
+                    key={category.id}
+                    category={category}
+                    level={0}
+                    expanded={expandedCategories.has(category.id)}
+                    onToggleExpand={() => toggleExpandedCategory(category.id)}
+                    onEdit={() => handleEditCategory(category)}
+                    onDelete={() => handleDeleteCategory(category)}
+                    allCategories={filteredCategories}
+                  />
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </div>
 
-      {/* Category Form Modal */}
+      {/* Form Modal */}
       <CategoryFormModal />
-
-      {/* Error Toast */}
-      {error && (
-        <div className="fixed bottom-4 right-4 bg-red-500 text-white p-4 rounded-lg shadow-lg">
-          <div className="flex items-center justify-between">
-            <span>{error}</span>
-            <button
-              onClick={() => setError(null)}
-              className="ml-4 text-white hover:text-gray-200"
-            >
-              <X className="w-4 h-4" />
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

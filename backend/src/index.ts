@@ -1,3 +1,4 @@
+import "dotenv/config";
 import express, { type Request, Response, NextFunction } from "express";
 import session from "express-session";
 import ConnectPGSimple from "connect-pg-simple";
@@ -26,6 +27,7 @@ const __dirname = (() => {
 const log = (msg: string) => console.log(msg);
 import { pool } from "./db";
 import { createApiManagementMiddleware } from "./middleware/api-management";
+import { storeContextMiddleware } from "./middleware/storeContext";
 import { scheduler } from "./services/scheduler";
 import { startAnalyticsScheduler } from "./services/analytics-scheduler";
 import { startCampaignVerifier } from "./jobs/campaign-verifier";
@@ -38,27 +40,45 @@ if (process.env.NODE_ENV === 'production') {
   app.set('trust proxy', 1);
 }
 
-// CORS configuration for custom domain support
-const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',').map(origin => origin.trim()) || [
-  'http://localhost:3000',
+// CORS configuration for multi-Repl setup
+// 🔒 SECURITY: Only explicit origins allowed in production (no wildcards)
+const allowedOrigins: string[] = [
+  'http://localhost:3001',  // Local SunFoods
+  'http://localhost:3002',  // Local Tramhuong
+  'http://localhost:3003',  // Local Nhangsach
+  'http://localhost:3000',  // Legacy local dev
   'http://localhost:5000',
-  'http://127.0.0.1:5000', // Fix CORS for dev environment
-  'https://your-storefront.vercel.app',
-  'https://yourdomain.com',
-  'https://www.yourdomain.com',
-  'https://*.replit.dev', // Allow all Replit dev domains
-  'https://*.pike.replit.dev', // Allow Replit dev domains
-  'https://*.sisko.replit.dev' // Allow Replit dev domains
+  'http://127.0.0.1:5000',
+  'https://sunfoods.vn',
+  'https://www.sunfoods.vn',
+  'https://tramhuonghoangngan.com',
+  'https://www.tramhuonghoangngan.com',
+  'https://nhangsach.net',
+  'https://www.nhangsach.net',
 ];
 
-// Add Replit default domain dynamically
+// Add custom frontend origins from environment variable (REQUIRED for Replit)
+// Example: FRONTEND_ORIGINS=https://backend-api-username.replit.dev,https://sunfoods-frontend-username.replit.app
+if (process.env.FRONTEND_ORIGINS) {
+  const customOrigins = process.env.FRONTEND_ORIGINS.split(',')
+    .map(origin => origin.trim())
+    .filter(origin => origin.length > 0);
+  
+  if (customOrigins.length > 0) {
+    allowedOrigins.push(...customOrigins);
+    console.log(`🔐 CORS: Added ${customOrigins.length} custom origins from FRONTEND_ORIGINS`);
+  }
+}
+
+// Add Replit default domain dynamically (backend's own domain)
 if (process.env.REPLIT_DEV_DOMAIN) {
   allowedOrigins.push(`https://${process.env.REPLIT_DEV_DOMAIN}`);
+  console.log(`🔐 CORS: Added Replit backend domain: https://${process.env.REPLIT_DEV_DOMAIN}`);
 }
 
 app.use(cors({
   origin: function (origin, callback) {
-    // Allow requests with no origin (mobile apps, postman, curl, etc.)
+    // Allow requests with no origin (mobile apps, curl, etc)
     if (!origin) return callback(null, true);
     
     // 🔓 DEV MODE: Allow all origins for development/testing
@@ -67,21 +87,15 @@ app.use(cors({
       return callback(null, true);
     }
     
-    // Check if the origin is allowed
-    if (allowedOrigins.some(allowedOrigin => {
-      // Support wildcard subdomain matching for development
-      if (allowedOrigin.includes('*')) {
-        const pattern = allowedOrigin.replace(/\*/g, '.*');
-        return new RegExp(`^${pattern}$`).test(origin);
-      }
-      return allowedOrigin === origin;
-    })) {
-      return callback(null, true);
+    // 🔒 PRODUCTION: Only allow explicitly whitelisted origins
+    if (allowedOrigins.includes(origin)) {
+      console.log(`✅ CORS: Allowed origin ${origin}`);
+      callback(null, true);
+    } else {
+      // Reject unknown origins to prevent CSRF attacks
+      console.warn(`🚫 CORS: Rejected origin ${origin} (not in whitelist)`);
+      callback(new Error('CORS: Origin not allowed'));
     }
-    
-    // Log rejected origins for debugging
-    console.warn(`🚫 CORS: Rejected origin ${origin}. Allowed: ${allowedOrigins.join(', ')}`);
-    return callback(new Error('Not allowed by CORS'));
   },
   credentials: true, // Support cookies and authentication
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
@@ -194,6 +208,9 @@ app.use((req, res, next) => {
   console.log("🚀 Registering API Management Middleware...");
   app.use(createApiManagementMiddleware());
   console.log("✅ API Management Middleware registered successfully");
+  
+  // Register Store Context Middleware
+  app.use(storeContextMiddleware);
   
   const server = await registerRoutes(app);
 

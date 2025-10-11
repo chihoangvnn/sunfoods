@@ -1,0 +1,81 @@
+
+
+1 of 1 error
+Next.js (15.0.0) out of date (learn more)
+
+Unhandled Runtime Error
+
+TypeError: Failed to fetch
+
+Source
+src/services/apiService.ts (19:24) @ fetch
+
+  17 |   });
+  18 |
+> 19 |   const fetchPromise = fetch(url, {
+     |                        ^
+  20 |     ...options,
+  21 |     signal: controller.signal,
+  22 |     headers: {
+Call Stack
+fetchWithTimeout
+src/services/apiService.ts (76:28)
+queryFn
+src/app/products/page.tsx (32:34)
+Object.fetchFn [as fn]
+node_modules/@tanstack/query-core/build/modern/query.js (225:1)
+run
+node_modules/@tanstack/query-core/build/modern/retryer.js (77:1)
+Object.start
+node_modules/@tanstack/query-core/build/modern/retryer.js (119:1)
+Query.fetch
+node_modules/@tanstack/query-core/build/modern/query.js (272:1)
+#executeFetch
+node_modules/@tanstack/query-core/build/modern/queryObserver.js (176:1)
+QueryObserver.onSubscribe
+node_modules/@tanstack/query-core/build/modern/queryObserver.js (52:1)
+QueryObserver.subscribe
+node_modules/@tanstack/query-core/build/modern/subscribable.js (9:1)
+eval
+../src/useBaseQuery.ts (100:22)
+React
+recursivelyTraversePassiveMountEffects
+(app-pages-browser)/./node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js
+React
+recursivelyTraversePassiveMountEffects
+(app-pages-browser)/./node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js
+React
+recursivelyTraversePassiveMountEffects
+(app-pages-browser)/./node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js
+React
+recursivelyTraversePassiveMountEffects
+(app-pages-browser)/./node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js
+React
+recursivelyTraversePassiveMountEffects
+(app-pages-browser)/./node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js
+React
+recursivelyTraversePassiveMountEffects
+(app-pages-browser)/./node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js
+React
+recursivelyTraversePassiveMountEffects
+(app-pages-browser)/./node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js
+React
+recursivelyTraversePassiveMountEffects
+(app-pages-browser)/./node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js
+React
+recursivelyTraversePassiveMountEffects
+(app-pages-browser)/./node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js
+React
+recursivelyTraversePassiveMountEffects
+(app-pages-browser)/./node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js
+React
+recursivelyTraversePassiveMountEffects
+(app-pages-browser)/./node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js
+React
+recursivelyTraversePassiveMountEffects
+(app-pages-browser)/./node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js
+React
+recursivelyTraversePassiveMountEffects
+(app-pages-browser)/./node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js
+React
+Show collapsed frames

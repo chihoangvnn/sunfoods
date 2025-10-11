@@ -91,10 +91,7 @@ export function FAQLibraryManagement({ className = "" }: FAQLibraryManagementPro
   const { data: faqResponse, isLoading: faqsLoading, refetch: refetchFAQs } = useQuery({
     queryKey: ['faq-library', currentPage, pageSize, searchQuery, selectedCategory, selectedPriority, selectedStatus, selectedTag],
     queryFn: async () => {
-      const params = new URLSearchParams({
-        page: currentPage.toString(),
-        limit: pageSize.toString(),
-      });
+      const params = new URLSearchParams();
       
       if (searchQuery.trim()) params.append('search', searchQuery.trim());
       if (selectedCategory !== 'all') params.append('category', selectedCategory);
@@ -104,10 +101,11 @@ export function FAQLibraryManagement({ className = "" }: FAQLibraryManagementPro
       
       const response = await fetch(`/api/faq-library/faqs?${params.toString()}`);
       if (!response.ok) {
-        if (response.status === 401) return { faqs: [], totalCount: 0, currentPage: 1, totalPages: 1 };
+        if (response.status === 401) return [];
         throw new Error('Failed to fetch FAQ library items');
       }
-      return await response.json();
+      const data = await response.json();
+      return Array.isArray(data) ? data : [];
     },
   });
 
@@ -228,9 +226,7 @@ export function FAQLibraryManagement({ className = "" }: FAQLibraryManagementPro
     },
   });
 
-  const faqs = faqResponse?.faqs || [];
-  const totalCount = faqResponse?.totalCount || 0;
-  const totalPages = faqResponse?.totalPages || 1;
+  const faqs = faqResponse || [];
 
   const resetForm = () => {
     setFormQuestion('');
@@ -659,10 +655,9 @@ export function FAQLibraryManagement({ className = "" }: FAQLibraryManagementPro
       {/* Results Summary */}
       <div className="flex items-center justify-between text-sm text-gray-600">
         <span>
-          Hiển thị {faqs.length} / {totalCount} FAQ
+          Hiển thị {faqs.length} FAQ
           {searchQuery && ` (tìm kiếm: "${searchQuery}")`}
         </span>
-        <span>Trang {currentPage} / {totalPages}</span>
       </div>
 
       {/* FAQ List */}
