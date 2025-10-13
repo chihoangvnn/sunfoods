@@ -26,6 +26,10 @@ interface Product {
   image?: string; // Legacy field for backward compatibility
   images?: CloudinaryImage[];
   videos?: CloudinaryVideo[];
+  origin?: string;
+  rarity?: string;
+  fragrance?: string;
+  size?: string;
   createdAt?: string;
   updatedAt?: string;
 }

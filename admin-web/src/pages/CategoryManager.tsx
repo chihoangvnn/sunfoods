@@ -12,7 +12,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
-import { Plus, Edit3, Trash2, Save, X, ArrowUp, ArrowDown, Settings, Eye, Wand2 } from "lucide-react";
+import { Plus, ChevronUp, ChevronDown, Pencil, X, Save, Settings, Eye, Sparkles } from "lucide-react";
 
 interface Industry {
   id: string;
@@ -686,7 +686,7 @@ export default function CategoryManager() {
                           disabled={index === 0 || updateSortMutation.isPending}
                           data-testid={`button-move-up-${category.id}`}
                         >
-                          <ArrowUp className="h-4 w-4" />
+                          <ChevronUp className="h-4 w-4" />
                         </Button>
                         <Button
                           variant="ghost"
@@ -695,7 +695,7 @@ export default function CategoryManager() {
                           disabled={index === filteredCategories.length - 1 || updateSortMutation.isPending}
                           data-testid={`button-move-down-${category.id}`}
                         >
-                          <ArrowDown className="h-4 w-4" />
+                          <ChevronDown className="h-4 w-4" />
                         </Button>
                         <Button
                           variant="ghost"
@@ -703,7 +703,7 @@ export default function CategoryManager() {
                           onClick={() => handleEdit(category)}
                           data-testid={`button-edit-${category.id}`}
                         >
-                          <Edit3 className="h-4 w-4" />
+                          <Pencil className="h-4 w-4" />
                         </Button>
                         <Button
                           variant="ghost"
@@ -712,7 +712,7 @@ export default function CategoryManager() {
                           disabled={deleteMutation.isPending}
                           data-testid={`button-delete-${category.id}`}
                         >
-                          <Trash2 className="h-4 w-4" />
+                          <X className="h-4 w-4" />
                         </Button>
                       </div>
                     </div>

@@ -6,6 +6,7 @@ import { VirtualizedList } from '@/hooks/useVirtualizedList';
 import { useRenderPerformance, useInteractionPerformance } from '@/hooks/usePerformanceMonitor';
 import { Package, Plus, AlertCircle, Star } from 'lucide-react';
 import type { Product } from '@shared/schema';
+import { DynamicBadge } from './DynamicBadge';
 
 interface OptimizedProductGridProps {
   products: Product[];
@@ -77,8 +78,8 @@ const ProductCard = React.memo(({
       onClick={isOutOfStock ? undefined : handleAddToCart}
     >
       <CardContent className="p-4 h-full flex flex-col">
-        {/* Image section - fixed size */}
-        <div className="h-24 w-full mb-3 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
+        {/* Image section - fixed size with badges overlay */}
+        <div className="h-24 w-full mb-3 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0 relative">
           {shouldLoadImage && imageUrl ? (
             <img
               src={imageUrl}
@@ -96,6 +97,11 @@ const ProductCard = React.memo(({
             <div className="w-full h-full flex items-center justify-center">
               <Package className="h-8 w-8 text-gray-400" />
             </div>
+          )}
+          
+          {/* Dynamic badges overlay */}
+          {product.badges && (
+            <DynamicBadge badges={product.badges as any} variant="overlay" />
           )}
         </div>
         

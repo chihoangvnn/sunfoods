@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { 
-  Plus, Search, Edit2, Trash2, Save, X, Eye, EyeOff,
-  Tag, CheckCircle2, AlertCircle, GripVertical, 
-  ArrowUp, ArrowDown, Settings, FileQuestion,
+  Plus, Search, Edit, Trash2, Save, X, Eye, EyeOff,
+  Tag, CheckCircle, AlertTriangle, GripVertical, 
+  ChevronUp, ChevronDown, Settings, FileQuestion,
   Sparkles, Copy, MoreVertical, Layers, 
   Target, ToggleLeft, ToggleRight
 } from 'lucide-react';
@@ -631,7 +631,7 @@ export function CategoryFAQTemplatesManagement({ className = "" }: CategoryFAQTe
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
                         <DropdownMenuItem onClick={() => handleEditTemplate(template)}>
-                          <Edit2 className="h-4 w-4 mr-2" />
+                          <Edit className="h-4 w-4 mr-2" />
                           Chỉnh sửa
                         </DropdownMenuItem>
                         <DropdownMenuItem 

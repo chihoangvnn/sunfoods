@@ -94,7 +94,16 @@ export default function LandingPage() {
   // Fetch landing page products
   const { data: products = [], isLoading } = useQuery<LandingPageProduct[]>({
     queryKey: ['/api/product-landing-pages', 'products'],
-    queryFn: () => fetch('/api/product-landing-pages').then(res => res.json()),
+    queryFn: async () => {
+      try {
+        const res = await fetch('/api/product-landing-pages');
+        if (!res.ok) return [];
+        const data = await res.json();
+        return Array.isArray(data) ? data : [];
+      } catch {
+        return [];
+      }
+    },
   });
 
   // Cart functions

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Link } from 'wouter';
 import { Search, Plus, Tag, X, Package, CheckCircle, Target, BarChart } from "lucide-react";
 import { useDebounce } from "@/hooks/use-debounce";
@@ -49,6 +49,191 @@ const DEFAULT_FORM_DATA: ProductCategoryFormData = {
   metaDescription: ''
 };
 
+// Category Form Modal Component (extracted to prevent re-render on keystroke)
+interface CategoryFormModalProps {
+  show: boolean;
+  editingCategory: ProductCategory | null;
+  categoryFormData: ProductCategoryFormData;
+  categories: ProductCategory[];
+  error: string | null;
+  onClose: () => void;
+  onSave: () => void;
+  setCategoryFormData: React.Dispatch<React.SetStateAction<ProductCategoryFormData>>;
+}
+
+const CategoryFormModal = React.memo<CategoryFormModalProps>(({
+  show,
+  editingCategory,
+  categoryFormData,
+  categories,
+  error,
+  onClose,
+  onSave,
+  setCategoryFormData
+}) => {
+  if (!show) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white rounded-lg p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-lg font-semibold">
+            {editingCategory ? 'Sửa Danh Mục' : 'Thêm Danh Mục Mới'}
+          </h3>
+          <button 
+            onClick={onClose}
+            className="p-2 hover:bg-gray-100 rounded"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+        
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Tên Danh Mục *</label>
+            <input
+              type="text"
+              value={categoryFormData.name}
+              onChange={(e) => setCategoryFormData(prev => ({ ...prev, name: e.target.value }))}
+              className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-500"
+              placeholder="VD: Nến thơm, Quà tặng, Trang trí"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Slug</label>
+            <input
+              type="text"
+              value={categoryFormData.slug}
+              onChange={(e) => setCategoryFormData(prev => ({ ...prev, slug: e.target.value }))}
+              className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-500"
+              placeholder="Tự động tạo từ tên nếu để trống"
+            />
+            <p className="text-xs text-gray-500 mt-1">URL thân thiện (VD: nen-thom, qua-tang)</p>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Danh Mục Cha</label>
+            <select
+              value={categoryFormData.parentId}
+              onChange={(e) => setCategoryFormData(prev => ({ ...prev, parentId: e.target.value }))}
+              className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-500"
+            >
+              <option value="">Không có (Danh mục gốc)</option>
+              {categories
+                .filter(cat => cat.id !== editingCategory?.id)
+                .map(cat => (
+                  <option key={cat.id} value={cat.id}>
+                    {'  '.repeat(cat.level)}{cat.name} (Cấp {cat.level})
+                  </option>
+                ))}
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Mô tả</label>
+            <textarea
+              value={categoryFormData.description}
+              onChange={(e) => setCategoryFormData(prev => ({ ...prev, description: e.target.value }))}
+              className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-500"
+              rows={3}
+              placeholder="Mô tả danh mục..."
+            />
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Icon</label>
+              <input
+                type="text"
+                value={categoryFormData.icon}
+                onChange={(e) => setCategoryFormData(prev => ({ ...prev, icon: e.target.value }))}
+                className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-500"
+                placeholder="🕯️"
+              />
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Màu sắc</label>
+              <input
+                type="color"
+                value={categoryFormData.color}
+                onChange={(e) => setCategoryFormData(prev => ({ ...prev, color: e.target.value }))}
+                className="w-full h-10 border rounded-lg"
+              />
+            </div>
+          </div>
+
+          <div className="space-y-3">
+            <label className="flex items-center">
+              <input
+                type="checkbox"
+                checked={categoryFormData.isActive}
+                onChange={(e) => setCategoryFormData(prev => ({ ...prev, isActive: e.target.checked }))}
+                className="mr-2"
+              />
+              <span className="text-sm text-gray-700">Kích hoạt</span>
+            </label>
+            
+            <label className="flex items-center">
+              <input
+                type="checkbox"
+                checked={categoryFormData.isFeatured}
+                onChange={(e) => setCategoryFormData(prev => ({ ...prev, isFeatured: e.target.checked }))}
+                className="mr-2"
+              />
+              <span className="text-sm text-gray-700">Nổi bật</span>
+            </label>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Meta Title (SEO)</label>
+            <input
+              type="text"
+              value={categoryFormData.metaTitle}
+              onChange={(e) => setCategoryFormData(prev => ({ ...prev, metaTitle: e.target.value }))}
+              className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-500"
+              placeholder="Tiêu đề SEO cho trang danh mục"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Meta Description (SEO)</label>
+            <textarea
+              value={categoryFormData.metaDescription}
+              onChange={(e) => setCategoryFormData(prev => ({ ...prev, metaDescription: e.target.value }))}
+              className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-500"
+              rows={2}
+              placeholder="Mô tả SEO cho trang danh mục"
+            />
+          </div>
+        </div>
+
+        {error && (
+          <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+            <p className="text-sm text-red-600">{error}</p>
+          </div>
+        )}
+
+        <div className="flex items-center justify-end space-x-3 mt-6">
+          <button
+            onClick={onClose}
+            className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg"
+          >
+            Hủy
+          </button>
+          <button
+            onClick={onSave}
+            className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+          >
+            {editingCategory ? 'Cập Nhật' : 'Tạo Mới'}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+});
+
 export default function GeneralCategoriesAdmin() {
   // State Management
   const [categories, setCategories] = useState<ProductCategory[]>([]);
@@ -94,17 +279,17 @@ export default function GeneralCategoriesAdmin() {
     fetchCategories();
   }, []); // Load once on mount
 
-  // Client-side filtering (like CategoriesAdmin)
-  const getFilteredCategories = () => {
+  // Client-side filtering with useMemo (prevents re-render on every keystroke)
+  const filteredCategories = useMemo(() => {
     return categories.filter(cat => {
       let matches = true;
       
       // Search filter
       if (searchQuery) {
-        matches = matches && (
-          cat.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          (cat.description && cat.description.toLowerCase().includes(searchQuery.toLowerCase()))
-        );
+        const query = searchQuery.toLowerCase();
+        const matchesName = cat.name.toLowerCase().includes(query);
+        const matchesDesc = cat.description?.toLowerCase().includes(query) ?? false;
+        matches = matches && (matchesName || matchesDesc);
       }
       
       // Level filter
@@ -121,7 +306,7 @@ export default function GeneralCategoriesAdmin() {
       
       return matches;
     });
-  };
+  }, [categories, searchQuery, levelFilter, statusFilter]);
 
   // CategoryTreeNode Component
   const CategoryTreeNode: React.FC<{
@@ -318,172 +503,13 @@ export default function GeneralCategoriesAdmin() {
     avgProducts: categories.length > 0 ? Math.round(categories.reduce((sum, cat) => sum + cat.productCount, 0) / categories.length) : 0
   };
 
-  // Get filtered categories and extract root ones
-  const filteredCategories = getFilteredCategories();
-  const rootCategories = filteredCategories.filter(cat => cat.parentId === null);
-
-  // Category Form Modal
-  const CategoryFormModal = () => (
-    showCategoryForm && (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div className="bg-white rounded-lg p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold">
-              {editingCategory ? 'Sửa Danh Mục' : 'Thêm Danh Mục Mới'}
-            </h3>
-            <button 
-              onClick={() => setShowCategoryForm(false)}
-              className="p-2 hover:bg-gray-100 rounded"
-            >
-              <X className="w-4 h-4" />
-            </button>
-          </div>
-          
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Tên Danh Mục *</label>
-              <input
-                type="text"
-                value={categoryFormData.name}
-                onChange={(e) => setCategoryFormData({ ...categoryFormData, name: e.target.value })}
-                className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-500"
-                placeholder="VD: Nến thơm, Quà tặng, Trang trí"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Slug</label>
-              <input
-                type="text"
-                value={categoryFormData.slug}
-                onChange={(e) => setCategoryFormData({ ...categoryFormData, slug: e.target.value })}
-                className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-500"
-                placeholder="Tự động tạo từ tên nếu để trống"
-              />
-              <p className="text-xs text-gray-500 mt-1">URL thân thiện (VD: nen-thom, qua-tang)</p>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Danh Mục Cha</label>
-              <select
-                value={categoryFormData.parentId}
-                onChange={(e) => setCategoryFormData({ ...categoryFormData, parentId: e.target.value })}
-                className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-500"
-              >
-                <option value="">Không có (Danh mục gốc)</option>
-                {categories
-                  .filter(cat => cat.id !== editingCategory?.id)
-                  .map(cat => (
-                    <option key={cat.id} value={cat.id}>
-                      {'  '.repeat(cat.level)}{cat.name} (Cấp {cat.level})
-                    </option>
-                  ))}
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Mô tả</label>
-              <textarea
-                value={categoryFormData.description}
-                onChange={(e) => setCategoryFormData({ ...categoryFormData, description: e.target.value })}
-                className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-500"
-                rows={3}
-                placeholder="Mô tả danh mục..."
-              />
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Icon</label>
-                <input
-                  type="text"
-                  value={categoryFormData.icon}
-                  onChange={(e) => setCategoryFormData({ ...categoryFormData, icon: e.target.value })}
-                  className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-500"
-                  placeholder="🕯️"
-                />
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Màu sắc</label>
-                <input
-                  type="color"
-                  value={categoryFormData.color}
-                  onChange={(e) => setCategoryFormData({ ...categoryFormData, color: e.target.value })}
-                  className="w-full h-10 border rounded-lg"
-                />
-              </div>
-            </div>
-
-            <div className="space-y-3">
-              <label className="flex items-center">
-                <input
-                  type="checkbox"
-                  checked={categoryFormData.isActive}
-                  onChange={(e) => setCategoryFormData({ ...categoryFormData, isActive: e.target.checked })}
-                  className="mr-2"
-                />
-                <span className="text-sm text-gray-700">Kích hoạt</span>
-              </label>
-              
-              <label className="flex items-center">
-                <input
-                  type="checkbox"
-                  checked={categoryFormData.isFeatured}
-                  onChange={(e) => setCategoryFormData({ ...categoryFormData, isFeatured: e.target.checked })}
-                  className="mr-2"
-                />
-                <span className="text-sm text-gray-700">Nổi bật</span>
-              </label>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Meta Title (SEO)</label>
-              <input
-                type="text"
-                value={categoryFormData.metaTitle}
-                onChange={(e) => setCategoryFormData({ ...categoryFormData, metaTitle: e.target.value })}
-                className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-500"
-                placeholder="Tiêu đề SEO cho trang danh mục"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Meta Description (SEO)</label>
-              <textarea
-                value={categoryFormData.metaDescription}
-                onChange={(e) => setCategoryFormData({ ...categoryFormData, metaDescription: e.target.value })}
-                className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-500"
-                rows={2}
-                placeholder="Mô tả SEO cho trang danh mục"
-              />
-            </div>
-          </div>
-
-          {error && (
-            <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
-              <p className="text-sm text-red-600">{error}</p>
-            </div>
-          )}
-
-          <div className="flex items-center justify-end space-x-3 mt-6">
-            <button
-              onClick={() => setShowCategoryForm(false)}
-              className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg"
-            >
-              Hủy
-            </button>
-            <button
-              onClick={handleSaveCategory}
-              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
-            >
-              {editingCategory ? 'Cập Nhật' : 'Tạo Mới'}
-            </button>
-          </div>
-        </div>
-      </div>
-    )
-  );
+  // Get root categories with useMemo (prevents re-render)
+  // Support null, undefined, and empty string for root categories (strict check to avoid falsy ID "0")
+  const rootCategories = useMemo(() => {
+    return filteredCategories.filter(cat => 
+      cat.parentId === null || cat.parentId === undefined || cat.parentId === ""
+    );
+  }, [filteredCategories]);
 
   if (loading) {
     return (
@@ -678,7 +704,16 @@ export default function GeneralCategoriesAdmin() {
       </div>
 
       {/* Form Modal */}
-      <CategoryFormModal />
+      <CategoryFormModal
+        show={showCategoryForm}
+        editingCategory={editingCategory}
+        categoryFormData={categoryFormData}
+        categories={categories}
+        error={error}
+        onClose={() => setShowCategoryForm(false)}
+        onSave={handleSaveCategory}
+        setCategoryFormData={setCategoryFormData}
+      />
     </div>
   );
 }

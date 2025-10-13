@@ -280,20 +280,20 @@ export default function CompleteAdminSidebar() {
                       const active = isActive(item.path);
 
                       return (
-                        <Link key={item.path} href={item.path}>
-                          <a
-                            className={`
-                              flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-all
-                              ${
-                                active
-                                  ? "bg-blue-50 text-blue-600 font-medium border-l-4 border-blue-600 pl-2"
-                                  : "text-gray-600 hover:bg-gray-50 border-l-4 border-transparent pl-2"
-                              }
-                            `}
-                          >
-                            {item.icon}
-                            <span className="truncate">{item.label}</span>
-                          </a>
+                        <Link
+                          key={item.path}
+                          href={item.path}
+                          className={`
+                            flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-all
+                            ${
+                              active
+                                ? "bg-blue-50 text-blue-600 font-medium border-l-4 border-blue-600 pl-2"
+                                : "text-gray-600 hover:bg-gray-50 border-l-4 border-transparent pl-2"
+                            }
+                          `}
+                        >
+                          {item.icon}
+                          <span className="truncate">{item.label}</span>
                         </Link>
                       );
                     })}

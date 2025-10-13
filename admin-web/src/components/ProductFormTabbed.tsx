@@ -8,14 +8,33 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { useToast } from "@/hooks/use-toast";
-import { X, Save, Wand2, Loader2, QrCode, Tag, Info, Package, TrendingUp, Search, Bot, Calendar } from "lucide-react";
+import { X, Save, Tag, Package, TrendingUp, Search, Bot, Calendar, Plus, Sparkles, FileText, RefreshCw, Image } from "lucide-react";
 import { ImageUploader } from "./ImageUploader";
 import { QRScanner } from "./QRScanner";
 import { FAQManagement } from "./FAQManagement";
-import type { 
-  CloudinaryImage
-} from "@shared/schema";
+import type { ProductFAQ, BasicInfoContent } from "@/lib/gemini";
+import { generateBasicInfo } from "@/lib/gemini";
+
+// CloudinaryImage type definition
+export interface CloudinaryImage {
+  public_id: string;
+  version: number;
+  signature: string;
+  width: number;
+  height: number;
+  format: string;
+  resource_type: 'image' | 'video';
+  created_at: string;
+  bytes: number;
+  type: string;
+  url: string;
+  secure_url: string;
+  alt?: string;
+  caption?: string;
+  display_order?: number;
+}
 
 // Types
 interface Industry {
@@ -87,9 +106,6 @@ export function ProductFormTabbed({ product, onClose, onSuccess }: ProductFormPr
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const isEditing = Boolean(product);
-  
-  // Tab state
-  const [activeTab, setActiveTab] = useState<'basic' | 'media' | 'info' | 'marketing' | 'seo' | 'ai'>('basic');
   
   // Form data state
   const [formData, setFormData] = useState({
@@ -341,10 +357,17 @@ export function ProductFormTabbed({ product, onClose, onSuccess }: ProductFormPr
     });
   };
 
-  // Filter categories based on selected industry
+  // Filter categories based on selected industry (REQUIRED for industry-based categories)
   const filteredCategories = categories.filter(category => {
-    const industryMatch = formData.industryId ? category.industryId === formData.industryId : true;
-    return category.isActive && industryMatch;
+    // MUST select industry first - only show categories matching selected industry
+    if (!formData.industryId) {
+      return false; // No industry selected = no categories shown
+    }
+    // Match industryId
+    const industryMatch = category.industryId === formData.industryId;
+    // Show only active categories
+    const activeMatch = category.isActive === true;
+    return activeMatch && industryMatch;
   });
 
   return (
@@ -368,98 +391,109 @@ export function ProductFormTabbed({ product, onClose, onSuccess }: ProductFormPr
               </Button>
             </div>
             
-            {/* Tab Navigation */}
-            <div className="flex space-x-1 border-b mt-4 overflow-x-auto">
-              <TabButton
-                active={activeTab === 'basic'}
-                onClick={() => setActiveTab('basic')}
-                icon={<Info className="h-4 w-4" />}
-                label="Cơ bản"
-              />
-              <TabButton
-                active={activeTab === 'media'}
-                onClick={() => setActiveTab('media')}
-                icon={<Package className="h-4 w-4" />}
-                label="Media"
-              />
-              <TabButton
-                active={activeTab === 'info'}
-                onClick={() => setActiveTab('info')}
-                icon={<Package className="h-4 w-4" />}
-                label="Thông tin SP"
-              />
-              <TabButton
-                active={activeTab === 'marketing'}
-                onClick={() => setActiveTab('marketing')}
-                icon={<TrendingUp className="h-4 w-4" />}
-                label="Marketing"
-              />
-              <TabButton
-                active={activeTab === 'seo'}
-                onClick={() => setActiveTab('seo')}
-                icon={<Search className="h-4 w-4" />}
-                label="SEO"
-              />
-              <TabButton
-                active={activeTab === 'ai'}
-                onClick={() => setActiveTab('ai')}
-                icon={<Bot className="h-4 w-4" />}
-                label="AI FAQ"
-              />
-            </div>
           </CardHeader>
 
-          <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-6">
+          <CardContent className="px-3 py-4">
+            <form onSubmit={handleSubmit} className="space-y-4">
               
-              {/* Tab Content */}
-              {activeTab === 'basic' && (
-                <BasicInfoTab 
-                  formData={formData}
-                  setFormData={setFormData}
-                  industries={industries}
-                  categories={filteredCategories}
-                  product={product}
-                />
-              )}
-              
-              {activeTab === 'media' && (
-                <MediaTab 
-                  formData={formData}
-                  setFormData={setFormData}
-                />
-              )}
-              
-              {activeTab === 'info' && (
-                <ProductInfoTab 
-                  formData={formData}
-                  setFormData={setFormData}
-                  isQRScannerOpen={isQRScannerOpen}
-                  setIsQRScannerOpen={setIsQRScannerOpen}
-                />
-              )}
-              
-              {activeTab === 'marketing' && (
-                <MarketingTab 
-                  formData={formData}
-                  setFormData={setFormData}
-                />
-              )}
-              
-              {activeTab === 'seo' && (
-                <SEOTab 
-                  formData={formData}
-                  setFormData={setFormData}
-                  tags={tags}
-                />
-              )}
-              
-              {activeTab === 'ai' && (
-                <AIFAQTab 
-                  formData={formData}
-                  setFormData={setFormData}
-                />
-              )}
+              {/* Accordion Sections */}
+              <Accordion type="single" defaultValue="basic" className="w-full" collapsible>
+                <AccordionItem value="basic">
+                  <AccordionTrigger className="py-3 px-3 hover:no-underline hover:bg-gray-50 rounded-t-md">
+                    <div className="flex items-center gap-2">
+                      <FileText className="h-4 w-4 text-blue-600" />
+                      <span className="font-semibold">Thông tin cơ bản</span>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="px-3 pt-2">
+                    <BasicInfoTab 
+                      formData={formData}
+                      setFormData={setFormData}
+                      industries={industries}
+                      categories={filteredCategories}
+                      product={product}
+                    />
+                  </AccordionContent>
+                </AccordionItem>
+
+                <AccordionItem value="media">
+                  <AccordionTrigger className="py-3 px-3 hover:no-underline hover:bg-gray-50">
+                    <div className="flex items-center gap-2">
+                      <Image className="h-4 w-4 text-purple-600" />
+                      <span className="font-semibold">Media & Hình ảnh</span>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="px-3 pt-2">
+                    <MediaTab 
+                      formData={formData}
+                      setFormData={setFormData}
+                    />
+                  </AccordionContent>
+                </AccordionItem>
+
+                <AccordionItem value="info">
+                  <AccordionTrigger className="py-3 px-3 hover:no-underline hover:bg-gray-50">
+                    <div className="flex items-center gap-2">
+                      <Package className="h-4 w-4 text-green-600" />
+                      <span className="font-semibold">Thông tin sản phẩm</span>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="px-3 pt-2">
+                    <ProductInfoTab 
+                      formData={formData}
+                      setFormData={setFormData}
+                      isQRScannerOpen={isQRScannerOpen}
+                      setIsQRScannerOpen={setIsQRScannerOpen}
+                    />
+                  </AccordionContent>
+                </AccordionItem>
+
+                <AccordionItem value="marketing">
+                  <AccordionTrigger className="py-3 px-3 hover:no-underline hover:bg-gray-50">
+                    <div className="flex items-center gap-2">
+                      <TrendingUp className="h-4 w-4 text-orange-600" />
+                      <span className="font-semibold">Marketing & Khuyến mãi</span>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="px-3 pt-2">
+                    <MarketingTab 
+                      formData={formData}
+                      setFormData={setFormData}
+                    />
+                  </AccordionContent>
+                </AccordionItem>
+
+                <AccordionItem value="seo">
+                  <AccordionTrigger className="py-3 px-3 hover:no-underline hover:bg-gray-50">
+                    <div className="flex items-center gap-2">
+                      <Search className="h-4 w-4 text-indigo-600" />
+                      <span className="font-semibold">SEO & Tags</span>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="px-3 pt-2">
+                    <SEOTab 
+                      formData={formData}
+                      setFormData={setFormData}
+                      tags={tags}
+                    />
+                  </AccordionContent>
+                </AccordionItem>
+
+                <AccordionItem value="ai">
+                  <AccordionTrigger className="py-3 px-3 hover:no-underline hover:bg-gray-50 rounded-b-md">
+                    <div className="flex items-center gap-2">
+                      <Bot className="h-4 w-4 text-pink-600" />
+                      <span className="font-semibold">AI FAQ</span>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="px-3 pt-2">
+                    <AIFAQTab 
+                      formData={formData}
+                      setFormData={setFormData}
+                    />
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
 
               {/* Action Buttons */}
               <div className="flex gap-3 pt-6 border-t">
@@ -498,26 +532,52 @@ export function ProductFormTabbed({ product, onClose, onSuccess }: ProductFormPr
   );
 }
 
-// Tab Button Component
-function TabButton({ active, onClick, icon, label }: any) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={`flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-t-lg transition-colors whitespace-nowrap ${
-        active
-          ? 'bg-blue-50 text-blue-700 border-b-2 border-blue-700'
-          : 'text-gray-500 hover:text-gray-700'
-      }`}
-    >
-      {icon}
-      <span>{label}</span>
-    </button>
-  );
-}
-
 // Basic Info Tab
 function BasicInfoTab({ formData, setFormData, industries, categories, product }: any) {
+  const { toast } = useToast();
+  const [isGenerating, setIsGenerating] = useState(false);
+
+  const handleAIGenerate = async () => {
+    if (!formData.name || !formData.categoryId) {
+      toast({
+        title: "⚠️ Thiếu thông tin",
+        description: "Vui lòng nhập tên sản phẩm và chọn danh mục trước khi dùng AI.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setIsGenerating(true);
+    try {
+      const categoryName = categories.find((c: any) => c.id === formData.categoryId)?.name || '';
+      const industryName = industries.find((i: Industry) => i.id === formData.industryId)?.name;
+      
+      const result = await generateBasicInfo(formData.name, categoryName, industryName);
+      
+      setFormData((prev: any) => ({
+        ...prev,
+        description: result.description,
+        shortDescription: result.shortDescription,
+        metaDescription: result.seoDescription,
+        seoTitle: result.seoTitle,
+        tags: result.tags
+      }));
+
+      toast({
+        title: "✨ AI đã tạo thành công!",
+        description: "Thông tin sản phẩm đã được tự động điền vào form.",
+      });
+    } catch (error: any) {
+      toast({
+        title: "❌ Lỗi AI generation",
+        description: error.message || "Không thể tạo nội dung. Vui lòng thử lại.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
   return (
     <div className="space-y-4">
       <div className="text-sm text-gray-600 mb-4">
@@ -605,10 +665,10 @@ function BasicInfoTab({ formData, setFormData, industries, categories, product }
             disabled={!formData.industryId}
           >
             <SelectTrigger>
-              <SelectValue placeholder="Chọn danh mục" />
+              <SelectValue placeholder={formData.industryId ? "Chọn danh mục" : "Chọn ngành hàng trước"} />
             </SelectTrigger>
             <SelectContent>
-              {categories.map((category: any) => (
+              {filteredCategories.map((category: any) => (
                 <SelectItem key={category.id} value={category.id}>
                   {category.name}
                 </SelectItem>
@@ -616,6 +676,28 @@ function BasicInfoTab({ formData, setFormData, industries, categories, product }
             </SelectContent>
           </Select>
         </div>
+      </div>
+
+      {/* AI Auto-fill Button */}
+      <div className="flex justify-center py-2">
+        <Button
+          type="button"
+          onClick={handleAIGenerate}
+          disabled={isGenerating || !formData.name || !formData.categoryId}
+          className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white"
+        >
+          {isGenerating ? (
+            <>
+              <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+              AI đang tạo...
+            </>
+          ) : (
+            <>
+              <Sparkles className="h-4 w-4 mr-2" />
+              ✨ AI Tự động điền thông tin
+            </>
+          )}
+        </Button>
       </div>
 
       {/* Status */}
@@ -690,9 +772,9 @@ function MediaTab({ formData, setFormData }: any) {
       <div>
         <Label>Hình ảnh sản phẩm (Cloudinary)</Label>
         <ImageUploader
-          images={formData.images}
-          onImagesChange={(images) => setFormData((prev: any) => ({ ...prev, images }))}
-          maxImages={10}
+          value={formData.images}
+          onChange={(images) => setFormData((prev: any) => ({ ...prev, images }))}
+          maxFiles={10}
         />
       </div>
     </div>
@@ -720,34 +802,32 @@ function ProductInfoTab({ formData, setFormData, isQRScannerOpen, setIsQRScanner
 
       {/* Item Code with QR Scanner */}
       <div>
-        <Label htmlFor="itemCode">Mã sản phẩm (Item Code)</Label>
+        <Label htmlFor="itemCode">Mã sản phẩm</Label>
         <div className="flex gap-2">
           <Input
             id="itemCode"
             value={formData.itemCode}
             onChange={(e) => setFormData((prev: any) => ({ ...prev, itemCode: e.target.value }))}
-            placeholder="Nhập mã sản phẩm hoặc quét QR"
+            placeholder="Nhập hoặc quét mã"
           />
           <Button
             type="button"
             variant="outline"
-            size="sm"
             onClick={() => setIsQRScannerOpen(true)}
-            className="px-3"
           >
-            <QrCode className="h-4 w-4" />
+            <Search className="h-4 w-4" />
           </Button>
         </div>
       </div>
 
       {/* Slug */}
       <div>
-        <Label htmlFor="slug">Slug URL</Label>
+        <Label htmlFor="slug">Slug (URL)</Label>
         <Input
           id="slug"
           value={formData.slug}
           onChange={(e) => setFormData((prev: any) => ({ ...prev, slug: e.target.value }))}
-          placeholder="url-thân-thiện-cho-sản-phẩm"
+          placeholder="san-pham-mau"
         />
       </div>
 
@@ -763,45 +843,20 @@ function ProductInfoTab({ formData, setFormData, isQRScannerOpen, setIsQRScanner
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="count">Đếm (cái, chiếc, hộp...)</SelectItem>
-              <SelectItem value="weight">Cân nặng (kg, g...)</SelectItem>
-              <SelectItem value="volume">Thể tích (lít, ml...)</SelectItem>
+              <SelectItem value="count">Đếm (cái, chiếc)</SelectItem>
+              <SelectItem value="weight">Cân nặng (kg, g)</SelectItem>
+              <SelectItem value="volume">Thể tích (l, ml)</SelectItem>
             </SelectContent>
           </Select>
         </div>
         <div>
           <Label htmlFor="unit">Đơn vị</Label>
-          <Select
+          <Input
+            id="unit"
             value={formData.unit}
-            onValueChange={(value) => setFormData((prev: any) => ({ ...prev, unit: value }))}
-          >
-            <SelectTrigger>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {formData.unitType === 'count' && (
-                <>
-                  <SelectItem value="cái">Cái</SelectItem>
-                  <SelectItem value="chiếc">Chiếc</SelectItem>
-                  <SelectItem value="hộp">Hộp</SelectItem>
-                  <SelectItem value="bộ">Bộ</SelectItem>
-                </>
-              )}
-              {formData.unitType === 'weight' && (
-                <>
-                  <SelectItem value="kg">Kilogram (kg)</SelectItem>
-                  <SelectItem value="g">Gram (g)</SelectItem>
-                  <SelectItem value="lạng">Lạng</SelectItem>
-                </>
-              )}
-              {formData.unitType === 'volume' && (
-                <>
-                  <SelectItem value="lít">Lít</SelectItem>
-                  <SelectItem value="ml">Mililít (ml)</SelectItem>
-                </>
-              )}
-            </SelectContent>
-          </Select>
+            onChange={(e) => setFormData((prev: any) => ({ ...prev, unit: e.target.value }))}
+            placeholder="cái, kg, l..."
+          />
         </div>
       </div>
     </div>
@@ -813,13 +868,13 @@ function MarketingTab({ formData, setFormData }: any) {
   return (
     <div className="space-y-4">
       <div className="text-sm text-gray-600 mb-4">
-        Cấu hình marketing và badges sản phẩm
+        Cấu hình marketing và khuyến mãi
       </div>
       
       {/* Original Price & Fake Sales Count */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <Label htmlFor="originalPrice">Giá gốc (để tính discount)</Label>
+          <Label htmlFor="originalPrice">Giá gốc (hiển thị giảm giá)</Label>
           <Input
             id="originalPrice"
             type="number"
@@ -830,7 +885,7 @@ function MarketingTab({ formData, setFormData }: any) {
           />
         </div>
         <div>
-          <Label htmlFor="fakeSalesCount">Số lượt bán giả (cho marketing)</Label>
+          <Label htmlFor="fakeSalesCount">Lượt bán giả</Label>
           <Input
             id="fakeSalesCount"
             type="number"
@@ -842,10 +897,8 @@ function MarketingTab({ formData, setFormData }: any) {
       </div>
 
       {/* Marketing Badges */}
-      <div className="space-y-3 pt-4 border-t">
-        <h4 className="font-medium text-gray-900">Marketing Badges</h4>
-        
-        <div className="flex items-center justify-between">
+      <div className="grid grid-cols-2 gap-4 pt-4 border-t">
+        <div className="flex items-center justify-between p-3 border rounded-lg">
           <Label htmlFor="isNew" className="cursor-pointer">
             🆕 Sản phẩm mới
           </Label>
@@ -856,20 +909,9 @@ function MarketingTab({ formData, setFormData }: any) {
           />
         </div>
 
-        <div className="flex items-center justify-between">
-          <Label htmlFor="isBestseller" className="cursor-pointer">
-            🏆 Bestseller
-          </Label>
-          <Switch
-            id="isBestseller"
-            checked={formData.isBestseller}
-            onCheckedChange={(checked) => setFormData((prev: any) => ({ ...prev, isBestseller: checked }))}
-          />
-        </div>
-
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between p-3 border rounded-lg">
           <Label htmlFor="isTopseller" className="cursor-pointer">
-            ⭐ Topseller
+            🔥 Bán chạy
           </Label>
           <Switch
             id="isTopseller"
@@ -878,14 +920,25 @@ function MarketingTab({ formData, setFormData }: any) {
           />
         </div>
 
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between p-3 border rounded-lg">
           <Label htmlFor="isFreeshipping" className="cursor-pointer">
-            🚚 Miễn phí vận chuyển
+            🚚 Miễn phí ship
           </Label>
           <Switch
             id="isFreeshipping"
             checked={formData.isFreeshipping}
             onCheckedChange={(checked) => setFormData((prev: any) => ({ ...prev, isFreeshipping: checked }))}
+          />
+        </div>
+
+        <div className="flex items-center justify-between p-3 border rounded-lg">
+          <Label htmlFor="isBestseller" className="cursor-pointer">
+            ⭐ Bestseller
+          </Label>
+          <Switch
+            id="isBestseller"
+            checked={formData.isBestseller}
+            onCheckedChange={(checked) => setFormData((prev: any) => ({ ...prev, isBestseller: checked }))}
           />
         </div>
       </div>
@@ -895,19 +948,10 @@ function MarketingTab({ formData, setFormData }: any) {
 
 // SEO Tab
 function SEOTab({ formData, setFormData, tags }: any) {
-  // Toggle tag selection
-  const toggleTag = (tagId: string) => {
-    const currentTags = formData.tagIds || [];
-    const newTags = currentTags.includes(tagId)
-      ? currentTags.filter((id: string) => id !== tagId)
-      : [...currentTags, tagId];
-    setFormData((prev: any) => ({ ...prev, tagIds: newTags }));
-  };
-
   return (
     <div className="space-y-4">
       <div className="text-sm text-gray-600 mb-4">
-        Tối ưu hóa SEO và marketing cho sản phẩm
+        Tối ưu hóa công cụ tìm kiếm (SEO)
       </div>
       
       {/* SEO Title */}
@@ -917,11 +961,10 @@ function SEOTab({ formData, setFormData, tags }: any) {
           id="seoTitle"
           value={formData.seoTitle}
           onChange={(e) => setFormData((prev: any) => ({ ...prev, seoTitle: e.target.value }))}
-          placeholder="Tiêu đề SEO (50-60 ký tự)"
-          maxLength={60}
+          placeholder="Tiêu đề tối ưu cho SEO"
         />
         <p className="text-xs text-muted-foreground mt-1">
-          {formData.seoTitle.length}/60 ký tự
+          Tối ưu: 50-60 ký tự
         </p>
       </div>
 
@@ -932,47 +975,50 @@ function SEOTab({ formData, setFormData, tags }: any) {
           id="seoDescription"
           value={formData.seoDescription}
           onChange={(e) => setFormData((prev: any) => ({ ...prev, seoDescription: e.target.value }))}
-          placeholder="Mô tả SEO (150-160 ký tự)"
-          maxLength={160}
+          placeholder="Mô tả meta cho SEO"
           rows={3}
         />
         <p className="text-xs text-muted-foreground mt-1">
-          {formData.seoDescription.length}/160 ký tự
+          Tối ưu: 150-160 ký tự
         </p>
       </div>
 
       {/* OG Image URL */}
       <div>
-        <Label htmlFor="ogImageUrl">Open Graph Image URL</Label>
+        <Label htmlFor="ogImageUrl">OG Image URL (Social Sharing)</Label>
         <Input
           id="ogImageUrl"
           value={formData.ogImageUrl}
           onChange={(e) => setFormData((prev: any) => ({ ...prev, ogImageUrl: e.target.value }))}
-          placeholder="URL hình ảnh cho social sharing"
+          placeholder="https://example.com/og-image.jpg"
         />
       </div>
 
-      {/* Tag Selector */}
+      {/* Tags Selector */}
       <div className="pt-4 border-t">
-        <Label className="flex items-center gap-2 mb-3">
+        <Label className="flex items-center gap-2 mb-2">
           <Tag className="h-4 w-4" />
           Tags
         </Label>
-        <div className="flex flex-wrap gap-2 mb-3">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-2 max-h-60 overflow-y-auto p-3 border rounded-lg">
           {tags.map((tag: Tag) => (
-            <Badge
-              key={tag.id}
-              variant={formData.tagIds?.includes(tag.id) ? "default" : "outline"}
-              className="cursor-pointer hover:opacity-80 transition-opacity"
-              style={{
-                backgroundColor: formData.tagIds?.includes(tag.id) ? tag.color : 'transparent',
-                borderColor: tag.color,
-                color: formData.tagIds?.includes(tag.id) ? 'white' : tag.color,
-              }}
-              onClick={() => toggleTag(tag.id)}
-            >
-              {tag.name}
-            </Badge>
+            <div key={tag.id} className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                id={`tag-${tag.id}`}
+                checked={formData.tagIds?.includes(tag.id)}
+                onChange={(e) => {
+                  const newTagIds = e.target.checked
+                    ? [...(formData.tagIds || []), tag.id]
+                    : formData.tagIds?.filter((id: string) => id !== tag.id) || [];
+                  setFormData((prev: any) => ({ ...prev, tagIds: newTagIds }));
+                }}
+                className="rounded"
+              />
+              <Label htmlFor={`tag-${tag.id}`} className="text-sm cursor-pointer">
+                {tag.name}
+              </Label>
+            </div>
           ))}
         </div>
         {formData.tagIds?.length > 0 && (
@@ -1001,46 +1047,189 @@ function SEOTab({ formData, setFormData, tags }: any) {
   );
 }
 
-// AI FAQ Tab
+// AI FAQ Tab - Enhanced with form fields
 function AIFAQTab({ formData, setFormData }: any) {
+  const { toast } = useToast();
+  const [faqs, setFaqs] = useState<ProductFAQ[]>([]);
+  const [isGenerating, setIsGenerating] = useState(false);
+
+  // Load FAQ data from formData.smartFaq
+  useEffect(() => {
+    if (formData.smartFaq) {
+      try {
+        if (Array.isArray(formData.smartFaq)) {
+          setFaqs(formData.smartFaq);
+        } else if (typeof formData.smartFaq === 'object' && formData.smartFaq.questions && formData.smartFaq.answers) {
+          // Convert old format to new format
+          const converted: ProductFAQ[] = [];
+          const questions = formData.smartFaq.questions || [];
+          const answers = formData.smartFaq.answers || [];
+          for (let i = 0; i < Math.min(questions.length, answers.length); i++) {
+            converted.push({
+              question: questions[i],
+              answer: answers[i]
+            });
+          }
+          setFaqs(converted);
+        }
+      } catch (err) {
+        console.error('Error parsing FAQ data:', err);
+      }
+    }
+  }, [formData.smartFaq]);
+
+  // Update formData when FAQs change
+  useEffect(() => {
+    setFormData((prev: any) => ({ ...prev, smartFaq: faqs }));
+  }, [faqs, setFormData]);
+
+  const handleGenerateFAQs = async () => {
+    if (!formData.name) {
+      toast({
+        title: "Thiếu thông tin",
+        description: "Vui lòng nhập tên sản phẩm trước khi tạo FAQ",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setIsGenerating(true);
+    try {
+      const { generateProductFAQs } = await import('@/lib/gemini');
+      const generatedFaqs = await generateProductFAQs(
+        formData.name,
+        formData.description || '',
+        formData.categoryId || 'general',
+        ''
+      );
+      
+      setFaqs(generatedFaqs);
+      toast({
+        title: "Thành công",
+        description: `Đã tạo ${generatedFaqs.length} câu hỏi FAQ tự động`
+      });
+    } catch (error) {
+      console.error('Error generating FAQs:', error);
+      toast({
+        title: "Lỗi",
+        description: "Không thể tạo FAQ tự động. Vui lòng thử lại.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
+  const addFAQ = () => {
+    setFaqs([...faqs, { question: '', answer: '' }]);
+  };
+
+  const removeFAQ = (index: number) => {
+    setFaqs(faqs.filter((_, i) => i !== index));
+  };
+
+  const updateFAQ = (index: number, field: 'question' | 'answer', value: string) => {
+    const updated = [...faqs];
+    updated[index][field] = value;
+    setFaqs(updated);
+  };
+
   return (
     <div className="space-y-4">
-      <div className="text-sm text-gray-600 mb-4">
-        Cấu hình Smart FAQ cho AI chatbot
-      </div>
-      
-      <div>
-        <Label htmlFor="smartFaq">Smart FAQ Data (JSON)</Label>
-        <Textarea
-          id="smartFaq"
-          value={formData.smartFaq ? JSON.stringify(formData.smartFaq, null, 2) : ''}
-          onChange={(e) => {
-            try {
-              const parsed = JSON.parse(e.target.value);
-              setFormData((prev: any) => ({ ...prev, smartFaq: parsed }));
-            } catch (err) {
-              setFormData((prev: any) => ({ ...prev, smartFaq: e.target.value }));
-            }
-          }}
-          placeholder='{"questions": [], "answers": [], "context": "..."}'
-          rows={10}
-          className="font-mono text-sm"
-        />
-        <p className="text-xs text-muted-foreground mt-1">
-          Nhập JSON object cho Smart FAQ. Format: {`{"questions": [], "answers": [], "context": ""}`}
-        </p>
+      <div className="flex items-center justify-between border-b pb-2">
+        <div className="text-sm text-gray-600">
+          Cấu hình Smart FAQ cho AI chatbot
+        </div>
+        <div className="flex gap-2">
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={handleGenerateFAQs}
+            disabled={isGenerating}
+          >
+            {isGenerating ? (
+              <>
+                <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                Đang tạo...
+              </>
+            ) : (
+              <>
+                <Sparkles className="h-4 w-4 mr-2" />
+                AI Tạo FAQ
+              </>
+            )}
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={addFAQ}
+          >
+            <Plus className="h-4 w-4 mr-2" />
+            Thêm FAQ
+          </Button>
+        </div>
       </div>
 
-      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-        <h4 className="font-medium text-blue-900 mb-2">💡 Gợi ý Smart FAQ</h4>
-        <p className="text-sm text-blue-700 mb-3">
-          Smart FAQ giúp AI chatbot trả lời câu hỏi khách hàng một cách thông minh và tự nhiên.
-        </p>
-        <div className="text-xs text-blue-600 space-y-1">
-          <p>• <strong>questions</strong>: Danh sách câu hỏi thường gặp</p>
-          <p>• <strong>answers</strong>: Câu trả lời tương ứng</p>
-          <p>• <strong>context</strong>: Ngữ cảnh và thông tin bổ sung</p>
+      {faqs.length === 0 ? (
+        <div className="text-center py-8 bg-gray-50 rounded-lg border-2 border-dashed">
+          <p className="text-gray-500 mb-2">Chưa có FAQ</p>
+          <p className="text-sm text-gray-400">Nhấn "AI Tạo FAQ" để tự động tạo hoặc "Thêm FAQ" để nhập thủ công</p>
         </div>
+      ) : (
+        <div className="space-y-4 max-h-96 overflow-y-auto">
+          {faqs.map((faq, index) => (
+            <div key={index} className="p-4 border rounded-lg bg-white space-y-3">
+              <div className="flex items-center justify-between">
+                <h4 className="font-medium text-sm text-gray-600">FAQ #{index + 1}</h4>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => removeFAQ(index)}
+                  className="text-red-500 hover:text-red-700 hover:bg-red-50"
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+              
+              <div>
+                <Label htmlFor={`faq-question-${index}`} className="text-sm">
+                  Câu hỏi <span className="text-red-500">*</span>
+                </Label>
+                <Input
+                  id={`faq-question-${index}`}
+                  value={faq.question}
+                  onChange={(e) => updateFAQ(index, 'question', e.target.value)}
+                  placeholder="Ví dụ: Sản phẩm này có nguồn gốc từ đâu?"
+                  className="mt-1"
+                />
+              </div>
+
+              <div>
+                <Label htmlFor={`faq-answer-${index}`} className="text-sm">
+                  Trả lời <span className="text-red-500">*</span>
+                </Label>
+                <Textarea
+                  id={`faq-answer-${index}`}
+                  value={faq.answer}
+                  onChange={(e) => updateFAQ(index, 'answer', e.target.value)}
+                  placeholder="Nhập câu trả lời chi tiết..."
+                  rows={3}
+                  className="mt-1"
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+        <p className="text-sm text-blue-700">
+          💡 <strong>Gợi ý:</strong> FAQ giúp khách hàng hiểu rõ hơn về sản phẩm. 
+          Sử dụng AI để tạo tự động hoặc thêm thủ công các câu hỏi thường gặp.
+        </p>
       </div>
     </div>
   );

@@ -95,7 +95,16 @@ export default function LandingPageManager() {
   // Fetch landing page products
   const { data: landingProducts = [], isLoading: productsLoading } = useQuery<LandingPageProduct[]>({
     queryKey: ['/api/product-landing-pages', 'products'],
-    queryFn: () => fetch('/api/product-landing-pages').then(res => res.json()),
+    queryFn: async () => {
+      try {
+        const res = await fetch('/api/product-landing-pages');
+        if (!res.ok) return [];
+        const data = await res.json();
+        return Array.isArray(data) ? data : [];
+      } catch {
+        return [];
+      }
+    },
   });
 
   // Fetch all available products for selection

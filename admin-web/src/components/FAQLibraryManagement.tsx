@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { 
-  Plus, Search, Filter, Edit2, Trash2, Eye, EyeOff, 
-  Tag, Hash, CheckCircle2, AlertCircle, Save, X,
+  Plus, Search, Filter, Pencil, Trash, Eye, EyeOff, 
+  Tag, Hash, CheckCircle, AlertTriangle, Save, X,
   GripVertical, MoreVertical, FileQuestion, 
   Calendar, TrendingUp, Users
 } from 'lucide-react';
@@ -124,6 +124,23 @@ export function FAQLibraryManagement({ className = "" }: FAQLibraryManagementPro
     },
   });
 
+  // Calculate pagination
+  const faqs = faqResponse || [];
+  const totalPages = Math.ceil(faqs.length / pageSize);
+  const paginatedFaqs = faqs.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+
+  // Reset current page when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, selectedCategory, selectedPriority, selectedStatus, selectedTag]);
+
+  // Clamp current page to valid range
+  useEffect(() => {
+    if (currentPage > totalPages && totalPages > 0) {
+      setCurrentPage(totalPages);
+    }
+  }, [currentPage, totalPages]);
+
   // Create FAQ mutation
   const createFAQMutation = useMutation({
     mutationFn: async (data: {
@@ -225,8 +242,6 @@ export function FAQLibraryManagement({ className = "" }: FAQLibraryManagementPro
       });
     },
   });
-
-  const faqs = faqResponse || [];
 
   const resetForm = () => {
     setFormQuestion('');
@@ -365,7 +380,7 @@ export function FAQLibraryManagement({ className = "" }: FAQLibraryManagementPro
               onClick={handleDeleteSelected}
               className="flex items-center gap-2"
             >
-              <Trash2 className="w-4 h-4" />
+              <Trash className="w-4 h-4" />
               Xóa {selectedItems.size} mục
             </Button>
           )}
@@ -681,7 +696,7 @@ export function FAQLibraryManagement({ className = "" }: FAQLibraryManagementPro
             </CardContent>
           </Card>
         ) : (
-          faqs.map((faq: FAQLibraryItem) => (
+          paginatedFaqs.map((faq: FAQLibraryItem) => (
             <Card key={faq.id} className="hover:shadow-md transition-shadow">
               <CardContent className="p-6">
                 <div className="flex items-start justify-between">
@@ -769,7 +784,7 @@ export function FAQLibraryManagement({ className = "" }: FAQLibraryManagementPro
                       size="sm"
                       onClick={() => handleEditItem(faq)}
                     >
-                      <Edit2 className="w-4 h-4" />
+                      <Pencil className="w-4 h-4" />
                     </Button>
                     
                     <Button
@@ -778,7 +793,7 @@ export function FAQLibraryManagement({ className = "" }: FAQLibraryManagementPro
                       onClick={() => deleteFAQMutation.mutate(faq.id)}
                       className="text-red-600 hover:text-red-700 hover:bg-red-50"
                     >
-                      <Trash2 className="w-4 h-4" />
+                      <Trash className="w-4 h-4" />
                     </Button>
                   </div>
                 </div>

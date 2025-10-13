@@ -51,17 +51,47 @@ export default function StorefrontManager() {
   // Fetch storefront configs
   const { data: configs = [], isLoading: configsLoading } = useQuery<StorefrontConfigType[]>({
     queryKey: ['/api/storefront/config'],
+    queryFn: async () => {
+      try {
+        const res = await fetch('/api/storefront/config');
+        if (!res.ok) return [];
+        const data = await res.json();
+        return Array.isArray(data) ? data : [];
+      } catch {
+        return [];
+      }
+    },
   });
 
   // Fetch orders for selected storefront
   const { data: orders = [], isLoading: ordersLoading } = useQuery<StorefrontOrderType[]>({
     queryKey: ['/api/storefront/orders', selectedConfig],
     enabled: !!selectedConfig,
+    queryFn: async () => {
+      try {
+        const res = await fetch(`/api/storefront/orders?storefrontConfigId=${selectedConfig}`);
+        if (!res.ok) return [];
+        const data = await res.json();
+        return Array.isArray(data) ? data : [];
+      } catch {
+        return [];
+      }
+    },
   });
 
   // Fetch available products for manual selection
   const { data: availableProducts = [], isLoading: productsLoading } = useQuery<Product[]>({
     queryKey: ['/api/products'],
+    queryFn: async () => {
+      try {
+        const res = await fetch('/api/products');
+        if (!res.ok) return [];
+        const data = await res.json();
+        return Array.isArray(data) ? data : [];
+      } catch {
+        return [];
+      }
+    },
   });
 
   // Create storefront config mutation

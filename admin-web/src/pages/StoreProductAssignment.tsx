@@ -8,6 +8,13 @@ import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   Table,
   TableBody,
   TableCell,
@@ -22,6 +29,14 @@ interface Product {
   sku: string | null;
   price: string;
   stock: number;
+  categoryId?: string | null;
+}
+
+interface Category {
+  id: string;
+  name: string;
+  description?: string | null;
+  isActive: boolean;
 }
 
 interface Store {
@@ -48,6 +63,7 @@ export default function StoreProductAssignment() {
   const queryClient = useQueryClient();
   
   const [productSearch, setProductSearch] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
   
   // State Management: Track assignments, price overrides, and featured status
   const [assignments, setAssignments] = useState<Map<string, Set<string>>>(new Map());
@@ -69,6 +85,16 @@ export default function StoreProductAssignment() {
     queryKey: ["/api/products/admin/all"],
   });
 
+  // Fetch categories
+  const { data: categoriesData, isLoading: categoriesLoading } = useQuery<Category[]>({
+    queryKey: ["/api/categories"],
+    queryFn: async () => {
+      const response = await fetch("/api/categories");
+      if (!response.ok) throw new Error("Failed to fetch categories");
+      return response.json();
+    },
+  });
+
   // Fetch assignments
   const { data: assignmentsData, isLoading: assignmentsLoading, refetch: refetchAssignments } = useQuery<Assignment[]>({
     queryKey: ["/api/stores/admin/store-products/assignments"],
@@ -76,6 +102,7 @@ export default function StoreProductAssignment() {
 
   const stores = storesData?.stores || [];
   const products = productsData?.products || [];
+  const categories = categoriesData || [];
   const currentAssignments = assignmentsData || [];
 
   // Initialize state from fetched assignments
@@ -119,12 +146,85 @@ export default function StoreProductAssignment() {
     }
   }, [currentAssignments]);
 
-  // Filter products
-  const filteredProducts = products.filter(p => 
-    productSearch === "" || 
-    p.name.toLowerCase().includes(productSearch.toLowerCase()) ||
-    p.sku?.toLowerCase().includes(productSearch.toLowerCase())
-  );
+  // Save mutations - MOVED HERE (before regular functions)
+  const createMutation = useMutation({
+    mutationFn: async (data: { storeId: string; productIds: string[]; priceOverride?: string; isFeatured?: boolean }) => {
+      const res = await fetch("/api/stores/admin/store-products", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify(data)
+      });
+      if (!res.ok) throw new Error("Failed to create assignment");
+      return res.json();
+    }
+  });
+
+  const updateMutation = useMutation({
+    mutationFn: async (data: { storeId: string; productId: string; priceOverride?: string | null; isFeatured?: boolean }) => {
+      const res = await fetch(`/api/stores/admin/store-products/${data.storeId}/${data.productId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          priceOverride: data.priceOverride,
+          isFeatured: data.isFeatured
+        })
+      });
+      if (!res.ok) throw new Error("Failed to update assignment");
+      return res.json();
+    }
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: async (data: { storeId: string; productId: string }) => {
+      const res = await fetch(`/api/stores/admin/store-products/${data.storeId}/${data.productId}`, {
+        method: "DELETE",
+        credentials: "include",
+      });
+      if (!res.ok) throw new Error("Failed to delete assignment");
+      return res.json();
+    }
+  });
+
+  // Check for changes - MOVED HERE (before regular functions)
+  const hasChanges = useMemo(() => {
+    // Compare current state with initial state
+    for (const [productId, storeSet] of Array.from(assignments)) {
+      const initialStoreSet = initialAssignments.get(productId);
+      if (!initialStoreSet || storeSet.size !== initialStoreSet.size) return true;
+      for (const storeId of Array.from(storeSet)) {
+        if (!initialStoreSet.has(storeId)) return true;
+      }
+    }
+    
+    for (const [productId, priceMap] of Array.from(priceOverrides)) {
+      const initialPriceMap = initialPriceOverrides.get(productId);
+      for (const [storeId, price] of Array.from(priceMap)) {
+        if (initialPriceMap?.get(storeId) !== price) return true;
+      }
+    }
+    
+    for (const [productId, featMap] of Array.from(featuredStatus)) {
+      const initialFeatMap = initialFeaturedStatus.get(productId);
+      for (const [storeId, featured] of Array.from(featMap)) {
+        if (initialFeatMap?.get(storeId) !== featured) return true;
+      }
+    }
+    
+    return false;
+  }, [assignments, priceOverrides, featuredStatus, initialAssignments, initialPriceOverrides, initialFeaturedStatus]);
+
+  // Filter products by search and category
+  const filteredProducts = products.filter(p => {
+    const matchesSearch = productSearch === "" || 
+      p.name.toLowerCase().includes(productSearch.toLowerCase()) ||
+      p.sku?.toLowerCase().includes(productSearch.toLowerCase());
+    
+    const matchesCategory = selectedCategory === "all" || p.categoryId === selectedCategory;
+    
+    return matchesSearch && matchesCategory;
+  });
 
   // Toggle assignment
   const toggleAssignment = (productId: string, storeId: string) => {
@@ -201,47 +301,6 @@ export default function StoreProductAssignment() {
   const wasInitiallyAssigned = (productId: string, storeId: string): boolean => {
     return initialAssignments.get(productId)?.has(storeId) || false;
   };
-
-  // Save mutations
-  const createMutation = useMutation({
-    mutationFn: async (data: { storeId: string; productIds: string[]; priceOverride?: string; isFeatured?: boolean }) => {
-      const res = await fetch("/api/stores/admin/store-products", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify(data)
-      });
-      if (!res.ok) throw new Error("Failed to create assignment");
-      return res.json();
-    }
-  });
-
-  const updateMutation = useMutation({
-    mutationFn: async (data: { storeId: string; productId: string; priceOverride?: string | null; isFeatured?: boolean }) => {
-      const res = await fetch(`/api/stores/admin/store-products/${data.storeId}/${data.productId}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({
-          priceOverride: data.priceOverride,
-          isFeatured: data.isFeatured
-        })
-      });
-      if (!res.ok) throw new Error("Failed to update assignment");
-      return res.json();
-    }
-  });
-
-  const deleteMutation = useMutation({
-    mutationFn: async (data: { storeId: string; productId: string }) => {
-      const res = await fetch(`/api/stores/admin/store-products/${data.storeId}/${data.productId}`, {
-        method: "DELETE",
-        credentials: "include",
-      });
-      if (!res.ok) throw new Error("Failed to delete assignment");
-      return res.json();
-    }
-  });
 
   // Save all changes
   const handleSaveChanges = async () => {
@@ -332,6 +391,13 @@ export default function StoreProductAssignment() {
     });
   };
 
+  // Get category name by ID
+  const getCategoryName = (categoryId: string | null | undefined): string => {
+    if (!categoryId) return "Chưa phân loại";
+    const category = categories.find(c => c.id === categoryId);
+    return category?.name || "Không xác định";
+  };
+
   // Store badge colors
   const getStoreBadgeColor = (storeName: string): string => {
     if (storeName.toLowerCase().includes('sunfoods')) return 'bg-green-100 text-green-800 border-green-300';
@@ -339,33 +405,6 @@ export default function StoreProductAssignment() {
     if (storeName.toLowerCase().includes('nhang sạch')) return 'bg-teal-100 text-teal-800 border-teal-300';
     return 'bg-gray-100 text-gray-800 border-gray-300';
   };
-
-  const hasChanges = useMemo(() => {
-    // Compare current state with initial state
-    for (const [productId, storeSet] of Array.from(assignments)) {
-      const initialStoreSet = initialAssignments.get(productId);
-      if (!initialStoreSet || storeSet.size !== initialStoreSet.size) return true;
-      for (const storeId of Array.from(storeSet)) {
-        if (!initialStoreSet.has(storeId)) return true;
-      }
-    }
-    
-    for (const [productId, priceMap] of Array.from(priceOverrides)) {
-      const initialPriceMap = initialPriceOverrides.get(productId);
-      for (const [storeId, price] of Array.from(priceMap)) {
-        if (initialPriceMap?.get(storeId) !== price) return true;
-      }
-    }
-    
-    for (const [productId, featMap] of Array.from(featuredStatus)) {
-      const initialFeatMap = initialFeaturedStatus.get(productId);
-      for (const [storeId, featured] of Array.from(featMap)) {
-        if (initialFeatMap?.get(storeId) !== featured) return true;
-      }
-    }
-    
-    return false;
-  }, [assignments, priceOverrides, featuredStatus, initialAssignments, initialPriceOverrides, initialFeaturedStatus]);
 
   return (
     <div className="p-6 space-y-6">
@@ -383,14 +422,32 @@ export default function StoreProductAssignment() {
       {/* Actions */}
       <Card>
         <CardContent className="pt-6">
-          <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
-            <Input
-              placeholder="🔍 Tìm sản phẩm (tên hoặc SKU)..."
-              value={productSearch}
-              onChange={(e) => setProductSearch(e.target.value)}
-              className="max-w-md"
-            />
-            <div className="flex gap-2">
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+              <Input
+                placeholder="🔍 Tìm sản phẩm (tên hoặc SKU)..."
+                value={productSearch}
+                onChange={(e) => setProductSearch(e.target.value)}
+                className="max-w-md"
+              />
+              <Select
+                value={selectedCategory}
+                onValueChange={setSelectedCategory}
+              >
+                <SelectTrigger className="max-w-xs">
+                  <SelectValue placeholder="Chọn danh mục" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Tất cả danh mục</SelectItem>
+                  {categories.map((category) => (
+                    <SelectItem key={category.id} value={category.id}>
+                      {category.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="flex gap-2 justify-end">
               <Button
                 variant="outline"
                 onClick={handleReset}
@@ -436,6 +493,7 @@ export default function StoreProductAssignment() {
               <TableHeader>
                 <TableRow>
                   <TableHead className="min-w-[250px] sticky left-0 bg-background z-10">Sản Phẩm</TableHead>
+                  <TableHead className="min-w-[150px]">Danh mục</TableHead>
                   <TableHead className="text-right">Giá Gốc</TableHead>
                   {stores.map((store) => (
                     <TableHead key={store.id} className="text-center min-w-[200px]">
@@ -447,15 +505,15 @@ export default function StoreProductAssignment() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {productsLoading || storesLoading || assignmentsLoading ? (
+                {productsLoading || storesLoading || assignmentsLoading || categoriesLoading ? (
                   <TableRow>
-                    <TableCell colSpan={2 + stores.length} className="text-center py-8">
+                    <TableCell colSpan={3 + stores.length} className="text-center py-8">
                       Đang tải...
                     </TableCell>
                   </TableRow>
                 ) : filteredProducts.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={2 + stores.length} className="text-center py-8 text-muted-foreground">
+                    <TableCell colSpan={3 + stores.length} className="text-center py-8 text-muted-foreground">
                       Không tìm thấy sản phẩm
                     </TableCell>
                   </TableRow>
@@ -469,6 +527,11 @@ export default function StoreProductAssignment() {
                             <p className="text-xs text-muted-foreground">SKU: {product.sku}</p>
                           )}
                         </div>
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
+                          {getCategoryName(product.categoryId)}
+                        </Badge>
                       </TableCell>
                       <TableCell className="text-right">
                         <span className="font-medium">
