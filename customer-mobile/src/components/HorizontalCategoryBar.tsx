@@ -86,14 +86,14 @@ export function HorizontalCategoryBar({
   if (!categories.length) return null;
 
   return (
-    <div className="relative bg-green-600 border-t border-green-700/30">
+    <div className="relative bg-sunrise-leaf/5 border-t border-sunrise-leaf/30">
       <div className="w-full px-6 lg:px-8 xl:px-12 2xl:px-16">
         <div className="relative flex items-center py-3">
           {/* Left scroll arrow */}
           {showLeftArrow && (
             <button
               onClick={scrollLeft}
-              className="absolute left-4 z-10 flex items-center justify-center w-8 h-8 bg-green-700/80 hover:bg-green-700 text-white rounded-full shadow-lg transition-all duration-200 backdrop-blur-sm"
+              className="absolute left-4 z-10 flex items-center justify-center w-8 h-8 bg-sunrise-leaf/20 hover:bg-sunrise-leaf/30 text-sunrise-leaf rounded-full shadow-md transition-all duration-200 backdrop-blur-sm"
               aria-label="Scroll left"
             >
               <ChevronLeft className="w-5 h-5" />
@@ -103,33 +103,41 @@ export function HorizontalCategoryBar({
           {/* Category buttons container */}
           <div
             ref={scrollContainerRef}
-            className="flex items-center gap-2 overflow-x-auto scrollbar-hide scroll-smooth px-10 md:px-8 lg:px-4"
+            className="flex items-center gap-3 overflow-x-auto scrollbar-hide scroll-smooth px-10 md:px-8 lg:px-4"
             style={{
               scrollbarWidth: 'none',
               msOverflowStyle: 'none',
             }}
           >
             {categories.map((category) => (
-              <Button
+              <button
                 key={category.id}
                 data-category-id={category.id}
                 onClick={() => onCategorySelect(category.id)}
-                variant="ghost"
-                size="sm"
                 className={`
-                  flex-shrink-0 px-4 py-2 rounded-full font-medium transition-all duration-200 whitespace-nowrap
+                  flex-shrink-0 px-4 py-2 font-semibold transition-all duration-200 whitespace-nowrap relative group
                   ${
                     selectedCategory === category.id
-                      ? 'bg-white text-green-700 shadow-md hover:bg-gray-50'
-                      : 'text-white/90 hover:text-white hover:bg-white/10 border border-white/20 hover:border-white/40'
+                      ? 'text-sunrise-leaf'
+                      : 'text-gray-600 hover:text-sunrise-leaf'
                   }
                 `}
               >
                 {category.icon && (
-                  <span className="mr-1.5 text-sm">{category.icon}</span>
+                  <span className="mr-1.5 text-base">{category.icon}</span>
                 )}
-                <span className="text-sm">{category.name}</span>
-              </Button>
+                <span className="text-sm tracking-wide">{category.name}</span>
+                
+                {/* Bottom border - warm-sun for selected, subtle for hover */}
+                <span className={`
+                  absolute bottom-0 left-0 right-0 h-0.5 transition-all duration-200
+                  ${
+                    selectedCategory === category.id
+                      ? 'bg-warm-sun'
+                      : 'bg-transparent group-hover:bg-warm-sun/50'
+                  }
+                `} />
+              </button>
             ))}
           </div>
 
@@ -137,7 +145,7 @@ export function HorizontalCategoryBar({
           {showRightArrow && (
             <button
               onClick={scrollRight}
-              className="absolute right-4 z-10 flex items-center justify-center w-8 h-8 bg-green-700/80 hover:bg-green-700 text-white rounded-full shadow-lg transition-all duration-200 backdrop-blur-sm"
+              className="absolute right-4 z-10 flex items-center justify-center w-8 h-8 bg-sunrise-leaf/20 hover:bg-sunrise-leaf/30 text-sunrise-leaf rounded-full shadow-md transition-all duration-200 backdrop-blur-sm"
               aria-label="Scroll right"
             >
               <ChevronRight className="w-5 h-5" />

@@ -1,21 +1,99 @@
 'use client'
 
 import React, { useState } from 'react';
-import { useAuth } from '@/hooks/useAuth';
+import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
-import { User, LogIn, LogOut, Mail, Shield, ArrowLeft, Package, Heart, MapPin, Bell, Crown, FileText, ChevronRight } from 'lucide-react';
+import { User, LogIn, LogOut, Mail, Shield, ArrowLeft, Package, Heart, MapPin, Bell, Crown, FileText, ChevronRight, Plus, Truck, AlertCircle, Calendar, Tag, Ticket } from 'lucide-react';
 import { OrderHistory } from '@/components/OrderHistory';
-import { VipTierCard } from '@/components/VipTierCard';
 import { AddressManagement } from '@/components/AddressManagement';
 import { NotesManagementPage } from '@/components/NotesManagementPage';
-import { PushNotificationSettings } from '@/components/PushNotificationSettings';
+import { CustomerPushSettings } from '@/components/CustomerPushSettings';
 import { CustomerProfileAddress } from '@/components/CustomerProfileAddress';
+import { VoucherCard, type Voucher } from '@/components/VoucherCard';
+import { WishlistView } from '@/components/WishlistView';
+import { FullScreenLunarCalendar } from '@/components/FullScreenLunarCalendar';
 import { calculateVipStatus } from '@/utils/vipCalculator';
 import { useQuery } from '@tanstack/react-query';
 import { fetchOrders } from '@/lib/orderApi';
 import LoginModal from './LoginModal';
 import DesktopLoginModal from './DesktopLoginModal';
 import { useResponsive } from '@/hooks/use-mobile';
+
+// Mock voucher data
+const MOCK_VOUCHERS: Voucher[] = [
+  {
+    id: 'v1',
+    code: 'ORGANIC20',
+    title: 'Giảm 20% Rau Organic',
+    description: 'Áp dụng cho tất cả rau củ organic',
+    discount: 20,
+    discountType: 'percentage',
+    minOrderValue: 200000,
+    expiryDate: '2024-11-30',
+    status: 'available',
+    category: 'Rau củ'
+  },
+  {
+    id: 'v2',
+    code: 'FREESHIP50',
+    title: 'Miễn phí vận chuyển',
+    description: 'Free ship đơn từ 300k',
+    discount: 50000,
+    discountType: 'fixed',
+    minOrderValue: 300000,
+    expiryDate: '2024-11-25',
+    status: 'available',
+    category: 'Vận chuyển'
+  },
+  {
+    id: 'v3',
+    code: 'NEWFRESH100',
+    title: 'Giảm 100K cho khách mới',
+    description: 'Dành cho đơn hàng đầu tiên',
+    discount: 100000,
+    discountType: 'fixed',
+    minOrderValue: 500000,
+    expiryDate: '2024-12-15',
+    status: 'available',
+    category: 'Khách mới'
+  },
+  {
+    id: 'v4',
+    code: 'FRUIT15',
+    title: 'Giảm 15% Trái cây',
+    description: 'Áp dụng cho tất cả trái cây tươi',
+    discount: 15,
+    discountType: 'percentage',
+    minOrderValue: 150000,
+    expiryDate: '2024-11-20',
+    status: 'available',
+    category: 'Trái cây'
+  },
+  {
+    id: 'v5',
+    code: 'SUMMER50',
+    title: 'Ưu đãi mùa hè',
+    description: 'Giảm giá đặc biệt',
+    discount: 50000,
+    discountType: 'fixed',
+    minOrderValue: 400000,
+    expiryDate: '2024-10-15',
+    status: 'expired',
+    category: 'Khuyến mãi'
+  },
+  {
+    id: 'v6',
+    code: 'VIP30',
+    title: 'VIP Member - 30% OFF',
+    description: 'Dành riêng thành viên VIP',
+    discount: 30,
+    discountType: 'percentage',
+    minOrderValue: 1000000,
+    expiryDate: '2024-10-10',
+    status: 'used',
+    category: 'VIP'
+  }
+];
 
 interface Product {
   id: string;
@@ -35,8 +113,9 @@ interface ProfileTabProps {
 }
 
 export function ProfileTab({ addToCart, setActiveTab }: ProfileTabProps = {}) {
-  const { user, isAuthenticated, isLoading, login, logout } = useAuth();
-  const [activeView, setActiveView] = useState<'profile' | 'orders' | 'wishlist' | 'shipping' | 'notifications' | 'notes' | 'address'>('profile');
+  const { user, isAuthenticated, login, logout } = useAuth();
+  const [activeView, setActiveView] = useState<'profile' | 'orders' | 'wishlist' | 'shipping' | 'notifications' | 'notes' | 'address' | 'vouchers' | 'calendar'>('profile');
+  const [vouchers] = useState<Voucher[]>(MOCK_VOUCHERS);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const { isMobile } = useResponsive();
 
@@ -49,34 +128,22 @@ export function ProfileTab({ addToCart, setActiveTab }: ProfileTabProps = {}) {
     retry: 1, // Only retry once on failure
   });
 
-  // Calculate real total spent from delivered orders
+  // Calculate real total spent from delivered orders - guard against null/undefined totals
   const totalSpent = orders
     .filter(order => order.status === 'delivered') // Only count delivered orders
-    .reduce((sum, order) => sum + order.total, 0);
+    .reduce((sum, order) => sum + (order.total || 0), 0);
 
   // Calculate VIP status based on real purchase history
   const vipProgress = calculateVipStatus(totalSpent);
 
-  if (isLoading) {
-    return (
-      <div className="p-4 pt-6">
-        <div className="bg-white rounded-xl p-6 mb-4 animate-pulse">
-          <div className="flex items-center space-x-4">
-            <div className="w-16 h-16 bg-gray-200 rounded-full"></div>
-            <div className="flex-1">
-              <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
-              <div className="h-3 bg-gray-200 rounded w-1/2"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  const handleTestLogin = async () => {
+    await login('test@sunfoods.vn', 'password123');
+  };
 
   if (!isAuthenticated) {
     return (
-      <div className="p-4 pt-6">
-        <div className="bg-white rounded-xl p-6 mb-4 text-center">
+      <div className="px-5 pt-5">
+        <div className="bg-white rounded-xl p-4 mb-4 text-center">
           <div className="w-20 h-20 bg-gray-100 rounded-full mx-auto mb-4 flex items-center justify-center">
             <User className="w-10 h-10 text-gray-400" />
           </div>
@@ -85,19 +152,28 @@ export function ProfileTab({ addToCart, setActiveTab }: ProfileTabProps = {}) {
             Chào mừng bạn!
           </h2>
           
-          <p className="text-[16px] md:text-[17px] text-gray-600 mb-6">
+          <p className="text-base text-gray-600 mb-6">
             Đăng nhập để trải nghiệm mua sắm tốt nhất và theo dõi đơn hàng của bạn.
           </p>
           
-          <Button 
-            onClick={() => setIsLoginModalOpen(true)}
-            className="w-full bg-green-600 hover:bg-green-700 text-white py-3 text-[16px] md:text-[18px] min-h-[56px]"
-          >
-            <LogIn className="w-5 h-5 mr-2" />
-            Đăng nhập
-          </Button>
+          <div className="space-y-3">
+            <Button 
+              onClick={() => setIsLoginModalOpen(true)}
+              className="w-full bg-green-600 hover:bg-green-700 text-white py-3 text-base min-h-[56px]"
+            >
+              <LogIn className="w-5 h-5 mr-2" />
+              Đăng nhập
+            </Button>
+            
+            <Button 
+              onClick={handleTestLogin}
+              className="w-full bg-amber-500 hover:bg-amber-600 text-white py-3 text-base min-h-[56px]"
+            >
+              🧪 Test Login (Demo)
+            </Button>
+          </div>
           
-          <div className="mt-4 text-[16px] md:text-[17px] text-gray-500">
+          <div className="mt-4 text-sm text-gray-500">
             <p className="flex items-center justify-center">
               <Shield className="w-4 h-4 mr-1" />
               Đăng nhập an toàn với Gmail, Facebook hoặc khách
@@ -106,11 +182,11 @@ export function ProfileTab({ addToCart, setActiveTab }: ProfileTabProps = {}) {
         </div>
 
         {/* Guest Features */}
-        <div className="bg-white rounded-xl p-6">
-          <h3 className="text-[18px] md:text-[20px] font-bold text-gray-900 mb-4">
+        <div className="bg-white rounded-xl p-4">
+          <h3 className="text-lg font-bold text-gray-900 mb-4">
             Tính năng khi đăng nhập
           </h3>
-          <ul className="space-y-3 text-[16px] md:text-[17px] text-gray-700">
+          <ul className="space-y-3 text-base text-gray-700">
             <li className="flex items-center">
               <div className="w-2 h-2 bg-green-500 rounded-full mr-3 flex-shrink-0"></div>
               Lưu giỏ hàng và sản phẩm yêu thích
@@ -152,7 +228,7 @@ export function ProfileTab({ addToCart, setActiveTab }: ProfileTabProps = {}) {
   // Render different views based on activeView
   if (activeView === 'orders') {
     return (
-      <div className="p-4 pt-6">
+      <div className="px-5 pt-5">
         {/* Back Button */}
         <div className="flex items-center mb-6">
           <Button
@@ -195,7 +271,7 @@ export function ProfileTab({ addToCart, setActiveTab }: ProfileTabProps = {}) {
 
   if (activeView === 'notifications') {
     return (
-      <div className="p-4 pt-6">
+      <div className="px-5 pt-5">
         {/* Back Button */}
         <div className="flex items-center mb-6">
           <Button
@@ -208,211 +284,339 @@ export function ProfileTab({ addToCart, setActiveTab }: ProfileTabProps = {}) {
           <h1 className="text-xl font-semibold text-gray-900">Cài đặt thông báo</h1>
         </div>
         
-        <PushNotificationSettings />
-        
-        <div className="mt-4 bg-blue-50 p-4 rounded-lg border border-blue-200">
-          <h3 className="text-[16px] md:text-[18px] font-semibold text-blue-900 mb-2">💡 Về thông báo đẩy</h3>
-          <ul className="text-[16px] md:text-[17px] text-blue-800 space-y-1">
-            <li>• Nhận thông báo ngay khi có đơn hàng mới</li>
-            <li>• Hoạt động ngay cả khi không mở website</li>
-            <li>• Có thể tắt bất cứ lúc nào</li>
-          </ul>
+        <CustomerPushSettings />
+      </div>
+    );
+  }
+
+  if (activeView === 'wishlist') {
+    return (
+      <WishlistView 
+        onBack={() => setActiveView('profile')}
+        addToCart={addToCart}
+      />
+    );
+  }
+
+  if (activeView === 'calendar') {
+    return (
+      <div className="min-h-screen">
+        {/* Back Button */}
+        <div className="flex items-center mb-4 px-5 pt-5 bg-white">
+          <Button
+            variant="ghost"
+            onClick={() => setActiveView('profile')}
+            className="p-2 mr-2"
+          >
+            <ArrowLeft className="h-5 w-5" />
+          </Button>
+          <h1 className="text-xl font-semibold text-gray-900">Lịch Âm</h1>
         </div>
+        
+        <FullScreenLunarCalendar />
+      </div>
+    );
+  }
+
+  if (activeView === 'vouchers') {
+    const availableVouchers = vouchers.filter(v => v.status === 'available');
+    const usedVouchers = vouchers.filter(v => v.status === 'used');
+    const expiredVouchers = vouchers.filter(v => v.status === 'expired');
+
+    const handleUseVoucher = (voucherId: string) => {
+      // Navigate to cart tab and apply voucher (in real app, pass voucher to cart state)
+      const voucher = vouchers.find(v => v.id === voucherId);
+      if (voucher) {
+        // Store voucher in localStorage for cart to pick up
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('selectedVoucher', JSON.stringify(voucher));
+        }
+        setActiveTab?.('cart');
+      }
+    };
+
+    return (
+      <div className="px-5 pt-5 pb-20">
+        {/* Back Button */}
+        <div className="flex items-center mb-6">
+          <Button
+            variant="ghost"
+            onClick={() => setActiveView('profile')}
+            className="p-2 mr-2"
+          >
+            <ArrowLeft className="h-5 w-5" />
+          </Button>
+          <h1 className="text-xl font-semibold text-gray-900">Kho Voucher</h1>
+        </div>
+
+        {/* Claim New Voucher Button */}
+        <div className="mb-6">
+          <button className="w-full bg-gradient-to-r from-warm-sun to-amber-400 text-white font-semibold py-4 px-6 rounded-xl flex items-center justify-center gap-2 hover:opacity-90 transition-opacity shadow-md">
+            <Plus className="w-5 h-5" />
+            Nhận voucher mới
+          </button>
+        </div>
+
+        {/* Available Vouchers */}
+        {availableVouchers.length > 0 && (
+          <div className="mb-6">
+            <h2 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+              <Ticket className="w-5 h-5 text-green-600" />
+              Khả dụng ({availableVouchers.length})
+            </h2>
+            <div className="space-y-4">
+              {availableVouchers.map(voucher => (
+                <VoucherCard 
+                  key={voucher.id} 
+                  voucher={voucher} 
+                  onUse={handleUseVoucher}
+                />
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Used Vouchers */}
+        {usedVouchers.length > 0 && (
+          <div className="mb-6">
+            <h2 className="text-lg font-bold text-gray-700 mb-4">
+              Đã sử dụng ({usedVouchers.length})
+            </h2>
+            <div className="space-y-4">
+              {usedVouchers.map(voucher => (
+                <VoucherCard key={voucher.id} voucher={voucher} />
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Expired Vouchers */}
+        {expiredVouchers.length > 0 && (
+          <div className="mb-6">
+            <h2 className="text-lg font-bold text-gray-700 mb-4">
+              Hết hạn ({expiredVouchers.length})
+            </h2>
+            <div className="space-y-4">
+              {expiredVouchers.map(voucher => (
+                <VoucherCard key={voucher.id} voucher={voucher} />
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Empty State */}
+        {vouchers.length === 0 && (
+          <div className="text-center py-12">
+            <Ticket className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+            <p className="text-gray-500 text-lg">Bạn chưa có voucher nào</p>
+            <p className="text-gray-400 text-sm mt-2">Nhận voucher để tiết kiệm chi phí!</p>
+          </div>
+        )}
       </div>
     );
   }
 
   // Profile overview (default view)
   return (
-    <div className="pb-4">
-      {/* Enhanced Gradient Hero Header */}
-      <div className="bg-gradient-to-r from-green-600 to-green-500 p-6 mb-4 shadow-lg">
-        <div className="flex items-center space-x-4 mb-6">
-          <div className="w-[72px] h-[72px] rounded-full overflow-hidden bg-white/20 backdrop-blur-sm flex items-center justify-center ring-4 ring-white/30">
-            {user.profileImageUrl ? (
+    <div className="px-5 pt-6 pb-24 bg-gray-50 min-h-screen">
+      {/* Clean Centered Hero Header */}
+      <div className="bg-white rounded-2xl p-6 mb-6 text-center shadow-sm relative">
+        {/* Large Centered Avatar with Ring */}
+        <div className="relative inline-block mb-4">
+          <div className="w-24 h-24 rounded-full overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center ring-4 ring-green-600 ring-offset-2">
+            {user.avatar ? (
               <img 
-                src={user.profileImageUrl} 
+                src={user.avatar} 
                 alt="Profile" 
                 className="w-full h-full object-cover"
               />
             ) : (
-              <User className="w-10 h-10 text-white" />
+              <User className="w-12 h-12 text-gray-400" />
             )}
           </div>
-          
-          <div className="flex-1">
-            <h2 className="text-[20px] md:text-[22px] font-bold text-white tracking-tight leading-snug">
-              {user.firstName || user.lastName 
-                ? `${user.firstName || ''} ${user.lastName || ''}`.trim()
-                : 'Người dùng'
-              }
-            </h2>
-            {user.email && (
-              <p className="text-white/90 text-[16px] md:text-[17px] flex items-center mt-1">
-                <Mail className="w-4 h-4 mr-1" />
-                {user.email}
+          {/* Verified Badge */}
+          <div className="absolute bottom-0 right-0 w-7 h-7 bg-green-600 rounded-full flex items-center justify-center ring-2 ring-white">
+            <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+            </svg>
+          </div>
+        </div>
+        
+        {/* Name in Gray (NOT amber) */}
+        <h2 className="text-xl font-semibold text-gray-900 mb-3">
+          {user.name || 'Người dùng'}
+        </h2>
+        
+        {/* VIP Progress Bar - Moved up to replace subtitle */}
+        <div className="max-w-[280px] mx-auto">
+          {vipProgress.nextTier ? (
+            <>
+              {/* Progress Label with Crown */}
+              <div className="flex items-center justify-center gap-2 mb-2">
+                <Crown className="w-4 h-4 text-amber-500" />
+                <span className="text-sm font-medium text-gray-700">
+                  Lên cấp {vipProgress.nextTier.name}
+                </span>
+              </div>
+              
+              {/* Progress Bar */}
+              <div className="w-full bg-gray-200 rounded-full h-2 mb-1.5">
+                <div 
+                  className="h-full bg-gradient-to-r from-amber-400 to-amber-500 rounded-full transition-all duration-300"
+                  style={{ width: `${vipProgress.progressToNext}%` }}
+                />
+              </div>
+              
+              {/* Progress Percentage */}
+              <p className="text-xs text-gray-600 text-center">
+                <Crown className="w-3 h-3 inline text-amber-500 mr-1" />
+                Đã đạt {vipProgress.progressToNext}% - Tiếp tục mua sắm!
               </p>
-            )}
-          </div>
-          
-          <Button 
-            onClick={logout}
-            variant="ghost"
-            size="sm"
-            className="text-white hover:bg-white/20"
-          >
-            <LogOut className="w-5 h-5" />
-          </Button>
+            </>
+          ) : (
+            <div className="flex items-center justify-center gap-2">
+              <Crown className="w-4 h-4 text-amber-500" />
+              <span className="text-sm font-medium text-gray-700">{vipProgress.currentTier.name}</span>
+            </div>
+          )}
         </div>
         
-        {/* Quick Action Buttons */}
-        <div className="grid grid-cols-3 gap-2">
-          <button 
-            onClick={() => setActiveView('orders')}
-            className="bg-white/90 backdrop-blur-sm rounded-xl p-3 text-center hover:bg-white transition-all shadow-sm min-h-[56px] flex flex-col items-center justify-center"
-          >
-            <Package className="h-5 w-5 text-green-600 mb-1" />
-            <span className="text-[16px] md:text-[17px] font-medium text-gray-900">Đơn mua</span>
-          </button>
-          <button 
-            onClick={() => {}}
-            className="bg-white/90 backdrop-blur-sm rounded-xl p-3 text-center hover:bg-white transition-all shadow-sm min-h-[56px] flex flex-col items-center justify-center"
-          >
-            <Crown className="h-5 w-5 text-amber-500 mb-1" />
-            <span className="text-[16px] md:text-[17px] font-medium text-gray-900">VIP</span>
-          </button>
-          <button 
-            onClick={() => setActiveView('notifications')}
-            className="bg-white/90 backdrop-blur-sm rounded-xl p-3 text-center hover:bg-white transition-all shadow-sm min-h-[56px] flex flex-col items-center justify-center"
-          >
-            <Bell className="h-5 w-5 text-orange-500 mb-1" />
-            <span className="text-[16px] md:text-[17px] font-medium text-gray-900">Thông báo</span>
-          </button>
-        </div>
-      </div>
-      
-      <div className="px-4">
-      {/* Stats Row */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
-        <div className="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm">
-          <div className="text-[24px] font-bold text-gray-900">{orders.length}</div>
-          <div className="text-[16px] md:text-[17px] text-gray-600">Đơn hàng</div>
-        </div>
-        <div className="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm">
-          <div className="text-[24px] font-bold text-green-600">
-            {orders.filter(o => o.status !== 'delivered' && o.status !== 'cancelled').length}
-          </div>
-          <div className="text-[16px] md:text-[17px] text-gray-600">Chờ giao</div>
-        </div>
-        <div className="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm">
-          <div className="text-[24px] font-bold text-amber-600">0</div>
-          <div className="text-[16px] md:text-[17px] text-gray-600">Voucher</div>
-        </div>
-        <div className="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm">
-          <div className="text-[24px] font-bold text-orange-600">0</div>
-          <div className="text-[16px] md:text-[17px] text-gray-600">Tin mới</div>
-        </div>
+        {/* Logout Button - Top Right */}
+        <Button 
+          onClick={logout}
+          variant="ghost"
+          size="sm"
+          className="absolute top-4 right-4 text-gray-600 hover:bg-gray-100"
+        >
+          <LogOut className="w-4 h-4" />
+        </Button>
       </div>
 
-      {/* VIP Tier System */}
-      {isLoadingOrders ? (
-        <div className="bg-white rounded-xl p-6 mb-4 animate-pulse">
-          <div className="h-32 bg-gray-200 rounded-lg mb-4"></div>
-          <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
-          <div className="h-4 bg-gray-200 rounded w-1/2"></div>
-        </div>
-      ) : ordersError ? (
-        <div className="bg-white rounded-xl p-6 mb-4">
-          <div className="text-center p-4 bg-yellow-50 rounded-lg border border-yellow-200">
-            <p className="text-yellow-700 text-[16px] md:text-[17px]">
-              Không thể tải thông tin cấp độ. Hãy thử lại sau.
-            </p>
+      {/* Khuyến Mãi Button */}
+      <div className="bg-white rounded-2xl p-4 mb-6 shadow-sm">
+        <button
+          onClick={() => setActiveView('vouchers')}
+          className="w-full flex items-center gap-4 p-4 rounded-xl hover:bg-red-50 transition-colors active:scale-95 border border-red-100"
+        >
+          <div className="w-14 h-14 bg-red-100 rounded-full flex items-center justify-center">
+            <Tag className="w-7 h-7 text-red-600" />
           </div>
-        </div>
-      ) : (
-        <VipTierCard vipProgress={vipProgress} />
-      )}
+          <div className="flex-1 text-left">
+            <h3 className="text-base font-semibold text-gray-900">Khuyến Mãi</h3>
+            <p className="text-sm text-gray-600">Xem các chương trình ưu đãi hấp dẫn</p>
+          </div>
+          <ChevronRight className="w-5 h-5 text-gray-400" />
+        </button>
+      </div>
 
-      {/* Account Features - Shopee Style Menu */}
-      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm">
-        <h3 className="text-[18px] md:text-[20px] font-bold text-gray-900 px-6 pt-6 pb-3">
-          Tài khoản của tôi
-        </h3>
-        
-        <div className="space-y-0 divide-y divide-gray-100">
-          <button 
+      {/* Colorful Icon Grid - No heading for space optimization */}
+      <div className="bg-white rounded-2xl p-5 mb-6 shadow-sm">
+        <div className="grid grid-cols-3 gap-3">
+          {/* Đơn hàng - Blue */}
+          <button
             onClick={() => setActiveView('orders')}
-            className="w-full text-left px-6 py-4 hover:bg-green-50/40 transition-colors flex items-center min-h-[56px] group"
+            className="flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-blue-50 transition-colors active:scale-95"
           >
-            <Package className="h-5 w-5 text-green-600 mr-4 flex-shrink-0" />
-            <div className="flex-1">
-              <div className="text-[16px] md:text-[18px] font-medium text-gray-900">Lịch sử đơn hàng</div>
-              <div className="text-[16px] md:text-[17px] text-gray-500 mt-0.5">Xem các đơn hàng đã mua</div>
+            <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+              <Package className="w-6 h-6 text-blue-600" />
             </div>
-            <ChevronRight className="h-5 w-5 text-gray-400 group-hover:text-green-600 transition-colors flex-shrink-0" />
+            <span className="text-xs font-medium text-gray-700">Đơn hàng</span>
           </button>
-          
-          <button 
-            onClick={() => setActiveView('wishlist')}
-            className="w-full text-left px-6 py-4 hover:bg-green-50/40 transition-colors flex items-center min-h-[56px] group"
-          >
-            <Heart className="h-5 w-5 text-red-500 mr-4 flex-shrink-0" />
-            <div className="flex-1">
-              <div className="text-[16px] md:text-[18px] font-medium text-gray-900">Sản phẩm yêu thích</div>
-              <div className="text-[16px] md:text-[17px] text-gray-500 mt-0.5">Quản lý danh sách yêu thích</div>
-            </div>
-            <ChevronRight className="h-5 w-5 text-gray-400 group-hover:text-red-500 transition-colors flex-shrink-0" />
-          </button>
-          
-          <button 
-            onClick={() => setActiveView('shipping')}
-            className="w-full text-left px-6 py-4 hover:bg-green-50/40 transition-colors flex items-center min-h-[56px] group"
-          >
-            <MapPin className="h-5 w-5 text-blue-600 mr-4 flex-shrink-0" />
-            <div className="flex-1">
-              <div className="text-[16px] md:text-[18px] font-medium text-gray-900">Thông tin giao hàng</div>
-              <div className="text-[16px] md:text-[17px] text-gray-500 mt-0.5">Địa chỉ và thông tin liên lạc</div>
-            </div>
-            <ChevronRight className="h-5 w-5 text-gray-400 group-hover:text-blue-600 transition-colors flex-shrink-0" />
-          </button>
-          
-          <button 
+
+          {/* Địa chỉ - Green */}
+          <button
             onClick={() => setActiveView('address')}
-            className="w-full text-left px-6 py-4 hover:bg-green-50/40 transition-colors flex items-center min-h-[56px] group"
+            className="flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-green-50 transition-colors active:scale-95"
           >
-            <MapPin className="h-5 w-5 text-green-600 mr-4 flex-shrink-0" />
-            <div className="flex-1">
-              <div className="text-[16px] md:text-[18px] font-medium text-gray-900">Địa chỉ chính</div>
-              <div className="text-[16px] md:text-[17px] text-gray-500 mt-0.5">Cập nhật địa chỉ trên bản đồ</div>
+            <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+              <MapPin className="w-6 h-6 text-green-600" />
             </div>
-            <ChevronRight className="h-5 w-5 text-gray-400 group-hover:text-green-600 transition-colors flex-shrink-0" />
+            <span className="text-xs font-medium text-gray-700">Địa chỉ</span>
           </button>
-          
-          <button 
-            onClick={() => setActiveView('notes')}
-            className="w-full text-left px-6 py-4 hover:bg-green-50/40 transition-colors flex items-center min-h-[56px] group"
+
+          {/* Voucher - Amber */}
+          <button
+            onClick={() => setActiveView('vouchers')}
+            className="flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-amber-50 transition-colors active:scale-95"
           >
-            <FileText className="h-5 w-5 text-purple-600 mr-4 flex-shrink-0" />
-            <div className="flex-1">
-              <div className="text-[16px] md:text-[18px] font-medium text-gray-900">Quản lý ghi chú</div>
-              <div className="text-[16px] md:text-[17px] text-gray-500 mt-0.5">Xem và chỉnh sửa ghi chú lịch</div>
+            <div className="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center">
+              <Ticket className="w-6 h-6 text-amber-600" />
             </div>
-            <ChevronRight className="h-5 w-5 text-gray-400 group-hover:text-purple-600 transition-colors flex-shrink-0" />
+            <span className="text-xs font-medium text-gray-700">Voucher</span>
           </button>
-          
-          <button 
+
+          {/* Yêu thích - Red */}
+          <button
+            onClick={() => setActiveView('wishlist')}
+            className="flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-red-50 transition-colors active:scale-95"
+          >
+            <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
+              <Heart className="w-6 h-6 text-red-600" />
+            </div>
+            <span className="text-xs font-medium text-gray-700">Yêu thích</span>
+          </button>
+
+          {/* Customer Care - Purple */}
+          <button
             onClick={() => setActiveView('notifications')}
-            className="w-full text-left px-6 py-4 hover:bg-green-50/40 transition-colors flex items-center min-h-[56px] group"
+            className="flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-purple-50 transition-colors active:scale-95"
           >
-            <Bell className="h-5 w-5 text-orange-600 mr-4 flex-shrink-0" />
-            <div className="flex-1">
-              <div className="text-[16px] md:text-[18px] font-medium text-gray-900">Cài đặt thông báo</div>
-              <div className="text-[16px] md:text-[17px] text-gray-500 mt-0.5">Nhận thông báo đơn hàng mới</div>
+            <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
+              <Bell className="w-6 h-6 text-purple-600" />
             </div>
-            <ChevronRight className="h-5 w-5 text-gray-400 group-hover:text-orange-600 transition-colors flex-shrink-0" />
+            <span className="text-xs font-medium text-gray-700">Thông báo</span>
+          </button>
+
+          {/* Lịch Âm - Teal */}
+          <button
+            onClick={() => setActiveView('calendar')}
+            className="flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-teal-50 transition-colors active:scale-95"
+          >
+            <div className="w-12 h-12 bg-teal-100 rounded-full flex items-center justify-center">
+              <Calendar className="w-6 h-6 text-teal-600" />
+            </div>
+            <span className="text-xs font-medium text-gray-700">Lịch Âm</span>
           </button>
         </div>
       </div>
+
+      {/* Simple Menu - 4 Items Only (No Sections/Dividers) */}
+      <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
+        <button 
+          onClick={() => setActiveView('orders')}
+          className="w-full px-5 py-4 flex items-center hover:bg-gray-50 transition-colors border-b border-gray-100"
+        >
+          <Package className="w-5 h-5 text-gray-600 mr-4" />
+          <span className="flex-1 text-left text-base font-medium text-gray-900">Đơn hàng</span>
+          <ChevronRight className="w-5 h-5 text-gray-400" />
+        </button>
+
+        <button 
+          onClick={() => setActiveView('address')}
+          className="w-full px-5 py-4 flex items-center hover:bg-gray-50 transition-colors border-b border-gray-100"
+        >
+          <MapPin className="w-5 h-5 text-gray-600 mr-4" />
+          <span className="flex-1 text-left text-base font-medium text-gray-900">Địa chỉ</span>
+          <ChevronRight className="w-5 h-5 text-gray-400" />
+        </button>
+
+        <button 
+          onClick={() => setActiveView('vouchers')}
+          className="w-full px-5 py-4 flex items-center hover:bg-gray-50 transition-colors border-b border-gray-100"
+        >
+          <Ticket className="w-5 h-5 text-gray-600 mr-4" />
+          <span className="flex-1 text-left text-base font-medium text-gray-900">Voucher</span>
+          <ChevronRight className="w-5 h-5 text-gray-400" />
+        </button>
+
+        <button 
+          onClick={() => setActiveView('wishlist')}
+          className="w-full px-5 py-4 flex items-center hover:bg-gray-50 transition-colors"
+        >
+          <Heart className="w-5 h-5 text-gray-600 mr-4" />
+          <span className="flex-1 text-left text-base font-medium text-gray-900">Yêu thích</span>
+          <ChevronRight className="w-5 h-5 text-gray-400" />
+        </button>
       </div>
     </div>
   );

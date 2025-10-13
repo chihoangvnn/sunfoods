@@ -3,6 +3,7 @@
 import React, { useState, useRef, useEffect, useCallback, memo } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 interface SlideItem {
   url: string;
@@ -230,12 +231,14 @@ export const ImageSlider = memo(function ImageSlider({
                     }}
                   />
                 ) : (
-                  <img
+                  <Image
                     src={slide.url}
                     alt={slide.alt || `Slide ${index + 1}`}
-                    className="w-full h-full object-cover object-center"
+                    fill
+                    priority={index === currentIndex}
+                    className="object-cover object-center"
                     draggable={false}
-                    loading="lazy"
+                    sizes="100vw"
                   />
                 )}
                 

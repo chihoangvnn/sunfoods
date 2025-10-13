@@ -172,7 +172,7 @@ export function AddressMapPicker({
 
   return (
     <Card>
-      <CardContent className="p-4 space-y-3">
+      <CardContent className="p-3 space-y-2">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <MapPin className="h-5 w-5 text-primary" />
@@ -180,19 +180,19 @@ export function AddressMapPicker({
           </div>
           <Button
             type="button"
-            variant="outline"
             size="sm"
             onClick={handleGeolocation}
             disabled={isGeolocating}
+            className="bg-green-600 hover:bg-green-700 text-white font-semibold shadow-sm"
           >
             {isGeolocating ? (
               <>
-                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                <Loader2 className="h-5 w-5 mr-2 animate-spin" />
                 Đang lấy...
               </>
             ) : (
               <>
-                <Navigation className="h-4 w-4 mr-2" />
+                <Navigation className="h-5 w-5 mr-2" />
                 Vị trí của tôi
               </>
             )}
@@ -225,7 +225,7 @@ export function AddressMapPicker({
           </div>
         )}
 
-        <div style={{ height: '400px', width: '100%', borderRadius: '8px', overflow: 'hidden' }}>
+        <div className="w-full rounded-lg overflow-hidden" style={{ height: 'min(25vh, 250px)' }}>
           <Map
             center={center}
             zoom={zoom}

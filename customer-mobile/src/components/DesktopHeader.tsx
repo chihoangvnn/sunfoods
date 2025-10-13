@@ -3,8 +3,9 @@
 import React, { useState } from 'react';
 import { ShoppingCart, Search, User, LogIn, PlusCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useAuth } from '@/hooks/useAuth';
+import { useAuth } from '@/contexts/AuthContext';
 import DesktopLoginModal from './DesktopLoginModal';
+import { SunFoodsLogo } from './SunFoodsLogo';
 
 interface DesktopHeaderProps {
   storeName: string;
@@ -29,7 +30,7 @@ export function DesktopHeader({
   onBlogClick,
   onLogoClick
 }: DesktopHeaderProps) {
-  const { user, isAuthenticated, isLoading } = useAuth();
+  const { user, isAuthenticated } = useAuth();
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   
   const handleGuestLogin = () => {
@@ -38,32 +39,32 @@ export function DesktopHeader({
   };
   
   return (
-    <header className="bg-green-600 shadow-sm sticky top-0 z-50">
+    <header className="bg-white shadow-md sticky top-0 z-50">
       <div className="w-full px-6 lg:px-8 xl:px-12 2xl:px-16">
         <div className="flex items-center justify-between h-16">
           {/* Store Logo/Name - Clickable */}
           <div className="flex items-center">
             <button 
               onClick={onLogoClick}
-              className="text-xl lg:text-2xl font-bold text-white hover:text-green-100 transition-colors duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-white/20 rounded-md px-2 py-1"
+              className="hover:opacity-80 transition-opacity duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-sunrise-leaf/20 rounded-md px-2 py-1"
               aria-label="Về trang chủ"
             >
-              {storeName}
+              <SunFoodsLogo size="lg" showText={true} variant="default" />
             </button>
           </div>
 
-          {/* Desktop Search Bar - More Compact */}
-          <div className="flex-1 max-w-xs mx-6">
+          {/* Desktop Search Bar - Premium Style */}
+          <div className="flex-1 max-w-md mx-8">
             <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none">
-                <Search className="h-4 w-4 text-gray-400" />
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <Search className="h-5 w-5 text-warm-sun" />
               </div>
               <input
                 type="text"
-                placeholder="Tìm kiếm..."
+                placeholder="Tìm thực phẩm organic..."
                 value={searchQuery}
                 onChange={(e) => onSearchChange(e.target.value)}
-                className="block w-full pl-8 pr-3 py-1.5 border border-gray-300 rounded-md leading-4 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-2 focus:ring-green-400 focus:border-green-400 text-sm"
+                className="block w-full pl-12 pr-4 py-2.5 border border-gray-200 rounded-lg leading-5 bg-gray-50 placeholder-gray-400 focus:outline-none focus:placeholder-gray-300 focus:ring-2 focus:ring-warm-sun focus:border-warm-sun focus:bg-white text-sm transition-all duration-200"
               />
             </div>
           </div>
@@ -75,7 +76,7 @@ export function DesktopHeader({
               variant="outline"
               size="sm"
               onClick={onBlogClick}
-              className="bg-white/10 border-white/20 text-white hover:bg-white/20 hover:border-white/30"
+              className="border-gray-200 text-sunrise-leaf hover:bg-sunrise-leaf/5 hover:border-sunrise-leaf/30"
             >
               <PlusCircle className="h-4 w-4" />
               <span className="ml-2 hidden lg:inline">Thêm Blog</span>
@@ -86,11 +87,11 @@ export function DesktopHeader({
               variant="outline"
               size="sm"
               onClick={onCartClick}
-              className="relative bg-white/10 border-white/20 text-white hover:bg-white/20 hover:border-white/30"
+              className="relative border-gray-200 text-sunrise-leaf hover:bg-sunrise-leaf/5 hover:border-sunrise-leaf/30"
             >
               <ShoppingCart className="h-4 w-4" />
               {cartCount > 0 && (
-                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold">
+                <span className="absolute -top-2 -right-2 bg-warm-sun text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold shadow-md">
                   {cartCount > 99 ? '99+' : cartCount}
                 </span>
               )}
@@ -102,12 +103,12 @@ export function DesktopHeader({
               <Button
                 variant="outline"
                 size="sm"
-                onClick={onProfileClick}
-                className="flex bg-white/10 border-white/20 text-white hover:bg-white/20 hover:border-white/30 px-4 py-2"
+                onClick={() => window.location.href = '/profile'}
+                className="flex border-gray-200 text-sunrise-leaf hover:bg-sunrise-leaf/5 hover:border-sunrise-leaf/30 px-4 py-2"
               >
-                {user?.profileImageUrl ? (
+                {user?.avatar ? (
                   <img 
-                    src={user.profileImageUrl} 
+                    src={user.avatar} 
                     alt="Profile" 
                     className="h-5 w-5 rounded-full object-cover"
                   />
@@ -115,18 +116,15 @@ export function DesktopHeader({
                   <User className="h-5 w-5" />
                 )}
                 <span className="ml-2">
-                  {user?.firstName || user?.lastName 
-                    ? `${user.firstName || ''} ${user.lastName || ''}`.trim()
-                    : 'Tài khoản'
-                  }
+                  {user?.name || 'Tài khoản'}
                 </span>
               </Button>
             ) : (
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => setIsLoginModalOpen(true)}
-                className="flex bg-white/10 border-white/20 text-white hover:bg-white/20 hover:border-white/30 hover:shadow-md transition-all duration-200 px-4 py-2"
+                onClick={() => window.location.href = '/login'}
+                className="flex border-gray-200 text-sunrise-leaf hover:bg-sunrise-leaf/5 hover:border-sunrise-leaf/30 hover:shadow-md transition-all duration-200 px-4 py-2"
               >
                 <LogIn className="h-5 w-5" />
                 <span className="ml-2 font-medium">Đăng nhập</span>

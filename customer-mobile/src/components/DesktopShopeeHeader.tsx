@@ -3,12 +3,10 @@
 import React from 'react';
 import { TopBar } from './TopBar';
 import { ShopeeStyleHeader } from './ShopeeStyleHeader';
-import { CategoryIconsGrid } from './CategoryIconsGrid';
 
 interface DesktopShopeeHeaderProps {
   cartCount: number;
   onSearch: (query: string) => void;
-  onCategoryClick: (categoryId: string) => void;
   onCartClick: () => void;
   onLogin?: () => void;
   onRegister?: () => void;
@@ -17,7 +15,6 @@ interface DesktopShopeeHeaderProps {
 export function DesktopShopeeHeader({
   cartCount,
   onSearch,
-  onCategoryClick,
   onCartClick,
   onLogin,
   onRegister
@@ -32,7 +29,6 @@ export function DesktopShopeeHeader({
         onSearch={onSearch}
         onCartClick={onCartClick}
       />
-      <CategoryIconsGrid onCategoryClick={onCategoryClick} />
     </header>
   );
 }

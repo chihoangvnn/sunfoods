@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useMemo, useCallback, useEffect } from 'react';
+import React, { useState, useMemo, useCallback, useEffect, lazy, Suspense } from 'react';
 import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
 import { ShoppingCart, User, ArrowLeft, Plus, Minus, Store, Calendar, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -11,18 +11,18 @@ import { DesktopHeader } from '@/components/DesktopHeader';
 import { DesktopShopeeHeader } from '@/components/DesktopShopeeHeader';
 import { AutoHideSearchBar } from '@/components/AutoHideSearchBar';
 import { HiddenSearchBar } from '@/components/HiddenSearchBar';
-import { FullScreenLunarCalendar } from '@/components/FullScreenLunarCalendar';
 import { MediaViewer } from '@/components/MediaViewer';
 import { ImageSlider } from '@/components/ImageSlider';
-import { BlogFeaturedSection } from '@/components/BlogFeaturedSection';
+import { OrganicHeroSection } from '@/components/OrganicHeroSection';
+import { WhyChooseSunFoods } from '@/components/WhyChooseSunFoods';
+import { OrganicProductBadge } from '@/components/OrganicProductBadge';
 import { ProfileTab } from '@/components/ProfileTab';
 import { BlogTab } from '@/components/BlogTab';
 import { BlogPost } from '@/components/BlogPost';
-import DesktopChatBot from '@/components/DesktopChatBot';
-import MobileChatBot from '@/components/MobileChatBot';
 import DesktopFooter from '@/components/DesktopFooter';
 import { ProductModal } from '@/components/ProductModal';
 import { DesktopFullPageView } from '@/components/DesktopFullPageView';
+import { ProductStrip } from '@/components/ProductStrip';
 import { useResponsive } from '@/hooks/use-mobile';
 import { useAuth } from '@/hooks/useAuth';
 import { formatVietnamPrice } from '@/utils/currency';
@@ -34,16 +34,29 @@ import { markInternalNav } from '@/utils/navigation';
 import Head from 'next/head';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { 
+  VegetablesIcon, 
+  FruitsIcon, 
+  PantryIcon, 
+  WellnessIcon, 
+  ProteinIcon, 
+  HerbsIcon 
+} from '@/components/icons/CategoryIcons';
+
+// Lazy load non-critical components for better performance
+const DesktopChatBot = lazy(() => import('@/components/DesktopChatBot'));
+const MobileChatBot = lazy(() => import('@/components/MobileChatBot'));
+const FullScreenLunarCalendar = lazy(() => import('@/components/FullScreenLunarCalendar').then(module => ({ default: module.FullScreenLunarCalendar })));
 
 // API base URL from environment or default  
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '/api';
 
-// Spiritual-themed banner images for mobile (fallback)
-const BANNER_IMAGES = [
-  '/images/spiritual-banner-1.jpg', // Vietnamese incense burning on altar
-  '/images/spiritual-banner-2.jpg', // Spiritual meditation atmosphere
-  '/images/spiritual-banner-3.jpg'  // Serene incense ceremony
+// Organic farm images for hero section (fallback)
+const ORGANIC_HERO_IMAGES = [
+  '/images/organic-farm-1.jpg', // Fresh organic vegetables from local farm
+  '/images/organic-farm-2.jpg', // Farmer harvesting fresh produce
+  '/images/organic-farm-3.jpg'  // Organic fruits and vegetables display
 ];
 
 // Interface for shop settings
@@ -118,6 +131,7 @@ interface BlogPost {
 export default function MobileStorefront() {
   // Router for navigation
   const router = useRouter();
+  const searchParams = useSearchParams();
   
   // Responsive hooks
   const { isMobile, isTablet } = useResponsive();
@@ -140,9 +154,48 @@ export default function MobileStorefront() {
   const [activeTab, setActiveTab] = useState('home');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
+  
+  // Handle category from URL parameter
+  useEffect(() => {
+    const categoryParam = searchParams.get('category');
+    if (categoryParam) {
+      setSelectedCategory(categoryParam);
+      setActiveTab('home'); // Make sure we're on home tab
+    }
+  }, [searchParams]);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [forceFullView, setForceFullView] = useState(false);
+  const [shouldLoadChatbot, setShouldLoadChatbot] = useState(false);
+  
+  // Lazy load chatbot after scroll or 3 seconds
+  useEffect(() => {
+    let hasLoaded = false;
+    
+    const loadChatbot = () => {
+      if (!hasLoaded) {
+        setShouldLoadChatbot(true);
+        hasLoaded = true;
+      }
+    };
+    
+    // Load after 3 seconds idle
+    const timer = setTimeout(loadChatbot, 3000);
+    
+    // Load on scroll
+    const handleScroll = () => {
+      if (window.scrollY > 100) {
+        loadChatbot();
+      }
+    };
+    
+    window.addEventListener('scroll', handleScroll);
+    
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
   
   // Sample products for Enhanced Product Cards demo
   const sampleProducts = [
@@ -159,10 +212,10 @@ export default function MobileStorefront() {
   
   // Enhanced responsive layout configurations - Memoized for performance
   const layoutConfig = useMemo(() => ({
-    gridCols: isMobile ? 'grid-cols-1' : 'grid-cols-3',
+    gridCols: (isMobile || isTablet) ? 'grid-cols-2' : 'grid-cols-4',
     containerClass: 'w-full',
     contentPadding: isMobile ? 'px-3 py-4' : 'px-6 py-8 lg:px-12 xl:px-16',
-    gridGap: isMobile ? 'gap-2' : 'gap-4 lg:gap-5 xl:gap-6',
+    gridGap: (isMobile || isTablet) ? 'gap-3' : 'gap-4 lg:gap-5 xl:gap-6',
     showBottomNav: isMobile,
     desktopProductContainer: 'max-w-7xl mx-auto',
     sectionSpacing: 'mb-16',
@@ -210,6 +263,24 @@ export default function MobileStorefront() {
   
   // Flatten pages into single array
   const products = productsData?.pages.flat() || [];
+  
+  // Infinite scroll implementation with 0.8 threshold
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollHeight = document.documentElement.scrollHeight;
+      const scrollTop = document.documentElement.scrollTop;
+      const clientHeight = document.documentElement.clientHeight;
+      
+      const scrollPercentage = (scrollTop + clientHeight) / scrollHeight;
+      
+      if (scrollPercentage >= 0.8 && hasNextPage && !isFetchingNextPage) {
+        fetchNextPage();
+      }
+    };
+    
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   // Fetch shop settings for hero slider
   const { data: shopSettingsData, isLoading: shopSettingsLoading } = useQuery<{ data: ShopSettings }>({
@@ -223,90 +294,112 @@ export default function MobileStorefront() {
     staleTime: 60000,
   });
 
-  // Process hero slider data - use fetched data or fallback to default images
+  // Process hero slider data - use fetched data or fallback to organic farm images
   const heroSlides = useMemo(() => {
     const heroSlider = shopSettingsData?.data?.heroSlider;
     if (heroSlider && heroSlider.length > 0) {
       return heroSlider;
     }
-    // Fallback to BANNER_IMAGES if no hero slider data
-    return BANNER_IMAGES.map(url => ({ url }));
+    // Fallback to ORGANIC_HERO_IMAGES if no hero slider data
+    return ORGANIC_HERO_IMAGES.map(url => ({ url }));
   }, [shopSettingsData]);
 
-  // Demo products with badges for testing (when API fails)
+  // Demo organic food products for testing (when API fails)
+  // Updated to use new SunFoods category IDs
   const demoProducts: Product[] = [
     {
       id: 'demo-1',
-      name: 'Nhang Trầm Hương Cao Cấp',
-      price: 150000,
-      originalPrice: 200000,  // 25% discount
-      image: '/images/modern_e-commerce_ba_70f9ff6e.jpg',
-      category_id: 'incense',
+      slug: 'rau-cai-xanh-organic-dalat',
+      name: 'Rau Cải Xanh Organic Đà Lạt',
+      price: 25000,
+      image: '/images/organic-farm-1.jpg',
+      category_id: 'rau-cu',
       stock: 50,
-      short_description: 'Nhang trầm hương thượng hạng từ Huế',
+      short_description: 'Rau cải xanh hữu cơ tươi, thu hoạch sáng nay từ Farm Đà Lạt',
       status: 'active',
-      benefits: ['Thanh tịnh tâm hồn', 'Thơm dịu nhẹ'],
+      benefits: ['100% Organic', 'Không hóa chất', 'Tươi trong ngày'],
       isNew: true,
       isTopseller: true,
-      rating: 4.8,
-      totalReviews: 120,
-      positivePercent: 92,
-      createdAt: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000) // 15 days ago
     },
     {
-      id: 'demo-2', 
-      name: 'Nhang Sandalwood Premium',
-      price: 200000,
-      originalPrice: 250000,  // 20% discount
-      image: '/images/modern_e-commerce_ba_a5ed4b23.jpg',
-      category_id: 'incense',
+      id: 'demo-2',
+      slug: 'tao-organic-usa',
+      name: 'Táo Organic USA',
+      price: 120000,
+      image: '/images/organic-farm-2.jpg',
+      category_id: 'trai-cay-nhap',
       stock: 30,
-      short_description: 'Nhang gỗ đàn hương nguyên chất',
+      short_description: 'Táo organic nhập khẩu từ Mỹ - Giòn ngọt tự nhiên',
       status: 'active',
-      benefits: ['Thư giãn', 'Thiền định'],
+      benefits: ['100% Organic USA', 'Giòn ngọt', 'An toàn tuyệt đối'],
       isFreeshipping: true,
       isBestseller: true,
-      rating: 4.6,
-      totalReviews: 85,
-      positivePercent: 88,
-      createdAt: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000) // 60 days ago
     },
     {
       id: 'demo-3',
-      name: 'Nhang Que Truyền Thống',
-      price: 80000,
-      originalPrice: 110000,  // 27% discount
-      image: '/images/modern_e-commerce_ba_9f23a27c.jpg',
-      category_id: 'incense',
+      name: 'Gạo Lứt Hữu Cơ ST25',
+      price: 75000,
+      originalPrice: 95000,
+      image: '/images/organic-farm-3.jpg',
+      category_id: 'thuc-pham-kho',
       stock: 100,
-      short_description: 'Nhang que làm thủ công theo phương pháp cổ truyền',
+      short_description: 'Gạo lứt organic ST25 - Gạo ngon nhất thế giới 2023',
       status: 'active',
-      benefits: ['Tôn giáo', 'Gia đình'],
+      benefits: ['Chứng nhận Organic', 'Giàu chất xơ', 'Đồng Tháp Mười'],
       isNew: true,
       isFreeshipping: true,
       rating: 4.9,
       totalReviews: 203,
-      positivePercent: 95,
-      createdAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000) // 10 days ago
+      positivePercent: 97,
+      createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000) // 5 days ago
     },
     {
       id: 'demo-4',
-      name: 'Bộ Nhang Ngũ Hành',
-      price: 350000,
-      originalPrice: 400000,  // 12.5% discount
-      image: '/images/modern_e-commerce_ba_70f9ff6e.jpg',
-      category_id: 'incense',
+      name: 'Dâu Tây Nhật Bản',
+      price: 180000,
+      originalPrice: 220000,
+      image: '/images/organic-farm-1.jpg',
+      category_id: 'trai-cay-nhap',
       stock: 20,
-      short_description: 'Bộ nhang 5 loại theo ngũ hành kim, mộc, thủy, hỏa, thổ',
+      short_description: 'Dâu tây Nhật Bản cao cấp - Ngọt thanh, mọng nước',
       status: 'active',
-      benefits: ['Cân bằng năng lượng', 'Phong thủy'],
+      benefits: ['Nhập khẩu Nhật', 'Ngọt tự nhiên', 'Đóng gói cẩn thận'],
       isTopseller: true,
       isBestseller: true,
       isFreeshipping: true,
-      rating: 4.3,
-      totalReviews: 45,
-      positivePercent: 78,
-      createdAt: new Date(Date.now() - 90 * 24 * 60 * 60 * 1000) // 90 days ago
+      rating: 4.8,
+      totalReviews: 89,
+      positivePercent: 94,
+      createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000) // 2 days ago
+    },
+    {
+      id: 'demo-5',
+      name: 'Cà Chua Cherry Organic Sapa',
+      price: 45000,
+      image: '/images/organic-farm-2.jpg',
+      category_id: 'rau-cu',
+      stock: 35,
+      short_description: 'Cà chua cherry organic từ Sapa - Ngọt tự nhiên',
+      status: 'active',
+      benefits: ['VietGAP', 'Farm Sapa', 'Tươi sáng nay'],
+      isNew: true,
+      rating: 4.6,
+      totalReviews: 67,
+      createdAt: new Date()
+    },
+    {
+      id: 'demo-6',
+      name: 'Bơ Hass Úc',
+      price: 95000,
+      image: '/images/organic-farm-3.jpg',
+      category_id: 'trai-cay-nhap',
+      stock: 25,
+      short_description: 'Bơ Hass nhập khẩu Úc - Béo ngậy, dinh dưỡng',
+      status: 'active',
+      benefits: ['Nhập Australia', 'Béo ngậy', 'Chín tự nhiên'],
+      isFreeshipping: true,
+      rating: 4.9,
+      totalReviews: 156
     }
   ];
 
@@ -315,6 +408,43 @@ export default function MobileStorefront() {
   
   // Force demo products when error or no products available (even during loading if products exist)
   const finalProducts = products.length > 0 ? products : demoProducts;
+
+  // Merchandising Strips - Product Collections
+  const bestSellerProducts = useMemo(() => {
+    const filtered = finalProducts.filter(p => p.isBestseller || p.isTopseller);
+    if (filtered.length > 0) return filtered.slice(0, 6);
+    // Fallback: First 6 products sorted by rating
+    return [...finalProducts]
+      .sort((a, b) => (b.rating || 0) - (a.rating || 0))
+      .slice(0, 6);
+  }, [finalProducts]);
+
+  const newHarvestProducts = useMemo(() => {
+    const filtered = finalProducts.filter(p => p.isNew);
+    if (filtered.length > 0) return filtered.slice(0, 6);
+    // Fallback: Products created in last 7 days
+    const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+    return finalProducts
+      .filter(p => {
+        if (!p.createdAt) return false;
+        const createdDate = new Date(p.createdAt);
+        return createdDate >= sevenDaysAgo;
+      })
+      .slice(0, 6);
+  }, [finalProducts]);
+
+  const topRatedProducts = useMemo(() => {
+    return [...finalProducts]
+      .filter(p => (p.rating || 0) >= 4.7)
+      .sort((a, b) => {
+        // Sort by rating DESC
+        const ratingDiff = (b.rating || 0) - (a.rating || 0);
+        if (ratingDiff !== 0) return ratingDiff;
+        // Then by totalReviews DESC
+        return (b.totalReviews || 0) - (a.totalReviews || 0);
+      })
+      .slice(0, 6);
+  }, [finalProducts]);
 
   // Fetch real categories with loading states
   const { 
@@ -331,29 +461,46 @@ export default function MobileStorefront() {
     }
   });
   
-  // Create simplified category list with real IDs (filter out duplicate "all")
-  const categories = categoriesLoading ? [] : [
-    { id: 'all', name: 'Tất cả', icon: '🛍️' },
-    ...allCategories
-      .filter(cat => cat.id !== 'all') // Prevent duplicate "all" key
-      .map(cat => ({
-        id: cat.id,
-        name: cat.name,
-        icon: getCategoryIcon(cat.name)
-      }))
-  ];
-  
-  // Helper function to get category icons
-  function getCategoryIcon(categoryName: string): string {
+  // Helper function to map backend categories to organic food display with icons
+  function getOrganicCategoryIcon(categoryName: string): { IconComponent: any; color: string } | null {
     const name = categoryName.toLowerCase();
-    if (name.includes('điện') || name.includes('phone') || name.includes('tech')) return '📱';
-    if (name.includes('sách') || name.includes('book')) return '📚';
-    if (name.includes('làm đẹp') || name.includes('beauty') || name.includes('cosmetic')) return '💄';
-    if (name.includes('thời trang') || name.includes('fashion') || name.includes('clothes')) return '👕';
-    if (name.includes('gia dụng') || name.includes('home')) return '🏠';
-    if (name.includes('thể thao') || name.includes('sport')) return '⚽';
-    return '📦';
+    if (name.includes('rau') || name.includes('vegetable') || name.includes('củ')) {
+      return { IconComponent: VegetablesIcon, color: 'text-category-vegetables' };
+    }
+    if (name.includes('trái cây') || name.includes('fruit') || name.includes('hoa quả')) {
+      return { IconComponent: FruitsIcon, color: 'text-category-fruits' };
+    }
+    if (name.includes('thơm') || name.includes('herb')) {
+      return { IconComponent: HerbsIcon, color: 'text-sunrise-leaf' };
+    }
+    if (name.includes('khô') || name.includes('pantry') || name.includes('gạo') || name.includes('ngũ cốc')) {
+      return { IconComponent: PantryIcon, color: 'text-category-pantry' };
+    }
+    if (name.includes('protein') || name.includes('đậu') || name.includes('sữa')) {
+      return { IconComponent: ProteinIcon, color: 'text-sunrise-leaf' };
+    }
+    if (name.includes('wellness') || name.includes('chức năng') || name.includes('tinh dầu')) {
+      return { IconComponent: WellnessIcon, color: 'text-category-wellness' };
+    }
+    // Default to vegetables icon for unmatched categories
+    return { IconComponent: VegetablesIcon, color: 'text-sunrise-leaf' };
   }
+  
+  // Map backend categories with organic icons while preserving real IDs
+  const categories = categoriesLoading ? [] : [
+    { id: 'all', name: 'Tất cả', IconComponent: null, color: 'text-sunrise-leaf' },
+    ...allCategories
+      .filter(cat => cat.id !== 'all')
+      .map(cat => {
+        const iconData = getOrganicCategoryIcon(cat.name);
+        return {
+          id: cat.id,  // Preserve backend ID for filtering
+          name: cat.name,  // Keep backend name for now (can customize display later)
+          IconComponent: iconData?.IconComponent || null,
+          color: iconData?.color || 'text-sunrise-leaf'
+        };
+      })
+  ];
 
   const addToCart = (product: Product) => {
     setCart(prev => {
@@ -518,7 +665,7 @@ export default function MobileStorefront() {
             <div>
               {/* Product Name and Badges - inline layout */}
               <div className="flex flex-wrap items-center gap-3 mb-3">
-                <h1 className="text-2xl font-bold text-gray-900">
+                <h1 className="text-2xl font-bold text-sunrise-leaf">
                   {selectedProduct.name}
                 </h1>
                 {/* Product Badges - displayed next to product name */}
@@ -533,10 +680,10 @@ export default function MobileStorefront() {
                   {formatVietnamPrice(selectedProduct.price)}
                 </span>
                 <div className="flex items-center gap-1">
-                  <Star className="h-4 w-4 fill-gold text-gold" />
-                  <Star className="h-4 w-4 fill-gold text-gold" />
-                  <Star className="h-4 w-4 fill-gold text-gold" />
-                  <Star className="h-4 w-4 fill-gold text-gold" />
+                  <Star className="h-4 w-4 fill-warm-sun text-warm-sun" />
+                  <Star className="h-4 w-4 fill-warm-sun text-warm-sun" />
+                  <Star className="h-4 w-4 fill-warm-sun text-warm-sun" />
+                  <Star className="h-4 w-4 fill-warm-sun text-warm-sun" />
                   <Star className="h-4 w-4 fill-gray-200 text-gray-200" />
                   <span className="text-sm text-gray-600 ml-1">(4.0)</span>
                 </div>
@@ -613,23 +760,75 @@ export default function MobileStorefront() {
 
     switch (activeTab) {
       case 'categories':
+        const mainCategories = [
+          {
+            id: "rau-cu",
+            icon: "🥒",
+            title: "Rau Củ Quả",
+            slug: "rau-cu-qua",
+            description: "Tươi ngon tự nhiên"
+          },
+          {
+            id: "trai-cay-nhap",
+            icon: "🍎",
+            title: "Trái Cây Nhập Khẩu",
+            slug: "trai-cay-nhap-khau",
+            description: "Tươi ngon tự nhiên"
+          },
+          {
+            id: "my-pham",
+            icon: "💄",
+            title: "Mỹ Phẩm",
+            slug: "my-pham",
+            description: "Tươi ngon tự nhiên"
+          },
+          {
+            id: "thuc-pham-kho",
+            icon: "🌾",
+            title: "Thực Phẩm Khô",
+            slug: "thuc-pham-kho",
+            description: "Tươi ngon tự nhiên"
+          },
+          {
+            id: "an-dam-cho-be",
+            icon: "👶",
+            title: "Ăn Dặm Cho Bé",
+            slug: "an-dam-cho-be",
+            description: "Tươi ngon tự nhiên"
+          },
+          {
+            id: "gia-dung",
+            icon: "🏠",
+            title: "Gia Dụng",
+            slug: "gia-dung",
+            description: "Tươi ngon tự nhiên"
+          },
+          {
+            id: "thuc-pham-tuoi",
+            icon: "🥩",
+            title: "Thực Phẩm Tươi",
+            slug: "thuc-pham-tuoi",
+            description: "Tươi ngon tự nhiên"
+          }
+        ];
+
         return (
-          <div className={`${layoutConfig.containerClass}`}>
+          <div className={`${layoutConfig.containerClass} pb-20`}>
             <div className={`${layoutConfig.contentPadding} pt-6`}>
               <h2 className="text-xl font-bold mb-4 text-gray-900">Danh mục sản phẩm</h2>
-              <div className={`grid ${layoutConfig.gridCols} ${layoutConfig.gridGap}`}>
-                {categories.map((category) => (
+              <div className="grid grid-cols-2 gap-3">
+                {mainCategories.map((category) => (
                   <button
                     key={category.id}
                     onClick={() => {
-                      setSelectedCategory(category.id);
-                      setActiveTab('home');
+                      router.push(`/${category.slug}`);
                     }}
-                    className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow"
+                    className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 hover:shadow-md hover:border-sunrise-leaf/30 transition-all"
                   >
                     <div className="text-center">
-                      <div className="text-3xl mb-2">{category.icon}</div>
-                      <h3 className="font-semibold text-gray-900">{category.name}</h3>
+                      <div className="mb-2 text-4xl">{category.icon}</div>
+                      <h3 className="font-semibold text-gray-900 text-sm">{category.title}</h3>
+                      <p className="text-xs text-gray-500 mt-1">{category.description}</p>
                     </div>
                   </button>
                 ))}
@@ -704,8 +903,22 @@ export default function MobileStorefront() {
           </div>
         );
 
-      case 'calendar':
-        return <FullScreenLunarCalendar />;
+      case 'wishlist':
+        return (
+          <div className="px-5 pt-5 pb-20">
+            <div className="flex items-center mb-6">
+              <Button
+                variant="ghost"
+                onClick={() => setActiveTab('home')}
+                className="p-2 mr-2"
+              >
+                <ArrowLeft className="h-5 w-5" />
+              </Button>
+              <h1 className="text-xl font-semibold text-gray-900">Yêu thích</h1>
+            </div>
+            <p className="text-gray-600 text-center py-8">Tính năng yêu thích đang được phát triển</p>
+          </div>
+        );
 
       case 'profile':
         return <ProfileTab addToCart={addToCart} setActiveTab={setActiveTab} />;
@@ -714,15 +927,8 @@ export default function MobileStorefront() {
         // Enhanced Product Cards - Blue Theme with Real Products
         return (
           <div className={layoutConfig.containerClass}>
-            {/* Featured Blog Posts - Desktop only, above products, only on home tab */}
-            {activeTab === 'home' && (
-              <BlogFeaturedSection 
-                onPostClick={(post) => {
-                  setSelectedBlogPost(post);
-                  setActiveTab('blog-detail');
-                }}
-              />
-            )}
+            {/* Categories Section - Only on home tab */}
+            {activeTab === 'home' && <WhyChooseSunFoods onCategorySelect={setSelectedCategory} />}
             
             {/* Products Section with Enhanced Design */}
             <div className={`${layoutConfig.contentPadding} ${layoutConfig.sectionSpacing}`}>
@@ -730,13 +936,14 @@ export default function MobileStorefront() {
                 {/* Enhanced Product Grid */}
                 <div className={`grid ${layoutConfig.gridCols} ${layoutConfig.gridGap}`}>
                 {productsLoading && products.length === 0 && !productsError ? (
-                  // Loading skeleton - only show when no products loaded yet
+                  // Enhanced skeleton with organic colors and proper sizing
                   Array.from({ length: 8 }).map((_, index) => (
-                    <div key={index} className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-                      <div className="aspect-[2/3] bg-gray-100 animate-pulse" />
-                      <div className="p-4">
-                        <div className="h-4 bg-gray-200 rounded animate-pulse mb-2" />
-                        <div className="h-3 bg-gray-200 rounded animate-pulse w-2/3" />
+                    <div key={index} className="bg-white rounded-lg shadow-sm border border-neutral-mist/30 overflow-hidden">
+                      <div className="aspect-[4/5] bg-neutral-mist/20 animate-pulse" />
+                      <div className="p-4 space-y-3">
+                        <div className="h-4 bg-neutral-mist/30 rounded animate-pulse" />
+                        <div className="h-6 bg-neutral-mist/30 rounded w-2/3 animate-pulse" />
+                        <div className="h-10 bg-sunrise-leaf/10 rounded animate-pulse" />
                       </div>
                     </div>
                   ))
@@ -746,8 +953,8 @@ export default function MobileStorefront() {
                     <p className="text-gray-600">Không tìm thấy sản phẩm</p>
                   </div>
                 ) : (
-                  // Limit to 6 products on desktop, show all on mobile
-                  (isMobile ? finalProducts : finalProducts.slice(0, 6)).map((product) => {
+                  // Show all products on both desktop and mobile for infinite scroll
+                  finalProducts.map((product) => {
                     // Get rating value (default to 4.5 if not available)
                     const rating = product.rating || 4.5;
                     const fullStars = Math.floor(rating);
@@ -803,8 +1010,14 @@ export default function MobileStorefront() {
 
                       {/* Product info */}
                       <div className="p-3 space-y-2">
-                        {/* Product name - single line, medium weight */}
-                        <h3 className="font-medium text-gray-900 line-clamp-1 text-base" title={product.name}>
+                        {/* Organic Badges Row */}
+                        <div className="flex items-center gap-1.5 flex-wrap">
+                          <OrganicProductBadge type="certified" size="sm" />
+                          <OrganicProductBadge type="fresh" size="sm" />
+                        </div>
+                        
+                        {/* Product name - single line, medium weight, green color */}
+                        <h3 className="font-medium text-sunrise-leaf line-clamp-1 text-base" title={product.name}>
                           {product.name}
                         </h3>
 
@@ -818,16 +1031,16 @@ export default function MobileStorefront() {
                           </div>
                         )}
 
-                        {/* Star rating row */}
+                        {/* Star rating row - yellow stars */}
                         <div className="flex items-center gap-1">
                           {[...Array(5)].map((_, index) => (
                             <Star 
                               key={index} 
                               className={`h-4 w-4 ${
                                 index < fullStars 
-                                  ? 'fill-gold text-gold' 
+                                  ? 'fill-warm-sun text-warm-sun' 
                                   : index === fullStars && hasHalfStar
-                                  ? 'fill-gold text-gold'
+                                  ? 'fill-warm-sun text-warm-sun'
                                   : 'fill-gray-200 text-gray-200'
                               }`}
                             />
@@ -842,7 +1055,7 @@ export default function MobileStorefront() {
                           </span>
                         </div>
 
-                        {/* "Add to Cart" button - Full width, sunset-orange background */}
+                        {/* "Thêm vào giỏ" button - Full width, theme color */}
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
@@ -850,24 +1063,11 @@ export default function MobileStorefront() {
                             addToCart(product);
                           }}
                           disabled={product.stock === 0}
-                          className="w-full bg-sunset-orange hover:bg-sunset-orange/90 text-white font-medium py-2 px-4 rounded-md flex items-center justify-center gap-2 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
+                          className="w-full bg-sunrise-leaf hover:bg-sunrise-leaf/90 text-white font-bold py-3 px-4 rounded-xl flex items-center justify-center gap-2 transition-all shadow-sm hover:shadow-md disabled:bg-gray-400 disabled:cursor-not-allowed"
                         >
-                          <ShoppingCart className="h-4 w-4" />
-                          <span>Add to Cart</span>
+                          <ShoppingCart className="h-5 w-5" />
+                          <span>Thêm vào giỏ</span>
                         </button>
-
-                        {/* Stock availability */}
-                        <div className="text-center">
-                          {product.stock > 0 ? (
-                            <span className="text-sm text-gray-500">
-                              {product.stock} available
-                            </span>
-                          ) : (
-                            <span className="text-sm text-gray-500">
-                              Out of stock
-                            </span>
-                          )}
-                        </div>
                       </div>
                     </Link>
                     );
@@ -875,14 +1075,20 @@ export default function MobileStorefront() {
                 )}
                 </div>
                 
-                {/* "Xem tất cả sản phẩm" button - Desktop only */}
-                {!isMobile && (
-                  <div className="mt-8 text-center">
-                    <Link href="/products">
-                      <button className="bg-sunset-orange hover:bg-sunset-orange/90 text-white font-semibold py-3 px-8 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg">
-                        Xem tất cả sản phẩm →
-                      </button>
-                    </Link>
+                {/* Infinite Scroll Loading Indicator */}
+                {isFetchingNextPage && (
+                  <div className="mt-8 py-6 flex flex-col items-center justify-center gap-3">
+                    <div className="relative">
+                      <div className="w-10 h-10 border-4 border-neutral-mist/30 border-t-sunrise-leaf rounded-full animate-spin"></div>
+                    </div>
+                    <p className="text-sunrise-leaf font-medium">Đang tải thêm sản phẩm...</p>
+                  </div>
+                )}
+                
+                {/* End of products message */}
+                {!hasNextPage && finalProducts.length > 0 && (
+                  <div className="mt-8 py-4 text-center text-neutral-mist">
+                    <p className="text-sm">🌿 Bạn đã xem hết tất cả sản phẩm</p>
                   </div>
                 )}
               </div>
@@ -971,10 +1177,6 @@ export default function MobileStorefront() {
       <DesktopShopeeHeader 
         cartCount={getTotalItems()}
         onSearch={(query) => setSearchQuery(query)}
-        onCategoryClick={(cat) => {
-          setSelectedCategory(cat);
-          setActiveTab('home');
-        }}
         onCartClick={() => setActiveTab('cart')}
         onLogin={() => {
           // Handle login - can be implemented with modal or navigation
@@ -993,15 +1195,17 @@ export default function MobileStorefront() {
         onCartClick={() => setActiveTab('cart')}
         onSearchClick={handleHeaderSearchClick}
         onProfileClick={() => setActiveTab('profile')}
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        categories={categories}
+        selectedCategory={selectedCategory}
+        onCategorySelect={setSelectedCategory}
       />
 
-      {/* Banner Slider - Only on home tab, sits directly under CategoryIconsGrid */}
+      {/* Organic Hero Section - Only on home tab, sits directly under CategoryIconsGrid */}
       {activeTab === 'home' && (
-        <ImageSlider 
+        <OrganicHeroSection 
           slides={heroSlides}
-          className="mb-0"
-          autoplay={true}
-          autoplayDelay={4000}
         />
       )}
 
@@ -1015,12 +1219,17 @@ export default function MobileStorefront() {
         <StorefrontBottomNav
           activeTab={activeTab}
           onTabChange={handleTabChange}
+          wishlistCount={0}
           cartCount={getTotalItems()}
         />
       )}
 
-      {/* ChatBot - Responsive */}
-      {isMobile ? <MobileChatBot /> : <DesktopChatBot />}
+      {/* ChatBot - Responsive - Lazy loaded for performance */}
+      {shouldLoadChatbot && (
+        <Suspense fallback={null}>
+          {isMobile ? <MobileChatBot /> : <DesktopChatBot />}
+        </Suspense>
+      )}
 
       {/* Desktop Footer - Show on desktop only */}
       {!isMobile && <DesktopFooter />}

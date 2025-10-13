@@ -143,8 +143,8 @@ export function CustomerProfileAddress({ onBack, onSaved }: CustomerProfileAddre
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4 pt-6">
-      <div className="flex items-center mb-6">
+    <div className="min-h-screen bg-gray-50 p-3 pt-4">
+      <div className="flex items-center mb-4">
         {onBack && (
           <Button
             variant="ghost"
@@ -157,9 +157,9 @@ export function CustomerProfileAddress({ onBack, onSaved }: CustomerProfileAddre
         <h1 className="text-xl font-semibold text-gray-900">Địa chỉ chính của bạn</h1>
       </div>
 
-      <Card className="mb-4">
-        <CardContent className="p-4 space-y-3">
-          <div className="flex items-center gap-2 mb-2">
+      <Card className="mb-3">
+        <CardContent className="p-3 space-y-2">
+          <div className="flex items-center gap-2 mb-1">
             <MapPin className="h-5 w-5 text-green-600" />
             <h3 className="font-semibold">Địa chỉ</h3>
           </div>
@@ -167,11 +167,11 @@ export function CustomerProfileAddress({ onBack, onSaved }: CustomerProfileAddre
             value={address}
             onChange={(e) => setAddress(e.target.value)}
             placeholder="Nhập địa chỉ đầy đủ hoặc chọn trên bản đồ bên dưới"
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 resize-none"
-            rows={3}
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 resize-none"
+            rows={2}
           />
           {distanceFromShop !== null && (
-            <div className="flex items-center gap-1.5 text-sm text-gray-600 bg-blue-50 dark:bg-blue-900/20 p-3 rounded-lg">
+            <div className="flex items-center gap-1.5 text-sm text-gray-600 bg-blue-50 dark:bg-blue-900/20 p-2 rounded-lg">
               <Bird className="h-4 w-4 text-blue-600" />
               <span>Khoảng cách chim bay từ cửa hàng: <strong>{distanceFromShop} km</strong></span>
             </div>
@@ -190,7 +190,7 @@ export function CustomerProfileAddress({ onBack, onSaved }: CustomerProfileAddre
       />
 
       {message && (
-        <div className={`mt-4 p-3 rounded-lg text-sm ${
+        <div className={`mt-3 p-2 rounded-lg text-sm ${
           message.includes('✅')
             ? 'bg-green-50 text-green-800'
             : 'bg-red-50 text-red-800'
@@ -199,11 +199,11 @@ export function CustomerProfileAddress({ onBack, onSaved }: CustomerProfileAddre
         </div>
       )}
 
-      <div className="mt-6 pb-6">
+      <div className="mt-4 pb-4">
         <Button
           onClick={handleSaveAddress}
           disabled={saving || !address.trim()}
-          className="w-full py-6 text-lg font-semibold bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white"
+          className="w-full py-5 text-lg font-semibold bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white"
         >
           {saving ? (
             <>

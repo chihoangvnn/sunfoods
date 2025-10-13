@@ -6,26 +6,31 @@
 
 @layer base {
   :root {
+    /* SunFoods Organic Brand Colors */
     --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --foreground: 155 60% 20%; /* Dark green for text */
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 155 60% 20%;
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --popover-foreground: 155 60% 20%;
+    --primary: 155 61% 30%; /* Sunrise Leaf #1F7A4D */
+    --primary-foreground: 120 20% 96%; /* Neutral Mist */
+    --secondary: 40 100% 64%; /* Warm Sun #FFC145 */
+    --secondary-foreground: 155 60% 20%;
+    --muted: 120 20% 96%; /* Neutral Mist */
+    --muted-foreground: 120 5% 50%;
+    --accent: 40 100% 64%; /* Warm Sun accent */
+    --accent-foreground: 155 60% 20%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-    --radius: 0.5rem;
+    --border: 120 15% 88%;
+    --input: 120 15% 88%;
+    --ring: 155 61% 30%;
+    --radius: 0.75rem; /* Slightly more rounded for organic feel */
+    
+    /* Font variables */
+    --font-display: 'Inter', system-ui, -apple-system, sans-serif;
+    --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
   }
 
   .dark {

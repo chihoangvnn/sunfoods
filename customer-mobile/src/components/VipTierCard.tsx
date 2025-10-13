@@ -77,17 +77,31 @@ export function VipTierCard({ vipProgress }: VipTierCardProps) {
               </span>
             </div>
             
-            {/* Enhanced Progress Bar */}
-            <div className="w-full bg-white rounded-full h-3 overflow-hidden shadow-inner">
+            {/* Enhanced Progress Bar with Gradient by Tier */}
+            <div className="w-full bg-gradient-to-r from-gray-200 to-gray-300 rounded-full h-4 overflow-hidden shadow-inner border border-gray-300/50">
               <div 
-                className="bg-gradient-to-r from-green-500 to-green-600 h-full rounded-full transition-all duration-1000 relative"
-                style={{ width: `${progressToNext}%` }}
+                className={`h-full rounded-full transition-all duration-1000 relative ${
+                  progressToNext >= 80 ? 'animate-pulse' : ''
+                }`}
+                style={{ 
+                  width: `${progressToNext}%`,
+                  background: nextTier.id === 'diamond' 
+                    ? 'linear-gradient(90deg, #60a5fa 0%, #3b82f6 50%, #2563eb 100%)'
+                    : nextTier.id === 'gold'
+                    ? 'linear-gradient(90deg, #fbbf24 0%, #f59e0b 50%, #d97706 100%)'
+                    : nextTier.id === 'silver'
+                    ? 'linear-gradient(90deg, #94a3b8 0%, #64748b 50%, #475569 100%)'
+                    : 'linear-gradient(90deg, #10b981 0%, #059669 50%, #047857 100%)'
+                }}
               >
-                <div className="absolute inset-0 bg-white/20 animate-pulse"></div>
+                <div className="absolute inset-0 bg-white/30"></div>
+                {progressToNext >= 80 && (
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent animate-shimmer"></div>
+                )}
               </div>
             </div>
-            <p className="text-[16px] md:text-[17px] text-gray-600 text-center">
-              Đã đạt {progressToNext}%
+            <p className="text-[16px] md:text-[17px] font-semibold text-gray-700 text-center">
+              🎯 Đã đạt {progressToNext}% - {progressToNext >= 80 ? 'Sắp lên hạng!' : 'Tiếp tục mua sắm!'}
             </p>
           </div>
         )}

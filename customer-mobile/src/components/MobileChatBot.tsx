@@ -155,7 +155,7 @@ const MobileChatBot = () => {
       <div className="fixed bottom-20 right-4 z-50 sm:bottom-6 sm:right-6">
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center justify-center"
+          className="w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-r from-sunrise-leaf to-sunrise-leaf/90 hover:from-sunrise-leaf/90 hover:to-sunrise-leaf text-white rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center justify-center"
           aria-label="Mở trợ lý AI hỗ trợ khách hàng"
           title="Trợ lý AI - Hỗ trợ 24/7"
         >
@@ -170,15 +170,15 @@ const MobileChatBot = () => {
       {isOpen && (
         <div className="fixed inset-x-0 bottom-16 z-[80] bg-white flex flex-col h-[calc(85vh-4rem)] sm:inset-auto sm:bottom-24 sm:right-6 sm:w-96 sm:h-[600px] sm:rounded-2xl shadow-2xl border-t sm:border border-gray-200 animate-in slide-in-from-bottom-5 duration-300">
           {/* Header */}
-          <div className="bg-gradient-to-r from-green-500 to-green-600 text-white p-4 flex items-center justify-between sm:rounded-t-2xl">
+          <div className="bg-gradient-to-r from-sunrise-leaf to-sunrise-leaf/90 text-white p-4 flex items-center justify-between sm:rounded-t-2xl">
             <div className="flex items-center space-x-3">
               <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
                 <Bot size={18} />
               </div>
               <div>
                 <h3 className="font-semibold text-sm">Trợ lý AI NhangSach.Net</h3>
-                <p className="text-xs text-green-100 flex items-center">
-                  <span className={`inline-block w-2 h-2 rounded-full mr-1 ${isRasaConnected ? 'bg-green-300' : 'bg-yellow-300'}`}></span>
+                <p className="text-xs text-white/80 flex items-center">
+                  <span className={`inline-block w-2 h-2 rounded-full mr-1 ${isRasaConnected ? 'bg-white/80' : 'bg-yellow-300'}`}></span>
                   {isRasaConnected ? 'RASA Online' : 'Offline Mode'}
                   {!isRasaConnected && (
                     <button 
@@ -224,10 +224,10 @@ const MobileChatBot = () => {
                   <div className={`max-w-[85%] sm:max-w-[80%] p-3 rounded-2xl ${
                     message.isBot 
                       ? 'bg-gray-100 text-gray-800 rounded-bl-md' 
-                      : 'bg-green-500 text-white rounded-br-md'
+                      : 'bg-sunrise-leaf text-white rounded-br-md'
                   }`}>
                     <p className="text-sm">{message.text}</p>
-                    <p className={`text-xs mt-1 ${message.isBot ? 'text-gray-500' : 'text-green-100'}`}>
+                    <p className={`text-xs mt-1 ${message.isBot ? 'text-gray-500' : 'text-white/80'}`}>
                       {message.timestamp.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })}
                     </p>
                   </div>
@@ -240,7 +240,7 @@ const MobileChatBot = () => {
                       <button
                         key={buttonIndex}
                         onClick={() => handleButtonClick(button.payload)}
-                        className="text-xs bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-full transition-colors"
+                        className="text-xs bg-warm-sun hover:bg-warm-sun/90 text-white px-3 py-1 rounded-full transition-colors"
                       >
                         {button.title}
                       </button>
@@ -262,7 +262,7 @@ const MobileChatBot = () => {
                         </div>
                         <div className="flex-1">
                           <p className="text-xs font-medium text-gray-800">{product.name}</p>
-                          <p className="text-xs text-green-600 font-semibold">{product.price}</p>
+                          <p className="text-xs text-sunrise-leaf font-semibold">{product.price}</p>
                         </div>
                         <ShoppingCart size={14} className="text-gray-400" />
                       </div>
@@ -297,13 +297,13 @@ const MobileChatBot = () => {
                 onChange={(e) => setInputValue(e.target.value)}
                 onKeyPress={handleKeyPress}
                 placeholder="Nhập tin nhắn..."
-                className="flex-1 px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-sm"
+                className="flex-1 px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-warm-sun focus:border-transparent text-sm"
                 aria-label="Nhập tin nhắn cho trợ lý AI"
               />
               <button
                 onClick={() => handleSendMessage()}
                 disabled={!inputValue.trim()}
-                className="w-10 h-10 bg-green-500 hover:bg-green-600 disabled:bg-gray-300 text-white rounded-lg flex items-center justify-center transition-colors"
+                className="w-10 h-10 bg-warm-sun hover:bg-warm-sun/90 disabled:bg-gray-300 text-white rounded-lg flex items-center justify-center transition-colors"
                 aria-label="Gửi tin nhắn"
               >
                 <Send size={16} />

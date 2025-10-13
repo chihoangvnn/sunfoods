@@ -289,51 +289,55 @@ export function OrderHistory({ className = '', addToCart, setActiveTab }: OrderH
   };
 
   return (
-    <div className={`space-y-5 ${className}`}>
+    <div className={`space-y-2 md:space-y-3 ${className}`}>
       {/* Header */}
-      <div className="flex items-center justify-between mb-2">
+      <div className="flex items-center justify-between mb-0">
         <h2 className="text-2xl font-bold text-gray-900 tracking-tight">Lịch sử đơn hàng</h2>
-        <div className="bg-green-50 px-3 py-1 rounded-full">
-          <span className="text-sm font-medium text-green-700">
-            {filteredOrders.length} đơn hàng
-          </span>
-        </div>
+        {availableOrders.length > 0 && (
+          <div className="bg-green-50 px-3 py-1 rounded-full">
+            <span className="text-sm font-medium text-green-700">
+              {filteredOrders.length} đơn hàng
+            </span>
+          </div>
+        )}
       </div>
 
-      {/* Filter Tabs */}
-      <div className="flex flex-wrap gap-2 bg-gradient-to-r from-gray-50 to-gray-100 p-2 rounded-xl border border-gray-200/50">
-        <button
-          onClick={() => setSelectedFilter('all')}
-          className={`px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 ${
-            selectedFilter === 'all'
-              ? 'bg-white text-green-700 shadow-md border border-green-100'
-              : 'text-gray-600 hover:text-gray-900 hover:bg-white/50'
-          }`}
-        >
-          Tất cả
-        </button>
-        {Object.entries(ORDER_STATUS_CONFIG).map(([status, config]) => (
+      {/* Filter Tabs - Only show when there are orders */}
+      {availableOrders.length > 0 && !isLoading && (
+        <div className="flex flex-wrap gap-2 bg-gradient-to-r from-gray-50 to-gray-100 p-2 rounded-xl border border-gray-200/50">
           <button
-            key={status}
-            onClick={() => setSelectedFilter(status)}
+            onClick={() => setSelectedFilter('all')}
             className={`px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 ${
-              selectedFilter === status
+              selectedFilter === 'all'
                 ? 'bg-white text-green-700 shadow-md border border-green-100'
                 : 'text-gray-600 hover:text-gray-900 hover:bg-white/50'
             }`}
           >
-            {config.label}
+            Tất cả
           </button>
-        ))}
-      </div>
+          {Object.entries(ORDER_STATUS_CONFIG).map(([status, config]) => (
+            <button
+              key={status}
+              onClick={() => setSelectedFilter(status)}
+              className={`px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 ${
+                selectedFilter === status
+                  ? 'bg-white text-green-700 shadow-md border border-green-100'
+                  : 'text-gray-600 hover:text-gray-900 hover:bg-white/50'
+              }`}
+            >
+              {config.label}
+            </button>
+          ))}
+        </div>
+      )}
 
       {/* Loading State */}
       {isLoading && (
-        <div className="flex flex-col items-center justify-center py-12 px-4">
-          <div className="bg-white rounded-2xl shadow-lg p-8 flex flex-col items-center max-w-sm mx-auto">
-            <Loader2 className="h-8 w-8 animate-spin text-green-500 mb-4" />
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">Đang tải đơn hàng</h3>
-            <p className="text-sm text-gray-500 text-center">
+        <div className="flex flex-col items-center justify-center py-6 md:py-8 px-4">
+          <div className="bg-white rounded-xl shadow-md p-4 md:p-6 flex flex-col items-center max-w-sm mx-auto">
+            <Loader2 className="h-6 w-6 md:h-7 md:w-7 animate-spin text-green-500 mb-2 md:mb-3" />
+            <h3 className="text-base md:text-lg font-semibold text-gray-900 mb-1">Đang tải đơn hàng</h3>
+            <p className="text-xs md:text-sm text-gray-500 text-center">
               Vui lòng đợi trong giây lát...
             </p>
           </div>
@@ -342,14 +346,14 @@ export function OrderHistory({ className = '', addToCart, setActiveTab }: OrderH
 
       {/* Error State */}
       {isError && (
-        <div className="flex flex-col items-center justify-center py-8 px-4">
-          <div className="bg-amber-50 border border-amber-200 rounded-2xl shadow-sm p-6 flex flex-col items-center max-w-sm mx-auto">
-            <AlertCircle className="h-8 w-8 text-amber-500 mb-3" />
-            <h3 className="text-lg font-semibold text-amber-800 mb-2">Kết nối thất bại</h3>
-            <p className="text-sm text-amber-700 text-center mb-4">
+        <div className="flex flex-col items-center justify-center py-4 md:py-6 px-4">
+          <div className="bg-amber-50 border border-amber-200 rounded-xl shadow-sm p-4 md:p-5 flex flex-col items-center max-w-sm mx-auto">
+            <AlertCircle className="h-6 w-6 md:h-7 md:w-7 text-amber-500 mb-2" />
+            <h3 className="text-base md:text-lg font-semibold text-amber-800 mb-1">Kết nối thất bại</h3>
+            <p className="text-xs md:text-sm text-amber-700 text-center mb-3">
               Không thể tải dữ liệu từ server. Hiển thị dữ liệu demo.
             </p>
-            <div className="text-xs text-amber-600 bg-amber-100 px-3 py-1 rounded-full">
+            <div className="text-xs text-amber-600 bg-amber-100 px-2 py-1 rounded-full">
               Sử dụng dữ liệu fallback
             </div>
           </div>
@@ -357,7 +361,7 @@ export function OrderHistory({ className = '', addToCart, setActiveTab }: OrderH
       )}
 
       {/* Orders List */}
-      <div className="space-y-4">
+      <div className="space-y-3">
         {!isLoading && filteredOrders.length > 0 ? (
           filteredOrders.map((order: Order, index: number) => (
             <div 
@@ -367,9 +371,9 @@ export function OrderHistory({ className = '', addToCart, setActiveTab }: OrderH
               }`}
             >
               {/* Desktop-Optimized Layout */}
-              <div className="p-4 md:p-6">
+              <div className="p-3 md:p-4">
                 {/* Desktop Grid Layout */}
-                <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
+                <div className="grid grid-cols-1 md:grid-cols-12 gap-3 items-center">
                   {/* Order Number & Status - Col 1-3 */}
                   <div className="md:col-span-3">
                     <h3 className="font-bold text-base md:text-lg text-gray-900 mb-2 md:mb-0">
@@ -476,8 +480,8 @@ export function OrderHistory({ className = '', addToCart, setActiveTab }: OrderH
 
               {/* Order Details (Expandable) */}
               {expandedOrder === order.id && (
-                <div className="border-t border-gray-100 p-5 md:p-6 bg-gradient-to-b from-gray-50 to-white">
-                  <div className="flex items-center mb-4">
+                <div className="border-t border-gray-100 p-3 md:p-4 bg-gradient-to-b from-gray-50 to-white">
+                  <div className="flex items-center mb-3">
                     <Package className="h-5 w-5 text-green-500 mr-2" />
                     <h4 className="font-bold text-gray-900">Sản phẩm đã đặt</h4>
                   </div>
@@ -520,7 +524,7 @@ export function OrderHistory({ className = '', addToCart, setActiveTab }: OrderH
                   </div>
                   
                   {/* Mobile: Card layout */}
-                  <div className="md:hidden space-y-4">
+                  <div className="md:hidden space-y-3">
                     {order.items.map((item: Order['items'][0], itemIndex: number) => (
                       <div 
                         key={item.id} 
@@ -544,7 +548,7 @@ export function OrderHistory({ className = '', addToCart, setActiveTab }: OrderH
                   </div>
                   
                   {order.estimatedDelivery && (
-                    <div className="mt-4 p-4 bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl border-l-4 border-blue-400">
+                    <div className="mt-3 p-3 bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl border-l-4 border-blue-400">
                       <div className="flex items-center text-blue-800">
                         <Truck className="h-5 w-5 mr-2" />
                         <div>
@@ -555,7 +559,7 @@ export function OrderHistory({ className = '', addToCart, setActiveTab }: OrderH
                     </div>
                   )}
 
-                  <div className="mt-6 p-4 md:p-6 bg-gradient-to-r from-green-50 to-green-100 rounded-xl">
+                  <div className="mt-4 p-3 md:p-4 bg-gradient-to-r from-green-50 to-green-100 rounded-xl">
                     <div className="flex justify-between items-center">
                       <div className="text-green-800 font-semibold text-lg">Tổng thanh toán:</div>
                       <div className="text-2xl md:text-3xl font-bold text-green-600">
@@ -568,19 +572,19 @@ export function OrderHistory({ className = '', addToCart, setActiveTab }: OrderH
             </div>
           ))
         ) : !isLoading ? (
-          <div className="text-center py-16 bg-gradient-to-b from-white to-gray-50 rounded-2xl border border-gray-100 shadow-lg">
-            <div className="w-20 h-20 bg-gray-100 rounded-full mx-auto mb-6 flex items-center justify-center">
-              <Package className="h-10 w-10 text-gray-400" />
+          <div className="text-center py-6 md:py-8 bg-gradient-to-b from-white to-gray-50 rounded-xl border border-gray-100 shadow-md">
+            <div className="w-12 h-12 md:w-14 md:h-14 bg-gray-100 rounded-full mx-auto mb-3 md:mb-4 flex items-center justify-center">
+              <Package className="h-6 w-6 md:h-7 md:w-7 text-gray-400" />
             </div>
-            <h3 className="text-xl font-bold text-gray-900 mb-3">Chưa có đơn hàng</h3>
-            <p className="text-gray-600 mb-8 max-w-md mx-auto leading-relaxed">
+            <h3 className="text-base md:text-lg font-bold text-gray-900 mb-2">Chưa có đơn hàng</h3>
+            <p className="text-xs md:text-sm text-gray-600 mb-4 md:mb-5 max-w-md mx-auto px-4">
               {selectedFilter === 'all' 
                 ? 'Bạn chưa có đơn hàng nào. Hãy khám phá các sản phẩm tuyệt vời của chúng tôi!' 
                 : `Không có đơn hàng nào ở trạng thái "${ORDER_STATUS_CONFIG[selectedFilter as keyof typeof ORDER_STATUS_CONFIG]?.label}".`
               }
             </p>
             <Button 
-              className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white px-8 py-3 rounded-xl font-semibold shadow-lg transition-all duration-200 transform hover:scale-105"
+              className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white px-5 py-2 md:px-6 md:py-2.5 rounded-lg text-sm md:text-base font-semibold shadow-md transition-all duration-200"
               onClick={() => window.location.href = '/'}
             >
               Mua sắm ngay
