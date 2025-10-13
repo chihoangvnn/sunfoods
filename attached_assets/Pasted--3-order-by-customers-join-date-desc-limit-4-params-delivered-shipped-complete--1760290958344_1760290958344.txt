@@ -1,0 +1,56 @@
+= $3 order by "customers"."join_date" desc limit $4 -- params: ["delivered", "shipped", "complete", 1]
+✅ Health report generated in 143ms - Overall: unhealthy
+🚨 SYSTEM HEALTH CRITICAL: [
+  '🔴 DATABASE is unhealthy: relation "customers" does not exist',
+  'ℹ️ WORKERS: No external workers deployed - Auto-posting requires Vercel Function workers'
+]
+Query: select "id", "caption", "hashtags", "asset_ids", "social_account_id", "platform", "scheduled_time", "timezone", "status", "published_at", "platform_post_id", "platform_url", "error_message", "retry_count", "last_retry_at", "analytics", "created_at", "updated_at", "priority", "ip_pool_id", "ip_snapshot", "batch_id" from "scheduled_posts" where ("scheduled_posts"."status" = $1 and "scheduled_posts"."scheduled_time" <= $2) order by "scheduled_posts"."scheduled_time" -- params: ["scheduled", "2025-10-12T17:42:26.331Z"]
+❌ Error in processScheduledPosts: error: relation "scheduled_posts" does not exist
+    at /home/runner/workspace/node_modules/@neondatabase/serverless/index.js:1345:74
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async NeonPreparedQuery.execute (/home/runner/workspace/backend/node_modules/src/neon-serverless/session.ts:102:18)
+    at async DatabaseStorage.getScheduledPostsToProcess (/home/runner/workspace/backend/src/storage.ts:4205:12)
+    at async PostScheduler.getReadyToPostPosts (/home/runner/workspace/backend/src/services/post-scheduler.ts:144:19)
+    at async PostScheduler.processScheduledPosts (/home/runner/workspace/backend/src/services/post-scheduler.ts:92:30) {
+  length: 115,
+  severity: 'ERROR',
+  code: '42P01',
+  detail: undefined,
+  hint: undefined,
+  position: '322',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_relation.c',
+  line: '1449',
+  routine: 'parserOpenTable'
+}
+Query: select "id", "caption", "hashtags", "asset_ids", "social_account_id", "platform", "scheduled_time", "timezone", "status", "published_at", "platform_post_id", "platform_url", "error_message", "retry_count", "last_retry_at", "analytics", "created_at", "updated_at", "priority", "ip_pool_id", "ip_snapshot", "batch_id" from "scheduled_posts" where ("scheduled_posts"."status" = $1 and "scheduled_posts"."scheduled_time" <= $2) order by "scheduled_posts"."scheduled_time" -- params: ["scheduled", "2025-10-12T17:42:26.602Z"]
+❌ Error processing due posts: error: relation "scheduled_posts" does not exist
+    at /home/runner/workspace/node_modules/@neondatabase/serverless/index.js:1345:74
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async NeonPreparedQuery.execute (/home/runner/workspace/backend/node_modules/src/neon-serverless/session.ts:102:18)
+    at async PostScheduler.processDuePosts (/home/runner/workspace/backend/src/services/scheduler.ts:75:24) {
+  length: 115,
+  severity: 'ERROR',
+  code: '42P01',
+  detail: undefined,
+  hint: undefined,
+  position: '322',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_relation.c',
+  line: '1449',
+  routine: 'parserOpenTable'
+}

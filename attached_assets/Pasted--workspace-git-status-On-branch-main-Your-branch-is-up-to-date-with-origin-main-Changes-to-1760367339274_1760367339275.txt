@@ -1,0 +1,77 @@
+~/workspace$ git status
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+    modified:   admin-web/src/components/CategoryFAQTemplatesManagement.tsx
+    modified:   admin-web/src/components/CompleteAdminSidebar.tsx
+    new file:   admin-web/src/components/DynamicBadge.tsx
+    modified:   admin-web/src/components/FAQLibraryManagement.tsx
+    modified:   admin-web/src/components/OptimizedProductGrid.tsx
+    modified:   admin-web/src/components/ProductFormTabbed.tsx
+    new file:   admin-web/src/lib/gemini.ts
+    modified:   admin-web/src/pages/CategoryManager.tsx
+    modified:   admin-web/src/pages/GeneralCategoriesAdmin.tsx
+    modified:   admin-web/src/pages/LandingPage.tsx
+    modified:   admin-web/src/pages/LandingPageManager.tsx
+    modified:   admin-web/src/pages/Products.tsx
+    modified:   admin-web/src/pages/StoreProductAssignment.tsx
+    modified:   admin-web/src/pages/StorefrontManager.tsx
+    new file:   admin-web/src/vite-env.d.ts
+
+Changes not staged for commit:
+  (use "git add/rm <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+    modified:   .replit
+    modified:   backend/drizzle.config.ts
+    modified:   backend/shared/schema.ts
+    modified:   backend/src/api/admin-reviews.ts
+    modified:   backend/src/api/category-faq-templates.ts
+    modified:   backend/src/api/review-seeding.ts
+    modified:   backend/src/routes.ts
+    modified:   backend/src/routes/stores.ts
+    modified:   backend/src/services/vietqr-service.ts
+    modified:   customer-tramhuong/src/app/globals.css
+    modified:   customer-tramhuong/src/app/layout.tsx
+    modified:   customer-tramhuong/src/app/page.tsx
+    deleted:    customer-tramhuong/src/app/page.tsx.backup
+    modified:   customer-tramhuong/src/app/product/[slug]/page.tsx
+    modified:   customer-tramhuong/src/components/CategoryIconsGrid.tsx
+    modified:   customer-tramhuong/src/components/DesktopFooter.tsx
+    modified:   customer-tramhuong/src/components/DesktopHeader.tsx
+    modified:   customer-tramhuong/src/components/FloatingCartButton.tsx
+    modified:   customer-tramhuong/src/components/HorizontalCategoryBar.tsx
+    modified:   customer-tramhuong/src/components/MobileHeader.tsx
+    modified:   customer-tramhuong/src/components/ProductActions.tsx
+    modified:   customer-tramhuong/src/components/TopBar.tsx
+    modified:   customer-tramhuong/src/components/ui/button.tsx
+    modified:   customer-tramhuong/tailwind.config.js
+    modified:   package-lock.json
+    modified:   package.json
+    modified:   replit.md
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+    COMPACT_MEDIA_SECTION_IMPLEMENTATION.md
+    attached_assets/Pasted--3-order-by-customers-join-date-desc-limit-4-params-delivered-shipped-complete--1760290958344_1760290958344.txt
+    attached_assets/Pasted--Worker-health-check-NODE-ENV-development-isDevelopment-true-Workers-0-total-0-activ-1760290749721_1760290749722.txt
+    attached_assets/Pasted--v-n-m-u-s-c-cho-website-l-m-t-trong-nh-ng-b-c-quan-tr-ng-nh-t-nh-h-nh-c-m-x-c-v-x-y-d-ng-n-1760229623698_1760229623700.txt
+    attached_assets/Pasted--workspace-rm-f-git-index-lock-flag-provided-but-not-defined-x-Usage-grep-clFivnhqre-FI-1760367197031_1760367197032.txt
+    attached_assets/Pasted-Z-Error-in-processScheduledPosts-error-relation-scheduled-posts-does-not-exist-at-hom-1760290293653_1760290293654.txt
+    attached_assets/Pasted-import-useState-useEffect-useRef-useMemo-from-react-import-useQuery-useMutation-useQue-1760327862057_1760327862058.txt
+    attached_assets/image_1760231739698.png
+    attached_assets/image_1760287396772.png
+    attached_assets/stock_images/
+    attached_assets/targeted_element_1760241293454.png
+    attached_assets/targeted_element_1760242265237.png
+    attached_assets/targeted_element_1760243781042.png
+    attached_assets/targeted_element_1760244116139.png
+    attached_assets/targeted_element_1760257834750.png
+    attached_assets/targeted_element_1760261575091.png
+    backend/src/api/product-promotions.ts
+    backend/src/api/product-variants.ts
+    customer-tramhuong/src/components/LuxuryProductGallery.tsx
+    customer-tramhuong/src/components/ProductBreadcrumb.tsx
+
+~/workspace$ 

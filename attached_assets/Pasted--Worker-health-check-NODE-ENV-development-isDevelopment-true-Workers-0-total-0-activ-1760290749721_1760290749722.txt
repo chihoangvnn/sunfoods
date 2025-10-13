@@ -1,0 +1,57 @@
+}
+🔍 Worker health check - NODE_ENV: development, isDevelopment: true
+🔍 Workers: 0 total, 0 active (0 stale), 0 online
+🔍 No workers - setting status to: degraded
+Query: select "customers"."id", "customers"."name", "customers"."email", "customers"."phone", "customers"."avatar", "customers"."status", "customers"."total_debt", "customers"."credit_limit", "customers"."join_date", "customers"."registration_source", "customers"."profile_status", "customers"."membership_tier", "customers"."points_balance", "customers"."points_earned", "customers"."last_tier_update", "customers"."auth_user_id", "customers"."membership_data", "customers"."social_account_ids", "customers"."social_data", "customers"."customer_role", "customers"."limits_data", "customers"."is_local_customer", "customers"."is_affiliate", "customers"."affiliate_code", "customers"."affiliate_status", "customers"."commission_rate", "customers"."affiliate_data", COALESCE("order_stats"."total_orders", 0) as "total_orders", COALESCE("order_stats"."total_spent", 0) as "order_total_spent", COALESCE("order_stats"."last_order_date", "customers"."join_date"::text) as "last_order_date" from "customers" left join (select "user_id", count("id") as "total_orders", sum("total") as "total_spent", MAX("created_at")::text as "last_order_date" from "orders" where "orders"."status" in ($1, $2) group by "orders"."user_id") "order_stats" on "customers"."id" = "order_stats"."user_id" where "customers"."profile_status" = $3 order by "customers"."join_date" desc limit $4 -- params: ["delivered", "shipped", "complete", 1]
+✅ Health report generated in 198ms - Overall: unhealthy
+🚨 SYSTEM HEALTH CRITICAL: [
+  '🔴 DATABASE is unhealthy: relation "customers" does not exist',
+  'ℹ️ WORKERS: No external workers deployed - Auto-posting requires Vercel Function workers'
+]
+Query: select "id", "caption", "hashtags", "asset_ids", "social_account_id", "platform", "scheduled_time", "timezone", "status", "published_at", "platform_post_id", "platform_url", "error_message", "retry_count", "last_retry_at", "analytics", "created_at", "updated_at", "priority", "ip_pool_id", "ip_snapshot", "batch_id" from "scheduled_posts" where ("scheduled_posts"."status" = $1 and "scheduled_posts"."scheduled_time" <= $2) order by "scheduled_posts"."scheduled_time" -- params: ["scheduled", "2025-10-12T17:39:01.799Z"]
+❌ Error in processScheduledPosts: error: relation "scheduled_posts" does not exist
+    at /home/runner/workspace/node_modules/@neondatabase/serverless/index.js:1345:74
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async NeonPreparedQuery.execute (/home/runner/workspace/backend/node_modules/src/neon-serverless/session.ts:102:18)
+    at async DatabaseStorage.getScheduledPostsToProcess (/home/runner/workspace/backend/src/storage.ts:4205:12)
+    at async PostScheduler.getReadyToPostPosts (/home/runner/workspace/backend/src/services/post-scheduler.ts:144:19)
+    at async PostScheduler.processScheduledPosts (/home/runner/workspace/backend/src/services/post-scheduler.ts:92:30) {
+  length: 115,
+  severity: 'ERROR',
+  code: '42P01',
+  detail: undefined,
+  hint: undefined,
+  position: '322',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_relation.c',
+  line: '1449',
+  routine: 'parserOpenTable'
+}
+Query: select "id", "caption", "hashtags", "asset_ids", "social_account_id", "platform", "scheduled_time", "timezone", "status", "published_at", "platform_post_id", "platform_url", "error_message", "retry_count", "last_retry_at", "analytics", "created_at", "updated_at", "priority", "ip_pool_id", "ip_snapshot", "batch_id" from "scheduled_posts" where ("scheduled_posts"."status" = $1 and "scheduled_posts"."scheduled_time" <= $2) order by "scheduled_posts"."scheduled_time" -- params: ["scheduled", "2025-10-12T17:39:02.055Z"]
+❌ Error processing due posts: error: relation "scheduled_posts" does not exist
+    at /home/runner/workspace/node_modules/@neondatabase/serverless/index.js:1345:74
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async NeonPreparedQuery.execute (/home/runner/workspace/backend/node_modules/src/neon-serverless/session.ts:102:18)
+    at async PostScheduler.processDuePosts (/home/runner/workspace/backend/src/services/scheduler.ts:75:24) {
+  length: 115,
+  severity: 'ERROR',
+  code: '42P01',
+  detail: undefined,
+  hint: undefined,
+  position: '322',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_relation.c',
