@@ -17,6 +17,10 @@ module.exports = {
       },
     },
     extend: {
+      fontFamily: {
+        playfair: ['var(--font-playfair)', 'serif'],
+        nunito: ['var(--font-nunito)', 'sans-serif'],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -84,5 +88,24 @@ module.exports = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [
+    require("tailwindcss-animate"),
+    function({ addUtilities }) {
+      addUtilities({
+        '.will-change-transform': {
+          'will-change': 'transform',
+        },
+        '.will-change-blur': {
+          'will-change': 'filter',
+        },
+        '.will-change-opacity': {
+          'will-change': 'opacity',
+        },
+        '.gpu-accelerate': {
+          'transform': 'translateZ(0)',
+          'backface-visibility': 'hidden',
+        },
+      })
+    },
+  ],
 }

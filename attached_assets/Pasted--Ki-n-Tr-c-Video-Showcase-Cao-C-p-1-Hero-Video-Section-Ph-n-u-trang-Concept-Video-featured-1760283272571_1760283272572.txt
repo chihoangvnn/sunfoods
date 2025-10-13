@@ -1,0 +1,73 @@
+🎬 Kiến Trúc Video Showcase Cao Cấp
+1. Hero Video Section (Phần đầu trang)
+Concept: Video featured lớn, chiếm toàn màn hình hoặc 70% viewport
+Layout:
+Desktop: Video ngang full-width với overlay thông tin sản phẩm
+Mobile: Video dọc tự động crop thông minh
+Features:
+Auto-detect orientation (dọc/ngang) → tự động điều chỉnh layout
+Luxury bronze glass overlay với giá nổi bật
+CTA buttons: "Xem Chi Tiết" & "Liên Hệ Tư Vấn"
+2. Smart Video Grid (Danh sách sản phẩm)
+Adaptive Layout:
+Desktop: 2-3 columns tùy video orientation
+Mobile: 1 column với video full-width
+Video Cards Enhancement:
+Aspect ratio tự động (16:9 cho ngang, 9:16 cho dọc, 1:1 cho vuông)
+Hover → Show overlay với: Giá + Tên + "Xem Video"
+Click → Full-screen video player với product info sidebar
+3. Professional Pricing Display
+Bronze Luxury Style:
+Font Playfair Display cho số tiền (lớn, nổi bật)
+Glass morphism background (bg-white/80 backdrop-blur)
+Border bronze gold với shadow
+Price Position:
+Overlay trên video (bottom-right) với badge đẹp
+Sidebar khi full-screen mode
+4. Video Player Features
+Controls:
+Play/Pause với bronze button
+Full-screen toggle
+Quality selector (nếu có multi-quality)
+Mute/Unmute
+UX:
+Click anywhere → Play/Pause
+Double-click → Full-screen
+Swipe (mobile) → Next/Previous video
+5. Mobile vs Desktop Optimization
+Desktop (>1024px):
+
+┌─────────────────────────────────┐
+│   Hero Video (16:9 landscape)   │
+│   + Glass Overlay Info          │
+└─────────────────────────────────┘
+┌────────┬────────┬────────┐
+│ Video 1│ Video 2│ Video 3│ (3 cols)
+├────────┼────────┼────────┤
+│ Price  │ Price  │ Price  │
+└────────┴────────┴────────┘
+Mobile (<768px):
+
+┌──────────────┐
+│ Hero Video   │
+│ (9:16 or     │
+│  auto-crop)  │
+└──────────────┘
+┌──────────────┐
+│  Video 1     │
+│  Full-width  │
+│  + Price     │
+└──────────────┘
+6. Bronze Luxury Design Consistency
+Colors: Chỉ dùng #C1A875 (bronze gold) & #3D2B1F (deep brown)
+Glass Effects: backdrop-blur-md, bg-white/60
+Transitions: 300ms cubic-bezier mượt mà
+Typography: Playfair (headings) + Nunito Sans (body)
+📋 Implementation Plan
+Tôi sẽ thiết kế và code:
+
+Hero Video Component - Featured video với luxury overlay
+Enhanced VideoProductCard - Auto-detect orientation, professional pricing
+Full-screen Video Modal - Theater mode với product info
+Responsive Grid System - Adaptive layout cho mọi device
+Video Controls - Custom bronze-styled player controls

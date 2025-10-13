@@ -12,6 +12,7 @@ import {
   getCustomerTierFromSession, 
   isAdminUser 
 } from '../utils/vip-utils';
+import { getDemoProductBySlug } from '../data/demoProducts';
 
 const router = Router();
 
@@ -182,7 +183,17 @@ router.get('/slug/:slug',
     const { slug } = req.params;
     console.log('📊 API: Getting product with slug:', slug);
     
-    const product = await storage.getProductBySlug(slug);
+    let product = await storage.getProductBySlug(slug);
+    
+    // 🎯 DEMO FALLBACK - If not found in database, check demo products
+    if (!product) {
+      const demoProduct = getDemoProductBySlug(slug);
+      if (demoProduct) {
+        console.log('✨ Using demo product for slug:', slug);
+        product = demoProduct as any;
+      }
+    }
+    
     if (!product) {
       return res.status(404).json({ error: 'Product not found' });
     }

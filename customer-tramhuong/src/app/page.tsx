@@ -1,8 +1,8 @@
 'use client'
 
-import React, { useState, useMemo, useCallback, useEffect } from 'react';
+import React, { useState, useMemo, useCallback, useEffect, Suspense } from 'react';
 import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
-import { ShoppingCart, User, ArrowLeft, Plus, Minus, Store, Calendar, Star } from 'lucide-react';
+import { ShoppingCart, User, ArrowLeft, Plus, Minus, Store, Calendar, Star, Leaf, Flame, Crown, Package, Gift, Sparkles, Award, Shield, ChevronDown, Circle, Heart, ShoppingBag, Smartphone, BookOpen, Shirt, Home, Truck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { StorefrontBottomNav } from '@/components/StorefrontBottomNav';
@@ -12,17 +12,12 @@ import { DesktopShopeeHeader } from '@/components/DesktopShopeeHeader';
 import { AutoHideSearchBar } from '@/components/AutoHideSearchBar';
 import { HiddenSearchBar } from '@/components/HiddenSearchBar';
 import { FullScreenLunarCalendar } from '@/components/FullScreenLunarCalendar';
+import CategoryBottomSheet from '@/components/CategoryBottomSheet';
 import { MediaViewer } from '@/components/MediaViewer';
 import { ImageSlider } from '@/components/ImageSlider';
-import { BlogFeaturedSection } from '@/components/BlogFeaturedSection';
-import { ProfileTab } from '@/components/ProfileTab';
-import { BlogTab } from '@/components/BlogTab';
-import { BlogPost } from '@/components/BlogPost';
-import DesktopChatBot from '@/components/DesktopChatBot';
-import MobileChatBot from '@/components/MobileChatBot';
 import DesktopFooter from '@/components/DesktopFooter';
 import { ProductModal } from '@/components/ProductModal';
-import { DesktopFullPageView } from '@/components/DesktopFullPageView';
+import { ProductCard } from '@/components/ProductCard';
 import { useResponsive } from '@/hooks/use-mobile';
 import { useAuth } from '@/hooks/useAuth';
 import { formatVietnamPrice } from '@/utils/currency';
@@ -31,19 +26,69 @@ import { calculateVipStatus } from '@/utils/vipCalculator';
 import { calculateMarketingBadges } from '@/utils/marketingBadges';
 import { fetchProducts } from '@/services/apiService';
 import { markInternalNav } from '@/utils/navigation';
-import Head from 'next/head';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import dynamic from 'next/dynamic';
+
+const ProfileTab = dynamic(() => import('@/components/ProfileTab').then(m => m.ProfileTab), {
+  loading: () => <div className="p-4 text-center">Đang tải...</div>,
+  ssr: false
+});
+
+const BlogTab = dynamic(() => import('@/components/BlogTab').then(m => m.BlogTab), {
+  loading: () => <div className="p-4 text-center">Đang tải...</div>,
+  ssr: false
+});
+
+const BlogPost = dynamic(() => import('@/components/BlogPost').then(m => m.BlogPost), {
+  loading: () => <div className="p-4 text-center">Đang tải...</div>,
+  ssr: false
+});
+
+const DesktopChatBot = dynamic(() => import('@/components/DesktopChatBot').then(m => m.default), {
+  loading: () => null,
+  ssr: false
+});
+
+const MobileChatBot = dynamic(() => import('@/components/MobileChatBot').then(m => m.default), {
+  loading: () => null,
+  ssr: false
+});
+
+const DesktopFullPageView = dynamic(() => import('@/components/DesktopFullPageView').then(m => m.DesktopFullPageView), {
+  loading: () => <div className="p-4 text-center">Đang tải...</div>,
+  ssr: false
+});
+
+// Lazy load blog section - only load when user scrolls near it
+const BlogFeaturedSection = dynamic(() => import('@/components/BlogFeaturedSection').then(mod => ({ default: mod.BlogFeaturedSection })), {
+  loading: () => (
+    <div className="w-full h-96 bg-white/60 backdrop-blur-md rounded-xl border border-tramhuong-accent/20 animate-pulse" />
+  ),
+  ssr: false // Blog is below the fold, client-only is fine
+});
 
 // API base URL from environment or default  
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '/api';
 
-// Spiritual-themed banner images for mobile (fallback)
-const BANNER_IMAGES = [
-  '/images/spiritual-banner-1.jpg', // Vietnamese incense burning on altar
-  '/images/spiritual-banner-2.jpg', // Spiritual meditation atmosphere
-  '/images/spiritual-banner-3.jpg'  // Serene incense ceremony
+// Luxury packaging-themed hero images (fallback)
+const LUXURY_HERO_IMAGES = [
+  {
+    type: 'image' as const,
+    url: '/images/tramhuong-packaging-hero.png',
+    alt: 'Trầm Hương Hoàng Ngân - Bộ sản phẩm cao cấp'
+  },
+  {
+    type: 'image' as const,
+    url: '/images/tramhuong-packaging-hero.png',
+    alt: 'Tinh hoa trầm hương từ đất Bồi'
+  },
+  {
+    type: 'image' as const,
+    url: '/images/tramhuong-packaging-hero.png',
+    alt: 'Trầm hương trong văn hóa tâm linh'
+  }
 ];
 
 // Interface for shop settings
@@ -143,6 +188,7 @@ export default function MobileStorefront() {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [forceFullView, setForceFullView] = useState(false);
+  const [showCategorySheet, setShowCategorySheet] = useState(false);
   
   // Sample products for Enhanced Product Cards demo
   const sampleProducts = [
@@ -167,7 +213,7 @@ export default function MobileStorefront() {
     desktopProductContainer: 'max-w-7xl mx-auto',
     sectionSpacing: 'mb-16',
     cardShadow: 'shadow-lg hover:shadow-xl',
-    cardBorder: 'border border-gray-100 hover:border-lime-green'
+    cardBorder: 'border border-gray-100 hover:border-tramhuong-accent'
   }), [isMobile, isTablet]);
   
   
@@ -223,14 +269,14 @@ export default function MobileStorefront() {
     staleTime: 60000,
   });
 
-  // Process hero slider data - use fetched data or fallback to default images
+  // Process hero slider data - use fetched data or fallback to luxury images
   const heroSlides = useMemo(() => {
     const heroSlider = shopSettingsData?.data?.heroSlider;
     if (heroSlider && heroSlider.length > 0) {
       return heroSlider;
     }
-    // Fallback to BANNER_IMAGES if no hero slider data
-    return BANNER_IMAGES.map(url => ({ url }));
+    // Fallback to LUXURY_HERO_IMAGES if no hero slider data
+    return LUXURY_HERO_IMAGES;
   }, [shopSettingsData]);
 
   // Demo products with badges for testing (when API fails)
@@ -331,9 +377,22 @@ export default function MobileStorefront() {
     }
   });
   
+  // Helper function to get category icons
+  function getCategoryIcon(categoryName: string): JSX.Element {
+    const name = categoryName.toLowerCase();
+    const iconClass = "w-6 h-6 text-tramhuong-accent";
+    if (name.includes('điện') || name.includes('phone') || name.includes('tech')) return <Smartphone className={iconClass} />;
+    if (name.includes('sách') || name.includes('book')) return <BookOpen className={iconClass} />;
+    if (name.includes('làm đẹp') || name.includes('beauty') || name.includes('cosmetic')) return <Sparkles className={iconClass} />;
+    if (name.includes('thời trang') || name.includes('fashion') || name.includes('clothes')) return <Shirt className={iconClass} />;
+    if (name.includes('gia dụng') || name.includes('home')) return <Home className={iconClass} />;
+    if (name.includes('thể thao') || name.includes('sport')) return <Circle className={iconClass} />;
+    return <Package className={iconClass} />;
+  }
+  
   // Create simplified category list with real IDs (filter out duplicate "all")
   const categories = categoriesLoading ? [] : [
-    { id: 'all', name: 'Tất cả', icon: '🛍️' },
+    { id: 'all', name: 'Tất cả', icon: <ShoppingBag className="w-6 h-6 text-tramhuong-accent" /> },
     ...allCategories
       .filter(cat => cat.id !== 'all') // Prevent duplicate "all" key
       .map(cat => ({
@@ -342,18 +401,6 @@ export default function MobileStorefront() {
         icon: getCategoryIcon(cat.name)
       }))
   ];
-  
-  // Helper function to get category icons
-  function getCategoryIcon(categoryName: string): string {
-    const name = categoryName.toLowerCase();
-    if (name.includes('điện') || name.includes('phone') || name.includes('tech')) return '📱';
-    if (name.includes('sách') || name.includes('book')) return '📚';
-    if (name.includes('làm đẹp') || name.includes('beauty') || name.includes('cosmetic')) return '💄';
-    if (name.includes('thời trang') || name.includes('fashion') || name.includes('clothes')) return '👕';
-    if (name.includes('gia dụng') || name.includes('home')) return '🏠';
-    if (name.includes('thể thao') || name.includes('sport')) return '⚽';
-    return '📦';
-  }
 
   const addToCart = (product: Product) => {
     setCart(prev => {
@@ -404,6 +451,12 @@ export default function MobileStorefront() {
       return;
     }
     
+    // Handle categories tab - open bottom sheet
+    if (tab === 'categories') {
+      setShowCategorySheet(true);
+      return;
+    }
+    
     setActiveTab(tab);
   };
 
@@ -434,32 +487,36 @@ export default function MobileStorefront() {
     
     if (product.isNew) {
       badges.push(
-        <Badge key="new" variant="new" className="text-sm">
-          🆕 MỚI
+        <Badge key="new" variant="new" className="text-sm flex items-center gap-1">
+          <Sparkles className="w-3 h-3 text-tramhuong-accent" />
+          MỚI
         </Badge>
       );
     }
     
     if (product.isTopseller) {
       badges.push(
-        <Badge key="topseller" variant="topseller" className="text-sm">
-          🏆 BÁN CHẠY
+        <Badge key="topseller" variant="topseller" className="text-sm flex items-center gap-1">
+          <Award className="w-3 h-3 text-tramhuong-accent" />
+          BÁN CHẠY
         </Badge>
       );
     }
     
     if (product.isFreeshipping) {
       badges.push(
-        <Badge key="freeshipping" variant="freeshipping" className="text-sm">
-          🚚 FREESHIP
+        <Badge key="freeshipping" variant="freeshipping" className="text-sm flex items-center gap-1">
+          <Truck className="w-3 h-3 text-tramhuong-accent" />
+          FREESHIP
         </Badge>
       );
     }
     
     if (product.isBestseller) {
       badges.push(
-        <Badge key="bestseller" variant="bestseller" className="text-sm">
-          ⭐ YÊU THÍCH
+        <Badge key="bestseller" variant="bestseller" className="text-sm flex items-center gap-1">
+          <Star className="w-3 h-3 text-tramhuong-accent" />
+          YÊU THÍCH
         </Badge>
       );
     }
@@ -529,14 +586,14 @@ export default function MobileStorefront() {
                 )}
               </div>
               <div className="flex items-center justify-between mb-4">
-                <span className="text-3xl font-bold text-forest-green">
+                <span className="text-3xl font-bold text-tramhuong-accent font-playfair">
                   {formatVietnamPrice(selectedProduct.price)}
                 </span>
                 <div className="flex items-center gap-1">
-                  <Star className="h-4 w-4 fill-gold text-gold" />
-                  <Star className="h-4 w-4 fill-gold text-gold" />
-                  <Star className="h-4 w-4 fill-gold text-gold" />
-                  <Star className="h-4 w-4 fill-gold text-gold" />
+                  <Star className="h-4 w-4 fill-tramhuong-accent text-tramhuong-accent" />
+                  <Star className="h-4 w-4 fill-tramhuong-accent text-tramhuong-accent" />
+                  <Star className="h-4 w-4 fill-tramhuong-accent text-tramhuong-accent" />
+                  <Star className="h-4 w-4 fill-tramhuong-accent text-tramhuong-accent" />
                   <Star className="h-4 w-4 fill-gray-200 text-gray-200" />
                   <span className="text-sm text-gray-600 ml-1">(4.0)</span>
                 </div>
@@ -563,7 +620,7 @@ export default function MobileStorefront() {
                     : selectedProduct.benefits
                   ).map((benefit, index) => (
                     <li key={index} className="flex items-start gap-2 text-gray-600">
-                      <span className="text-lime-green mt-1">•</span>
+                      <span className="text-tramhuong-accent mt-1">•</span>
                       <span>{benefit}</span>
                     </li>
                   ))}
@@ -575,7 +632,7 @@ export default function MobileStorefront() {
             <div className="flex items-center gap-2">
               <span className="text-sm text-gray-600">Tình trạng:</span>
               {selectedProduct.stock > 0 ? (
-                <span className="text-sm text-lime-green font-medium">
+                <span className="text-sm text-tramhuong-accent font-medium">
                   Còn hàng ({selectedProduct.stock} sản phẩm)
                 </span>
               ) : (
@@ -585,8 +642,8 @@ export default function MobileStorefront() {
 
             {/* Quantity in Cart */}
             {cart.find(item => item.product.id === selectedProduct.id) && (
-              <div className="bg-lime-green/10 border border-lime-green rounded-lg p-3">
-                <div className="flex items-center gap-2 text-lime-green">
+              <div className="bg-tramhuong-accent/10 border border-tramhuong-accent rounded-lg p-3">
+                <div className="flex items-center gap-2 text-tramhuong-accent">
                   <ShoppingCart className="h-4 w-4" />
                   <span className="text-sm font-medium">
                     Đã có {cart.find(item => item.product.id === selectedProduct.id)?.quantity} sản phẩm trong giỏ hàng
@@ -600,7 +657,7 @@ export default function MobileStorefront() {
               <Button
                 onClick={() => addToCart(selectedProduct)}
                 disabled={selectedProduct.stock === 0}
-                className="w-full bg-sunset-orange hover:bg-sunset-orange/90 text-white py-3 text-lg font-semibold"
+                className="w-full gradient-incense-gold text-white py-3 text-lg font-semibold shadow-lg hover:shadow-luxury-lg transition-all duration-300 disabled:bg-gray-400"
               >
                 <Plus className="h-5 w-5 mr-2" />
                 {selectedProduct.stock === 0 ? 'Hết hàng' : 'Thêm vào giỏ'}
@@ -616,23 +673,57 @@ export default function MobileStorefront() {
         return (
           <div className={`${layoutConfig.containerClass}`}>
             <div className={`${layoutConfig.contentPadding} pt-6`}>
-              <h2 className="text-xl font-bold mb-4 text-gray-900">Danh mục sản phẩm</h2>
-              <div className={`grid ${layoutConfig.gridCols} ${layoutConfig.gridGap}`}>
-                {categories.map((category) => (
-                  <button
-                    key={category.id}
-                    onClick={() => {
-                      setSelectedCategory(category.id);
-                      setActiveTab('home');
-                    }}
-                    className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow"
-                  >
-                    <div className="text-center">
-                      <div className="text-3xl mb-2">{category.icon}</div>
-                      <h3 className="font-semibold text-gray-900">{category.name}</h3>
-                    </div>
-                  </button>
-                ))}
+              <h2 className="text-xl font-bold mb-4 text-tramhuong-primary font-playfair">Danh mục sản phẩm</h2>
+              <div className={`grid ${isMobile ? 'grid-cols-2' : isTablet ? 'grid-cols-3' : 'grid-cols-4 lg:grid-cols-5'} gap-4 md:gap-5 lg:gap-6`}>
+                {categories.map((category) => {
+                  const isSelected = selectedCategory === category.id;
+                  
+                  return (
+                    <button
+                      key={category.id}
+                      onClick={() => {
+                        setSelectedCategory(category.id);
+                        setActiveTab('home');
+                      }}
+                      className={`
+                        group relative
+                        min-h-[200px] ${isMobile ? 'min-h-[160px] p-6' : isTablet ? 'p-7' : 'p-8'}
+                        rounded-xl
+                        transition-all duration-300 ease-out
+                        cursor-pointer
+                        ${isSelected 
+                          ? 'bg-[rgba(193,168,117,0.15)] border-2 border-tramhuong-accent shadow-[0_4px_16px_rgba(193,168,117,0.3),0_12px_32px_rgba(193,168,117,0.2)] -translate-y-2' 
+                          : 'bg-[rgba(250,248,245,0.7)] border border-[rgba(61,43,31,0.2)] shadow-[0_2px_8px_rgba(61,43,31,0.08),0_8px_24px_rgba(61,43,31,0.12)] hover:-translate-y-2 hover:shadow-[0_4px_16px_rgba(61,43,31,0.12),0_12px_32px_rgba(61,43,31,0.18),0_16px_40px_rgba(193,168,117,0.15)] hover:border-[rgba(193,168,117,0.6)]'
+                        }
+                        backdrop-blur-[12px]
+                      `}
+                    >
+                      <div className="flex flex-col items-center justify-center gap-5 h-full">
+                        <div 
+                          className={`
+                            w-20 h-20 rounded-full
+                            flex items-center justify-center
+                            transition-all duration-300 ease-out
+                            ${isSelected
+                              ? 'bg-[rgba(193,168,117,0.3)] border-2 border-[rgba(193,168,117,0.5)] scale-110'
+                              : 'bg-[rgba(193,168,117,0.1)] border-2 border-[rgba(193,168,117,0.3)] group-hover:bg-[rgba(193,168,117,0.2)] group-hover:border-[rgba(193,168,117,0.5)] group-hover:scale-110'
+                            }
+                          `}
+                        >
+                          {category.icon}
+                        </div>
+                        
+                        <h3 className={`
+                          font-playfair text-lg text-center tracking-wide
+                          ${isSelected ? 'text-tramhuong-accent font-semibold' : 'text-tramhuong-primary font-medium'}
+                          transition-colors duration-300
+                        `}>
+                          {category.name}
+                        </h3>
+                      </div>
+                    </button>
+                  );
+                })}
               </div>
             </div>
           </div>
@@ -661,7 +752,7 @@ export default function MobileStorefront() {
                       />
                       <div className="flex-1">
                         <h3 className="font-medium">{item.product.name}</h3>
-                        <p className="text-forest-green font-bold">
+                        <p className="text-tramhuong-accent font-bold">
                           {formatVietnamPrice(item.product.price)}
                         </p>
                       </div>
@@ -691,11 +782,11 @@ export default function MobileStorefront() {
                 <div className="bg-white p-4 rounded-xl border border-gray-200">
                   <div className="flex justify-between items-center mb-4">
                     <span className="text-lg font-semibold">Tổng cộng:</span>
-                    <span className="text-2xl font-bold text-forest-green">
+                    <span className="text-2xl font-bold text-tramhuong-accent font-playfair">
                       {formatVietnamPrice(getTotalPrice())}
                     </span>
                   </div>
-                  <Button className="w-full bg-sunset-orange hover:bg-sunset-orange/90 text-white py-3 rounded-full font-semibold">
+                  <Button className="w-full gradient-incense-gold text-white py-3 rounded-full font-semibold shadow-lg hover:shadow-luxury-lg transition-all duration-300">
                     Đặt hàng ngay
                   </Button>
                 </div>
@@ -714,18 +805,68 @@ export default function MobileStorefront() {
         // Enhanced Product Cards - Blue Theme with Real Products
         return (
           <div className={layoutConfig.containerClass}>
-            {/* Featured Blog Posts - Desktop only, above products, only on home tab */}
+            {/* Heritage Section - Brand Storytelling */}
             {activeTab === 'home' && (
-              <BlogFeaturedSection 
-                onPostClick={(post) => {
-                  setSelectedBlogPost(post);
-                  setActiveTab('blog-detail');
-                }}
-              />
+              <section className="heritage-section py-12 md:py-20 bg-gradient-to-b from-amber-50 to-white">
+                <div className="container mx-auto px-4">
+                  <div className="text-center mb-8 md:mb-12">
+                    <h2 className="text-3xl md:text-4xl lg:text-5xl font-playfair text-tramhuong-primary mb-4 animate-fade-in-up">
+                      Di Sản Trầm Hương
+                    </h2>
+                    <div className="w-24 h-1 bg-tramhuong-accent mx-auto mb-4 md:mb-6"></div>
+                    <p className="text-base md:text-lg text-tramhuong-text max-w-3xl mx-auto animate-fade-in-up stagger-1">
+                      Trầm Hương Hoàng Ngân - Tinh hoa từ đất Bồi, nơi những cây trầm quý hiếm 
+                      được ươm mầm qua hàng trăm năm. Mỗi que trầm là một câu chuyện, 
+                      một hành trình tâm linh độc đáo.
+                    </p>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+                    <div className="luxury-card text-center p-6 md:p-8 rounded-xl animate-fade-in-up stagger-2">
+                      <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-tramhuong-accent/20 flex items-center justify-center">
+                        <Leaf className="w-8 h-8 text-tramhuong-accent" />
+                      </div>
+                      <h3 className="text-lg md:text-xl font-playfair text-tramhuong-primary mb-3">
+                        Nguồn Gốc Quý Hiếm
+                      </h3>
+                      <p className="text-sm md:text-base text-tramhuong-text/80">
+                        Trầm hương tự nhiên từ vùng đất Bồi nổi tiếng, 
+                        được tuyển chọn kỹ lưỡng qua nhiều thế hệ
+                      </p>
+                    </div>
+
+                    <div className="luxury-card text-center p-6 md:p-8 rounded-xl animate-fade-in-up stagger-3">
+                      <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-tramhuong-accent/20 flex items-center justify-center">
+                        <Package className="w-8 h-8 text-tramhuong-accent" />
+                      </div>
+                      <h3 className="text-lg md:text-xl font-playfair text-tramhuong-primary mb-3">
+                        Quy Trình Truyền Thống
+                      </h3>
+                      <p className="text-sm md:text-base text-tramhuong-text/80">
+                        Sản xuất theo phương pháp thủ công cổ truyền,
+                        kết hợp kỹ thuật hiện đại để giữ nguyên hương thơm
+                      </p>
+                    </div>
+
+                    <div className="luxury-card text-center p-6 md:p-8 rounded-xl animate-fade-in-up stagger-4">
+                      <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-tramhuong-accent/20 flex items-center justify-center">
+                        <Award className="w-8 h-8 text-tramhuong-accent" />
+                      </div>
+                      <h3 className="text-lg md:text-xl font-playfair text-tramhuong-primary mb-3">
+                        Giá Trị Tâm Linh
+                      </h3>
+                      <p className="text-sm md:text-base text-tramhuong-text/80">
+                        Mang lại sự thanh tịnh, bình an và tĩnh tâm
+                        cho không gian cúng bái và thiền định
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </section>
             )}
             
             {/* Products Section with Enhanced Design */}
-            <div className={`${layoutConfig.contentPadding} ${layoutConfig.sectionSpacing}`}>
+            <div id="products-section" data-section="products" className={`${layoutConfig.contentPadding} ${layoutConfig.sectionSpacing}`}>
               <div className={layoutConfig.desktopProductContainer}>
                 {/* Enhanced Product Grid */}
                 <div className={`grid ${layoutConfig.gridCols} ${layoutConfig.gridGap}`}>
@@ -742,136 +883,18 @@ export default function MobileStorefront() {
                   ))
                 ) : finalProducts.length === 0 ? (
                   <div className="text-center py-8 col-span-full">
-                    <span className="text-4xl mb-4 block">🔍</span>
+                    <Star className="h-16 w-16 mx-auto mb-4 text-tramhuong-accent opacity-50" />
                     <p className="text-gray-600">Không tìm thấy sản phẩm</p>
                   </div>
                 ) : (
                   // Limit to 6 products on desktop, show all on mobile
-                  (isMobile ? finalProducts : finalProducts.slice(0, 6)).map((product) => {
-                    // Get rating value (default to 4.5 if not available)
-                    const rating = product.rating || 4.5;
-                    const fullStars = Math.floor(rating);
-                    const hasHalfStar = rating % 1 >= 0.5;
-                    
-                    // Check if media is a video
-                    const mediaUrl = product.media || product.image || '';
-                    const isVideo = /\.(mp4|webm|mov)$/i.test(mediaUrl);
-                    
-                    return (
-                    <Link 
-                      key={product.id} 
-                      href={`/product/${product.slug || product.id}`}
-                      className="group relative bg-white rounded-lg border border-gray-200 overflow-hidden transition-all duration-300 shadow-sm hover:shadow-xl hover:border-lime-green block"
-                    >
-                      {/* Lime-green "NEW" badge - top-left corner, absolute positioned */}
-                      {product.isNew && (
-                        <div className="absolute top-2 left-2 z-10">
-                          <span className="bg-lime-green text-white text-xs font-semibold px-2 py-1 rounded">
-                            NEW
-                          </span>
-                        </div>
-                      )}
-
-                      {/* Product image/video - aspect-[4/5] ratio */}
-                      <div className="relative aspect-[4/5] bg-gray-100 overflow-hidden">
-                        {isVideo ? (
-                          <video 
-                            src={mediaUrl}
-                            autoPlay 
-                            muted 
-                            loop 
-                            playsInline 
-                            className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                          />
-
-                        ) : product.image ? (
-                          <Image
-                            src={product.image}
-                            alt={product.name}
-                            fill
-                            sizes="(max-width: 768px) 50vw, 33vw"
-                            className="object-cover transition-transform duration-500 group-hover:scale-110"
-                            loading="lazy"
-                            quality={85}
-                          />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center text-gray-400">
-                            <span className="text-sm">Sản phẩm</span>
-                          </div>
-                        )}
-                      </div>
-
-                      {/* Product info */}
-                      <div className="p-3 space-y-2">
-                        {/* Product name - single line, medium weight */}
-                        <h3 className="font-medium text-gray-900 line-clamp-1 text-base" title={product.name}>
-                          {product.name}
-                        </h3>
-
-                        {/* Short description with lime-green icon */}
-                        {product.short_description && (
-                          <div className="flex items-start gap-1">
-                            <span className="text-lime-green mt-0.5">✓</span>
-                            <p className="text-xs text-lime-green line-clamp-2">
-                              {product.short_description}
-                            </p>
-                          </div>
-                        )}
-
-                        {/* Star rating row */}
-                        <div className="flex items-center gap-1">
-                          {[...Array(5)].map((_, index) => (
-                            <Star 
-                              key={index} 
-                              className={`h-4 w-4 ${
-                                index < fullStars 
-                                  ? 'fill-gold text-gold' 
-                                  : index === fullStars && hasHalfStar
-                                  ? 'fill-gold text-gold'
-                                  : 'fill-gray-200 text-gray-200'
-                              }`}
-                            />
-                          ))}
-                          <span className="text-sm text-gray-600">({rating.toFixed(1)})</span>
-                        </div>
-
-                        {/* Price - Large, bold, forest-green color */}
-                        <div className="pt-1">
-                          <span className="text-xl font-bold text-forest-green">
-                            {formatVietnamPrice(product.price)}
-                          </span>
-                        </div>
-
-                        {/* "Add to Cart" button - Full width, sunset-orange background */}
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            e.preventDefault();
-                            addToCart(product);
-                          }}
-                          disabled={product.stock === 0}
-                          className="w-full bg-sunset-orange hover:bg-sunset-orange/90 text-white font-medium py-2 px-4 rounded-md flex items-center justify-center gap-2 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
-                        >
-                          <ShoppingCart className="h-4 w-4" />
-                          <span>Add to Cart</span>
-                        </button>
-
-                        {/* Stock availability */}
-                        <div className="text-center">
-                          {product.stock > 0 ? (
-                            <span className="text-sm text-gray-500">
-                              {product.stock} available
-                            </span>
-                          ) : (
-                            <span className="text-sm text-gray-500">
-                              Out of stock
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                    </Link>
-                    );
-                  })
+                  (isMobile ? finalProducts : finalProducts.slice(0, 6)).map((product) => (
+                    <ProductCard
+                      key={product.id}
+                      product={product}
+                      onAddToCart={addToCart}
+                    />
+                  ))
                 )}
                 </div>
                 
@@ -879,7 +902,7 @@ export default function MobileStorefront() {
                 {!isMobile && (
                   <div className="mt-8 text-center">
                     <Link href="/products">
-                      <button className="bg-sunset-orange hover:bg-sunset-orange/90 text-white font-semibold py-3 px-8 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg">
+                      <button className="gradient-incense-gold hover:luxury-glow text-tramhuong-bg font-semibold py-3 px-8 rounded-lg transition-all duration-300 shadow-lg">
                         Xem tất cả sản phẩm →
                       </button>
                     </Link>
@@ -887,6 +910,138 @@ export default function MobileStorefront() {
                 )}
               </div>
             </div>
+
+            {/* Featured Blog Posts - After products, only on home tab */}
+            {activeTab === 'home' && (
+              <Suspense fallback={
+                <div className="w-full h-96 bg-white/60 backdrop-blur-md rounded-xl border border-tramhuong-accent/20 animate-pulse" />
+              }>
+                <BlogFeaturedSection 
+                  onPostClick={(post) => {
+                    setSelectedBlogPost(post);
+                    setActiveTab('blog-detail');
+                  }}
+                />
+              </Suspense>
+            )}
+
+            {/* Philosophy Section - Brand Storytelling */}
+            {activeTab === 'home' && (
+              <section className="philosophy-section py-12 md:py-20 bg-tramhuong-primary text-white relative overflow-hidden">
+                {/* Smoke decoration elements */}
+                <div className="absolute top-0 left-0 w-32 h-32 opacity-10 animate-smoke-rise">
+                  <div className="w-full h-full bg-tramhuong-accent rounded-full blur-3xl"></div>
+                </div>
+                <div className="absolute bottom-0 right-0 w-40 h-40 opacity-10 animate-smoke-rise" style={{animationDelay: '2s'}}>
+                  <div className="w-full h-full bg-tramhuong-accent rounded-full blur-3xl"></div>
+                </div>
+                
+                <div className="container mx-auto px-4 relative z-10">
+                  <div className="text-center mb-8 md:mb-12">
+                    <h2 className="text-3xl md:text-4xl lg:text-5xl font-playfair text-tramhuong-accent mb-4">
+                      Triết Lý Tâm Linh
+                    </h2>
+                    <div className="w-24 h-1 bg-tramhuong-accent mx-auto mb-4 md:mb-6"></div>
+                  </div>
+                  
+                  <div className="max-w-4xl mx-auto">
+                    <p className="text-lg md:text-xl text-center mb-8 md:mb-12 text-amber-100 px-4">
+                      "Trầm hương không chỉ là hương thơm, mà là cầu nối giữa thế giới vật chất 
+                      và tâm linh. Mỗi luồng khói bay lên mang theo những lời cầu nguyện, 
+                      sự thanh tịnh và bình an."
+                    </p>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+                      <div className="text-center p-6">
+                        <Sparkles className="h-12 w-12 md:h-14 md:w-14 mx-auto mb-4 text-tramhuong-accent" />
+                        <h4 className="font-playfair text-lg md:text-xl text-tramhuong-accent mb-2">
+                          Thanh Tịnh
+                        </h4>
+                        <p className="text-sm md:text-base text-amber-100/80">
+                          Làm sạch không gian và tâm hồn khỏi năng lượng tiêu cực
+                        </p>
+                      </div>
+                      
+                      <div className="text-center p-6">
+                        <Circle className="h-12 w-12 md:h-14 md:w-14 mx-auto mb-4 text-tramhuong-accent" />
+                        <h4 className="font-playfair text-lg md:text-xl text-tramhuong-accent mb-2">
+                          Thiền Định
+                        </h4>
+                        <p className="text-sm md:text-base text-amber-100/80">
+                          Hỗ trợ tập trung và an tĩnh trong thiền định, yoga
+                        </p>
+                      </div>
+                      
+                      <div className="text-center p-6">
+                        <Heart className="h-12 w-12 md:h-14 md:w-14 mx-auto mb-4 text-tramhuong-accent" />
+                        <h4 className="font-playfair text-lg md:text-xl text-tramhuong-accent mb-2">
+                          Bình An
+                        </h4>
+                        <p className="text-sm md:text-base text-amber-100/80">
+                          Mang lại sự yên tĩnh, thư thái cho tâm trí
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+            )}
+
+            {/* Quality Promise Section - Brand Storytelling */}
+            {activeTab === 'home' && (
+              <section className="quality-section py-12 md:py-20 bg-white">
+                <div className="container mx-auto px-4">
+                  <div className="text-center mb-8 md:mb-12">
+                    <h2 className="text-3xl md:text-4xl lg:text-5xl font-playfair text-tramhuong-primary mb-4">
+                      Cam Kết Chất Lượng
+                    </h2>
+                    <div className="w-24 h-1 bg-tramhuong-accent mx-auto mb-4 md:mb-6"></div>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-6">
+                    <div className="text-center p-4 md:p-6 luxury-card rounded-xl">
+                      <div className="text-4xl md:text-5xl mb-3 md:mb-4 text-tramhuong-accent">✓</div>
+                      <h4 className="font-playfair text-lg md:text-xl text-tramhuong-primary mb-2">
+                        100% Tự Nhiên
+                      </h4>
+                      <p className="text-sm md:text-base text-tramhuong-text/70">
+                        Không hóa chất, không tạp chất
+                      </p>
+                    </div>
+                    
+                    <div className="text-center p-4 md:p-6 luxury-card rounded-xl">
+                      <Award className="h-12 w-12 md:h-14 md:w-14 mx-auto mb-3 md:mb-4 text-tramhuong-accent" />
+                      <h4 className="font-playfair text-lg md:text-xl text-tramhuong-primary mb-2">
+                        Chứng Nhận
+                      </h4>
+                      <p className="text-sm md:text-base text-tramhuong-text/70">
+                        Đạt chuẩn chất lượng quốc tế
+                      </p>
+                    </div>
+                    
+                    <div className="text-center p-4 md:p-6 luxury-card rounded-xl">
+                      <Package className="h-12 w-12 md:h-14 md:w-14 mx-auto mb-3 md:mb-4 text-tramhuong-accent" />
+                      <h4 className="font-playfair text-lg md:text-xl text-tramhuong-primary mb-2">
+                        Giao Hàng Toàn Quốc
+                      </h4>
+                      <p className="text-sm md:text-base text-tramhuong-text/70">
+                        Nhanh chóng, an toàn, bảo mật
+                      </p>
+                    </div>
+                    
+                    <div className="text-center p-4 md:p-6 luxury-card rounded-xl">
+                      <Shield className="h-12 w-12 md:h-14 md:w-14 mx-auto mb-3 md:mb-4 text-tramhuong-accent" />
+                      <h4 className="font-playfair text-lg md:text-xl text-tramhuong-primary mb-2">
+                        Đổi Trả Dễ Dàng
+                      </h4>
+                      <p className="text-sm md:text-base text-tramhuong-text/70">
+                        Hoàn tiền 100% nếu không hài lòng
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </section>
+            )}
           </div>
         );
     }
@@ -976,6 +1131,7 @@ export default function MobileStorefront() {
           setActiveTab('home');
         }}
         onCartClick={() => setActiveTab('cart')}
+        onAccountClick={() => setActiveTab('profile')}
         onLogin={() => {
           // Handle login - can be implemented with modal or navigation
           setActiveTab('profile');
@@ -995,14 +1151,107 @@ export default function MobileStorefront() {
         onProfileClick={() => setActiveTab('profile')}
       />
 
-      {/* Banner Slider - Only on home tab, sits directly under CategoryIconsGrid */}
+      {/* Premium Luxury Glass Hero Section - Only on home tab */}
       {activeTab === 'home' && (
-        <ImageSlider 
-          slides={heroSlides}
-          className="mb-0"
-          autoplay={true}
-          autoplayDelay={4000}
-        />
+        <section className="relative h-[70vh] md:h-[80vh] overflow-hidden">
+          {/* Layer 1: ImageSlider Background */}
+          <div className="absolute inset-0">
+            <ImageSlider 
+              slides={heroSlides}
+              className="h-full"
+              autoplay={true}
+              autoplayDelay={5000}
+            />
+          </div>
+          
+          {/* Layer 2: Deep Brown Gradient for depth */}
+          <div className="absolute inset-0 bg-gradient-to-b from-tramhuong-primary/40 via-tramhuong-primary/60 to-tramhuong-primary/80" />
+          
+          {/* Layer 3: Glass morphism overlay */}
+          <div className="absolute inset-0 backdrop-blur-[2px]" />
+          
+          {/* Layer 4: Texture overlay */}
+          <div className="absolute inset-0 texture-overlay opacity-10" />
+          
+          {/* Hero Content */}
+          <div className="relative z-10 container mx-auto px-4 h-full flex flex-col items-center justify-center text-center">
+            {/* Logo Container - Luxury Glass Circular */}
+            <div className="mb-8 animate-fade-in-up">
+              <div className="w-28 h-28 md:w-32 md:h-32 mx-auto rounded-full bg-tramhuong-accent/10 backdrop-blur-md border-2 border-tramhuong-accent/30 flex items-center justify-center shadow-[0_8px_32px_rgba(193,168,117,0.2)] hover:scale-110 transition-transform duration-300">
+                <Sparkles className="w-14 h-14 md:w-16 md:h-16 text-tramhuong-accent" />
+              </div>
+            </div>
+            
+            {/* Main Headline with Bronze Gold Accent */}
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-playfair text-white mb-6 animate-fade-in-up stagger-1">
+              TRẦM HƯƠNG 
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-tramhuong-accent to-amber-300"> HOÀNG NGÂN</span>
+            </h1>
+            
+            {/* Subtitle with decorative underline */}
+            <div className="relative inline-block mb-4 animate-fade-in-up stagger-2">
+              <p className="text-xl md:text-3xl text-tramhuong-accent font-playfair">
+                TINH HOA TRẦM HƯƠNG
+              </p>
+              {/* Bronze gold decorative underline */}
+              <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-24 md:w-32 h-0.5 bg-gradient-to-r from-transparent via-tramhuong-accent to-transparent" />
+            </div>
+            
+            {/* Description text */}
+            <p className="text-base md:text-xl text-white/80 mb-10 max-w-2xl mx-auto font-nunito animate-fade-in-up stagger-3 leading-relaxed">
+              Hơn 20 năm tinh luyện trầm hương Khánh Hòa • Sản phẩm cao cấp từ đất Bồi
+            </p>
+            
+            {/* Floating CTA Buttons - Glass Style */}
+            <div className="flex flex-col sm:flex-row gap-4 animate-fade-in-up stagger-4">
+              {/* Primary CTA - Glass with bronze gradient */}
+              <Button 
+                onClick={() => document.getElementById('products-section')?.scrollIntoView({ behavior: 'smooth' })}
+                className="group relative px-8 py-6 text-lg font-semibold rounded-xl overflow-hidden bg-gradient-to-r from-tramhuong-primary to-tramhuong-accent text-white shadow-[0_8px_32px_rgba(193,168,117,0.3)] hover:shadow-[0_12px_48px_rgba(193,168,117,0.4)] transition-all duration-300 hover:scale-105"
+              >
+                <span className="relative z-10 flex items-center gap-2">
+                  <Sparkles className="w-5 h-5" />
+                  Khám Phá Bộ Sưu Tập
+                </span>
+                {/* Glass shine effect */}
+                <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
+              </Button>
+
+              {/* Secondary CTA - Glass outline */}
+              <Button 
+                onClick={() => setActiveTab('categories')}
+                variant="outline"
+                className="px-8 py-6 text-lg font-semibold rounded-xl bg-white/10 backdrop-blur-md border-2 border-tramhuong-accent/50 text-white hover:bg-tramhuong-accent/20 hover:border-tramhuong-accent transition-all duration-300 shadow-luxury"
+              >
+                <span className="flex items-center gap-2">
+                  <Package className="w-5 h-5" />
+                  Danh Mục Sản Phẩm
+                </span>
+              </Button>
+            </div>
+            
+            {/* Trust Badges Row - Glass Containers */}
+            <div className="mt-12 flex flex-wrap justify-center gap-6 animate-fade-in-up stagger-5">
+              <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-md border border-tramhuong-accent/30">
+                <Award className="w-5 h-5 text-tramhuong-accent" />
+                <span className="text-sm text-white/90">20+ Năm Kinh Nghiệm</span>
+              </div>
+              <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-md border border-tramhuong-accent/30">
+                <Star className="w-5 h-5 text-tramhuong-accent" />
+                <span className="text-sm text-white/90">4.95/5 Đánh Giá</span>
+              </div>
+              <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-md border border-tramhuong-accent/30">
+                <Shield className="w-5 h-5 text-tramhuong-accent" />
+                <span className="text-sm text-white/90">Chứng Nhận Nguồn Gốc</span>
+              </div>
+            </div>
+          </div>
+          
+          {/* Scroll Indicator - Bronze Gold */}
+          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce z-10">
+            <ChevronDown className="w-8 h-8 text-tramhuong-accent" />
+          </div>
+        </section>
       )}
 
       {/* Main Content - Add top padding for desktop sticky header only for non-home tabs */}
@@ -1018,6 +1267,16 @@ export default function MobileStorefront() {
           cartCount={getTotalItems()}
         />
       )}
+
+      {/* Category Bottom Sheet */}
+      <CategoryBottomSheet
+        isOpen={showCategorySheet}
+        onClose={() => setShowCategorySheet(false)}
+        onCategorySelect={(path) => {
+          router.push(path);
+          setShowCategorySheet(false);
+        }}
+      />
 
       {/* ChatBot - Responsive */}
       {isMobile ? <MobileChatBot /> : <DesktopChatBot />}
