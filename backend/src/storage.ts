@@ -20,6 +20,9 @@ import {
   carGroups, vehicleGroupAssignments,
   affiliateProductRequests, affiliateProductAssignments, stockReservations,
   ipPools, ipPoolSessions, ipRotationLogs,
+  notifications,
+  flashSales,
+  preorderProducts,
   type User, type InsertUser, type Product, type InsertProduct, 
   type Customer, type InsertCustomer, type Order, type InsertOrder,
   type OrderItem, type InsertOrderItem, type SocialAccount, type InsertSocialAccount,
@@ -82,7 +85,10 @@ import {
   type FanpageBotConfig,
   type IpPool, type InsertIpPool, type UpdateIpPool,
   type IpPoolSession, type InsertIpPoolSession, type UpdateIpPoolSession,
-  type IpRotationLog, type InsertIpRotationLog
+  type IpRotationLog, type InsertIpRotationLog,
+  type Notifications, type InsertNotifications,
+  type FlashSales, type InsertFlashSales,
+  type PreorderProducts, type InsertPreorderProducts
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc, asc, and, count, sum, sql, ilike, or, gte, lte, isNull, inArray } from "drizzle-orm";
@@ -270,6 +276,30 @@ export interface IStorage {
   getCustomerEvents(customerId: string, limit?: number): Promise<CustomerEvent[]>;
   getCustomerEventsByType(customerId: string, eventType: string, limit?: number): Promise<CustomerEvent[]>;
   updateCustomerSummary(customerId: string): Promise<Customer | undefined>;
+
+  // 🔔 Notifications methods
+  getNotifications(customerId: string): Promise<Notifications[]>;
+  createNotification(notification: InsertNotifications): Promise<Notifications>;
+  markNotificationsAsRead(notificationIds: string[], customerId: string): Promise<void>;
+  deleteNotification(id: string, customerId: string): Promise<boolean>;
+
+  // 🔥 Flash Sales methods
+  getFlashSales(limit?: number, offset?: number): Promise<FlashSales[]>;
+  getFlashSaleById(id: string): Promise<FlashSales | undefined>;
+  getFlashSaleBySlug(slug: string): Promise<(FlashSales & { product: Product }) | undefined>;
+  getActiveFlashSales(): Promise<(FlashSales & { product: Product })[]>;
+  createFlashSale(data: InsertFlashSales): Promise<FlashSales>;
+  updateFlashSale(id: string, data: Partial<InsertFlashSales>): Promise<FlashSales | undefined>;
+  deleteFlashSale(id: string): Promise<boolean>;
+
+  // 📦 Pre-orders methods
+  getPreorders(limit?: number, offset?: number): Promise<PreorderProducts[]>;
+  getPreorderById(id: string): Promise<PreorderProducts | undefined>;
+  getPreorderBySlug(slug: string): Promise<PreorderProducts & { product?: Product }>;
+  getActivePreorders(): Promise<(PreorderProducts & { product?: Product })[]>;
+  createPreorder(data: InsertPreorderProducts): Promise<PreorderProducts>;
+  updatePreorder(id: string, data: Partial<InsertPreorderProducts>): Promise<PreorderProducts | undefined>;
+  deletePreorder(id: string): Promise<boolean>;
 
   // Order methods
   getOrders(limit?: number): Promise<(Order & { customerName: string; customerEmail: string })[]>;
@@ -2395,6 +2425,286 @@ export class DatabaseStorage implements IStorage {
     }, 0);
 
     return Math.round(totalDuration / sessions.length);
+  }
+
+  // 🔔 Notifications methods
+  async getNotifications(customerId: string): Promise<Notifications[]> {
+    return await db
+      .select()
+      .from(notifications)
+      .where(eq(notifications.customerId, customerId))
+      .orderBy(desc(notifications.createdAt));
+  }
+
+  async createNotification(notification: InsertNotifications): Promise<Notifications> {
+    const [newNotification] = await db
+      .insert(notifications)
+      .values(notification)
+      .returning();
+    return newNotification;
+  }
+
+  async markNotificationsAsRead(notificationIds: string[], customerId: string): Promise<void> {
+    if (notificationIds.length === 0) return;
+
+    await db
+      .update(notifications)
+      .set({ 
+        isRead: true,
+        readAt: new Date().toISOString()
+      })
+      .where(
+        and(
+          inArray(notifications.id, notificationIds),
+          eq(notifications.customerId, customerId)
+        )
+      );
+  }
+
+  async deleteNotification(id: string, customerId: string): Promise<boolean> {
+    const result = await db
+      .delete(notifications)
+      .where(
+        and(
+          eq(notifications.id, id),
+          eq(notifications.customerId, customerId)
+        )
+      )
+      .returning();
+
+    return result.length > 0;
+  }
+
+  // 🔥 Flash Sales methods implementation
+  async getFlashSales(limit = 50, offset = 0): Promise<FlashSales[]> {
+    return await db
+      .select()
+      .from(flashSales)
+      .orderBy(desc(flashSales.createdAt))
+      .limit(limit)
+      .offset(offset);
+  }
+
+  async getFlashSaleById(id: string): Promise<FlashSales | undefined> {
+    const [flashSale] = await db
+      .select()
+      .from(flashSales)
+      .where(eq(flashSales.id, id));
+    return flashSale || undefined;
+  }
+
+  async getFlashSaleBySlug(slug: string): Promise<(FlashSales & { product: Product }) | undefined> {
+    const result = await db
+      .select({
+        id: flashSales.id,
+        productId: flashSales.productId,
+        slug: flashSales.slug,
+        title: flashSales.title,
+        originalPrice: flashSales.originalPrice,
+        salePrice: flashSales.salePrice,
+        discountPercent: flashSales.discountPercent,
+        startTime: flashSales.startTime,
+        endTime: flashSales.endTime,
+        bannerImage: flashSales.bannerImage,
+        description: flashSales.description,
+        unit: flashSales.unit,
+        isActive: flashSales.isActive,
+        createdAt: flashSales.createdAt,
+        updatedAt: flashSales.updatedAt,
+        product: products
+      })
+      .from(flashSales)
+      .innerJoin(products, eq(flashSales.productId, products.id))
+      .where(eq(flashSales.slug, slug));
+
+    if (result.length === 0) return undefined;
+
+    const row = result[0];
+    return {
+      ...row,
+      product: row.product as Product
+    } as FlashSales & { product: Product };
+  }
+
+  async getActiveFlashSales(): Promise<(FlashSales & { product: Product })[]> {
+    const now = new Date().toISOString();
+    
+    const results = await db
+      .select({
+        id: flashSales.id,
+        productId: flashSales.productId,
+        slug: flashSales.slug,
+        title: flashSales.title,
+        originalPrice: flashSales.originalPrice,
+        salePrice: flashSales.salePrice,
+        discountPercent: flashSales.discountPercent,
+        startTime: flashSales.startTime,
+        endTime: flashSales.endTime,
+        bannerImage: flashSales.bannerImage,
+        description: flashSales.description,
+        unit: flashSales.unit,
+        isActive: flashSales.isActive,
+        createdAt: flashSales.createdAt,
+        updatedAt: flashSales.updatedAt,
+        product: products
+      })
+      .from(flashSales)
+      .innerJoin(products, eq(flashSales.productId, products.id))
+      .where(
+        and(
+          eq(flashSales.isActive, true),
+          lte(flashSales.startTime, now),
+          gte(flashSales.endTime, now)
+        )
+      )
+      .orderBy(desc(flashSales.startTime));
+
+    return results.map(row => ({
+      ...row,
+      product: row.product as Product
+    })) as (FlashSales & { product: Product })[];
+  }
+
+  async createFlashSale(data: InsertFlashSales): Promise<FlashSales> {
+    const [flashSale] = await db
+      .insert(flashSales)
+      .values({
+        ...data,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      })
+      .returning();
+    return flashSale;
+  }
+
+  async updateFlashSale(id: string, data: Partial<InsertFlashSales>): Promise<FlashSales | undefined> {
+    const [flashSale] = await db
+      .update(flashSales)
+      .set({
+        ...data,
+        updatedAt: new Date().toISOString()
+      })
+      .where(eq(flashSales.id, id))
+      .returning();
+    return flashSale || undefined;
+  }
+
+  async deleteFlashSale(id: string): Promise<boolean> {
+    const result = await db
+      .delete(flashSales)
+      .where(eq(flashSales.id, id))
+      .returning();
+    return result.length > 0;
+  }
+
+  // 📦 Pre-orders methods implementation
+  async getPreorders(limit = 50, offset = 0): Promise<PreorderProducts[]> {
+    return await db
+      .select()
+      .from(preorderProducts)
+      .orderBy(desc(preorderProducts.createdAt))
+      .limit(limit)
+      .offset(offset);
+  }
+
+  async getPreorderById(id: string): Promise<PreorderProducts | undefined> {
+    const [preorder] = await db
+      .select()
+      .from(preorderProducts)
+      .where(eq(preorderProducts.id, id));
+    return preorder || undefined;
+  }
+
+  async getPreorderBySlug(slug: string): Promise<PreorderProducts & { product?: Product }> {
+    const result = await db
+      .select({
+        id: preorderProducts.id,
+        productId: preorderProducts.productId,
+        slug: preorderProducts.slug,
+        title: preorderProducts.title,
+        description: preorderProducts.description,
+        price: preorderProducts.price,
+        estimatedDate: preorderProducts.estimatedDate,
+        bannerImage: preorderProducts.bannerImage,
+        unit: preorderProducts.unit,
+        isActive: preorderProducts.isActive,
+        createdAt: preorderProducts.createdAt,
+        updatedAt: preorderProducts.updatedAt,
+        product: products
+      })
+      .from(preorderProducts)
+      .leftJoin(products, eq(preorderProducts.productId, products.id))
+      .where(eq(preorderProducts.slug, slug));
+
+    if (result.length === 0) {
+      throw new Error('Preorder not found');
+    }
+
+    const row = result[0];
+    return {
+      ...row,
+      product: row.product ? (row.product as Product) : undefined
+    } as PreorderProducts & { product?: Product };
+  }
+
+  async getActivePreorders(): Promise<(PreorderProducts & { product?: Product })[]> {
+    const results = await db
+      .select({
+        id: preorderProducts.id,
+        productId: preorderProducts.productId,
+        slug: preorderProducts.slug,
+        title: preorderProducts.title,
+        description: preorderProducts.description,
+        price: preorderProducts.price,
+        estimatedDate: preorderProducts.estimatedDate,
+        bannerImage: preorderProducts.bannerImage,
+        unit: preorderProducts.unit,
+        isActive: preorderProducts.isActive,
+        createdAt: preorderProducts.createdAt,
+        updatedAt: preorderProducts.updatedAt,
+        product: products
+      })
+      .from(preorderProducts)
+      .leftJoin(products, eq(preorderProducts.productId, products.id))
+      .where(eq(preorderProducts.isActive, true))
+      .orderBy(desc(preorderProducts.createdAt));
+
+    return results.map(row => ({
+      ...row,
+      product: row.product ? (row.product as Product) : undefined
+    })) as (PreorderProducts & { product?: Product })[];
+  }
+
+  async createPreorder(data: InsertPreorderProducts): Promise<PreorderProducts> {
+    const [preorder] = await db
+      .insert(preorderProducts)
+      .values({
+        ...data,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      })
+      .returning();
+    return preorder;
+  }
+
+  async updatePreorder(id: string, data: Partial<InsertPreorderProducts>): Promise<PreorderProducts | undefined> {
+    const [preorder] = await db
+      .update(preorderProducts)
+      .set({
+        ...data,
+        updatedAt: new Date().toISOString()
+      })
+      .where(eq(preorderProducts.id, id))
+      .returning();
+    return preorder || undefined;
+  }
+
+  async deletePreorder(id: string): Promise<boolean> {
+    const result = await db
+      .delete(preorderProducts)
+      .where(eq(preorderProducts.id, id))
+      .returning();
+    return result.length > 0;
   }
 
   // Order methods

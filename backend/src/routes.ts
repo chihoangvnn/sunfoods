@@ -83,7 +83,12 @@ import giftVouchersRouter from './api/gift-vouchers';
 import lunarCalendarHandler from './api/lunar-calendar';
 import membershipRouter from './api/membership';
 import customerVouchersRouter from './api/customer-vouchers';
+import publicVouchersRouter from './api/public-vouchers';
 import customerManagementRouter from './api/customer-management';
+import wishlistRouter from './api/wishlist';
+import customerProfileRouter from './api/customer-profile';
+import sessionRouter from './api/session';
+import notificationsRouter from './api/notifications';
 import { secureAddressHandlers } from './api/secure-addresses';
 import discountsRouter from './api/discounts';
 import discountsValidationRouter from './api/discounts-validation';
@@ -120,6 +125,8 @@ import vendorNotificationsRouter from './api/vendor-notifications';
 import shippingGhnRouter from './api/shipping-ghn';
 import shopSettingsRouter from './api/shop-settings';
 import shopInfoRouter from './api/shop-info';
+import flashSalesRouter from './api/flash-sales';
+import preordersRouter from './api/preorders';
 import { registerPaymentSettingsRoutes } from './api/payment-settings';
 import { registerBookTransactionsRoutes } from './api/book-transactions';
 import { registerBookCheckoutRoutes } from './api/book-checkout';
@@ -6872,6 +6879,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // ==========================================
   app.use("/api/customer/vouchers", customerVouchersRouter);
   
+  // 🔐 SESSION AUTHENTICATION API ROUTES
+  // ==========================================
+  app.use("/api/session", sessionRouter);
+  
+  // ❤️ CUSTOMER WISHLIST API ROUTES
+  // ==========================================
+  app.use("/api/wishlist", wishlistRouter);
+  
+  // 🔔 CUSTOMER NOTIFICATIONS API ROUTES
+  // ==========================================
+  app.use("/api/notifications", notificationsRouter);
+  
+  // 👤 CUSTOMER PROFILE API ROUTES
+  // ==========================================
+  app.use("/api/customers", customerProfileRouter);
+  
+  // ==========================================
+  // 🎁 PUBLIC VOUCHERS API ROUTES (No Auth Required)
+  // ==========================================
+  app.use("/api/public-vouchers", publicVouchersRouter);
+  
   // ==========================================
   // 🔔 WEB PUSH NOTIFICATIONS API ROUTES
   // ==========================================
@@ -7122,6 +7150,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.use("/api/shipping/ghn", shippingGhnRouter); // 🚚 GHN Shipping Integration (Vietnam)
   app.use("/api/admin/shop-settings", shopSettingsRouter); // 🏪 Shop Settings Management (Admin)
   app.use("/api/shop-info", shopInfoRouter); // 🏪 Public Shop Information (Frontend)
+  app.use("/api/flash-sales", flashSalesRouter); // 🔥 Flash Sales Management (Admin + Public)
+  app.use("/api/preorders", preordersRouter); // 📦 Pre-orders Management (Admin + Public)
   app.use("/api/price-filtering", priceFilteringRouter);
   app.use("/api", invoiceRouter); // 📄 Invoice Generation & Sending
   app.use("/api/invoice-templates", invoiceTemplatesRouter); // 📄 Invoice Template Management

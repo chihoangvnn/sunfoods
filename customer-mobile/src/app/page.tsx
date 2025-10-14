@@ -16,6 +16,8 @@ import { ImageSlider } from '@/components/ImageSlider';
 import { OrganicHeroSection } from '@/components/OrganicHeroSection';
 import { WhyChooseSunFoods } from '@/components/WhyChooseSunFoods';
 import { OrganicProductBadge } from '@/components/OrganicProductBadge';
+import { FeaturedProducts } from '@/components/FeaturedProducts';
+import { CustomBanner } from '@/components/CustomBanner';
 import { ProfileTab } from '@/components/ProfileTab';
 import { BlogTab } from '@/components/BlogTab';
 import { BlogPost } from '@/components/BlogPost';
@@ -69,6 +71,7 @@ interface ShopSettings {
     link?: string;
     buttonText?: string;
     showButton?: boolean;
+    targetPage?: 'home' | 'category' | 'product' | 'all';
   }>;
 }
 
@@ -298,7 +301,10 @@ export default function MobileStorefront() {
   const heroSlides = useMemo(() => {
     const heroSlider = shopSettingsData?.data?.heroSlider;
     if (heroSlider && heroSlider.length > 0) {
-      return heroSlider;
+      // Filter slides for homepage: show 'home' or 'all' targetPage
+      return heroSlider.filter((slide: any) => 
+        !slide.targetPage || slide.targetPage === 'all' || slide.targetPage === 'home'
+      );
     }
     // Fallback to ORGANIC_HERO_IMAGES if no hero slider data
     return ORGANIC_HERO_IMAGES.map(url => ({ url }));
@@ -930,6 +936,12 @@ export default function MobileStorefront() {
             {/* Categories Section - Only on home tab */}
             {activeTab === 'home' && <WhyChooseSunFoods onCategorySelect={setSelectedCategory} />}
             
+            {/* Featured Products Section */}
+            {activeTab === 'home' && <FeaturedProducts />}
+
+            {/* Custom Banner - Middle Position */}
+            {activeTab === 'home' && <CustomBanner position="middle" />}
+            
             {/* Products Section with Enhanced Design */}
             <div className={`${layoutConfig.contentPadding} ${layoutConfig.sectionSpacing}`}>
               <div className={layoutConfig.desktopProductContainer}>
@@ -1209,6 +1221,9 @@ export default function MobileStorefront() {
         />
       )}
 
+      {/* Custom Banner - Top Position */}
+      {activeTab === 'home' && <CustomBanner position="top" />}
+
       {/* Main Content - Add top padding for desktop sticky header only for non-home tabs */}
       <div className={activeTab === 'home' ? '' : 'lg:pt-[160px]'}>
         {renderContent()}
@@ -1230,6 +1245,9 @@ export default function MobileStorefront() {
           {isMobile ? <MobileChatBot /> : <DesktopChatBot />}
         </Suspense>
       )}
+
+      {/* Custom Banner - Bottom Position */}
+      {activeTab === 'home' && <CustomBanner position="bottom" />}
 
       {/* Desktop Footer - Show on desktop only */}
       {!isMobile && <DesktopFooter />}

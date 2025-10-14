@@ -59,6 +59,15 @@ const heroSliderItemSchema = z.object({
   thumbnail: z.string().optional()
 });
 
+const customBannerSchema = z.object({
+  imageUrl: z.string().url(),
+  title: z.string().optional(),
+  description: z.string().optional(),
+  link: z.string().optional(),
+  position: z.enum(['top', 'middle', 'bottom']),
+  isActive: z.boolean().default(true)
+});
+
 const updateShopSettingsSchema = z.object({
   // Basic Info
   businessName: z.string().min(1).optional(),
@@ -104,6 +113,10 @@ const updateShopSettingsSchema = z.object({
   
   // Hero Slider
   heroSlider: z.array(heroSliderItemSchema).optional(),
+  
+  // Featured Products & Custom Banners
+  featuredProducts: z.array(z.string()).max(8).optional(),
+  customBanners: z.array(customBannerSchema).max(5).optional(),
   
   // Map Location
   shopLatitude: z.string().optional().or(z.literal('')),

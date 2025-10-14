@@ -101,6 +101,8 @@ import LinkedAccounts from "@/pages/LinkedAccounts";
 import ChatLogs from "@/pages/ChatLogs";
 import DiscountManagement from "@/pages/DiscountManagement";
 import GiftManagement from "@/pages/GiftManagement";
+import FlashSaleManagement from "@/pages/FlashSaleManagement";
+import PreorderManagement from "@/pages/PreorderManagement";
 import GuestCheckoutPage from "@/pages/GuestCheckoutPage";
 import BookCatalogAdmin from "@/pages/BookCatalogAdmin";
 import GeneralCategoriesAdmin from "@/pages/GeneralCategoriesAdmin";
@@ -227,6 +229,8 @@ function AdminRouter() {
       <Route path="/book-transactions" component={BookPaymentTransactions} />
       <Route path="/discounts" component={DiscountManagement} />
       <Route path="/gifts" component={GiftManagement} />
+      <Route path="/flash-sales" component={FlashSaleManagement} />
+      <Route path="/preorders" component={PreorderManagement} />
       <Route path="/cookie-management" component={CookieManagement} />
       <Route path="/admin/invoice-designer" component={InvoiceDesigner} />
       <Route path="/mobile" component={MobileStorefront} />
@@ -258,7 +262,8 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
         <TooltipProvider>
-          <Router hook={useHashLocation}>
+          <AdminAuthProvider>
+            <Router hook={useHashLocation}>
               {/* Public Routes (outside admin layout) */}
               <Switch>
               <Route path="/checkout" component={GuestCheckoutPage} />
@@ -352,7 +357,8 @@ function App() {
             </Router>
             
             <Toaster />
-          </TooltipProvider>
+          </AdminAuthProvider>
+        </TooltipProvider>
     </QueryClientProvider>
   );
 }

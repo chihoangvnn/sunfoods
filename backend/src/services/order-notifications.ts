@@ -78,8 +78,8 @@ export async function getCustomerFacebookConversation(customerId: string) {
 }
 
 /**
- * 🆕 Gửi order status notification vào WEB CHAT conversation
- * CHỈ gửi vào chatbot conversation (không gửi Facebook để tránh vi phạm policy)
+ * 🔔 TẠO IN-APP NOTIFICATION khi order status thay đổi
+ * Tạo notification trong database để customer thấy trong NotificationBell
  */
 export async function sendOrderStatusNotification(
   orderId: string,
@@ -93,30 +93,37 @@ export async function sendOrderStatusNotification(
       return { success: false, error: 'No customer found' };
     }
 
-    // 🎯 Tìm web chat conversation của customer
-    const chatConversation = await getChatbotConversationByCustomer(order.customerId);
-    if (!chatConversation) {
-      console.log(`💬 No web chat conversation found for customer ${order.customerId}`);
-      return { success: false, error: 'No web chat conversation found' };
-    }
-
     const statusMessage = STATUS_MESSAGES[newStatus] || newStatus;
     const orderNumber = order.id.slice(-8).toUpperCase();
-    const message = `✅ Đơn hàng #${orderNumber} đã được ${statusMessage.toLowerCase()}! Cảm ơn bạn đã mua hàng.`;
+    const title = `Cập nhật đơn hàng #${orderNumber}`;
+    const message = `Đơn hàng #${orderNumber} đã được cập nhật: ${statusMessage}`;
 
-    // 💬 Push message vào chatbot conversation
-    await storage.addMessageToChatbotConversation(chatConversation.id, {
-      senderType: 'bot',
-      senderName: 'Hệ thống',
-      content: message,
-      messageType: 'text',
-      metadata: {
-        type: 'order_notification',
-        orderId: order.id,
-        orderStatus: newStatus,
-        automated: true
-      }
+    // 🔔 TẠO IN-APP NOTIFICATION (database)
+    await storage.createNotification({
+      customerId: order.customerId,
+      type: 'order_status',
+      title,
+      message,
+      link: `/orders/${order.id}`,
+      isRead: false
     });
+
+    // 💬 OPTIONAL: Push message vào chatbot conversation (nếu có)
+    const chatConversation = await getChatbotConversationByCustomer(order.customerId);
+    if (chatConversation) {
+      await storage.addMessageToChatbotConversation(chatConversation.id, {
+        senderType: 'bot',
+        senderName: 'Hệ thống',
+        content: `✅ ${message}! Cảm ơn bạn đã mua hàng.`,
+        messageType: 'text',
+        metadata: {
+          type: 'order_notification',
+          orderId: order.id,
+          orderStatus: newStatus,
+          automated: true
+        }
+      });
+    }
 
     // 🔔 Gửi Web Push Notification (non-blocking)
     PushNotificationService.sendOrderNotification(
@@ -128,10 +135,10 @@ export async function sendOrderStatusNotification(
       console.error('Failed to send push notification:', error);
     });
 
-    console.log(`✅ Order notification sent to web chat for order ${orderId}: ${statusMessage}`);
+    console.log(`✅ In-app notification created for order ${orderId}: ${statusMessage}`);
     return { success: true };
   } catch (error) {
-    console.error('💬 Error sending order notification to web chat:', error);
+    console.error('💬 Error creating order notification:', error);
     return { 
       success: false, 
       error: error instanceof Error ? error.message : 'Unknown error' 

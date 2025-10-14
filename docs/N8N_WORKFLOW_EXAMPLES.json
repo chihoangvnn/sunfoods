@@ -1,0 +1,512 @@
+{
+  "workflows": [
+    {
+      "name": "Auto Create Flash Sale from Product",
+      "description": "Automatically create a flash sale when a new product is added with a discount tag",
+      "trigger": "Webhook or Schedule",
+      "nodes": [
+        {
+          "type": "Trigger",
+          "name": "Webhook Trigger",
+          "config": {
+            "httpMethod": "POST",
+            "path": "new-product-webhook"
+          }
+        },
+        {
+          "type": "HTTP Request",
+          "name": "Admin Login",
+          "config": {
+            "method": "POST",
+            "url": "{{$env.API_URL}}/api/admin/login",
+            "sendBody": true,
+            "specifyBody": "json",
+            "jsonBody": "={{ { email: $env.ADMIN_EMAIL, password: $env.ADMIN_PASSWORD } }}",
+            "options": {
+              "response": {
+                "response": {
+                  "fullResponse": true,
+                  "neverError": false
+                }
+              }
+            }
+          }
+        },
+        {
+          "type": "Function",
+          "name": "Extract Cookie",
+          "code": "// CRITICAL: Extract session cookie from login response\nconst setCookieHeader = $input.item.json.headers['set-cookie'];\nif (!setCookieHeader || setCookieHeader.length === 0) {\n  throw new Error('No session cookie received from admin login');\n}\nconst cookie = setCookieHeader[0].split(';')[0];\nconsole.log('Extracted cookie:', cookie.substring(0, 30) + '...');\nreturn { cookie };"
+        },
+        {
+          "type": "HTTP Request",
+          "name": "Create Flash Sale",
+          "config": {
+            "method": "POST",
+            "url": "{{$env.API_URL}}/api/flash-sales",
+            "sendHeaders": true,
+            "headerParameters": {
+              "parameters": [
+                {
+                  "name": "Cookie",
+                  "value": "={{$node['Extract Cookie'].json.cookie}}"
+                },
+                {
+                  "name": "Content-Type",
+                  "value": "application/json"
+                }
+              ]
+            },
+            "sendBody": true,
+            "specifyBody": "json",
+            "jsonBody": "={{ {\n  productId: $json.productId,\n  title: 'Flash Sale - ' + $json.productName,\n  originalPrice: Number($json.originalPrice),\n  salePrice: Math.round(Number($json.originalPrice) * 0.7),\n  discountPercent: 30,\n  startTime: $now.toISO(),\n  endTime: $now.plus({days: 7}).toISO(),\n  unit: $json.unit || 'cái'\n} }}"
+          }
+        },
+        {
+          "type": "Function",
+          "name": "Log Result",
+          "code": "console.log('Flash sale created:', $json.data.id);\nreturn { success: true, flashSaleId: $json.data.id };"
+        }
+      ]
+    },
+    {
+      "name": "Sync Product Inventory to External System",
+      "description": "Daily sync of product inventory levels to external warehouse system",
+      "trigger": "Schedule (Daily at 6 AM)",
+      "nodes": [
+        {
+          "type": "Schedule Trigger",
+          "name": "Daily 6 AM",
+          "config": {
+            "mode": "cron",
+            "cronExpression": "0 6 * * *"
+          }
+        },
+        {
+          "type": "HTTP Request",
+          "name": "Admin Login",
+          "config": {
+            "method": "POST",
+            "url": "{{$env.API_URL}}/api/admin/login",
+            "sendBody": true,
+            "specifyBody": "json",
+            "jsonBody": "={{ { email: $env.ADMIN_EMAIL, password: $env.ADMIN_PASSWORD } }}",
+            "options": {
+              "response": {
+                "response": {
+                  "fullResponse": true,
+                  "neverError": false
+                }
+              }
+            }
+          }
+        },
+        {
+          "type": "Function",
+          "name": "Extract Cookie",
+          "code": "const setCookieHeader = $input.item.json.headers['set-cookie'];\nif (!setCookieHeader || setCookieHeader.length === 0) {\n  throw new Error('No session cookie received');\n}\nconst cookie = setCookieHeader[0].split(';')[0];\nreturn { cookie };"
+        },
+        {
+          "type": "HTTP Request",
+          "name": "Get All Products",
+          "config": {
+            "method": "GET",
+            "url": "{{$env.API_URL}}/api/products/admin/all?limit=1000",
+            "sendHeaders": true,
+            "headerParameters": {
+              "parameters": [
+                {
+                  "name": "Cookie",
+                  "value": "={{$node['Extract Cookie'].json.cookie}}"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "Function",
+          "name": "Transform to Inventory Format",
+          "code": "const products = $json.products;\nreturn products.map(p => ({\n  sku: p.barcode,\n  productId: p.id,\n  name: p.name,\n  stock: Number(p.stock),\n  unit: p.unit,\n  price: Number(p.price),\n  lastUpdated: new Date().toISOString()\n}));"
+        },
+        {
+          "type": "HTTP Request",
+          "name": "Send to External System",
+          "config": {
+            "method": "POST",
+            "url": "{{$env.EXTERNAL_WAREHOUSE_API}}/inventory/sync",
+            "sendBody": true,
+            "specifyBody": "json",
+            "jsonBody": "={{$json}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Order Status Update Notification",
+      "description": "Send customer notification when order status changes",
+      "trigger": "Webhook from Order Update",
+      "nodes": [
+        {
+          "type": "Webhook",
+          "name": "Order Update Webhook",
+          "config": {
+            "httpMethod": "POST",
+            "path": "order-status-changed"
+          }
+        },
+        {
+          "type": "Function",
+          "name": "Create Shipping Notification",
+          "code": "return {\n  customerId: $json.customerId,\n  orderId: $json.orderId,\n  type: 'order_update',\n  title: 'Đơn hàng đang được vận chuyển',\n  message: `Đơn hàng #${$json.orderId} đang trên đường giao. Dự kiến giao trong 2-3 ngày.`,\n  data: {\n    orderId: $json.orderId,\n    status: 'shipping',\n    trackingNumber: $json.trackingNumber\n  }\n};"
+        },
+        {
+          "type": "HTTP Request",
+          "name": "Admin Login",
+          "config": {
+            "method": "POST",
+            "url": "{{$env.API_URL}}/api/admin/login",
+            "sendBody": true,
+            "specifyBody": "json",
+            "jsonBody": "={{ { email: $env.ADMIN_EMAIL, password: $env.ADMIN_PASSWORD } }}",
+            "options": {
+              "response": {
+                "response": {
+                  "fullResponse": true
+                }
+              }
+            }
+          }
+        },
+        {
+          "type": "Function",
+          "name": "Extract Cookie",
+          "code": "const setCookieHeader = $input.item.json.headers['set-cookie'];\nif (!setCookieHeader) throw new Error('No cookie');\nreturn { cookie: setCookieHeader[0].split(';')[0] };"
+        },
+        {
+          "type": "HTTP Request",
+          "name": "Send Notification to Customer",
+          "config": {
+            "method": "POST",
+            "url": "{{$env.API_URL}}/api/notifications",
+            "sendHeaders": true,
+            "headerParameters": {
+              "parameters": [
+                {
+                  "name": "Cookie",
+                  "value": "={{$node['Extract Cookie'].json.cookie}}"
+                },
+                {
+                  "name": "Content-Type",
+                  "value": "application/json"
+                }
+              ]
+            },
+            "sendBody": true,
+            "specifyBody": "json",
+            "jsonBody": "={{$node['Create Shipping Notification'].json}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Low Stock Alert",
+      "description": "Alert admin when products are running low on stock",
+      "trigger": "Schedule (Every hour)",
+      "nodes": [
+        {
+          "type": "Schedule Trigger",
+          "name": "Every Hour",
+          "config": {
+            "mode": "cron",
+            "cronExpression": "0 * * * *"
+          }
+        },
+        {
+          "type": "HTTP Request",
+          "name": "Admin Login",
+          "config": {
+            "method": "POST",
+            "url": "{{$env.API_URL}}/api/admin/login",
+            "sendBody": true,
+            "specifyBody": "json",
+            "jsonBody": "={{ { email: $env.ADMIN_EMAIL, password: $env.ADMIN_PASSWORD } }}",
+            "options": {
+              "response": {
+                "response": {
+                  "fullResponse": true
+                }
+              }
+            }
+          }
+        },
+        {
+          "type": "Function",
+          "name": "Extract Cookie",
+          "code": "const h = $input.item.json.headers['set-cookie'];\nif (!h) throw new Error('No cookie');\nreturn { cookie: h[0].split(';')[0] };"
+        },
+        {
+          "type": "HTTP Request",
+          "name": "Get All Products",
+          "config": {
+            "method": "GET",
+            "url": "{{$env.API_URL}}/api/products/admin/all?limit=1000",
+            "sendHeaders": true,
+            "headerParameters": {
+              "parameters": [
+                {
+                  "name": "Cookie",
+                  "value": "={{$node['Extract Cookie'].json.cookie}}"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "Function",
+          "name": "Filter Low Stock Items",
+          "code": "const LOW_STOCK_THRESHOLD = 10;\nconst products = $json.products;\nconst lowStock = products.filter(p => Number(p.stock) <= LOW_STOCK_THRESHOLD && p.status === 'active');\nif (lowStock.length === 0) {\n  return { items: [], count: 0 };\n}\nconst items = lowStock.map(p => ({\n  id: p.id,\n  name: p.name,\n  currentStock: Number(p.stock),\n  unit: p.unit,\n  barcode: p.barcode\n}));\nreturn { items, count: items.length };"
+        },
+        {
+          "type": "IF",
+          "name": "Has Low Stock Items?",
+          "config": {
+            "conditions": {
+              "number": [
+                {
+                  "value1": "={{$json.count}}",
+                  "operation": "larger",
+                  "value2": 0
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "Send Email",
+          "name": "Send Alert Email",
+          "config": {
+            "to": "{{$env.ADMIN_EMAIL}}",
+            "subject": "⚠️ Cảnh báo: {{$json.count}} sản phẩm sắp hết hàng",
+            "text": "Danh sách sản phẩm cần nhập thêm:\n\n{{$json.items.map(p => `- ${p.name} (${p.currentStock} ${p.unit} còn lại)`).join('\\n')}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Customer Wishlist to Flash Sale Converter",
+      "description": "Create flash sales for most wishlisted products",
+      "trigger": "Manual or Weekly Schedule",
+      "nodes": [
+        {
+          "type": "Schedule Trigger",
+          "name": "Weekly Monday 8 AM",
+          "config": {
+            "mode": "cron",
+            "cronExpression": "0 8 * * 1"
+          }
+        },
+        {
+          "type": "HTTP Request",
+          "name": "Admin Login",
+          "config": {
+            "method": "POST",
+            "url": "{{$env.API_URL}}/api/admin/login",
+            "sendBody": true,
+            "specifyBody": "json",
+            "jsonBody": "={{ { email: $env.ADMIN_EMAIL, password: $env.ADMIN_PASSWORD } }}",
+            "options": {
+              "response": {
+                "response": {
+                  "fullResponse": true
+                }
+              }
+            }
+          }
+        },
+        {
+          "type": "Function",
+          "name": "Extract Cookie",
+          "code": "const h = $input.item.json.headers['set-cookie'];\nreturn { cookie: h[0].split(';')[0] };"
+        },
+        {
+          "type": "PostgresDB Query",
+          "name": "Get Top Wishlisted Products",
+          "config": {
+            "query": "SELECT product_id, COUNT(*) as wishlist_count\nFROM wishlists\nGROUP BY product_id\nORDER BY wishlist_count DESC\nLIMIT 5"
+          }
+        },
+        {
+          "type": "Loop Over Items",
+          "name": "For Each Product"
+        },
+        {
+          "type": "Function",
+          "name": "Extract Product ID",
+          "code": "return { productId: $json.product_id };"
+        },
+        {
+          "type": "HTTP Request",
+          "name": "Get Product Details",
+          "config": {
+            "method": "GET",
+            "url": "={{$env.API_URL}}/api/products/admin/all?limit=1000",
+            "sendHeaders": true,
+            "headerParameters": {
+              "parameters": [
+                {
+                  "name": "Cookie",
+                  "value": "={{$node['Extract Cookie'].json.cookie}}"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "Function",
+          "name": "Find Product by ID",
+          "code": "const productId = $node['Extract Product ID'].json.productId;\nconst products = $json.products;\nconst product = products.find(p => p.id === productId);\nif (!product) {\n  throw new Error('Product not found: ' + productId);\n}\nreturn product;"
+        },
+        {
+          "type": "HTTP Request",
+          "name": "Create Flash Sale",
+          "config": {
+            "method": "POST",
+            "url": "={{$env.API_URL}}/api/flash-sales",
+            "sendHeaders": true,
+            "headerParameters": {
+              "parameters": [
+                {
+                  "name": "Cookie",
+                  "value": "={{$node['Extract Cookie'].json.cookie}}"
+                },
+                {
+                  "name": "Content-Type",
+                  "value": "application/json"
+                }
+              ]
+            },
+            "sendBody": true,
+            "specifyBody": "json",
+            "jsonBody": "={{ {\n  productId: $json.id,\n  title: 'Flash Sale - ' + $json.name,\n  originalPrice: Number($json.price),\n  salePrice: Math.round(Number($json.price) * 0.85),\n  discountPercent: 15,\n  startTime: $now.toISO(),\n  endTime: $now.plus({days: 3}).toISO(),\n  unit: $json.unit\n} }}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Preorder Auto-Activate on Arrival Date",
+      "description": "Automatically activate preorders when estimated date arrives",
+      "trigger": "Schedule (Daily at 1 AM)",
+      "nodes": [
+        {
+          "type": "Schedule Trigger",
+          "name": "Daily 1 AM",
+          "config": {
+            "mode": "cron",
+            "cronExpression": "0 1 * * *"
+          }
+        },
+        {
+          "type": "HTTP Request",
+          "name": "Admin Login",
+          "config": {
+            "method": "POST",
+            "url": "{{$env.API_URL}}/api/admin/login",
+            "sendBody": true,
+            "specifyBody": "json",
+            "jsonBody": "={{ { email: $env.ADMIN_EMAIL, password: $env.ADMIN_PASSWORD } }}",
+            "options": {
+              "response": {
+                "response": {
+                  "fullResponse": true
+                }
+              }
+            }
+          }
+        },
+        {
+          "type": "Function",
+          "name": "Extract Cookie",
+          "code": "const h = $input.item.json.headers['set-cookie'];\nreturn { cookie: h[0].split(';')[0] };"
+        },
+        {
+          "type": "HTTP Request",
+          "name": "Get All Preorders",
+          "config": {
+            "method": "GET",
+            "url": "{{$env.API_URL}}/api/preorders?limit=100",
+            "sendHeaders": true,
+            "headerParameters": {
+              "parameters": [
+                {
+                  "name": "Cookie",
+                  "value": "={{$node['Extract Cookie'].json.cookie}}"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "Function",
+          "name": "Filter Arrived Preorders",
+          "code": "const today = new Date();\nconst preorders = $json.data;\nreturn preorders.filter(p => {\n  const estimatedDate = new Date(p.estimatedDate);\n  return estimatedDate <= today && p.isActive === true;\n});"
+        },
+        {
+          "type": "Loop Over Items",
+          "name": "For Each Preorder"
+        },
+        {
+          "type": "HTTP Request",
+          "name": "Update Preorder to Inactive",
+          "config": {
+            "method": "PUT",
+            "url": "={{$env.API_URL}}/api/preorders/{{$json.id}}",
+            "sendHeaders": true,
+            "headerParameters": {
+              "parameters": [
+                {
+                  "name": "Cookie",
+                  "value": "={{$node['Extract Cookie'].json.cookie}}"
+                },
+                {
+                  "name": "Content-Type",
+                  "value": "application/json"
+                }
+              ]
+            },
+            "sendBody": true,
+            "specifyBody": "json",
+            "jsonBody": "={{ { isActive: false } }}"
+          }
+        }
+      ]
+    }
+  ],
+  "globalSettings": {
+    "environmentVariables": {
+      "API_URL": "http://localhost:3001",
+      "ADMIN_EMAIL": "admin@sunfoods.vn",
+      "ADMIN_PASSWORD": "your-secure-password",
+      "EXTERNAL_WAREHOUSE_API": "https://warehouse.example.com/api"
+    },
+    "commonHeaders": {
+      "Content-Type": "application/json",
+      "Accept": "application/json"
+    },
+    "errorHandling": {
+      "retryOnFail": true,
+      "maxRetries": 3,
+      "retryInterval": 1000
+    }
+  },
+  "usageInstructions": {
+    "importToN8n": "1. Open n8n → Workflows → Import from File\n2. Select this JSON file\n3. Configure environment variables in Settings → Variables\n4. Activate workflows as needed",
+    "authentication": "All workflows use admin login via POST /api/admin/login with fullResponse=true to get session cookie, then extract cookie in Function node, then reuse cookie in all subsequent authenticated requests",
+    "scheduling": "Cron expressions: '0 6 * * *' = Daily 6 AM, '0 * * * *' = Every hour, '0 8 * * 1' = Weekly Monday 8 AM",
+    "criticalPoints": [
+      "ALWAYS enable fullResponse: true in login HTTP Request node",
+      "ALWAYS extract cookie in Function node after login",
+      "ALWAYS use specifyBody: json + jsonBody for proper type handling",
+      "ALWAYS wrap numeric fields with Number() to avoid validation errors",
+      "Reference cookie as: {{$node['Extract Cookie'].json.cookie}}"
+    ]
+  }
+}

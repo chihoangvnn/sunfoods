@@ -13,6 +13,7 @@
     "build:verify": "npm run build && ls -lh dist/assets/*.css && echo '---' && echo 'Checking Tailwind utilities...' && grep -o '\\.flex{' dist/assets/*.css | wc -l | xargs -I {} echo 'Found {} .flex utilities'"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
     "@hookform/resolvers": "^3.10.0",
     "@radix-ui/react-accordion": "^1.2.4",
     "@radix-ui/react-alert-dialog": "^1.1.7",

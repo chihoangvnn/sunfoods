@@ -109,6 +109,33 @@ module.exports = {
         'category-fruits': '#FF7043',
         'category-pantry': '#F2C94C',
         'category-wellness': '#7F8C8D',
+        // Trầm Hương Luxury Theme - Bronze & Brown
+        'luxury-bronze': {
+          DEFAULT: '#C1A875',
+          50: '#FAF8F3',
+          100: '#F0EBE0',
+          200: '#E5DDCA',
+          300: '#D9CEB4',
+          400: '#CDB89E',
+          500: '#C1A875',
+          600: '#B39555',
+          700: '#8F7745',
+          800: '#6B5935',
+          900: '#473C24',
+        },
+        'luxury-brown': {
+          DEFAULT: '#3D2B1F',
+          50: '#F5F1EE',
+          100: '#E8E0D9',
+          200: '#D1C1B3',
+          300: '#B9A28D',
+          400: '#A28367',
+          500: '#6B543F',
+          600: '#3D2B1F',
+          700: '#2E2017',
+          800: '#1F1610',
+          900: '#100B08',
+        },
       },
       fontFamily: {
         // Heading font - Friendly and rounded for organic feel

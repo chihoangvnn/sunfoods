@@ -21,11 +21,11 @@ args = "Backend API"
 
 [[workflows.workflow.tasks]]
 task = "workflow.run"
-args = "Tramhuong Storefront"
+args = "Customer Mobile Storefront"
 
 [[workflows.workflow.tasks]]
 task = "workflow.run"
-args = "Tramhuong2 Storefront"
+args = "Admin Dashboard"
 
 [[workflows.workflow]]
 name = "Backend API"
@@ -40,28 +40,28 @@ args = "cd backend && PORT=3001 NODE_ENV=development tsx src/index.ts"
 waitForPort = 3001
 
 [[workflows.workflow]]
-name = "Tramhuong Storefront"
+name = "Customer Mobile Storefront"
 author = "agent"
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "cd customer-tramhuong && npm run dev -- -p 3003 -H 0.0.0.0"
-waitForPort = 3003
-
-[workflows.workflow.metadata]
-outputType = "console"
-
-[[workflows.workflow]]
-name = "Tramhuong2 Storefront"
-author = "agent"
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "cd customer-tramhuong2 && npm run dev"
-waitForPort = 5000
 
 [workflows.workflow.metadata]
 outputType = "webview"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd customer-mobile && npm run dev"
+waitForPort = 5000
+
+[[workflows.workflow]]
+name = "Admin Dashboard"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd admin-web && npx vite --port 3002 --host 0.0.0.0"
+waitForPort = 3002
+
+[workflows.workflow.metadata]
+outputType = "console"
 
 [[ports]]
 localPort = 3000
@@ -78,18 +78,6 @@ externalPort = 3002
 [[ports]]
 localPort = 3003
 externalPort = 3003
-
-[[ports]]
-localPort = 5000
-externalPort = 80
-
-[[ports]]
-localPort = 36887
-externalPort = 5173
-
-[[ports]]
-localPort = 36999
-externalPort = 8000
 
 [[ports]]
 localPort = 37007

@@ -63,7 +63,11 @@ router.get('/', cacheMiddleware(300, () => CacheKeys.SHOP_INFO), async (req: Req
       quickLinks: settings.quickLinks,
       
       // Hero Slider (for homepage)
-      heroSlider: settings.heroSlider
+      heroSlider: settings.heroSlider,
+      
+      // Featured Products & Custom Banners (for storefront)
+      featuredProducts: settings.featuredProducts,
+      customBanners: settings.customBanners
       
       // EXCLUDED: id, isDefault, createdAt, updatedAt (admin-only fields)
     };

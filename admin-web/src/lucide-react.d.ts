@@ -97,4 +97,8 @@ declare module 'lucide-react' {
   export const FileText: LucideIcon;
   export const ChevronLeft: LucideIcon;
   export const ChevronRight: LucideIcon;
+  export const Edit3: LucideIcon;
+  export const Trash2: LucideIcon;
+  export const Zap: LucideIcon;
+  export const Grid3X3: LucideIcon;
 }

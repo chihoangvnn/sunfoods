@@ -25,7 +25,8 @@ import {
   Plus,
   Trash2,
   Save,
-  Loader2
+  Loader2,
+  X
 } from "lucide-react";
 
 // Lazy-load AddressMapPicker to avoid Leaflet bundling issues
@@ -76,6 +77,16 @@ interface HeroSliderItem {
   link?: string;
   buttonText?: string;
   showButton?: boolean;
+  targetPage?: 'home' | 'category' | 'product' | 'all';
+}
+
+interface CustomBanner {
+  imageUrl: string;
+  title?: string;
+  description?: string;
+  link?: string;
+  position: 'top' | 'middle' | 'bottom';
+  isActive: boolean;
 }
 
 interface ShopSettingsData {
@@ -109,6 +120,8 @@ interface ShopSettingsData {
   featureBoxes?: FeatureBox[];
   quickLinks?: QuickLink[];
   heroSlider?: HeroSliderItem[];
+  featuredProducts?: string[];
+  customBanners?: CustomBanner[];
 }
 
 const shopSettingsSchema = z.object({
@@ -149,6 +162,8 @@ export default function ShopSettings() {
   const [featureBoxes, setFeatureBoxes] = useState<FeatureBox[]>([]);
   const [quickLinks, setQuickLinks] = useState<QuickLink[]>([]);
   const [heroSlider, setHeroSlider] = useState<HeroSliderItem[]>([]);
+  const [featuredProducts, setFeaturedProducts] = useState<string[]>([]);
+  const [customBanners, setCustomBanners] = useState<CustomBanner[]>([]);
 
   const { data: response, isLoading } = useQuery({
     queryKey: ['/api/admin/shop-settings'],
@@ -162,6 +177,19 @@ export default function ShopSettings() {
   });
 
   const settings = response?.data;
+
+  const { data: productsResponse } = useQuery({
+    queryKey: ['/api/products'],
+    queryFn: async () => {
+      const res = await fetch('/api/products', {
+        credentials: 'include',
+      });
+      if (!res.ok) throw new Error('Failed to fetch products');
+      return res.json();
+    },
+  });
+
+  const products = productsResponse?.data || [];
 
   const form = useForm<ShopSettingsForm>({
     resolver: zodResolver(shopSettingsSchema),
@@ -226,6 +254,8 @@ export default function ShopSettings() {
       setFeatureBoxes(Array.isArray(settings.featureBoxes) ? settings.featureBoxes : []);
       setQuickLinks(Array.isArray(settings.quickLinks) ? settings.quickLinks : []);
       setHeroSlider(Array.isArray(settings.heroSlider) ? settings.heroSlider : []);
+      setFeaturedProducts(Array.isArray(settings.featuredProducts) ? settings.featuredProducts : []);
+      setCustomBanners(Array.isArray(settings.customBanners) ? settings.customBanners : []);
     }
   }, [settings, form]);
 
@@ -246,6 +276,8 @@ export default function ShopSettings() {
         featureBoxes,
         quickLinks,
         heroSlider,
+        featuredProducts,
+        customBanners,
       };
 
       if (settings?.id) {
@@ -971,32 +1003,61 @@ export default function ShopSettings() {
                         <Trash2 className="h-4 w-4" />
                       </Button>
                     </div>
-                    <div className="grid grid-cols-2 gap-3">
-                      <Select
-                        value={slide.type}
-                        onValueChange={(value: 'image' | 'video') => {
-                          const updated = [...heroSlider];
-                          updated[idx].type = value;
-                          setHeroSlider(updated);
-                        }}
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder="Loại" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="image">Hình ảnh</SelectItem>
-                          <SelectItem value="video">Video</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <Input
-                        value={slide.alt || ""}
-                        onChange={(e) => {
-                          const updated = [...heroSlider];
-                          updated[idx].alt = e.target.value;
-                          setHeroSlider(updated);
-                        }}
-                        placeholder="Alt text"
-                      />
+                    <div className="space-y-3">
+                      <div className="grid grid-cols-3 gap-3">
+                        <div>
+                          <Label className="text-sm text-gray-600 mb-1.5 block">Loại</Label>
+                          <Select
+                            value={slide.type}
+                            onValueChange={(value: 'image' | 'video') => {
+                              const updated = [...heroSlider];
+                              updated[idx].type = value;
+                              setHeroSlider(updated);
+                            }}
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="Chọn loại" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="image">Hình ảnh</SelectItem>
+                              <SelectItem value="video">Video</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div>
+                          <Label className="text-sm text-gray-600 mb-1.5 block">Hiển thị trang</Label>
+                          <Select
+                            value={slide.targetPage || 'all'}
+                            onValueChange={(value: 'home' | 'category' | 'product' | 'all') => {
+                              const updated = [...heroSlider];
+                              updated[idx].targetPage = value;
+                              setHeroSlider(updated);
+                            }}
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="Chọn trang" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="all">Tất cả</SelectItem>
+                              <SelectItem value="home">Trang chủ</SelectItem>
+                              <SelectItem value="category">Danh mục</SelectItem>
+                              <SelectItem value="product">Sản phẩm</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div>
+                          <Label className="text-sm text-gray-600 mb-1.5 block">Alt text</Label>
+                          <Input
+                            value={slide.alt || ""}
+                            onChange={(e) => {
+                              const updated = [...heroSlider];
+                              updated[idx].alt = e.target.value;
+                              setHeroSlider(updated);
+                            }}
+                            placeholder="Mô tả hình ảnh"
+                          />
+                        </div>
+                      </div>
                     </div>
                     <Input
                       value={slide.url}
@@ -1057,10 +1118,269 @@ export default function ShopSettings() {
                 <Button
                   type="button"
                   variant="outline"
-                  onClick={() => setHeroSlider([...heroSlider, { type: 'image', url: '', showButton: true }])}
+                  onClick={() => setHeroSlider([...heroSlider, { type: 'image', url: '', showButton: true, targetPage: 'all' }])}
                 >
                   <Plus className="h-4 w-4 mr-2" />
                   Thêm slide ({heroSlider.length}/3)
+                </Button>
+              )}
+            </AccordionContent>
+          </AccordionItem>
+
+          {/* Featured Products */}
+          <AccordionItem value="featured-products" className="border rounded-lg px-4">
+            <AccordionTrigger className="hover:no-underline">
+              <div className="flex items-center gap-2">
+                <Star className="h-5 w-5" />
+                <span className="font-semibold">Sản Phẩm Nổi Bật ({featuredProducts.length}/8)</span>
+              </div>
+            </AccordionTrigger>
+            <AccordionContent className="pt-4 space-y-4">
+              <div className="text-sm text-muted-foreground mb-3">
+                Chọn tối đa 8 sản phẩm để hiển thị trong phần nổi bật
+              </div>
+
+              {/* Product Selection Dropdown */}
+              <div>
+                <Label className="text-sm mb-2 block">Chọn sản phẩm</Label>
+                <Select
+                  value=""
+                  onValueChange={(productId) => {
+                    if (featuredProducts.length < 8 && !featuredProducts.includes(productId)) {
+                      setFeaturedProducts([...featuredProducts, productId]);
+                    }
+                  }}
+                  disabled={featuredProducts.length >= 8}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder={featuredProducts.length >= 8 ? "Đã đạt giới hạn 8 sản phẩm" : "Chọn sản phẩm để thêm..."} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {products.filter((p: any) => !featuredProducts.includes(p.id)).map((product: any) => (
+                      <SelectItem key={product.id} value={product.id}>
+                        {product.name} - {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(product.price)}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Selected Products Preview */}
+              {featuredProducts.length > 0 && (
+                <div className="space-y-2">
+                  <Label className="text-sm">Sản phẩm đã chọn</Label>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    {featuredProducts.map((productId) => {
+                      const product = products.find((p: any) => p.id === productId);
+                      if (!product) return null;
+                      
+                      return (
+                        <Card key={productId} className="overflow-hidden">
+                          <CardContent className="p-3">
+                            <div className="flex gap-3">
+                              {/* Product Image */}
+                              <div className="w-16 h-16 rounded-md overflow-hidden bg-gray-100 flex-shrink-0">
+                                {product.imageUrl ? (
+                                  <img 
+                                    src={product.imageUrl} 
+                                    alt={product.name}
+                                    className="w-full h-full object-cover"
+                                  />
+                                ) : (
+                                  <div className="w-full h-full flex items-center justify-center text-gray-400">
+                                    <ImageIcon className="h-6 w-6" />
+                                  </div>
+                                )}
+                              </div>
+                              
+                              {/* Product Info */}
+                              <div className="flex-1 min-w-0">
+                                <h4 className="font-medium text-sm truncate">{product.name}</h4>
+                                <p className="text-sm text-primary font-semibold mt-1">
+                                  {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(product.price)}
+                                </p>
+                              </div>
+                              
+                              {/* Remove Button */}
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="icon"
+                                className="h-8 w-8 flex-shrink-0"
+                                onClick={() => setFeaturedProducts(featuredProducts.filter(id => id !== productId))}
+                              >
+                                <X className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+            </AccordionContent>
+          </AccordionItem>
+
+          {/* Custom Banners */}
+          <AccordionItem value="custom-banners" className="border rounded-lg px-4">
+            <AccordionTrigger className="hover:no-underline">
+              <div className="flex items-center gap-2">
+                <ImageIcon className="h-5 w-5" />
+                <span className="font-semibold">Banner Tùy Chỉnh ({customBanners.length}/5)</span>
+              </div>
+            </AccordionTrigger>
+            <AccordionContent className="pt-4 space-y-4">
+              <div className="text-sm text-muted-foreground mb-3">
+                Tạo tối đa 5 banner tùy chỉnh với vị trí và nội dung riêng
+              </div>
+
+              {/* Existing Banners */}
+              {customBanners.map((banner, idx) => (
+                <Card key={idx} className="overflow-hidden">
+                  <CardContent className="pt-6 space-y-3">
+                    <div className="flex justify-between items-start">
+                      <div className="flex items-center gap-2">
+                        <h4 className="font-medium">Banner #{idx + 1}</h4>
+                        <span className={`text-xs px-2 py-1 rounded-full ${
+                          banner.position === 'top' ? 'bg-blue-100 text-blue-700' :
+                          banner.position === 'middle' ? 'bg-green-100 text-green-700' :
+                          'bg-purple-100 text-purple-700'
+                        }`}>
+                          {banner.position === 'top' ? 'Trên cùng' : banner.position === 'middle' ? 'Giữa' : 'Dưới cùng'}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2">
+                          <Switch
+                            checked={banner.isActive}
+                            onCheckedChange={(checked) => {
+                              const updated = [...customBanners];
+                              updated[idx].isActive = checked;
+                              setCustomBanners(updated);
+                            }}
+                          />
+                          <Label className="text-sm">
+                            {banner.isActive ? 'Đang hiển thị' : 'Ẩn'}
+                          </Label>
+                        </div>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => setCustomBanners(customBanners.filter((_, i) => i !== idx))}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
+
+                    {/* Banner Preview */}
+                    {banner.imageUrl && (
+                      <div className="relative w-full h-32 rounded-md overflow-hidden bg-gray-100">
+                        <img 
+                          src={banner.imageUrl} 
+                          alt={banner.title || `Banner ${idx + 1}`}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    )}
+
+                    {/* Banner Form Fields */}
+                    <div className="space-y-3 pt-2">
+                      <div>
+                        <Label className="text-sm">Hình ảnh URL *</Label>
+                        <Input
+                          value={banner.imageUrl}
+                          onChange={(e) => {
+                            const updated = [...customBanners];
+                            updated[idx].imageUrl = e.target.value;
+                            setCustomBanners(updated);
+                          }}
+                          placeholder="https://example.com/banner.jpg"
+                        />
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-3">
+                        <div>
+                          <Label className="text-sm">Tiêu đề (tùy chọn)</Label>
+                          <Input
+                            value={banner.title || ""}
+                            onChange={(e) => {
+                              const updated = [...customBanners];
+                              updated[idx].title = e.target.value;
+                              setCustomBanners(updated);
+                            }}
+                            placeholder="Tiêu đề banner"
+                          />
+                        </div>
+                        <div>
+                          <Label className="text-sm">Link (tùy chọn)</Label>
+                          <Input
+                            value={banner.link || ""}
+                            onChange={(e) => {
+                              const updated = [...customBanners];
+                              updated[idx].link = e.target.value;
+                              setCustomBanners(updated);
+                            }}
+                            placeholder="https://..."
+                          />
+                        </div>
+                      </div>
+
+                      <div>
+                        <Label className="text-sm">Mô tả (tùy chọn)</Label>
+                        <Textarea
+                          value={banner.description || ""}
+                          onChange={(e) => {
+                            const updated = [...customBanners];
+                            updated[idx].description = e.target.value;
+                            setCustomBanners(updated);
+                          }}
+                          placeholder="Mô tả ngắn cho banner"
+                          rows={2}
+                        />
+                      </div>
+
+                      <div>
+                        <Label className="text-sm">Vị trí hiển thị</Label>
+                        <Select
+                          value={banner.position}
+                          onValueChange={(value: 'top' | 'middle' | 'bottom') => {
+                            const updated = [...customBanners];
+                            updated[idx].position = value;
+                            setCustomBanners(updated);
+                          }}
+                        >
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="top">Trên cùng</SelectItem>
+                            <SelectItem value="middle">Giữa</SelectItem>
+                            <SelectItem value="bottom">Dưới cùng</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+
+              {/* Add Banner Button */}
+              {customBanners.length < 5 && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="w-full"
+                  onClick={() => setCustomBanners([...customBanners, { 
+                    imageUrl: '', 
+                    position: 'top', 
+                    isActive: true 
+                  }])}
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  Thêm Banner ({customBanners.length}/5)
                 </Button>
               )}
             </AccordionContent>

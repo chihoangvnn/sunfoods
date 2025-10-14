@@ -9,8 +9,9 @@ import { vi } from 'date-fns/locale';
 interface Notification {
   id: string;
   type: string;
+  title: string;
   message: string;
-  orderId: string | null;
+  link: string | null;
   isRead: boolean;
   createdAt: string;
 }
@@ -35,11 +36,11 @@ export function NotificationBell() {
   });
 
   const markAsReadMutation = useMutation({
-    mutationFn: async (notificationId: string) => {
-      const response = await fetch('/api/notifications/mark-read', {
+    mutationFn: async (notificationIds: string[]) => {
+      const response = await fetch('/api/notifications/read', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ notificationId }),
+        body: JSON.stringify({ notificationIds }),
       });
       if (!response.ok) {
         throw new Error('Failed to mark notification as read');
@@ -51,8 +52,8 @@ export function NotificationBell() {
     },
   });
 
-  const notifications: Notification[] = data?.notifications || [];
-  const count = data?.count || 0;
+  const notifications: Notification[] = Array.isArray(data) ? data : [];
+  const unreadCount = notifications.filter(n => !n.isRead).length;
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -67,11 +68,14 @@ export function NotificationBell() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [isOpen]);
 
-  const handleNotificationClick = (notificationId: string, orderId: string | null) => {
-    markAsReadMutation.mutate(notificationId);
-    if (orderId) {
-      window.location.href = `/order/${orderId}`;
+  const handleNotificationClick = (notification: Notification) => {
+    if (!notification.isRead) {
+      markAsReadMutation.mutate([notification.id]);
     }
+    if (notification.link) {
+      window.location.href = notification.link;
+    }
+    setIsOpen(false);
   };
 
   return (
@@ -82,9 +86,9 @@ export function NotificationBell() {
       >
         <Bell className="h-4 w-4" />
         <span>Thông Báo</span>
-        {count > 0 && (
+        {unreadCount > 0 && (
           <span className="absolute top-0 right-0 bg-red-500 text-white text-[10px] rounded-full h-4 w-4 flex items-center justify-center font-bold z-10">
-            {count > 99 ? '99+' : count}
+            {unreadCount > 99 ? '99+' : unreadCount}
           </span>
         )}
       </button>
@@ -93,7 +97,7 @@ export function NotificationBell() {
         <div className="absolute right-0 top-full mt-2 w-80 bg-white rounded-lg shadow-xl border border-gray-200 z-50 max-h-96 overflow-y-auto">
           <div className="p-3 border-b border-gray-200 bg-green-50">
             <h3 className="font-semibold text-gray-800 text-sm">
-              Thông báo ({count})
+              Thông báo ({notifications.length})
             </h3>
           </div>
           
@@ -110,15 +114,24 @@ export function NotificationBell() {
               {notifications.map((notification) => (
                 <button
                   key={notification.id}
-                  onClick={() => handleNotificationClick(notification.id, notification.orderId)}
-                  className="w-full p-3 hover:bg-gray-50 transition-colors text-left"
+                  onClick={() => handleNotificationClick(notification)}
+                  className={`w-full p-3 hover:bg-gray-50 transition-colors text-left ${
+                    !notification.isRead ? 'bg-blue-50' : ''
+                  }`}
                 >
                   <div className="flex items-start gap-2">
-                    <div className="bg-green-100 text-green-600 rounded-full p-1.5 mt-0.5">
+                    <div className={`${
+                      !notification.isRead ? 'bg-blue-100 text-blue-600' : 'bg-gray-100 text-gray-600'
+                    } rounded-full p-1.5 mt-0.5`}>
                       <Bell className="h-3 w-3" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm text-gray-800 font-medium mb-1">
+                      <p className={`text-sm mb-1 ${
+                        !notification.isRead ? 'text-gray-900 font-semibold' : 'text-gray-800 font-medium'
+                      }`}>
+                        {notification.title}
+                      </p>
+                      <p className="text-sm text-gray-600 mb-1">
                         {notification.message}
                       </p>
                       <p className="text-xs text-gray-500">
@@ -128,6 +141,9 @@ export function NotificationBell() {
                         })}
                       </p>
                     </div>
+                    {!notification.isRead && (
+                      <div className="w-2 h-2 bg-blue-500 rounded-full mt-2"></div>
+                    )}
                   </div>
                 </button>
               ))}

@@ -556,6 +556,7 @@ export const carGroups = pgTable("car_groups", {
 export const categories = pgTable("categories", {
   id: varchar().default(sql`gen_random_uuid()`).primaryKey(),
   name: text().notNull(),
+  slug: varchar({ length: 100 }).notNull(),
   description: text(),
   isActive: boolean("is_active").default(true).notNull(),
   sortOrder: integer("sort_order").default(0).notNull(),
@@ -566,7 +567,9 @@ export const categories = pgTable("categories", {
   consultationTemplates: jsonb("consultation_templates").default({}),
   salesAdviceTemplate: jsonb("sales_advice_template").default({}),
   isVipOnly: boolean("is_vip_only").default(false).notNull(),
-});
+}, (table) => [
+  unique("categories_slug_unique").on(table.slug),
+]);
 
 export const categoryFaqTemplates = pgTable("category_faq_templates", {
   id: varchar().default(sql`gen_random_uuid()`).primaryKey(),
@@ -908,6 +911,15 @@ export const customerVouchers = pgTable("customer_vouchers", {
   updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow().notNull(),
 });
 
+export const wishlists = pgTable("wishlists", {
+  id: varchar().default(sql`gen_random_uuid()`).primaryKey(),
+  customerId: varchar("customer_id").notNull(),
+  productId: varchar("product_id").notNull(),
+  addedAt: timestamp("added_at", { mode: 'string' }).defaultNow().notNull(),
+}, (table) => [
+  unique("wishlists_customer_product_unique").on(table.customerId, table.productId),
+]);
+
 export const customers = pgTable("customers", {
   id: varchar().default(sql`gen_random_uuid()`).primaryKey(),
   name: text().notNull(),
@@ -1152,6 +1164,26 @@ export const faqLibrary = pgTable("faq_library", {
   createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
   updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
 });
+
+export const flashSales = pgTable("flash_sales", {
+  id: varchar().default(sql`gen_random_uuid()`).primaryKey(),
+  productId: varchar("product_id").notNull(),
+  slug: varchar({ length: 200 }).notNull(),
+  title: text().notNull(),
+  originalPrice: numeric("original_price", { precision: 15, scale: 2 }).notNull(),
+  salePrice: numeric("sale_price", { precision: 15, scale: 2 }).notNull(),
+  discountPercent: integer("discount_percent"),
+  startTime: timestamp("start_time", { mode: 'string' }).notNull(),
+  endTime: timestamp("end_time", { mode: 'string' }).notNull(),
+  bannerImage: text("banner_image"),
+  description: text(),
+  unit: varchar("unit", { length: 50 }),
+  isActive: boolean("is_active").default(true).notNull(),
+  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+}, (table) => [
+  unique("flash_sales_slug_key").on(table.slug),
+]);
 
 export const frontendCategoryAssignments = pgTable("frontend_category_assignments", {
   id: varchar().default(sql`gen_random_uuid()`).primaryKey(),
@@ -1466,6 +1498,18 @@ export const marketTrends = pgTable("market_trends", {
   updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
 });
 
+export const notifications = pgTable("notifications", {
+  id: varchar().default(sql`gen_random_uuid()`).primaryKey(),
+  customerId: varchar("customer_id").notNull(),
+  type: text().notNull(),
+  title: text().notNull(),
+  message: text().notNull(),
+  link: text(),
+  isRead: boolean("is_read").default(false).notNull(),
+  readAt: timestamp("read_at", { mode: 'string' }),
+  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow().notNull(),
+});
+
 export const oauthConnections = pgTable("oauth_connections", {
   id: varchar().default(sql`gen_random_uuid()`).primaryKey(),
   customerId: varchar("customer_id").notNull(),
@@ -1657,6 +1701,23 @@ export const pricingStrategies = pgTable("pricing_strategies", {
   createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
   updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
 });
+
+export const preorderProducts = pgTable("preorder_products", {
+  id: varchar().default(sql`gen_random_uuid()`).primaryKey(),
+  productId: varchar("product_id"),
+  slug: varchar({ length: 200 }).notNull(),
+  title: text().notNull(),
+  description: text(),
+  price: numeric({ precision: 15, scale: 2 }).notNull(),
+  estimatedDate: timestamp("estimated_date", { mode: 'string' }).notNull(),
+  bannerImage: text("banner_image"),
+  unit: text().default('cái'),
+  isActive: boolean("is_active").default(true).notNull(),
+  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+}, (table) => [
+  unique("preorder_products_slug_key").on(table.slug),
+]);
 
 export const productFaqs = pgTable("product_faqs", {
   id: varchar().default(sql`gen_random_uuid()`).primaryKey(),
@@ -2160,6 +2221,8 @@ export const shopSettings = pgTable("shop_settings", {
   featureBoxes: jsonb("feature_boxes").default([]),
   quickLinks: jsonb("quick_links").default([]),
   heroSlider: jsonb("hero_slider").default([]),
+  featuredProducts: text("featured_products").array().default(sql`ARRAY[]::text[]`),
+  customBanners: jsonb("custom_banners").default([]),
   shopLatitude: numeric("shop_latitude", { precision: 10, scale: 8 }),
   shopLongitude: numeric("shop_longitude", { precision: 11, scale: 8 }),
   localRadiusKm: numeric("local_radius_km", { precision: 6, scale: 2 }).default(20.00),
@@ -2884,6 +2947,8 @@ export const insertCustomerReviewsSchema = createInsertSchema(customerReviews);
 export const selectCustomerReviewsSchema = createSelectSchema(customerReviews);
 export const insertCustomerVouchersSchema = createInsertSchema(customerVouchers);
 export const selectCustomerVouchersSchema = createSelectSchema(customerVouchers);
+export const insertWishlistsSchema = createInsertSchema(wishlists);
+export const selectWishlistsSchema = createSelectSchema(wishlists);
 export const insertCustomersSchema = createInsertSchema(customers);
 export const selectCustomersSchema = createSelectSchema(customers);
 export const insertDepositTransactionsSchema = createInsertSchema(depositTransactions);
@@ -2917,6 +2982,8 @@ export const updateFaqLibrarySchema = createInsertSchema(faqLibrary).omit({
   usageCount: true,
   lastUsed: true,
 }).partial();
+export const insertFlashSalesSchema = createInsertSchema(flashSales);
+export const selectFlashSalesSchema = createSelectSchema(flashSales);
 export const insertFrontendCategoryAssignmentsSchema = createInsertSchema(frontendCategoryAssignments);
 export const selectFrontendCategoryAssignmentsSchema = createSelectSchema(frontendCategoryAssignments);
 export const insertGeneralCategoriesSchema = createInsertSchema(generalCategories);
@@ -2955,6 +3022,8 @@ export const insertIpRotationLogsSchema = createInsertSchema(ipRotationLogs);
 export const selectIpRotationLogsSchema = createSelectSchema(ipRotationLogs);
 export const insertMarketTrendsSchema = createInsertSchema(marketTrends);
 export const selectMarketTrendsSchema = createSelectSchema(marketTrends);
+export const insertNotificationsSchema = createInsertSchema(notifications);
+export const selectNotificationsSchema = createSelectSchema(notifications);
 export const insertOauthConnectionsSchema = createInsertSchema(oauthConnections);
 export const selectOauthConnectionsSchema = createSelectSchema(oauthConnections);
 export const insertOauthProviderSettingsSchema = createInsertSchema(oauthProviderSettings);
@@ -2975,6 +3044,8 @@ export const insertPriceSourcesSchema = createInsertSchema(priceSources);
 export const selectPriceSourcesSchema = createSelectSchema(priceSources);
 export const insertPricingStrategiesSchema = createInsertSchema(pricingStrategies);
 export const selectPricingStrategiesSchema = createSelectSchema(pricingStrategies);
+export const insertPreorderProductsSchema = createInsertSchema(preorderProducts);
+export const selectPreorderProductsSchema = createSelectSchema(preorderProducts);
 export const insertProductFaqsSchema = createInsertSchema(productFaqs);
 export const selectProductFaqsSchema = createSelectSchema(productFaqs);
 export const insertProductLandingClicksSchema = createInsertSchema(productLandingClicks);
@@ -3163,6 +3234,8 @@ export type InsertCustomerReviews = z.infer<typeof insertCustomerReviewsSchema>;
 export type CustomerReviews = typeof customerReviews.$inferSelect;
 export type InsertCustomerVouchers = z.infer<typeof insertCustomerVouchersSchema>;
 export type CustomerVouchers = typeof customerVouchers.$inferSelect;
+export type InsertWishlists = z.infer<typeof insertWishlistsSchema>;
+export type Wishlists = typeof wishlists.$inferSelect;
 export type InsertCustomers = z.infer<typeof insertCustomersSchema>;
 export type Customers = typeof customers.$inferSelect;
 export type InsertDepositTransactions = z.infer<typeof insertDepositTransactionsSchema>;
@@ -3189,6 +3262,8 @@ export type InsertFaqGenerationResults = z.infer<typeof insertFaqGenerationResul
 export type FaqGenerationResults = typeof faqGenerationResults.$inferSelect;
 export type InsertFaqLibrary = z.infer<typeof insertFaqLibrarySchema>;
 export type FaqLibrary = typeof faqLibrary.$inferSelect;
+export type InsertFlashSales = z.infer<typeof insertFlashSalesSchema>;
+export type FlashSales = typeof flashSales.$inferSelect;
 export type InsertFrontendCategoryAssignments = z.infer<typeof insertFrontendCategoryAssignmentsSchema>;
 export type FrontendCategoryAssignments = typeof frontendCategoryAssignments.$inferSelect;
 export type InsertGeneralCategories = z.infer<typeof insertGeneralCategoriesSchema>;
@@ -3227,6 +3302,8 @@ export type InsertIpRotationLogs = z.infer<typeof insertIpRotationLogsSchema>;
 export type IpRotationLogs = typeof ipRotationLogs.$inferSelect;
 export type InsertMarketTrends = z.infer<typeof insertMarketTrendsSchema>;
 export type MarketTrends = typeof marketTrends.$inferSelect;
+export type InsertNotifications = z.infer<typeof insertNotificationsSchema>;
+export type Notifications = typeof notifications.$inferSelect;
 export type InsertOauthConnections = z.infer<typeof insertOauthConnectionsSchema>;
 export type OauthConnections = typeof oauthConnections.$inferSelect;
 export type InsertOauthProviderSettings = z.infer<typeof insertOauthProviderSettingsSchema>;
@@ -3247,6 +3324,8 @@ export type InsertPriceSources = z.infer<typeof insertPriceSourcesSchema>;
 export type PriceSources = typeof priceSources.$inferSelect;
 export type InsertPricingStrategies = z.infer<typeof insertPricingStrategiesSchema>;
 export type PricingStrategies = typeof pricingStrategies.$inferSelect;
+export type InsertPreorderProducts = z.infer<typeof insertPreorderProductsSchema>;
+export type PreorderProducts = typeof preorderProducts.$inferSelect;
 export type InsertProductFaqs = z.infer<typeof insertProductFaqsSchema>;
 export type ProductFaqs = typeof productFaqs.$inferSelect;
 export type InsertProductLandingClicks = z.infer<typeof insertProductLandingClicksSchema>;
