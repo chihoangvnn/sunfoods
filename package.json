@@ -37,6 +37,7 @@
     "esbuild": "^0.25.10",
     "node-ssh": "^13.2.1",
     "pigeon-maps": "^0.22.1",
+    "react-quill": "^2.0.0",
     "tsx": "^4.20.6"
   }
 }
