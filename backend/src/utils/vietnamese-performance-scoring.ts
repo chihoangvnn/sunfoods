@@ -204,8 +204,8 @@ export function calculateDeliverySpeedRating(avgDeliveryDays: number, category?:
   }
   
   // Apply category-specific adjustments
-  if (category && CATEGORY_ADJUSTMENTS[category]) {
-    const adjustment = CATEGORY_ADJUSTMENTS[category].deliverySpeed;
+  if (category && (CATEGORY_ADJUSTMENTS as any)[category]) {
+    const adjustment = (CATEGORY_ADJUSTMENTS as any)[category].deliverySpeed;
     if (adjustment > 1.0) {
       // More strict for categories like textbooks
       baseRating = Math.max(1.0, baseRating - (adjustment - 1.0) * 0.5);
@@ -232,8 +232,8 @@ export function calculateBookConditionRating(
   baseRating -= complaintRatio * 10; // 10% complaints reduces rating by 1.0
   
   // Apply category-specific adjustments
-  if (category && CATEGORY_ADJUSTMENTS[category]) {
-    const adjustment = CATEGORY_ADJUSTMENTS[category].bookCondition;
+  if (category && (CATEGORY_ADJUSTMENTS as any)[category]) {
+    const adjustment = (CATEGORY_ADJUSTMENTS as any)[category].bookCondition;
     if (adjustment > 1.0) {
       // More strict for categories like children's books
       baseRating = Math.max(1.0, baseRating - (adjustment - 1.0) * 0.3);
@@ -309,8 +309,8 @@ export function calculatePricingRating(
   let pricingRating = (competitivenessRating * 0.7) + (complaintRating * 0.3);
   
   // Apply category-specific adjustments
-  if (category && CATEGORY_ADJUSTMENTS[category]) {
-    const adjustment = CATEGORY_ADJUSTMENTS[category].pricing;
+  if (category && (CATEGORY_ADJUSTMENTS as any)[category]) {
+    const adjustment = (CATEGORY_ADJUSTMENTS as any)[category].pricing;
     if (adjustment > 1.0) {
       // More strict for price-sensitive categories like textbooks
       pricingRating = Math.max(1.0, pricingRating - (adjustment - 1.0) * 0.2);
@@ -347,8 +347,8 @@ export function calculateCommunicationRating(
   let communicationRating = (timelinessRating * 0.4) + (communicationClarity * 0.4) + (languageAppropriatenesss * 0.2);
   
   // Apply regional adjustments
-  if (region && REGIONAL_ADJUSTMENTS[region]) {
-    const multiplier = REGIONAL_ADJUSTMENTS[region].formalityExpectation;
+  if (region && (REGIONAL_ADJUSTMENTS as any)[region]) {
+    const multiplier = (REGIONAL_ADJUSTMENTS as any)[region].formalityExpectation;
     if (multiplier > 1.0) {
       // More strict expectations in northern and central Vietnam
       communicationRating = Math.max(1.0, communicationRating - (multiplier - 1.0) * 0.2);
@@ -371,8 +371,8 @@ export function calculateCourtesyRating(
   let courtesyRating = (courtesyScore * 0.4) + (formalLanguageUsage * 5 * 0.3) + (respectfulTreatment * 0.3);
   
   // Apply regional adjustments for courtesy expectations
-  if (region && REGIONAL_ADJUSTMENTS[region]) {
-    const multiplier = REGIONAL_ADJUSTMENTS[region].courtesyMultiplier;
+  if (region && (REGIONAL_ADJUSTMENTS as any)[region]) {
+    const multiplier = (REGIONAL_ADJUSTMENTS as any)[region].courtesyMultiplier;
     if (multiplier > 1.0) {
       // Higher expectations in central and northern Vietnam
       courtesyRating = Math.max(1.0, courtesyRating - (multiplier - 1.0) * 0.3);

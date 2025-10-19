@@ -1,14 +1,15 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.discountScopeAssignments = exports.discountCodes = exports.discountCodeUsages = exports.depositTransactions = exports.customers = exports.customerVouchers = exports.customerReviews = exports.customerEvents = exports.cookieProfiles = exports.conversationSessions = exports.conversationMessages = exports.contentQueue = exports.contentLibrary = exports.contentFaqAssignments = exports.contentCategories = exports.contentAssets = exports.consignmentRequests = exports.competitorProfiles = exports.chatbotConversations = exports.categoryPriceRules = exports.categoryFaqTemplates = exports.categories = exports.carGroups = exports.campaigns = exports.campaignParticipations = exports.botSettings = exports.books = exports.bookSellers = exports.bookSellerInventory = exports.bookPricingRules = exports.bookPrices = exports.bookPaymentTransactions = exports.bookOrders = exports.bookOrderItems = exports.bookMarketingCampaigns = exports.bookCustomers = exports.bookCategoryAssignments = exports.bookCategories = exports.bookCampaignRecipients = exports.bookAnalytics = exports.authUsers = exports.apiConfigurations = exports.affiliateProductRequests = exports.affiliateProductAssignments = exports.affiliateLandingPages = exports.affiliateClicks = exports.admins = exports.accountGroups = exports.BOOK_PRICE_SOURCES = exports.BOOK_CONDITIONS = void 0;
-exports.salesAutomationConfigs = exports.returnRequests = exports.registrationTokens = exports.queueHistory = exports.queueAutofillSettings = exports.pushSubscriptions = exports.projectTemplates = exports.products = exports.productReviews = exports.productPolicyAssociations = exports.productPolicies = exports.productLandingPages = exports.productLandingClicks = exports.productFaqs = exports.pricingStrategies = exports.priceSources = exports.performanceMetrics = exports.payments = exports.paymentGatewaySettings = exports.pageTags = exports.orders = exports.orderItems = exports.oauthConnections = exports.marketTrends = exports.ipRotationLogs = exports.ipPools = exports.ipPoolSessions = exports.invoiceTemplates = exports.intentAnalytics = exports.industryTemplates = exports.industryRules = exports.industryKeywords = exports.industries = exports.globalAutomationControl = exports.giftVouchers = exports.giftRedemptions = exports.giftCampaigns = exports.generalCategoryPriceRules = exports.generalCategoryAssignments = exports.generalCategoryAnalytics = exports.generalCategories = exports.frontendCategoryAssignments = exports.faqLibrary = exports.faqGenerationResults = exports.faqGenerationJobs = exports.facebookWebhookEvents = exports.facebookMessages = exports.facebookConversations = exports.facebookApps = exports.driverReports = void 0;
-exports.selectApiConfigurationsSchema = exports.insertApiConfigurationsSchema = exports.selectAffiliateProductRequestsSchema = exports.insertAffiliateProductRequestsSchema = exports.selectAffiliateProductAssignmentsSchema = exports.insertAffiliateProductAssignmentsSchema = exports.selectAffiliateLandingPagesSchema = exports.insertAffiliateLandingPagesSchema = exports.selectAffiliateClicksSchema = exports.insertAffiliateClicksSchema = exports.selectAdminsSchema = exports.insertAdminsSchema = exports.selectAccountGroupsSchema = exports.insertAccountGroupsSchema = exports.workers = exports.vietnameseReviewTemplates = exports.vendors = exports.vendorProducts = exports.vendorOrders = exports.vehicles = exports.vehicleGroupAssignments = exports.users = exports.userTemplates = exports.userSessions = exports.userSatisfactionScores = exports.unifiedTags = exports.trips = exports.tiktokVideos = exports.tiktokShopProducts = exports.tiktokShopOrders = exports.tiktokBusinessAccounts = exports.themeConfigurations = exports.templateCompilations = exports.storefrontOrders = exports.storefrontConfig = exports.stockReservations = exports.socialAccounts = exports.shopeeShopProducts = exports.shopeeShopOrders = exports.shopeeBusinessAccounts = exports.shopSettings = exports.shippingZones = exports.shareVerifications = exports.sessions = exports.sellerRatings = exports.sellerPaymentConfigs = exports.seasonalRules = exports.scheduledPosts = exports.satisfactionSurveys = exports.salesAutomationHistory = void 0;
-exports.selectCategoryFaqTemplatesSchema = exports.insertCategoryFaqTemplatesSchema = exports.selectCategoriesSchema = exports.insertCategoriesSchema = exports.selectCarGroupsSchema = exports.insertCarGroupsSchema = exports.selectCampaignsSchema = exports.insertCampaignsSchema = exports.selectCampaignParticipationsSchema = exports.insertCampaignParticipationsSchema = exports.selectBotSettingsSchema = exports.insertBotSettingsSchema = exports.selectBookSchema = exports.insertBookSchema = exports.selectBooksSchema = exports.insertBooksSchema = exports.selectBookSellersSchema = exports.insertBookSellersSchema = exports.selectBookSellerInventorySchema = exports.insertBookSellerInventorySchema = exports.selectBookPricingRulesSchema = exports.insertBookPricingRulesSchema = exports.selectBookPriceSchema = exports.insertBookPriceSchema = exports.selectBookPricesSchema = exports.insertBookPricesSchema = exports.selectBookPaymentTransactionsSchema = exports.insertBookPaymentTransactionsSchema = exports.selectBookOrderSchema = exports.insertBookOrderSchema = exports.selectBookOrdersSchema = exports.insertBookOrdersSchema = exports.selectBookOrderItemSchema = exports.insertBookOrderItemSchema = exports.selectBookOrderItemsSchema = exports.insertBookOrderItemsSchema = exports.selectBookMarketingCampaignsSchema = exports.insertBookMarketingCampaignsSchema = exports.selectBookCustomersSchema = exports.insertBookCustomersSchema = exports.selectBookCategoryAssignmentsSchema = exports.insertBookCategoryAssignmentsSchema = exports.selectBookCategoriesSchema = exports.insertBookCategoriesSchema = exports.selectBookCampaignRecipientsSchema = exports.insertBookCampaignRecipientsSchema = exports.selectBookAnalyticsSchema = exports.insertBookAnalyticsSchema = exports.selectAuthUsersSchema = exports.insertAuthUsersSchema = void 0;
-exports.selectFacebookWebhookEventsSchema = exports.insertFacebookWebhookEventsSchema = exports.selectFacebookMessagesSchema = exports.insertFacebookMessagesSchema = exports.selectFacebookConversationsSchema = exports.insertFacebookConversationsSchema = exports.selectFacebookAppsSchema = exports.insertFacebookAppsSchema = exports.selectDriverReportsSchema = exports.insertDriverReportsSchema = exports.selectDiscountScopeAssignmentsSchema = exports.insertDiscountScopeAssignmentsSchema = exports.selectDiscountCodesSchema = exports.insertDiscountCodesSchema = exports.selectDiscountCodeUsagesSchema = exports.insertDiscountCodeUsagesSchema = exports.selectDepositTransactionsSchema = exports.insertDepositTransactionsSchema = exports.selectCustomersSchema = exports.insertCustomersSchema = exports.selectCustomerVouchersSchema = exports.insertCustomerVouchersSchema = exports.selectCustomerReviewsSchema = exports.insertCustomerReviewsSchema = exports.selectCustomerEventsSchema = exports.insertCustomerEventsSchema = exports.selectCookieProfilesSchema = exports.insertCookieProfilesSchema = exports.selectConversationSessionsSchema = exports.insertConversationSessionsSchema = exports.selectConversationMessagesSchema = exports.insertConversationMessagesSchema = exports.selectContentQueueSchema = exports.insertContentQueueSchema = exports.selectContentLibrarySchema = exports.insertContentLibrarySchema = exports.selectContentFaqAssignmentsSchema = exports.insertContentFaqAssignmentsSchema = exports.selectContentCategoriesSchema = exports.insertContentCategoriesSchema = exports.selectContentAssetsSchema = exports.insertContentAssetsSchema = exports.selectConsignmentRequestsSchema = exports.insertConsignmentRequestsSchema = exports.selectCompetitorProfilesSchema = exports.insertCompetitorProfilesSchema = exports.selectChatbotConversationsSchema = exports.insertChatbotConversationsSchema = exports.selectCategoryPriceRulesSchema = exports.insertCategoryPriceRulesSchema = void 0;
-exports.insertOrdersSchema = exports.selectOrderItemsSchema = exports.insertOrderItemsSchema = exports.selectOauthConnectionsSchema = exports.insertOauthConnectionsSchema = exports.selectMarketTrendsSchema = exports.insertMarketTrendsSchema = exports.selectIpRotationLogsSchema = exports.insertIpRotationLogsSchema = exports.selectIpPoolsSchema = exports.insertIpPoolsSchema = exports.selectIpPoolSessionsSchema = exports.insertIpPoolSessionsSchema = exports.selectInvoiceTemplatesSchema = exports.insertInvoiceTemplatesSchema = exports.selectIntentAnalyticsSchema = exports.insertIntentAnalyticsSchema = exports.selectIndustryTemplatesSchema = exports.insertIndustryTemplatesSchema = exports.selectIndustryRulesSchema = exports.insertIndustryRulesSchema = exports.selectIndustryKeywordsSchema = exports.insertIndustryKeywordsSchema = exports.selectIndustriesSchema = exports.insertIndustriesSchema = exports.selectGlobalAutomationControlSchema = exports.insertGlobalAutomationControlSchema = exports.selectGiftVouchersSchema = exports.insertGiftVouchersSchema = exports.selectGiftRedemptionsSchema = exports.insertGiftRedemptionsSchema = exports.selectGiftCampaignsSchema = exports.insertGiftCampaignsSchema = exports.selectGeneralCategoryPriceRulesSchema = exports.insertGeneralCategoryPriceRulesSchema = exports.selectGeneralCategoryAssignmentsSchema = exports.insertGeneralCategoryAssignmentsSchema = exports.selectGeneralCategoryAnalyticsSchema = exports.insertGeneralCategoryAnalyticsSchema = exports.selectGeneralCategoriesSchema = exports.insertGeneralCategoriesSchema = exports.selectFrontendCategoryAssignmentsSchema = exports.insertFrontendCategoryAssignmentsSchema = exports.updateFaqLibrarySchema = exports.selectFaqLibrarySchema = exports.insertFaqLibrarySchema = exports.selectFaqGenerationResultsSchema = exports.insertFaqGenerationResultsSchema = exports.selectFaqGenerationJobsSchema = exports.insertFaqGenerationJobsSchema = void 0;
-exports.insertSellerPaymentConfigsSchema = exports.selectSeasonalRulesSchema = exports.insertSeasonalRulesSchema = exports.selectScheduledPostsSchema = exports.insertScheduledPostsSchema = exports.selectSatisfactionSurveysSchema = exports.insertSatisfactionSurveysSchema = exports.selectSalesAutomationHistorySchema = exports.insertSalesAutomationHistorySchema = exports.selectSalesAutomationConfigsSchema = exports.insertSalesAutomationConfigsSchema = exports.selectReturnRequestsSchema = exports.insertReturnRequestsSchema = exports.selectRegistrationTokensSchema = exports.insertRegistrationTokensSchema = exports.selectQueueHistorySchema = exports.insertQueueHistorySchema = exports.selectQueueAutofillSettingsSchema = exports.insertQueueAutofillSettingsSchema = exports.selectPushSubscriptionsSchema = exports.insertPushSubscriptionsSchema = exports.selectProjectTemplatesSchema = exports.insertProjectTemplatesSchema = exports.selectProductsSchema = exports.insertProductsSchema = exports.selectProductReviewsSchema = exports.insertProductReviewsSchema = exports.selectProductPolicyAssociationsSchema = exports.insertProductPolicyAssociationsSchema = exports.selectProductPoliciesSchema = exports.insertProductPoliciesSchema = exports.selectProductLandingPagesSchema = exports.insertProductLandingPagesSchema = exports.selectProductLandingClicksSchema = exports.insertProductLandingClicksSchema = exports.selectProductFaqsSchema = exports.insertProductFaqsSchema = exports.selectPricingStrategiesSchema = exports.insertPricingStrategiesSchema = exports.selectPriceSourcesSchema = exports.insertPriceSourcesSchema = exports.selectPerformanceMetricsSchema = exports.insertPerformanceMetricsSchema = exports.selectPaymentsSchema = exports.insertPaymentsSchema = exports.selectPaymentGatewaySettingsSchema = exports.insertPaymentGatewaySettingsSchema = exports.selectPageTagsSchema = exports.insertPageTagsSchema = exports.selectOrdersSchema = void 0;
-exports.insertVehicleGroupAssignmentsSchema = exports.selectUsersSchema = exports.insertUsersSchema = exports.selectUserTemplatesSchema = exports.insertUserTemplatesSchema = exports.selectUserSessionsSchema = exports.insertUserSessionsSchema = exports.selectUserSatisfactionScoresSchema = exports.insertUserSatisfactionScoresSchema = exports.selectUnifiedTagsSchema = exports.insertUnifiedTagsSchema = exports.selectTripsSchema = exports.insertTripsSchema = exports.selectTiktokVideosSchema = exports.insertTiktokVideosSchema = exports.selectTiktokShopProductsSchema = exports.insertTiktokShopProductsSchema = exports.selectTiktokShopOrdersSchema = exports.insertTiktokShopOrdersSchema = exports.selectTiktokBusinessAccountsSchema = exports.insertTiktokBusinessAccountsSchema = exports.selectThemeConfigurationsSchema = exports.insertThemeConfigurationsSchema = exports.selectTemplateCompilationsSchema = exports.insertTemplateCompilationsSchema = exports.selectStorefrontOrdersSchema = exports.insertStorefrontOrdersSchema = exports.selectStorefrontConfigSchema = exports.insertStorefrontConfigSchema = exports.selectStockReservationsSchema = exports.insertStockReservationsSchema = exports.selectSocialAccountsSchema = exports.insertSocialAccountsSchema = exports.selectShopeeShopProductsSchema = exports.insertShopeeShopProductsSchema = exports.selectShopeeShopOrdersSchema = exports.insertShopeeShopOrdersSchema = exports.selectShopeeBusinessAccountsSchema = exports.insertShopeeBusinessAccountsSchema = exports.selectShopSettingsSchema = exports.insertShopSettingsSchema = exports.selectShippingZonesSchema = exports.insertShippingZonesSchema = exports.selectShareVerificationsSchema = exports.insertShareVerificationsSchema = exports.selectSessionsSchema = exports.insertSessionsSchema = exports.selectSellerRatingsSchema = exports.insertSellerRatingsSchema = exports.selectSellerPaymentConfigsSchema = void 0;
-exports.SUPPORTED_WORKER_PLATFORMS = exports.selectWorkersSchema = exports.insertWorkersSchema = exports.selectVietnameseReviewTemplatesSchema = exports.insertVietnameseReviewTemplatesSchema = exports.selectVendorsSchema = exports.insertVendorsSchema = exports.selectVendorProductsSchema = exports.insertVendorProductsSchema = exports.selectVendorOrdersSchema = exports.insertVendorOrdersSchema = exports.selectVehiclesSchema = exports.insertVehiclesSchema = exports.selectVehicleGroupAssignmentsSchema = void 0;
+exports.contentLibrary = exports.contentFaqAssignments = exports.contentCategories = exports.contentAssets = exports.consignmentRequests = exports.competitorProfiles = exports.chatbotConversations = exports.storeCategories = exports.storeProducts = exports.stores = exports.categoryPriceRules = exports.categoryFaqTemplates = exports.categories = exports.carGroups = exports.campaigns = exports.campaignParticipations = exports.botSettings = exports.books = exports.bookSellers = exports.bookSellerInventory = exports.bookPricingRules = exports.bookPrices = exports.bookPaymentTransactions = exports.bookOrders = exports.bookOrderItems = exports.bookMarketingCampaigns = exports.bookCustomers = exports.bookCategoryAssignments = exports.bookCategories = exports.bookCampaignRecipients = exports.bookAnalytics = exports.authUsers = exports.apiConfigurations = exports.vendorPushSubscriptions = exports.productFAQs = exports.groupAccounts = exports.queueAutoFillSettings = exports.abebooksListings = exports.abebooksAccounts = exports.abebooksSearchHistory = exports.affiliateShareLogs = exports.affiliateOrders = exports.affiliateProductRequests = exports.affiliateProductAssignments = exports.affiliateLandingPages = exports.affiliateClicks = exports.admins = exports.accountGroups = exports.BOOK_PRICE_SOURCES = exports.BOOK_CONDITIONS = void 0;
+exports.performanceMetrics = exports.payments = exports.paymentGatewaySettings = exports.pageTags = exports.orders = exports.orderItems = exports.oauthProviderSettings = exports.oauthConnections = exports.notifications = exports.marketTrends = exports.ipRotationLogs = exports.ipPools = exports.ipPoolSessions = exports.invoiceTemplates = exports.intentAnalytics = exports.industryTemplates = exports.industryRules = exports.industryKeywords = exports.industries = exports.globalAutomationControl = exports.giftVouchers = exports.giftRedemptions = exports.giftCampaigns = exports.generalCategoryPriceRules = exports.generalCategoryAssignments = exports.generalCategoryAnalytics = exports.generalCategories = exports.frontendCategoryAssignments = exports.flashSales = exports.faqLibrary = exports.faqGenerationResults = exports.faqGenerationJobs = exports.facebookWebhookEvents = exports.facebookMessages = exports.facebookConversations = exports.facebookApps = exports.driverReports = exports.discountScopeAssignments = exports.discountCodes = exports.discountCodeUsages = exports.depositTransactions = exports.customers = exports.wishlists = exports.customerVouchers = exports.customerReviews = exports.customerEvents = exports.cookieProfiles = exports.conversationSessions = exports.conversationMessages = exports.contentQueue = void 0;
+exports.vendorProducts = exports.vendorOrders = exports.vehicles = exports.vehicleGroupAssignments = exports.users = exports.userTemplates = exports.userSessions = exports.userSatisfactionScores = exports.unifiedTags = exports.trips = exports.tiktokVideos = exports.tiktokShopProducts = exports.tiktokShopOrders = exports.tiktokBusinessAccounts = exports.themeConfigurations = exports.templateCompilations = exports.storefrontOrders = exports.storefrontConfig = exports.stockReservations = exports.socialAccounts = exports.shopeeShopProducts = exports.shopeeShopOrders = exports.shopeeBusinessAccounts = exports.shopSettings = exports.shippingZones = exports.shareVerifications = exports.sessions = exports.sellerRatings = exports.sellerPaymentConfigs = exports.seasonalRules = exports.scheduledPosts = exports.satisfactionSurveys = exports.salesAutomationHistory = exports.salesAutomationConfigs = exports.returnRequests = exports.registrationTokens = exports.queueHistory = exports.queueAutofillSettings = exports.pushSubscriptions = exports.projectTemplates = exports.products = exports.productReviews = exports.productPolicyAssociations = exports.productPolicies = exports.productLandingPages = exports.productLandingClicks = exports.productFaqs = exports.preorderProducts = exports.pricingStrategies = exports.priceSources = void 0;
+exports.insertBookOrderItemsSchema = exports.selectBookMarketingCampaignsSchema = exports.insertBookMarketingCampaignsSchema = exports.selectBookCustomersSchema = exports.insertBookCustomersSchema = exports.selectBookCategoryAssignmentsSchema = exports.insertBookCategoryAssignmentsSchema = exports.selectBookCategoriesSchema = exports.insertBookCategoriesSchema = exports.selectBookCampaignRecipientsSchema = exports.insertBookCampaignRecipientsSchema = exports.selectBookAnalyticsSchema = exports.insertBookAnalyticsSchema = exports.selectAuthUsersSchema = exports.insertAuthUsersSchema = exports.selectApiConfigurationsSchema = exports.insertApiConfigurationsSchema = exports.selectVendorPushSubscriptionsSchema = exports.insertVendorPushSubscriptionsSchema = exports.selectProductFAQsSchema = exports.insertProductFAQsSchema = exports.selectGroupAccountsSchema = exports.insertGroupAccountsSchema = exports.selectQueueAutoFillSettingsSchema = exports.insertQueueAutoFillSettingsSchema = exports.selectAbebooksListingsSchema = exports.insertAbebooksListingsSchema = exports.selectAbebooksAccountsSchema = exports.insertAbebooksAccountsSchema = exports.selectAbebooksSearchHistorySchema = exports.insertAbebooksSearchHistorySchema = exports.selectAffiliateShareLogsSchema = exports.insertAffiliateShareLogsSchema = exports.selectAffiliateOrdersSchema = exports.insertAffiliateOrdersSchema = exports.selectAffiliateProductRequestsSchema = exports.insertAffiliateProductRequestsSchema = exports.selectAffiliateProductAssignmentsSchema = exports.insertAffiliateProductAssignmentsSchema = exports.selectAffiliateLandingPagesSchema = exports.insertAffiliateLandingPagesSchema = exports.selectAffiliateClicksSchema = exports.insertAffiliateClicksSchema = exports.selectAdminsSchema = exports.insertAdminsSchema = exports.selectAccountGroupsSchema = exports.insertAccountGroupsSchema = exports.workers = exports.vietnameseReviewTemplates = exports.vendors = void 0;
+exports.insertContentLibrarySchema = exports.selectContentFaqAssignmentsSchema = exports.insertContentFaqAssignmentsSchema = exports.selectContentCategoriesSchema = exports.insertContentCategoriesSchema = exports.selectContentAssetsSchema = exports.insertContentAssetsSchema = exports.selectConsignmentRequestsSchema = exports.insertConsignmentRequestsSchema = exports.selectCompetitorProfilesSchema = exports.insertCompetitorProfilesSchema = exports.selectChatbotConversationsSchema = exports.insertChatbotConversationsSchema = exports.selectCategoryPriceRulesSchema = exports.insertCategoryPriceRulesSchema = exports.selectCategoryFaqTemplatesSchema = exports.insertCategoryFaqTemplatesSchema = exports.selectCategoriesSchema = exports.insertCategoriesSchema = exports.selectCarGroupsSchema = exports.insertCarGroupsSchema = exports.selectCampaignsSchema = exports.insertCampaignsSchema = exports.selectCampaignParticipationsSchema = exports.insertCampaignParticipationsSchema = exports.selectBotSettingsSchema = exports.insertBotSettingsSchema = exports.selectBookSchema = exports.insertBookSchema = exports.selectBooksSchema = exports.insertBooksSchema = exports.selectBookSellersSchema = exports.insertBookSellersSchema = exports.selectBookSellerInventorySchema = exports.insertBookSellerInventorySchema = exports.selectBookPricingRulesSchema = exports.insertBookPricingRulesSchema = exports.selectBookPriceSchema = exports.insertBookPriceSchema = exports.selectBookPricesSchema = exports.insertBookPricesSchema = exports.selectBookPaymentTransactionsSchema = exports.insertBookPaymentTransactionsSchema = exports.selectBookOrderSchema = exports.insertBookOrderSchema = exports.selectBookOrdersSchema = exports.insertBookOrdersSchema = exports.selectBookOrderItemSchema = exports.insertBookOrderItemSchema = exports.selectBookOrderItemsSchema = void 0;
+exports.selectGeneralCategoriesSchema = exports.insertGeneralCategoriesSchema = exports.selectFrontendCategoryAssignmentsSchema = exports.insertFrontendCategoryAssignmentsSchema = exports.selectFlashSalesSchema = exports.insertFlashSalesSchema = exports.updateFaqLibrarySchema = exports.selectFaqLibrarySchema = exports.insertFaqLibrarySchema = exports.selectFaqGenerationResultsSchema = exports.insertFaqGenerationResultsSchema = exports.selectFaqGenerationJobsSchema = exports.insertFaqGenerationJobsSchema = exports.selectFacebookWebhookEventsSchema = exports.insertFacebookWebhookEventsSchema = exports.selectFacebookMessagesSchema = exports.insertFacebookMessagesSchema = exports.selectFacebookConversationsSchema = exports.insertFacebookConversationsSchema = exports.selectFacebookAppsSchema = exports.insertFacebookAppsSchema = exports.selectDriverReportsSchema = exports.insertDriverReportsSchema = exports.selectDiscountScopeAssignmentsSchema = exports.insertDiscountScopeAssignmentsSchema = exports.selectDiscountCodesSchema = exports.insertDiscountCodesSchema = exports.selectDiscountCodeUsagesSchema = exports.insertDiscountCodeUsagesSchema = exports.selectDepositTransactionsSchema = exports.insertDepositTransactionsSchema = exports.selectCustomersSchema = exports.insertCustomersSchema = exports.selectWishlistsSchema = exports.insertWishlistsSchema = exports.selectCustomerVouchersSchema = exports.insertCustomerVouchersSchema = exports.selectCustomerReviewsSchema = exports.insertCustomerReviewsSchema = exports.selectCustomerEventsSchema = exports.insertCustomerEventsSchema = exports.selectCookieProfilesSchema = exports.insertCookieProfilesSchema = exports.selectConversationSessionsSchema = exports.insertConversationSessionsSchema = exports.selectConversationMessagesSchema = exports.insertConversationMessagesSchema = exports.selectContentQueueSchema = exports.insertContentQueueSchema = exports.selectContentLibrarySchema = void 0;
+exports.selectPaymentsSchema = exports.insertPaymentsSchema = exports.selectPaymentGatewaySettingsSchema = exports.insertPaymentGatewaySettingsSchema = exports.selectPageTagsSchema = exports.insertPageTagsSchema = exports.selectOrdersSchema = exports.insertOrdersSchema = exports.selectOrderItemsSchema = exports.insertOrderItemsSchema = exports.selectOauthProviderSettingsSchema = exports.insertOauthProviderSettingsSchema = exports.selectOauthConnectionsSchema = exports.insertOauthConnectionsSchema = exports.selectNotificationsSchema = exports.insertNotificationsSchema = exports.selectMarketTrendsSchema = exports.insertMarketTrendsSchema = exports.selectIpRotationLogsSchema = exports.insertIpRotationLogsSchema = exports.selectIpPoolsSchema = exports.insertIpPoolsSchema = exports.selectIpPoolSessionsSchema = exports.insertIpPoolSessionsSchema = exports.selectInvoiceTemplatesSchema = exports.insertInvoiceTemplatesSchema = exports.selectIntentAnalyticsSchema = exports.insertIntentAnalyticsSchema = exports.selectIndustryTemplatesSchema = exports.insertIndustryTemplatesSchema = exports.selectIndustryRulesSchema = exports.insertIndustryRulesSchema = exports.selectIndustryKeywordsSchema = exports.insertIndustryKeywordsSchema = exports.selectIndustriesSchema = exports.insertIndustriesSchema = exports.selectGlobalAutomationControlSchema = exports.insertGlobalAutomationControlSchema = exports.selectGiftVouchersSchema = exports.insertGiftVouchersSchema = exports.selectGiftRedemptionsSchema = exports.insertGiftRedemptionsSchema = exports.selectGiftCampaignsSchema = exports.insertGiftCampaignsSchema = exports.selectGeneralCategoryPriceRulesSchema = exports.insertGeneralCategoryPriceRulesSchema = exports.selectGeneralCategoryAssignmentsSchema = exports.insertGeneralCategoryAssignmentsSchema = exports.selectGeneralCategoryAnalyticsSchema = exports.insertGeneralCategoryAnalyticsSchema = void 0;
+exports.selectSessionsSchema = exports.insertSessionsSchema = exports.selectSellerRatingsSchema = exports.insertSellerRatingsSchema = exports.selectSellerPaymentConfigsSchema = exports.insertSellerPaymentConfigsSchema = exports.selectSeasonalRulesSchema = exports.insertSeasonalRulesSchema = exports.selectScheduledPostsSchema = exports.insertScheduledPostsSchema = exports.selectSatisfactionSurveysSchema = exports.insertSatisfactionSurveysSchema = exports.selectSalesAutomationHistorySchema = exports.insertSalesAutomationHistorySchema = exports.selectSalesAutomationConfigsSchema = exports.insertSalesAutomationConfigsSchema = exports.selectReturnRequestsSchema = exports.insertReturnRequestsSchema = exports.selectRegistrationTokensSchema = exports.insertRegistrationTokensSchema = exports.selectQueueHistorySchema = exports.insertQueueHistorySchema = exports.selectQueueAutofillSettingsSchema = exports.insertQueueAutofillSettingsSchema = exports.selectPushSubscriptionsSchema = exports.insertPushSubscriptionsSchema = exports.selectProjectTemplatesSchema = exports.insertProjectTemplatesSchema = exports.selectProductsSchema = exports.insertProductsSchema = exports.selectProductReviewsSchema = exports.insertProductReviewsSchema = exports.selectProductPolicyAssociationsSchema = exports.insertProductPolicyAssociationsSchema = exports.selectProductPoliciesSchema = exports.insertProductPoliciesSchema = exports.selectProductLandingPagesSchema = exports.insertProductLandingPagesSchema = exports.selectProductLandingClicksSchema = exports.insertProductLandingClicksSchema = exports.selectProductFaqsSchema = exports.insertProductFaqsSchema = exports.selectPreorderProductsSchema = exports.insertPreorderProductsSchema = exports.selectPricingStrategiesSchema = exports.insertPricingStrategiesSchema = exports.selectPriceSourcesSchema = exports.insertPriceSourcesSchema = exports.selectPerformanceMetricsSchema = exports.insertPerformanceMetricsSchema = void 0;
+exports.selectVendorOrdersSchema = exports.insertVendorOrdersSchema = exports.selectVehiclesSchema = exports.insertVehiclesSchema = exports.selectVehicleGroupAssignmentsSchema = exports.insertVehicleGroupAssignmentsSchema = exports.selectUsersSchema = exports.insertUsersSchema = exports.selectUserTemplatesSchema = exports.insertUserTemplatesSchema = exports.selectUserSessionsSchema = exports.insertUserSessionsSchema = exports.selectUserSatisfactionScoresSchema = exports.insertUserSatisfactionScoresSchema = exports.selectUnifiedTagsSchema = exports.insertUnifiedTagsSchema = exports.selectTripsSchema = exports.insertTripsSchema = exports.selectTiktokVideosSchema = exports.insertTiktokVideosSchema = exports.selectTiktokShopProductsSchema = exports.insertTiktokShopProductsSchema = exports.selectTiktokShopOrdersSchema = exports.insertTiktokShopOrdersSchema = exports.selectTiktokBusinessAccountsSchema = exports.insertTiktokBusinessAccountsSchema = exports.selectThemeConfigurationsSchema = exports.insertThemeConfigurationsSchema = exports.selectTemplateCompilationsSchema = exports.insertTemplateCompilationsSchema = exports.selectStorefrontOrdersSchema = exports.insertStorefrontOrdersSchema = exports.selectStorefrontConfigSchema = exports.insertStorefrontConfigSchema = exports.selectStockReservationsSchema = exports.insertStockReservationsSchema = exports.selectSocialAccountsSchema = exports.insertSocialAccountsSchema = exports.selectShopeeShopProductsSchema = exports.insertShopeeShopProductsSchema = exports.selectShopeeShopOrdersSchema = exports.insertShopeeShopOrdersSchema = exports.selectShopeeBusinessAccountsSchema = exports.insertShopeeBusinessAccountsSchema = exports.selectShopSettingsSchema = exports.insertShopSettingsSchema = exports.selectShippingZonesSchema = exports.insertShippingZonesSchema = exports.selectShareVerificationsSchema = exports.insertShareVerificationsSchema = void 0;
+exports.viettelpostConfigs = exports.fieldCategories = exports.customDescriptionTemplates = exports.smartSchedulingRules = exports.fanpageContentPreferences = exports.SUPPORTED_WORKER_PLATFORMS = exports.selectWorkersSchema = exports.insertWorkersSchema = exports.selectVietnameseReviewTemplatesSchema = exports.insertVietnameseReviewTemplatesSchema = exports.selectVendorsSchema = exports.insertVendorsSchema = exports.selectVendorProductsSchema = exports.insertVendorProductsSchema = void 0;
 const pg_core_1 = require("drizzle-orm/pg-core");
 const drizzle_orm_1 = require("drizzle-orm");
 const drizzle_zod_1 = require("drizzle-zod");
@@ -36,9 +37,9 @@ exports.accountGroups = (0, pg_core_1.pgTable)("account_groups", {
     isActive: (0, pg_core_1.boolean)("is_active").default(true),
     formulaId: (0, pg_core_1.varchar)("formula_id"),
     totalPosts: (0, pg_core_1.integer)("total_posts").default(0),
-    lastPostAt: (0, pg_core_1.timestamp)("last_post_at", { mode: 'string' }),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    lastPostAt: (0, pg_core_1.timestamp)("last_post_at", { mode: 'date' }),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
 });
 exports.admins = (0, pg_core_1.pgTable)("admins", {
     id: (0, pg_core_1.varchar)().default((0, drizzle_orm_1.sql) `gen_random_uuid()`).primaryKey(),
@@ -47,9 +48,9 @@ exports.admins = (0, pg_core_1.pgTable)("admins", {
     name: (0, pg_core_1.text)().notNull(),
     role: (0, pg_core_1.text)().default('staff').notNull(),
     isActive: (0, pg_core_1.boolean)("is_active").default(true).notNull(),
-    lastLoginAt: (0, pg_core_1.timestamp)("last_login_at", { mode: 'string' }),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    lastLoginAt: (0, pg_core_1.timestamp)("last_login_at", { mode: 'date' }),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
 }, (table) => [
     (0, pg_core_1.unique)("admins_email_key").on(table.email),
 ]);
@@ -65,8 +66,8 @@ exports.affiliateClicks = (0, pg_core_1.pgTable)("affiliate_clicks", {
     converted: (0, pg_core_1.boolean)().default(false).notNull(),
     orderId: (0, pg_core_1.varchar)("order_id"),
     conversionValue: (0, pg_core_1.numeric)("conversion_value", { precision: 15, scale: 2 }),
-    clickedAt: (0, pg_core_1.timestamp)("clicked_at", { mode: 'string' }).defaultNow().notNull(),
-    convertedAt: (0, pg_core_1.timestamp)("converted_at", { mode: 'string' }),
+    clickedAt: (0, pg_core_1.timestamp)("clicked_at", { mode: 'date' }).defaultNow().notNull(),
+    convertedAt: (0, pg_core_1.timestamp)("converted_at", { mode: 'date' }),
 });
 exports.affiliateLandingPages = (0, pg_core_1.pgTable)("affiliate_landing_pages", {
     id: (0, pg_core_1.varchar)().default((0, drizzle_orm_1.sql) `gen_random_uuid()`).primaryKey(),
@@ -92,8 +93,8 @@ exports.affiliateLandingPages = (0, pg_core_1.pgTable)("affiliate_landing_pages"
     totalRevenue: (0, pg_core_1.numeric)("total_revenue", { precision: 15, scale: 2 }).default(0.00),
     conversionRate: (0, pg_core_1.numeric)("conversion_rate", { precision: 5, scale: 2 }).default(0.00),
     isActive: (0, pg_core_1.boolean)("is_active").default(true).notNull(),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow().notNull(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow().notNull(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow().notNull(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow().notNull(),
 }, (table) => [
     (0, pg_core_1.unique)("affiliate_landing_pages_slug_key").on(table.slug),
 ]);
@@ -110,9 +111,9 @@ exports.affiliateProductAssignments = (0, pg_core_1.pgTable)("affiliate_product_
     totalSales: (0, pg_core_1.integer)("total_sales").default(0).notNull(),
     totalCommission: (0, pg_core_1.numeric)("total_commission", { precision: 15, scale: 2 }).default(0).notNull(),
     assignedBy: (0, pg_core_1.varchar)("assigned_by"),
-    assignedAt: (0, pg_core_1.timestamp)("assigned_at", { mode: 'string' }).defaultNow(),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    assignedAt: (0, pg_core_1.timestamp)("assigned_at", { mode: 'date' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
     isDefaultAssignment: (0, pg_core_1.boolean)("is_default_assignment").default(false).notNull(),
 });
 exports.affiliateProductRequests = (0, pg_core_1.pgTable)("affiliate_product_requests", {
@@ -129,9 +130,106 @@ exports.affiliateProductRequests = (0, pg_core_1.pgTable)("affiliate_product_req
     approvedProductId: (0, pg_core_1.varchar)("approved_product_id"),
     approvedCommissionRate: (0, pg_core_1.numeric)("approved_commission_rate", { precision: 5, scale: 2 }),
     reviewedBy: (0, pg_core_1.varchar)("reviewed_by"),
-    reviewedAt: (0, pg_core_1.timestamp)("reviewed_at", { mode: 'string' }),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    reviewedAt: (0, pg_core_1.timestamp)("reviewed_at", { mode: 'date' }),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
+});
+exports.affiliateOrders = (0, pg_core_1.pgTable)("affiliate_orders", {
+    id: (0, pg_core_1.varchar)().default((0, drizzle_orm_1.sql) `gen_random_uuid()`).primaryKey(),
+    affiliateId: (0, pg_core_1.varchar)("affiliate_id").notNull(),
+    orderId: (0, pg_core_1.varchar)("order_id").notNull(),
+    commissionAmount: (0, pg_core_1.numeric)("commission_amount", { precision: 15, scale: 2 }).notNull(),
+    commissionRate: (0, pg_core_1.numeric)("commission_rate", { precision: 5, scale: 2 }).notNull(),
+    status: (0, pg_core_1.text)().default('pending').notNull(),
+    paidAt: (0, pg_core_1.timestamp)("paid_at", { mode: 'date' }),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
+});
+exports.affiliateShareLogs = (0, pg_core_1.pgTable)("affiliate_share_logs", {
+    id: (0, pg_core_1.varchar)().default((0, drizzle_orm_1.sql) `gen_random_uuid()`).primaryKey(),
+    affiliateId: (0, pg_core_1.varchar)("affiliate_id").notNull(),
+    platform: (0, pg_core_1.text)().notNull(),
+    contentId: (0, pg_core_1.varchar)("content_id"),
+    shareUrl: (0, pg_core_1.text)("share_url"),
+    sharedAt: (0, pg_core_1.timestamp)("shared_at", { mode: 'date' }).defaultNow(),
+    clicks: (0, pg_core_1.integer)().default(0).notNull(),
+    conversions: (0, pg_core_1.integer)().default(0).notNull(),
+    revenue: (0, pg_core_1.numeric)({ precision: 15, scale: 2 }).default(0).notNull(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
+});
+exports.abebooksSearchHistory = (0, pg_core_1.pgTable)("abebooks_search_history", {
+    id: (0, pg_core_1.varchar)().default((0, drizzle_orm_1.sql) `gen_random_uuid()`).primaryKey(),
+    accountId: (0, pg_core_1.varchar)("account_id").notNull(),
+    searchQuery: (0, pg_core_1.text)("search_query").notNull(),
+    searchResults: (0, pg_core_1.integer)("search_results").default(0).notNull(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+});
+exports.abebooksAccounts = (0, pg_core_1.pgTable)("abebooks_accounts", {
+    id: (0, pg_core_1.varchar)().default((0, drizzle_orm_1.sql) `gen_random_uuid()`).primaryKey(),
+    username: (0, pg_core_1.varchar)().notNull(),
+    email: (0, pg_core_1.varchar)().notNull(),
+    requestsUsed: (0, pg_core_1.integer)("requests_used").default(0).notNull(),
+    isDefault: (0, pg_core_1.boolean)("is_default").default(false).notNull(),
+    lastUsedAt: (0, pg_core_1.timestamp)("last_used_at", { mode: 'date' }),
+    status: (0, pg_core_1.text)().default('active').notNull(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
+});
+exports.abebooksListings = (0, pg_core_1.pgTable)("abebooks_listings", {
+    id: (0, pg_core_1.varchar)().default((0, drizzle_orm_1.sql) `gen_random_uuid()`).primaryKey(),
+    accountId: (0, pg_core_1.varchar)("account_id").notNull(),
+    title: (0, pg_core_1.text)().notNull(),
+    author: (0, pg_core_1.text)(),
+    isbn: (0, pg_core_1.varchar)(),
+    bookIsbn: (0, pg_core_1.varchar)("book_isbn"),
+    price: (0, pg_core_1.numeric)({ precision: 10, scale: 2 }),
+    condition: (0, pg_core_1.text)(),
+    description: (0, pg_core_1.text)(),
+    status: (0, pg_core_1.text)().default('active').notNull(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
+});
+exports.queueAutoFillSettings = (0, pg_core_1.pgTable)("queue_auto_fill_settings", {
+    id: (0, pg_core_1.varchar)().default((0, drizzle_orm_1.sql) `gen_random_uuid()`).primaryKey(),
+    queueId: (0, pg_core_1.varchar)("queue_id").notNull(),
+    autoFillEnabled: (0, pg_core_1.boolean)("auto_fill_enabled").default(false).notNull(),
+    fillInterval: (0, pg_core_1.integer)("fill_interval").default(300).notNull(),
+    maxFillCount: (0, pg_core_1.integer)("max_fill_count").default(10).notNull(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
+});
+exports.groupAccounts = (0, pg_core_1.pgTable)("group_accounts", {
+    id: (0, pg_core_1.varchar)().default((0, drizzle_orm_1.sql) `gen_random_uuid()`).primaryKey(),
+    groupId: (0, pg_core_1.varchar)("group_id").notNull(),
+    accountId: (0, pg_core_1.varchar)("account_id").notNull(),
+    socialAccountId: (0, pg_core_1.varchar)("social_account_id"),
+    role: (0, pg_core_1.text)().default('member').notNull(),
+    isActive: (0, pg_core_1.boolean)("is_active").default(true).notNull(),
+    joinedAt: (0, pg_core_1.timestamp)("joined_at", { mode: 'date' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
+});
+exports.productFAQs = (0, pg_core_1.pgTable)("product_faqs", {
+    id: (0, pg_core_1.varchar)().default((0, drizzle_orm_1.sql) `gen_random_uuid()`).primaryKey(),
+    productId: (0, pg_core_1.varchar)("product_id").notNull(),
+    question: (0, pg_core_1.text)().notNull(),
+    answer: (0, pg_core_1.text)().notNull(),
+    sortOrder: (0, pg_core_1.integer)("sort_order").default(0).notNull(),
+    isActive: (0, pg_core_1.boolean)("is_active").default(true).notNull(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
+});
+exports.vendorPushSubscriptions = (0, pg_core_1.pgTable)("vendor_push_subscriptions", {
+    id: (0, pg_core_1.varchar)().default((0, drizzle_orm_1.sql) `gen_random_uuid()`).primaryKey(),
+    vendorId: (0, pg_core_1.varchar)("vendor_id").notNull(),
+    endpoint: (0, pg_core_1.text)().notNull(),
+    p256dhKey: (0, pg_core_1.text)("p256dh_key").notNull(),
+    authKey: (0, pg_core_1.text)("auth_key").notNull(),
+    isActive: (0, pg_core_1.boolean)("is_active").default(true).notNull(),
+    lastNotifiedAt: (0, pg_core_1.timestamp)("last_notified_at", { mode: 'date' }),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
 });
 exports.apiConfigurations = (0, pg_core_1.pgTable)("api_configurations", {
     id: (0, pg_core_1.varchar)().default((0, drizzle_orm_1.sql) `gen_random_uuid()`).primaryKey(),
@@ -151,16 +249,16 @@ exports.apiConfigurations = (0, pg_core_1.pgTable)("api_configurations", {
     accessCount: (0, pg_core_1.integer)("access_count").default(0).notNull(),
     errorCount: (0, pg_core_1.integer)("error_count").default(0).notNull(),
     avgResponseTime: (0, pg_core_1.numeric)("avg_response_time", { precision: 10, scale: 3 }).default(0),
-    lastAccessed: (0, pg_core_1.timestamp)("last_accessed", { mode: 'string' }),
-    lastToggled: (0, pg_core_1.timestamp)("last_toggled", { mode: 'string' }),
-    lastError: (0, pg_core_1.timestamp)("last_error", { mode: 'string' }),
+    lastAccessed: (0, pg_core_1.timestamp)("last_accessed", { mode: 'date' }),
+    lastToggled: (0, pg_core_1.timestamp)("last_toggled", { mode: 'date' }),
+    lastError: (0, pg_core_1.timestamp)("last_error", { mode: 'date' }),
     tags: (0, pg_core_1.jsonb)().default([]),
     priority: (0, pg_core_1.text)().default('normal').notNull(),
     owner: (0, pg_core_1.text)(),
     requiresAuth: (0, pg_core_1.boolean)("requires_auth").default(true).notNull(),
     adminOnly: (0, pg_core_1.boolean)("admin_only").default(false).notNull(),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
 }, (table) => [
     (0, pg_core_1.unique)("api_configurations_endpoint_method_unique").on(table.endpoint, table.method),
 ]);
@@ -170,8 +268,8 @@ exports.authUsers = (0, pg_core_1.pgTable)("auth_users", {
     firstName: (0, pg_core_1.varchar)("first_name"),
     lastName: (0, pg_core_1.varchar)("last_name"),
     profileImageUrl: (0, pg_core_1.varchar)("profile_image_url"),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
     provider: (0, pg_core_1.text)().default('replit'),
 }, (table) => [
     (0, pg_core_1.unique)("auth_users_email_key").on(table.email),
@@ -192,23 +290,23 @@ exports.bookAnalytics = (0, pg_core_1.pgTable)("book_analytics", {
     averagePrice: (0, pg_core_1.numeric)("average_price", { precision: 10, scale: 2 }),
     totalRatings: (0, pg_core_1.integer)("total_ratings").default(0),
     averageRating: (0, pg_core_1.numeric)("average_rating", { precision: 3, scale: 2 }),
-    lastViewedAt: (0, pg_core_1.timestamp)("last_viewed_at", { mode: 'string' }),
-    lastPurchasedAt: (0, pg_core_1.timestamp)("last_purchased_at", { mode: 'string' }),
-    analyticsDate: (0, pg_core_1.timestamp)("analytics_date", { mode: 'string' }).defaultNow(),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    lastViewedAt: (0, pg_core_1.timestamp)("last_viewed_at", { mode: 'date' }),
+    lastPurchasedAt: (0, pg_core_1.timestamp)("last_purchased_at", { mode: 'date' }),
+    analyticsDate: (0, pg_core_1.timestamp)("analytics_date", { mode: 'date' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
 });
 exports.bookCampaignRecipients = (0, pg_core_1.pgTable)("book_campaign_recipients", {
     id: (0, pg_core_1.varchar)().default((0, drizzle_orm_1.sql) `gen_random_uuid()`).primaryKey(),
     campaignId: (0, pg_core_1.varchar)("campaign_id").notNull(),
     customerId: (0, pg_core_1.varchar)("customer_id").notNull(),
-    sentAt: (0, pg_core_1.timestamp)("sent_at", { mode: 'string' }),
-    openedAt: (0, pg_core_1.timestamp)("opened_at", { mode: 'string' }),
-    clickedAt: (0, pg_core_1.timestamp)("clicked_at", { mode: 'string' }),
-    convertedAt: (0, pg_core_1.timestamp)("converted_at", { mode: 'string' }),
+    sentAt: (0, pg_core_1.timestamp)("sent_at", { mode: 'date' }),
+    openedAt: (0, pg_core_1.timestamp)("opened_at", { mode: 'date' }),
+    clickedAt: (0, pg_core_1.timestamp)("clicked_at", { mode: 'date' }),
+    convertedAt: (0, pg_core_1.timestamp)("converted_at", { mode: 'date' }),
     emailAddress: (0, pg_core_1.text)("email_address").notNull(),
     deliveryStatus: (0, pg_core_1.text)("delivery_status").default('pending').notNull(),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
 }, (table) => [
     (0, pg_core_1.unique)("book_campaign_recipients_campaign_id_customer_id_key").on(table.campaignId, table.customerId),
 ]);
@@ -229,20 +327,20 @@ exports.bookCategories = (0, pg_core_1.pgTable)("book_categories", {
     isFeatured: (0, pg_core_1.boolean)("is_featured").default(false),
     metaTitle: (0, pg_core_1.varchar)("meta_title"),
     metaDescription: (0, pg_core_1.text)("meta_description"),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
 });
 exports.bookCategoryAssignments = (0, pg_core_1.pgTable)("book_category_assignments", {
     id: (0, pg_core_1.varchar)().default((0, drizzle_orm_1.sql) `gen_random_uuid()`).primaryKey(),
     bookIsbn: (0, pg_core_1.varchar)("book_isbn").notNull(),
     categoryId: (0, pg_core_1.varchar)("category_id").notNull(),
     isPrimary: (0, pg_core_1.boolean)("is_primary").default(false),
-    assignedAt: (0, pg_core_1.timestamp)("assigned_at", { mode: 'string' }).defaultNow(),
+    assignedAt: (0, pg_core_1.timestamp)("assigned_at", { mode: 'date' }).defaultNow(),
     assignedBy: (0, pg_core_1.varchar)("assigned_by"),
     confidenceScore: (0, pg_core_1.numeric)("confidence_score"),
     isAutoAssigned: (0, pg_core_1.boolean)("is_auto_assigned").default(false),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
 }, (table) => [
     (0, pg_core_1.unique)("book_category_assignments_book_isbn_category_id_key").on(table.bookIsbn, table.categoryId),
 ]);
@@ -256,13 +354,13 @@ exports.bookCustomers = (0, pg_core_1.pgTable)("book_customers", {
     totalSpent: (0, pg_core_1.numeric)("total_spent", { precision: 15, scale: 2 }).default(0).notNull(),
     totalBooks: (0, pg_core_1.integer)("total_books").default(0).notNull(),
     avgOrderValue: (0, pg_core_1.numeric)("avg_order_value", { precision: 15, scale: 2 }).default(0).notNull(),
-    lastPurchase: (0, pg_core_1.timestamp)("last_purchase", { mode: 'string' }),
+    lastPurchase: (0, pg_core_1.timestamp)("last_purchase", { mode: 'date' }),
     emailSubscribed: (0, pg_core_1.boolean)("email_subscribed").default(true).notNull(),
     smsSubscribed: (0, pg_core_1.boolean)("sms_subscribed").default(false).notNull(),
     marketingTags: (0, pg_core_1.jsonb)("marketing_tags").default([]),
     status: (0, pg_core_1.text)().default('active').notNull(),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
 }, (table) => [
     (0, pg_core_1.unique)("book_customers_email_key").on(table.email),
 ]);
@@ -273,7 +371,7 @@ exports.bookMarketingCampaigns = (0, pg_core_1.pgTable)("book_marketing_campaign
     targetCriteria: (0, pg_core_1.jsonb)("target_criteria").default({}),
     emailContent: (0, pg_core_1.jsonb)("email_content").notNull(),
     scheduleType: (0, pg_core_1.text)("schedule_type").default('immediate').notNull(),
-    scheduledAt: (0, pg_core_1.timestamp)("scheduled_at", { mode: 'string' }),
+    scheduledAt: (0, pg_core_1.timestamp)("scheduled_at", { mode: 'date' }),
     triggerEvents: (0, pg_core_1.jsonb)("trigger_events").default([]),
     status: (0, pg_core_1.text)().default('draft').notNull(),
     targetCount: (0, pg_core_1.integer)("target_count").default(0).notNull(),
@@ -282,8 +380,8 @@ exports.bookMarketingCampaigns = (0, pg_core_1.pgTable)("book_marketing_campaign
     clickCount: (0, pg_core_1.integer)("click_count").default(0).notNull(),
     conversionCount: (0, pg_core_1.integer)("conversion_count").default(0).notNull(),
     isActive: (0, pg_core_1.boolean)("is_active").default(true).notNull(),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
 });
 exports.bookOrderItems = (0, pg_core_1.pgTable)("book_order_items", {
     id: (0, pg_core_1.varchar)().default((0, drizzle_orm_1.sql) `gen_random_uuid()`).primaryKey(),
@@ -315,8 +413,8 @@ exports.bookOrders = (0, pg_core_1.pgTable)("book_orders", {
     vtpStatus: (0, pg_core_1.text)("vtp_status").default('not_shipped'),
     vtpTrackingData: (0, pg_core_1.jsonb)("vtp_tracking_data"),
     vtpShippingInfo: (0, pg_core_1.jsonb)("vtp_shipping_info"),
-    vtpCreatedAt: (0, pg_core_1.timestamp)("vtp_created_at", { mode: 'string' }),
-    vtpUpdatedAt: (0, pg_core_1.timestamp)("vtp_updated_at", { mode: 'string' }),
+    vtpCreatedAt: (0, pg_core_1.timestamp)("vtp_created_at", { mode: 'date' }),
+    vtpUpdatedAt: (0, pg_core_1.timestamp)("vtp_updated_at", { mode: 'date' }),
     sellerId: (0, pg_core_1.varchar)("seller_id"),
     bookSource: (0, pg_core_1.text)("book_source").default('local_inventory').notNull(),
     isbn: (0, pg_core_1.text)(),
@@ -324,8 +422,8 @@ exports.bookOrders = (0, pg_core_1.pgTable)("book_orders", {
     sellerCommission: (0, pg_core_1.numeric)("seller_commission", { precision: 15, scale: 2 }).default(0),
     bookMetadata: (0, pg_core_1.jsonb)("book_metadata"),
     inventoryStatus: (0, pg_core_1.text)("inventory_status").default('reserved').notNull(),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
     customerNameBook: (0, pg_core_1.text)("customer_name_book").notNull(),
     customerEmailBook: (0, pg_core_1.text)("customer_email_book"),
     customerPhoneBook: (0, pg_core_1.text)("customer_phone_book").notNull(),
@@ -345,8 +443,8 @@ exports.bookPaymentTransactions = (0, pg_core_1.pgTable)("book_payment_transacti
     customerEmail: (0, pg_core_1.varchar)("customer_email"),
     metadata: (0, pg_core_1.jsonb)().default({}),
     errorMessage: (0, pg_core_1.text)("error_message"),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    completedAt: (0, pg_core_1.timestamp)("completed_at", { mode: 'string' }),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    completedAt: (0, pg_core_1.timestamp)("completed_at", { mode: 'date' }),
 });
 exports.bookPrices = (0, pg_core_1.pgTable)("book_prices", {
     id: (0, pg_core_1.varchar)().default((0, drizzle_orm_1.sql) `gen_random_uuid()`).primaryKey(),
@@ -356,8 +454,8 @@ exports.bookPrices = (0, pg_core_1.pgTable)("book_prices", {
     status: (0, pg_core_1.varchar)().default('In Stock'),
     sourceUrl: (0, pg_core_1.varchar)("source_url"),
     productId: (0, pg_core_1.varchar)("product_id"),
-    lastUpdatedAt: (0, pg_core_1.timestamp)("last_updated_at", { mode: 'string' }).defaultNow(),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
+    lastUpdatedAt: (0, pg_core_1.timestamp)("last_updated_at", { mode: 'date' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
     sourceId: (0, pg_core_1.varchar)("source_id"),
     currency: (0, pg_core_1.varchar)({ length: 3 }).default('USD'),
     stock: (0, pg_core_1.integer)().default(0),
@@ -367,8 +465,8 @@ exports.bookPrices = (0, pg_core_1.pgTable)("book_prices", {
     deliveryTime: (0, pg_core_1.varchar)("delivery_time", { length: 50 }),
     isCurrentPrice: (0, pg_core_1.boolean)("is_current_price").default(true),
     priceHistory: (0, pg_core_1.jsonb)("price_history"),
-    lastChecked: (0, pg_core_1.timestamp)("last_checked", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    lastChecked: (0, pg_core_1.timestamp)("last_checked", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
 }, (table) => [
     (0, pg_core_1.unique)("book_prices_book_isbn_source_key").on(table.bookIsbn, table.source),
 ]);
@@ -380,8 +478,8 @@ exports.bookPricingRules = (0, pg_core_1.pgTable)("book_pricing_rules", {
     priceAdjustment: (0, pg_core_1.jsonb)("price_adjustment").notNull(),
     priority: (0, pg_core_1.integer)().default(0).notNull(),
     isActive: (0, pg_core_1.boolean)("is_active").default(true).notNull(),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
 });
 exports.bookSellerInventory = (0, pg_core_1.pgTable)("book_seller_inventory", {
     id: (0, pg_core_1.varchar)().default((0, drizzle_orm_1.sql) `gen_random_uuid()`).primaryKey(),
@@ -392,14 +490,14 @@ exports.bookSellerInventory = (0, pg_core_1.pgTable)("book_seller_inventory", {
     basePrice: (0, pg_core_1.numeric)("base_price", { precision: 15, scale: 2 }).notNull(),
     sellerPrice: (0, pg_core_1.numeric)("seller_price", { precision: 15, scale: 2 }).notNull(),
     calculatedPrice: (0, pg_core_1.numeric)("calculated_price", { precision: 15, scale: 2 }).notNull(),
-    assignedAt: (0, pg_core_1.timestamp)("assigned_at", { mode: 'string' }).defaultNow(),
+    assignedAt: (0, pg_core_1.timestamp)("assigned_at", { mode: 'date' }).defaultNow(),
     assignmentType: (0, pg_core_1.text)("assignment_type").default('auto_random').notNull(),
     totalSold: (0, pg_core_1.integer)("total_sold").default(0).notNull(),
     totalRevenue: (0, pg_core_1.numeric)("total_revenue", { precision: 15, scale: 2 }).default(0).notNull(),
-    lastSale: (0, pg_core_1.timestamp)("last_sale", { mode: 'string' }),
+    lastSale: (0, pg_core_1.timestamp)("last_sale", { mode: 'date' }),
     isActive: (0, pg_core_1.boolean)("is_active").default(true).notNull(),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
 }, (table) => [
     (0, pg_core_1.unique)("book_seller_inventory_seller_id_product_id_key").on(table.sellerId, table.productId),
 ]);
@@ -420,8 +518,8 @@ exports.bookSellers = (0, pg_core_1.pgTable)("book_sellers", {
     autoAssignBooks: (0, pg_core_1.boolean)("auto_assign_books").default(true).notNull(),
     isActive: (0, pg_core_1.boolean)("is_active").default(true).notNull(),
     isTopSeller: (0, pg_core_1.boolean)("is_top_seller").default(false).notNull(),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
     config: (0, pg_core_1.jsonb)(),
 }, (table) => [
     (0, pg_core_1.unique)("book_sellers_seller_id_key").on(table.sellerId),
@@ -436,8 +534,8 @@ exports.books = (0, pg_core_1.pgTable)("books", {
     averageRating: (0, pg_core_1.numeric)("average_rating", { precision: 3, scale: 2 }).default(0.0),
     reviewCount: (0, pg_core_1.integer)("review_count").default(0),
     isTopSeller: (0, pg_core_1.boolean)("is_top_seller").default(false),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
     subtitle: (0, pg_core_1.text)(),
     publisher: (0, pg_core_1.varchar)({ length: 255 }),
     publicationYear: (0, pg_core_1.integer)("publication_year"),
@@ -456,7 +554,7 @@ exports.books = (0, pg_core_1.pgTable)("books", {
     seoKeywords: (0, pg_core_1.jsonb)("seo_keywords"),
     priceRegions: (0, pg_core_1.jsonb)("price_regions"),
     targetMarkets: (0, pg_core_1.jsonb)("target_markets"),
-    lastPriceUpdate: (0, pg_core_1.timestamp)("last_price_update", { mode: 'string' }),
+    lastPriceUpdate: (0, pg_core_1.timestamp)("last_price_update", { mode: 'date' }),
     sellerId: (0, pg_core_1.varchar)("seller_id", { length: 50 }),
 });
 exports.botSettings = (0, pg_core_1.pgTable)("bot_settings", {
@@ -468,28 +566,28 @@ exports.botSettings = (0, pg_core_1.pgTable)("bot_settings", {
     apiKey: (0, pg_core_1.text)("api_key"),
     connectionTimeout: (0, pg_core_1.integer)("connection_timeout").default(5000).notNull(),
     maxRetries: (0, pg_core_1.integer)("max_retries").default(3).notNull(),
-    lastHealthCheck: (0, pg_core_1.timestamp)("last_health_check", { mode: 'string' }),
+    lastHealthCheck: (0, pg_core_1.timestamp)("last_health_check", { mode: 'date' }),
     healthStatus: (0, pg_core_1.text)("health_status").default('offline').notNull(),
     errorMessage: (0, pg_core_1.text)("error_message"),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
 });
 exports.campaignParticipations = (0, pg_core_1.pgTable)("campaign_participations", {
     id: (0, pg_core_1.varchar)().default((0, drizzle_orm_1.sql) `gen_random_uuid()`).primaryKey(),
     campaignId: (0, pg_core_1.varchar)("campaign_id").notNull(),
     customerId: (0, pg_core_1.varchar)("customer_id").notNull(),
     shareUrl: (0, pg_core_1.text)("share_url").notNull(),
-    submittedAt: (0, pg_core_1.timestamp)("submitted_at", { mode: 'string' }).defaultNow().notNull(),
+    submittedAt: (0, pg_core_1.timestamp)("submitted_at", { mode: 'date' }).defaultNow().notNull(),
     status: (0, pg_core_1.text)().default('pending').notNull(),
-    verificationScheduledAt: (0, pg_core_1.timestamp)("verification_scheduled_at", { mode: 'string' }),
-    lastVerifiedAt: (0, pg_core_1.timestamp)("last_verified_at", { mode: 'string' }),
-    rewardedAt: (0, pg_core_1.timestamp)("rewarded_at", { mode: 'string' }),
+    verificationScheduledAt: (0, pg_core_1.timestamp)("verification_scheduled_at", { mode: 'date' }),
+    lastVerifiedAt: (0, pg_core_1.timestamp)("last_verified_at", { mode: 'date' }),
+    rewardedAt: (0, pg_core_1.timestamp)("rewarded_at", { mode: 'date' }),
     voucherId: (0, pg_core_1.varchar)("voucher_id"),
     rejectionReason: (0, pg_core_1.text)("rejection_reason"),
     verificationAttempts: (0, pg_core_1.integer)("verification_attempts").default(0).notNull(),
     metadata: (0, pg_core_1.jsonb)().default({}),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow().notNull(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow().notNull(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow().notNull(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow().notNull(),
 }, (table) => [
     (0, pg_core_1.unique)("campaign_participations_campaign_id_customer_id_key").on(table.campaignId, table.customerId),
 ]);
@@ -502,8 +600,8 @@ exports.campaigns = (0, pg_core_1.pgTable)("campaigns", {
     rewardVoucherCodeId: (0, pg_core_1.varchar)("reward_voucher_code_id"),
     rewardPoints: (0, pg_core_1.integer)("reward_points").default(0),
     status: (0, pg_core_1.text)().default('draft').notNull(),
-    startDate: (0, pg_core_1.timestamp)("start_date", { mode: 'string' }).notNull(),
-    endDate: (0, pg_core_1.timestamp)("end_date", { mode: 'string' }),
+    startDate: (0, pg_core_1.timestamp)("start_date", { mode: 'date' }).notNull(),
+    endDate: (0, pg_core_1.timestamp)("end_date", { mode: 'date' }),
     verificationDelayHours: (0, pg_core_1.integer)("verification_delay_hours").default(24).notNull(),
     minEngagementLikes: (0, pg_core_1.integer)("min_engagement_likes").default(0),
     minEngagementShares: (0, pg_core_1.integer)("min_engagement_shares").default(0),
@@ -513,8 +611,8 @@ exports.campaigns = (0, pg_core_1.pgTable)("campaigns", {
     maxParticipationsPerCustomer: (0, pg_core_1.integer)("max_participations_per_customer").default(1),
     shareTemplate: (0, pg_core_1.text)("share_template"),
     requiredHashtags: (0, pg_core_1.jsonb)("required_hashtags").default([]),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow().notNull(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow().notNull(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow().notNull(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow().notNull(),
     createdBy: (0, pg_core_1.varchar)("created_by"),
 });
 exports.carGroups = (0, pg_core_1.pgTable)("car_groups", {
@@ -526,24 +624,27 @@ exports.carGroups = (0, pg_core_1.pgTable)("car_groups", {
     groupType: (0, pg_core_1.text)("group_type").default('custom').notNull(),
     isActive: (0, pg_core_1.boolean)("is_active").default(true).notNull(),
     metadata: (0, pg_core_1.jsonb)().default({}),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
     createdBy: (0, pg_core_1.varchar)("created_by"),
 });
 exports.categories = (0, pg_core_1.pgTable)("categories", {
     id: (0, pg_core_1.varchar)().default((0, drizzle_orm_1.sql) `gen_random_uuid()`).primaryKey(),
     name: (0, pg_core_1.text)().notNull(),
+    slug: (0, pg_core_1.varchar)({ length: 100 }).notNull(),
     description: (0, pg_core_1.text)(),
     isActive: (0, pg_core_1.boolean)("is_active").default(true).notNull(),
     sortOrder: (0, pg_core_1.integer)("sort_order").default(0).notNull(),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
     industryId: (0, pg_core_1.varchar)("industry_id").notNull(),
     consultationConfig: (0, pg_core_1.jsonb)("consultation_config").default({}),
     consultationTemplates: (0, pg_core_1.jsonb)("consultation_templates").default({}),
     salesAdviceTemplate: (0, pg_core_1.jsonb)("sales_advice_template").default({}),
     isVipOnly: (0, pg_core_1.boolean)("is_vip_only").default(false).notNull(),
-});
+}, (table) => [
+    (0, pg_core_1.unique)("categories_slug_unique").on(table.slug),
+]);
 exports.categoryFaqTemplates = (0, pg_core_1.pgTable)("category_faq_templates", {
     id: (0, pg_core_1.varchar)().default((0, drizzle_orm_1.sql) `gen_random_uuid()`).primaryKey(),
     categoryId: (0, pg_core_1.varchar)("category_id").notNull(),
@@ -553,8 +654,8 @@ exports.categoryFaqTemplates = (0, pg_core_1.pgTable)("category_faq_templates", 
     autoInherit: (0, pg_core_1.boolean)("auto_inherit").default(true).notNull(),
     createdBy: (0, pg_core_1.varchar)("created_by"),
     templateNote: (0, pg_core_1.text)("template_note"),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
 }, (table) => [
     (0, pg_core_1.unique)("category_faq_templates_category_id_faq_id_key").on(table.categoryId, table.faqId),
 ]);
@@ -572,9 +673,45 @@ exports.categoryPriceRules = (0, pg_core_1.pgTable)("category_price_rules", {
     isActive: (0, pg_core_1.boolean)("is_active").default(true),
     startDate: (0, pg_core_1.text)("start_date"),
     endDate: (0, pg_core_1.text)("end_date"),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
 });
+exports.stores = (0, pg_core_1.pgTable)("stores", {
+    id: (0, pg_core_1.varchar)().default((0, drizzle_orm_1.sql) `gen_random_uuid()`).primaryKey(),
+    domain: (0, pg_core_1.varchar)().notNull().unique(),
+    name: (0, pg_core_1.varchar)().notNull(),
+    industry: (0, pg_core_1.varchar)().default('food'),
+    themeConfig: (0, pg_core_1.jsonb)("theme_config").default({}),
+    isActive: (0, pg_core_1.boolean)("is_active").default(true),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
+});
+exports.storeProducts = (0, pg_core_1.pgTable)("store_products", {
+    id: (0, pg_core_1.varchar)().default((0, drizzle_orm_1.sql) `gen_random_uuid()`).primaryKey(),
+    storeId: (0, pg_core_1.varchar)("store_id").notNull().references(() => exports.stores.id, { onDelete: 'cascade' }),
+    productId: (0, pg_core_1.varchar)("product_id").notNull().references(() => exports.products.id, { onDelete: 'cascade' }),
+    priceOverride: (0, pg_core_1.numeric)("price_override", { precision: 15, scale: 2 }),
+    isFeatured: (0, pg_core_1.boolean)("is_featured").default(false),
+    sortOrder: (0, pg_core_1.integer)("sort_order").default(0),
+    isActive: (0, pg_core_1.boolean)("is_active").default(true),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
+}, (table) => [
+    (0, pg_core_1.unique)("store_products_store_product").on(table.storeId, table.productId),
+    (0, pg_core_1.index)("store_products_store_id_idx").on(table.storeId),
+    (0, pg_core_1.index)("store_products_product_id_idx").on(table.productId),
+]);
+exports.storeCategories = (0, pg_core_1.pgTable)("store_categories", {
+    id: (0, pg_core_1.varchar)().default((0, drizzle_orm_1.sql) `gen_random_uuid()`).primaryKey(),
+    storeId: (0, pg_core_1.varchar)("store_id").notNull().references(() => exports.stores.id, { onDelete: 'cascade' }),
+    categoryId: (0, pg_core_1.varchar)("category_id").notNull().references(() => exports.categories.id, { onDelete: 'cascade' }),
+    sortOrder: (0, pg_core_1.integer)("sort_order").default(0),
+    isActive: (0, pg_core_1.boolean)("is_active").default(true),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+}, (table) => [
+    (0, pg_core_1.unique)("store_categories_store_category").on(table.storeId, table.categoryId),
+    (0, pg_core_1.index)("store_categories_store_id_idx").on(table.storeId),
+]);
 exports.chatbotConversations = (0, pg_core_1.pgTable)("chatbot_conversations", {
     id: (0, pg_core_1.varchar)().default((0, drizzle_orm_1.sql) `gen_random_uuid()`).primaryKey(),
     customerId: (0, pg_core_1.varchar)("customer_id"),
@@ -582,8 +719,8 @@ exports.chatbotConversations = (0, pg_core_1.pgTable)("chatbot_conversations", {
     messages: (0, pg_core_1.jsonb)().notNull(),
     status: (0, pg_core_1.text)().default('active').notNull(),
     satisfactionRating: (0, pg_core_1.integer)("satisfaction_rating"),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
 });
 exports.competitorProfiles = (0, pg_core_1.pgTable)("competitor_profiles", {
     id: (0, pg_core_1.varchar)().default((0, drizzle_orm_1.sql) `gen_random_uuid()`).primaryKey(),
@@ -607,8 +744,8 @@ exports.competitorProfiles = (0, pg_core_1.pgTable)("competitor_profiles", {
     vietnameseBusinessPractices: (0, pg_core_1.jsonb)("vietnamese_business_practices").default((0, drizzle_orm_1.sql) `'{"acceptsDebt": false, "festivalDiscounts": true, "offersInstallment": false, "regionalPreferences": []}'::jsonb`),
     isActive: (0, pg_core_1.boolean)("is_active").default(true).notNull(),
     simulationWeight: (0, pg_core_1.numeric)("simulation_weight", { precision: 3, scale: 2 }).default(1.00).notNull(),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
 });
 exports.consignmentRequests = (0, pg_core_1.pgTable)("consignment_requests", {
     id: (0, pg_core_1.varchar)().default((0, drizzle_orm_1.sql) `gen_random_uuid()`).primaryKey(),
@@ -623,9 +760,9 @@ exports.consignmentRequests = (0, pg_core_1.pgTable)("consignment_requests", {
     status: (0, pg_core_1.varchar)().default('pending'),
     reviewerId: (0, pg_core_1.varchar)("reviewer_id"),
     reviewerNotes: (0, pg_core_1.text)("reviewer_notes"),
-    reviewedAt: (0, pg_core_1.timestamp)("reviewed_at", { mode: 'string' }),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow().notNull(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow().notNull(),
+    reviewedAt: (0, pg_core_1.timestamp)("reviewed_at", { mode: 'date' }),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow().notNull(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow().notNull(),
 });
 exports.contentAssets = (0, pg_core_1.pgTable)("content_assets", {
     id: (0, pg_core_1.varchar)().default((0, drizzle_orm_1.sql) `gen_random_uuid()`).primaryKey(),
@@ -643,10 +780,11 @@ exports.contentAssets = (0, pg_core_1.pgTable)("content_assets", {
     altText: (0, pg_core_1.text)("alt_text"),
     caption: (0, pg_core_1.text)(),
     usageCount: (0, pg_core_1.integer)("usage_count").default(0),
-    lastUsed: (0, pg_core_1.timestamp)("last_used", { mode: 'string' }),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    lastUsed: (0, pg_core_1.timestamp)("last_used", { mode: 'date' }),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
     tagIds: (0, pg_core_1.jsonb)("tag_ids").default([]),
+    tags: (0, pg_core_1.text)().array(),
     resourceType: (0, pg_core_1.varchar)("resource_type", { length: 20 }).notNull(),
 }, (table) => [
     (0, pg_core_1.unique)("content_assets_cloudinary_public_id_unique").on(table.cloudinaryPublicId),
@@ -659,8 +797,8 @@ exports.contentCategories = (0, pg_core_1.pgTable)("content_categories", {
     icon: (0, pg_core_1.varchar)({ length: 50 }),
     sortOrder: (0, pg_core_1.integer)("sort_order").default(0),
     isActive: (0, pg_core_1.boolean)("is_active").default(true),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
 });
 exports.contentFaqAssignments = (0, pg_core_1.pgTable)("content_faq_assignments", {
     id: (0, pg_core_1.varchar)().default((0, drizzle_orm_1.sql) `gen_random_uuid()`).primaryKey(),
@@ -671,11 +809,11 @@ exports.contentFaqAssignments = (0, pg_core_1.pgTable)("content_faq_assignments"
     isVisible: (0, pg_core_1.boolean)("is_visible").default(true).notNull(),
     assignedBy: (0, pg_core_1.varchar)("assigned_by"),
     assignmentNote: (0, pg_core_1.text)("assignment_note"),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
     isInherited: (0, pg_core_1.boolean)("is_inherited").default(false).notNull(),
     templateId: (0, pg_core_1.varchar)("template_id"),
-    inheritedAt: (0, pg_core_1.timestamp)("inherited_at", { mode: 'string' }),
+    inheritedAt: (0, pg_core_1.timestamp)("inherited_at", { mode: 'date' }),
 }, (table) => [
     (0, pg_core_1.unique)("unique_faq_content_assignment").on(table.faqId, table.contentType, table.contentId),
 ]);
@@ -689,13 +827,13 @@ exports.contentLibrary = (0, pg_core_1.pgTable)("content_library", {
     aiVariations: (0, pg_core_1.jsonb)("ai_variations").default([]),
     priority: (0, pg_core_1.text)().default('normal').notNull(),
     usageCount: (0, pg_core_1.integer)("usage_count").default(0),
-    lastUsed: (0, pg_core_1.timestamp)("last_used", { mode: 'string' }),
+    lastUsed: (0, pg_core_1.timestamp)("last_used", { mode: 'date' }),
     status: (0, pg_core_1.text)().default('draft').notNull(),
     isTemplate: (0, pg_core_1.boolean)("is_template").default(false),
     platforms: (0, pg_core_1.jsonb)().default((0, drizzle_orm_1.sql) `'["facebook", "instagram", "tiktok"]'::jsonb`),
     bestTimeSlots: (0, pg_core_1.jsonb)("best_time_slots").default([]),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
     contentFingerprint: (0, pg_core_1.text)("content_fingerprint"),
 });
 exports.contentQueue = (0, pg_core_1.pgTable)("content_queue", {
@@ -715,13 +853,13 @@ exports.contentQueue = (0, pg_core_1.pgTable)("content_queue", {
     variationTone: (0, pg_core_1.text)("variation_tone"),
     status: (0, pg_core_1.text)().default('pending').notNull(),
     timesUsed: (0, pg_core_1.integer)("times_used").default(0),
-    lastScheduledAt: (0, pg_core_1.timestamp)("last_scheduled_at", { mode: 'string' }),
+    lastScheduledAt: (0, pg_core_1.timestamp)("last_scheduled_at", { mode: 'date' }),
     errorMessage: (0, pg_core_1.text)("error_message"),
     retryCount: (0, pg_core_1.integer)("retry_count").default(0),
     metadata: (0, pg_core_1.jsonb)(),
     createdBy: (0, pg_core_1.varchar)("created_by"),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
 });
 exports.conversationMessages = (0, pg_core_1.pgTable)("conversation_messages", {
     id: (0, pg_core_1.varchar)().default((0, drizzle_orm_1.sql) `gen_random_uuid()`).primaryKey(),
@@ -736,8 +874,8 @@ exports.conversationMessages = (0, pg_core_1.pgTable)("conversation_messages", {
     responseTime: (0, pg_core_1.integer)("response_time"),
     context: (0, pg_core_1.jsonb)().default({}),
     metadata: (0, pg_core_1.jsonb)().default({}),
-    timestamp: (0, pg_core_1.timestamp)({ mode: 'string' }).defaultNow(),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
+    timestamp: (0, pg_core_1.timestamp)({ mode: 'date' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
 });
 exports.conversationSessions = (0, pg_core_1.pgTable)("conversation_sessions", {
     id: (0, pg_core_1.varchar)().default((0, drizzle_orm_1.sql) `gen_random_uuid()`).primaryKey(),
@@ -752,14 +890,14 @@ exports.conversationSessions = (0, pg_core_1.pgTable)("conversation_sessions", {
     status: (0, pg_core_1.text)().default('active').notNull(),
     resolutionStatus: (0, pg_core_1.text)("resolution_status"),
     escalatedToHuman: (0, pg_core_1.boolean)("escalated_to_human").default(false).notNull(),
-    escalatedAt: (0, pg_core_1.timestamp)("escalated_at", { mode: 'string' }),
+    escalatedAt: (0, pg_core_1.timestamp)("escalated_at", { mode: 'date' }),
     escalationReason: (0, pg_core_1.text)("escalation_reason"),
     assignedAgentId: (0, pg_core_1.varchar)("assigned_agent_id"),
-    startedAt: (0, pg_core_1.timestamp)("started_at", { mode: 'string' }).defaultNow(),
-    endedAt: (0, pg_core_1.timestamp)("ended_at", { mode: 'string' }),
-    lastActiveAt: (0, pg_core_1.timestamp)("last_active_at", { mode: 'string' }).defaultNow(),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    startedAt: (0, pg_core_1.timestamp)("started_at", { mode: 'date' }).defaultNow(),
+    endedAt: (0, pg_core_1.timestamp)("ended_at", { mode: 'date' }),
+    lastActiveAt: (0, pg_core_1.timestamp)("last_active_at", { mode: 'date' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
 }, (table) => [
     (0, pg_core_1.unique)("conversation_sessions_session_id_key").on(table.sessionId),
 ]);
@@ -770,15 +908,15 @@ exports.cookieProfiles = (0, pg_core_1.pgTable)("cookie_profiles", {
     groupTag: (0, pg_core_1.text)("group_tag").notNull(),
     accountName: (0, pg_core_1.text)("account_name").notNull(),
     encryptedData: (0, pg_core_1.text)("encrypted_data").notNull(),
-    lastUsed: (0, pg_core_1.timestamp)("last_used", { mode: 'string' }),
+    lastUsed: (0, pg_core_1.timestamp)("last_used", { mode: 'date' }),
     isActive: (0, pg_core_1.boolean)("is_active").default(true).notNull(),
     metadata: (0, pg_core_1.jsonb)().default({}),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
     version: (0, pg_core_1.integer)().default(1).notNull(),
     isVerified: (0, pg_core_1.boolean)("is_verified").default(false).notNull(),
     verificationStatus: (0, pg_core_1.text)("verification_status"),
-    lastVerifiedAt: (0, pg_core_1.timestamp)("last_verified_at", { mode: 'string' }),
+    lastVerifiedAt: (0, pg_core_1.timestamp)("last_verified_at", { mode: 'date' }),
     adAccounts: (0, pg_core_1.jsonb)("ad_accounts").default([]),
     hasAdsAccess: (0, pg_core_1.boolean)("has_ads_access").default(false),
 });
@@ -789,7 +927,7 @@ exports.customerEvents = (0, pg_core_1.pgTable)("customer_events", {
     eventData: (0, pg_core_1.jsonb)("event_data").default({}),
     channel: (0, pg_core_1.text)().notNull(),
     sessionId: (0, pg_core_1.text)("session_id"),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow().notNull(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow().notNull(),
 });
 exports.customerReviews = (0, pg_core_1.pgTable)("customer_reviews", {
     id: (0, pg_core_1.varchar)().default((0, drizzle_orm_1.sql) `gen_random_uuid()`).primaryKey(),
@@ -809,26 +947,34 @@ exports.customerReviews = (0, pg_core_1.pgTable)("customer_reviews", {
     sentimentScore: (0, pg_core_1.numeric)("sentiment_score", { precision: 3, scale: 2 }).default(0),
     helpfulnessVotes: (0, pg_core_1.integer)("helpfulness_votes").default(0),
     isVerified: (0, pg_core_1.boolean)("is_verified").default(false),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
 });
 exports.customerVouchers = (0, pg_core_1.pgTable)("customer_vouchers", {
     id: (0, pg_core_1.varchar)().default((0, drizzle_orm_1.sql) `gen_random_uuid()`).primaryKey(),
     customerId: (0, pg_core_1.varchar)("customer_id").notNull(),
     discountCodeId: (0, pg_core_1.integer)("discount_code_id").notNull(),
-    claimedAt: (0, pg_core_1.timestamp)("claimed_at", { mode: 'string' }).defaultNow().notNull(),
+    claimedAt: (0, pg_core_1.timestamp)("claimed_at", { mode: 'date' }).defaultNow().notNull(),
     claimedVia: (0, pg_core_1.text)("claimed_via").default('manual_input').notNull(),
     campaignId: (0, pg_core_1.varchar)("campaign_id"),
     shareVerificationId: (0, pg_core_1.varchar)("share_verification_id"),
     status: (0, pg_core_1.text)().default('active').notNull(),
-    usedAt: (0, pg_core_1.timestamp)("used_at", { mode: 'string' }),
-    revokedAt: (0, pg_core_1.timestamp)("revoked_at", { mode: 'string' }),
+    usedAt: (0, pg_core_1.timestamp)("used_at", { mode: 'date' }),
+    revokedAt: (0, pg_core_1.timestamp)("revoked_at", { mode: 'date' }),
     revokedReason: (0, pg_core_1.text)("revoked_reason"),
     orderId: (0, pg_core_1.varchar)("order_id"),
     discountApplied: (0, pg_core_1.numeric)("discount_applied", { precision: 10, scale: 2 }),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow().notNull(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow().notNull(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow().notNull(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow().notNull(),
 });
+exports.wishlists = (0, pg_core_1.pgTable)("wishlists", {
+    id: (0, pg_core_1.varchar)().default((0, drizzle_orm_1.sql) `gen_random_uuid()`).primaryKey(),
+    customerId: (0, pg_core_1.varchar)("customer_id").notNull(),
+    productId: (0, pg_core_1.varchar)("product_id").notNull(),
+    addedAt: (0, pg_core_1.timestamp)("added_at", { mode: 'date' }).defaultNow().notNull(),
+}, (table) => [
+    (0, pg_core_1.unique)("wishlists_customer_product_unique").on(table.customerId, table.productId),
+]);
 exports.customers = (0, pg_core_1.pgTable)("customers", {
     id: (0, pg_core_1.varchar)().default((0, drizzle_orm_1.sql) `gen_random_uuid()`).primaryKey(),
     name: (0, pg_core_1.text)().notNull(),
@@ -836,14 +982,14 @@ exports.customers = (0, pg_core_1.pgTable)("customers", {
     phone: (0, pg_core_1.text)().notNull(),
     avatar: (0, pg_core_1.text)(),
     status: (0, pg_core_1.text)().default('active').notNull(),
-    joinDate: (0, pg_core_1.timestamp)("join_date", { mode: 'string' }).defaultNow(),
+    joinDate: (0, pg_core_1.timestamp)("join_date", { mode: 'date' }).defaultNow(),
     totalDebt: (0, pg_core_1.numeric)("total_debt", { precision: 15, scale: 2 }).default(0),
     creditLimit: (0, pg_core_1.numeric)("credit_limit", { precision: 15, scale: 2 }).default(0),
     membershipTier: (0, pg_core_1.text)("membership_tier").default('member'),
     totalSpent: (0, pg_core_1.numeric)("total_spent", { precision: 15, scale: 2 }).default(0),
     pointsBalance: (0, pg_core_1.integer)("points_balance").default(0),
     pointsEarned: (0, pg_core_1.integer)("points_earned").default(0),
-    lastTierUpdate: (0, pg_core_1.timestamp)("last_tier_update", { mode: 'string' }).defaultNow(),
+    lastTierUpdate: (0, pg_core_1.timestamp)("last_tier_update", { mode: 'date' }).defaultNow(),
     authUserId: (0, pg_core_1.varchar)("auth_user_id"),
     membershipData: (0, pg_core_1.jsonb)("membership_data").default({}),
     socialAccountIds: (0, pg_core_1.jsonb)("social_account_ids").default({}),
@@ -864,7 +1010,7 @@ exports.customers = (0, pg_core_1.pgTable)("customers", {
     distanceFromShop: (0, pg_core_1.numeric)("distance_from_shop", { precision: 10, scale: 3 }),
     routeDistanceFromShop: (0, pg_core_1.numeric)("route_distance_from_shop", { precision: 10, scale: 3 }),
     geocodingStatus: (0, pg_core_1.text)("geocoding_status").default('not_geocoded'),
-    lastGeocodedAt: (0, pg_core_1.timestamp)("last_geocoded_at", { mode: 'string' }),
+    lastGeocodedAt: (0, pg_core_1.timestamp)("last_geocoded_at", { mode: 'date' }),
     address2: (0, pg_core_1.text)(),
     district: (0, pg_core_1.text)(),
 }, (table) => [
@@ -882,7 +1028,7 @@ exports.depositTransactions = (0, pg_core_1.pgTable)("deposit_transactions", {
     proofUrl: (0, pg_core_1.text)("proof_url"),
     description: (0, pg_core_1.text)(),
     processedById: (0, pg_core_1.varchar)("processed_by_id"),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow().notNull(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow().notNull(),
 });
 exports.discountCodeUsages = (0, pg_core_1.pgTable)("discount_code_usages", {
     id: (0, pg_core_1.integer)().default('nextval(discount_code_usages_id_seq').primaryKey(),
@@ -892,7 +1038,7 @@ exports.discountCodeUsages = (0, pg_core_1.pgTable)("discount_code_usages", {
     usageAmount: (0, pg_core_1.numeric)("usage_amount", { precision: 10, scale: 2 }).notNull(),
     discountApplied: (0, pg_core_1.numeric)("discount_applied", { precision: 10, scale: 2 }).notNull(),
     channel: (0, pg_core_1.varchar)().default('online'),
-    usedAt: (0, pg_core_1.timestamp)("used_at", { mode: 'string' }).defaultNow(),
+    usedAt: (0, pg_core_1.timestamp)("used_at", { mode: 'date' }).defaultNow(),
     metadata: (0, pg_core_1.jsonb)(),
 });
 exports.discountCodes = (0, pg_core_1.pgTable)("discount_codes", {
@@ -907,15 +1053,15 @@ exports.discountCodes = (0, pg_core_1.pgTable)("discount_codes", {
     maxUsage: (0, pg_core_1.integer)("max_usage"),
     maxUsagePerCustomer: (0, pg_core_1.integer)("max_usage_per_customer").default(1),
     minOrderAmount: (0, pg_core_1.numeric)("min_order_amount", { precision: 10, scale: 2 }).default(0),
-    validFrom: (0, pg_core_1.timestamp)("valid_from", { mode: 'string' }).notNull(),
-    validUntil: (0, pg_core_1.timestamp)("valid_until", { mode: 'string' }),
+    validFrom: (0, pg_core_1.timestamp)("valid_from", { mode: 'date' }).notNull(),
+    validUntil: (0, pg_core_1.timestamp)("valid_until", { mode: 'date' }),
     channelRestrictions: (0, pg_core_1.jsonb)("channel_restrictions"),
     scheduleRules: (0, pg_core_1.jsonb)("schedule_rules"),
     status: (0, pg_core_1.varchar)().default('active').notNull(),
     usageCount: (0, pg_core_1.integer)("usage_count").default(0),
     localizedMessages: (0, pg_core_1.jsonb)("localized_messages"),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
     createdBy: (0, pg_core_1.varchar)("created_by"),
 }, (table) => [
     (0, pg_core_1.unique)("discount_codes_code_key").on(table.code),
@@ -929,8 +1075,8 @@ exports.discountScopeAssignments = (0, pg_core_1.pgTable)("discount_scope_assign
     customerSegmentRules: (0, pg_core_1.jsonb)("customer_segment_rules"),
     assignmentType: (0, pg_core_1.varchar)("assignment_type").default('include').notNull(),
     isExclusion: (0, pg_core_1.boolean)("is_exclusion").default(false),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
 });
 exports.driverReports = (0, pg_core_1.pgTable)("driver_reports", {
     id: (0, pg_core_1.varchar)().default((0, drizzle_orm_1.sql) `gen_random_uuid()`).primaryKey(),
@@ -943,12 +1089,12 @@ exports.driverReports = (0, pg_core_1.pgTable)("driver_reports", {
     severity: (0, pg_core_1.text)().default('medium').notNull(),
     status: (0, pg_core_1.text)().default('pending').notNull(),
     resolution: (0, pg_core_1.text)(),
-    reportedAt: (0, pg_core_1.timestamp)("reported_at", { mode: 'string' }).defaultNow(),
-    reviewedAt: (0, pg_core_1.timestamp)("reviewed_at", { mode: 'string' }),
-    resolvedAt: (0, pg_core_1.timestamp)("resolved_at", { mode: 'string' }),
+    reportedAt: (0, pg_core_1.timestamp)("reported_at", { mode: 'date' }).defaultNow(),
+    reviewedAt: (0, pg_core_1.timestamp)("reviewed_at", { mode: 'date' }),
+    resolvedAt: (0, pg_core_1.timestamp)("resolved_at", { mode: 'date' }),
     reviewedBy: (0, pg_core_1.varchar)("reviewed_by"),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
 });
 exports.facebookApps = (0, pg_core_1.pgTable)("facebook_apps", {
     id: (0, pg_core_1.varchar)().default((0, drizzle_orm_1.sql) `gen_random_uuid()`).primaryKey(),
@@ -961,10 +1107,10 @@ exports.facebookApps = (0, pg_core_1.pgTable)("facebook_apps", {
     isActive: (0, pg_core_1.boolean)("is_active").default(true),
     environment: (0, pg_core_1.text)().default('development'),
     description: (0, pg_core_1.text)(),
-    lastWebhookEvent: (0, pg_core_1.timestamp)("last_webhook_event", { mode: 'string' }),
+    lastWebhookEvent: (0, pg_core_1.timestamp)("last_webhook_event", { mode: 'date' }),
     totalEvents: (0, pg_core_1.integer)("total_events").default(0),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
     tagIds: (0, pg_core_1.jsonb)("tag_ids").default([]),
     groupId: (0, pg_core_1.varchar)("group_id"),
 }, (table) => [
@@ -981,11 +1127,11 @@ exports.facebookConversations = (0, pg_core_1.pgTable)("facebook_conversations",
     priority: (0, pg_core_1.text)().default('normal').notNull(),
     assignedTo: (0, pg_core_1.varchar)("assigned_to"),
     messageCount: (0, pg_core_1.integer)("message_count").default(0).notNull(),
-    lastMessageAt: (0, pg_core_1.timestamp)("last_message_at", { mode: 'string' }),
+    lastMessageAt: (0, pg_core_1.timestamp)("last_message_at", { mode: 'date' }),
     lastMessagePreview: (0, pg_core_1.text)("last_message_preview"),
     isRead: (0, pg_core_1.boolean)("is_read").default(false),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
     tagIds: (0, pg_core_1.jsonb)("tag_ids").default([]),
 });
 exports.facebookMessages = (0, pg_core_1.pgTable)("facebook_messages", {
@@ -998,12 +1144,12 @@ exports.facebookMessages = (0, pg_core_1.pgTable)("facebook_messages", {
     content: (0, pg_core_1.text)(),
     messageType: (0, pg_core_1.text)("message_type").default('text').notNull(),
     attachments: (0, pg_core_1.jsonb)().default([]),
-    timestamp: (0, pg_core_1.timestamp)({ mode: 'string' }).notNull(),
+    timestamp: (0, pg_core_1.timestamp)({ mode: 'date' }).notNull(),
     isEcho: (0, pg_core_1.boolean)("is_echo").default(false),
     replyToMessageId: (0, pg_core_1.text)("reply_to_message_id"),
     isRead: (0, pg_core_1.boolean)("is_read").default(false),
     isDelivered: (0, pg_core_1.boolean)("is_delivered").default(true),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
 }, (table) => [
     (0, pg_core_1.unique)("facebook_messages_facebook_message_id_unique").on(table.facebookMessageId),
 ]);
@@ -1012,7 +1158,7 @@ exports.facebookWebhookEvents = (0, pg_core_1.pgTable)("facebook_webhook_events"
     appId: (0, pg_core_1.varchar)("app_id").notNull(),
     eventType: (0, pg_core_1.text)("event_type").notNull(),
     eventData: (0, pg_core_1.jsonb)("event_data").notNull(),
-    processedAt: (0, pg_core_1.timestamp)("processed_at", { mode: 'string' }).defaultNow(),
+    processedAt: (0, pg_core_1.timestamp)("processed_at", { mode: 'date' }).defaultNow(),
     status: (0, pg_core_1.text)().default('pending'),
     errorMessage: (0, pg_core_1.text)("error_message"),
 });
@@ -1025,11 +1171,11 @@ exports.faqGenerationJobs = (0, pg_core_1.pgTable)("faq_generation_jobs", {
     status: (0, pg_core_1.varchar)().default('pending'),
     rawResponse: (0, pg_core_1.jsonb)("raw_response"),
     error: (0, pg_core_1.text)(),
-    processingStartedAt: (0, pg_core_1.timestamp)("processing_started_at", { mode: 'string' }),
-    processingCompletedAt: (0, pg_core_1.timestamp)("processing_completed_at", { mode: 'string' }),
+    processingStartedAt: (0, pg_core_1.timestamp)("processing_started_at", { mode: 'date' }),
+    processingCompletedAt: (0, pg_core_1.timestamp)("processing_completed_at", { mode: 'date' }),
     requestedBy: (0, pg_core_1.varchar)("requested_by").default('anonymous'),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
 });
 exports.faqGenerationResults = (0, pg_core_1.pgTable)("faq_generation_results", {
     id: (0, pg_core_1.varchar)().default((0, drizzle_orm_1.sql) `gen_random_uuid()`).primaryKey(),
@@ -1039,11 +1185,11 @@ exports.faqGenerationResults = (0, pg_core_1.pgTable)("faq_generation_results", 
     questionOrder: (0, pg_core_1.integer)("question_order").default(1),
     status: (0, pg_core_1.varchar)().default('generated'),
     finalFaqId: (0, pg_core_1.varchar)("final_faq_id"),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
     confidenceScore: (0, pg_core_1.numeric)("confidence_score", { precision: 5, scale: 3 }).default(0.85),
     reviewedBy: (0, pg_core_1.varchar)("reviewed_by"),
-    reviewedAt: (0, pg_core_1.timestamp)("reviewed_at", { mode: 'string' }),
+    reviewedAt: (0, pg_core_1.timestamp)("reviewed_at", { mode: 'date' }),
     reviewNotes: (0, pg_core_1.text)("review_notes"),
 });
 exports.faqLibrary = (0, pg_core_1.pgTable)("faq_library", {
@@ -1056,11 +1202,30 @@ exports.faqLibrary = (0, pg_core_1.pgTable)("faq_library", {
     isActive: (0, pg_core_1.boolean)("is_active").default(true).notNull(),
     sortOrder: (0, pg_core_1.integer)("sort_order").default(0).notNull(),
     usageCount: (0, pg_core_1.integer)("usage_count").default(0).notNull(),
-    lastUsed: (0, pg_core_1.timestamp)("last_used", { mode: 'string' }),
+    lastUsed: (0, pg_core_1.timestamp)("last_used", { mode: 'date' }),
     keywords: (0, pg_core_1.jsonb)().default([]),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
 });
+exports.flashSales = (0, pg_core_1.pgTable)("flash_sales", {
+    id: (0, pg_core_1.varchar)().default((0, drizzle_orm_1.sql) `gen_random_uuid()`).primaryKey(),
+    productId: (0, pg_core_1.varchar)("product_id").notNull(),
+    slug: (0, pg_core_1.varchar)({ length: 200 }).notNull(),
+    title: (0, pg_core_1.text)().notNull(),
+    originalPrice: (0, pg_core_1.numeric)("original_price", { precision: 15, scale: 2 }).notNull(),
+    salePrice: (0, pg_core_1.numeric)("sale_price", { precision: 15, scale: 2 }).notNull(),
+    discountPercent: (0, pg_core_1.integer)("discount_percent"),
+    startTime: (0, pg_core_1.timestamp)("start_time", { mode: 'date' }).notNull(),
+    endTime: (0, pg_core_1.timestamp)("end_time", { mode: 'date' }).notNull(),
+    bannerImage: (0, pg_core_1.text)("banner_image"),
+    description: (0, pg_core_1.text)(),
+    unit: (0, pg_core_1.varchar)("unit", { length: 50 }),
+    isActive: (0, pg_core_1.boolean)("is_active").default(true).notNull(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
+}, (table) => [
+    (0, pg_core_1.unique)("flash_sales_slug_key").on(table.slug),
+]);
 exports.frontendCategoryAssignments = (0, pg_core_1.pgTable)("frontend_category_assignments", {
     id: (0, pg_core_1.varchar)().default((0, drizzle_orm_1.sql) `gen_random_uuid()`).primaryKey(),
     frontendId: (0, pg_core_1.text)("frontend_id").notNull(),
@@ -1068,8 +1233,8 @@ exports.frontendCategoryAssignments = (0, pg_core_1.pgTable)("frontend_category_
     isLocalOnly: (0, pg_core_1.boolean)("is_local_only").default(false).notNull(),
     sortOrder: (0, pg_core_1.integer)("sort_order").default(0).notNull(),
     isActive: (0, pg_core_1.boolean)("is_active").default(true).notNull(),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
 });
 exports.generalCategories = (0, pg_core_1.pgTable)("general_categories", {
     id: (0, pg_core_1.varchar)().default((0, drizzle_orm_1.sql) `gen_random_uuid()`).primaryKey(),
@@ -1086,15 +1251,15 @@ exports.generalCategories = (0, pg_core_1.pgTable)("general_categories", {
     isFeatured: (0, pg_core_1.boolean)("is_featured").default(false),
     metaTitle: (0, pg_core_1.varchar)("meta_title"),
     metaDescription: (0, pg_core_1.text)("meta_description"),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
 }, (table) => [
     (0, pg_core_1.unique)("general_categories_slug_key").on(table.slug),
 ]);
 exports.generalCategoryAnalytics = (0, pg_core_1.pgTable)("general_category_analytics", {
     id: (0, pg_core_1.varchar)().default((0, drizzle_orm_1.sql) `gen_random_uuid()`).primaryKey(),
     categoryId: (0, pg_core_1.varchar)("category_id").notNull(),
-    analyticsDate: (0, pg_core_1.timestamp)("analytics_date", { mode: 'string' }).defaultNow().notNull(),
+    analyticsDate: (0, pg_core_1.timestamp)("analytics_date", { mode: 'date' }).defaultNow().notNull(),
     pageViews: (0, pg_core_1.integer)("page_views").default(0),
     uniqueVisitors: (0, pg_core_1.integer)("unique_visitors").default(0),
     bounceRate: (0, pg_core_1.numeric)("bounce_rate", { precision: 5, scale: 2 }).default(0.00),
@@ -1105,8 +1270,8 @@ exports.generalCategoryAnalytics = (0, pg_core_1.pgTable)("general_category_anal
     totalRevenue: (0, pg_core_1.numeric)("total_revenue", { precision: 12, scale: 2 }).default(0.00),
     clickThroughRate: (0, pg_core_1.numeric)("click_through_rate", { precision: 5, scale: 2 }).default(0.00),
     conversionRate: (0, pg_core_1.numeric)("conversion_rate", { precision: 5, scale: 2 }).default(0.00),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
 });
 exports.generalCategoryAssignments = (0, pg_core_1.pgTable)("general_category_assignments", {
     id: (0, pg_core_1.varchar)().default((0, drizzle_orm_1.sql) `gen_random_uuid()`).primaryKey(),
@@ -1114,8 +1279,8 @@ exports.generalCategoryAssignments = (0, pg_core_1.pgTable)("general_category_as
     categoryId: (0, pg_core_1.varchar)("category_id").notNull(),
     isPrimary: (0, pg_core_1.boolean)("is_primary").default(false),
     sortOrder: (0, pg_core_1.integer)("sort_order").default(0),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
 }, (table) => [
     (0, pg_core_1.unique)("general_unique_product_category").on(table.productId, table.categoryId),
 ]);
@@ -1131,10 +1296,10 @@ exports.generalCategoryPriceRules = (0, pg_core_1.pgTable)("general_category_pri
     conditions: (0, pg_core_1.jsonb)().default({}),
     priority: (0, pg_core_1.integer)().default(0),
     isActive: (0, pg_core_1.boolean)("is_active").default(true),
-    startDate: (0, pg_core_1.timestamp)("start_date", { mode: 'string' }),
-    endDate: (0, pg_core_1.timestamp)("end_date", { mode: 'string' }),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    startDate: (0, pg_core_1.timestamp)("start_date", { mode: 'date' }),
+    endDate: (0, pg_core_1.timestamp)("end_date", { mode: 'date' }),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
 });
 exports.giftCampaigns = (0, pg_core_1.pgTable)("gift_campaigns", {
     id: (0, pg_core_1.varchar)().default((0, drizzle_orm_1.sql) `gen_random_uuid()`).primaryKey(),
@@ -1153,12 +1318,12 @@ exports.giftCampaigns = (0, pg_core_1.pgTable)("gift_campaigns", {
     invoiceRequired: (0, pg_core_1.boolean)("invoice_required").default(false).notNull(),
     complianceNotes: (0, pg_core_1.text)("compliance_notes"),
     status: (0, pg_core_1.varchar)().default('draft').notNull(),
-    activeFrom: (0, pg_core_1.timestamp)("active_from", { mode: 'string' }).defaultNow(),
-    activeUntil: (0, pg_core_1.timestamp)("active_until", { mode: 'string' }),
+    activeFrom: (0, pg_core_1.timestamp)("active_from", { mode: 'date' }).defaultNow(),
+    activeUntil: (0, pg_core_1.timestamp)("active_until", { mode: 'date' }),
     totalSold: (0, pg_core_1.integer)("total_sold").default(0).notNull(),
     totalValue: (0, pg_core_1.numeric)("total_value", { precision: 12, scale: 2 }).default(0).notNull(),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
     createdBy: (0, pg_core_1.varchar)("created_by"),
 });
 exports.giftRedemptions = (0, pg_core_1.pgTable)("gift_redemptions", {
@@ -1174,9 +1339,9 @@ exports.giftRedemptions = (0, pg_core_1.pgTable)("gift_redemptions", {
     staffMemberId: (0, pg_core_1.varchar)("staff_member_id"),
     redemptionStatus: (0, pg_core_1.varchar)("redemption_status").default('successful').notNull(),
     validationResult: (0, pg_core_1.jsonb)("validation_result").default({}),
-    redeemedAt: (0, pg_core_1.timestamp)("redeemed_at", { mode: 'string' }).defaultNow(),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    redeemedAt: (0, pg_core_1.timestamp)("redeemed_at", { mode: 'date' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
 });
 exports.giftVouchers = (0, pg_core_1.pgTable)("gift_vouchers", {
     id: (0, pg_core_1.varchar)().default((0, drizzle_orm_1.sql) `gen_random_uuid()`).primaryKey(),
@@ -1195,16 +1360,16 @@ exports.giftVouchers = (0, pg_core_1.pgTable)("gift_vouchers", {
     deliveryMethod: (0, pg_core_1.varchar)("delivery_method").default('email').notNull(),
     deliveryStatus: (0, pg_core_1.varchar)("delivery_status").default('pending').notNull(),
     deliveryDetails: (0, pg_core_1.jsonb)("delivery_details").default({}),
-    expiresAt: (0, pg_core_1.timestamp)("expires_at", { mode: 'string' }).notNull(),
-    firstUsedAt: (0, pg_core_1.timestamp)("first_used_at", { mode: 'string' }),
-    fullyRedeemedAt: (0, pg_core_1.timestamp)("fully_redeemed_at", { mode: 'string' }),
+    expiresAt: (0, pg_core_1.timestamp)("expires_at", { mode: 'date' }).notNull(),
+    firstUsedAt: (0, pg_core_1.timestamp)("first_used_at", { mode: 'date' }),
+    fullyRedeemedAt: (0, pg_core_1.timestamp)("fully_redeemed_at", { mode: 'date' }),
     status: (0, pg_core_1.varchar)().default('issued').notNull(),
     vatAmount: (0, pg_core_1.numeric)("vat_amount", { precision: 10, scale: 2 }),
     invoiceNumber: (0, pg_core_1.text)("invoice_number"),
     complianceData: (0, pg_core_1.jsonb)("compliance_data").default({}),
-    issuedAt: (0, pg_core_1.timestamp)("issued_at", { mode: 'string' }).defaultNow(),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    issuedAt: (0, pg_core_1.timestamp)("issued_at", { mode: 'date' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
 }, (table) => [
     (0, pg_core_1.unique)("gift_vouchers_voucher_code_key").on(table.voucherCode),
 ]);
@@ -1219,8 +1384,8 @@ exports.globalAutomationControl = (0, pg_core_1.pgTable)("global_automation_cont
     statistics: (0, pg_core_1.jsonb)(),
     notes: (0, pg_core_1.text)(),
     lastUpdatedBy: (0, pg_core_1.text)("last_updated_by"),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
     version: (0, pg_core_1.integer)().default(1),
 });
 exports.industries = (0, pg_core_1.pgTable)("industries", {
@@ -1229,8 +1394,8 @@ exports.industries = (0, pg_core_1.pgTable)("industries", {
     description: (0, pg_core_1.text)(),
     isActive: (0, pg_core_1.boolean)("is_active").default(true).notNull(),
     sortOrder: (0, pg_core_1.integer)("sort_order").default(0).notNull(),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
 });
 exports.industryKeywords = (0, pg_core_1.pgTable)("industry_keywords", {
     id: (0, pg_core_1.varchar)().default((0, drizzle_orm_1.sql) `gen_random_uuid()`).primaryKey(),
@@ -1238,16 +1403,16 @@ exports.industryKeywords = (0, pg_core_1.pgTable)("industry_keywords", {
     keyword: (0, pg_core_1.text)().notNull(),
     weight: (0, pg_core_1.numeric)({ precision: 5, scale: 3 }).default(1.000).notNull(),
     isActive: (0, pg_core_1.boolean)("is_active").default(true).notNull(),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
 });
 exports.industryRules = (0, pg_core_1.pgTable)("industry_rules", {
     id: (0, pg_core_1.varchar)().default((0, drizzle_orm_1.sql) `gen_random_uuid()`).primaryKey(),
     industryId: (0, pg_core_1.varchar)("industry_id").notNull(),
     rulesJson: (0, pg_core_1.jsonb)("rules_json").default({}),
     isActive: (0, pg_core_1.boolean)("is_active").default(true).notNull(),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
 });
 exports.industryTemplates = (0, pg_core_1.pgTable)("industry_templates", {
     id: (0, pg_core_1.varchar)().default((0, drizzle_orm_1.sql) `gen_random_uuid()`).primaryKey(),
@@ -1257,8 +1422,8 @@ exports.industryTemplates = (0, pg_core_1.pgTable)("industry_templates", {
     language: (0, pg_core_1.text)().default('vi').notNull(),
     isActive: (0, pg_core_1.boolean)("is_active").default(true).notNull(),
     priority: (0, pg_core_1.integer)().default(0).notNull(),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
 });
 exports.intentAnalytics = (0, pg_core_1.pgTable)("intent_analytics", {
     id: (0, pg_core_1.varchar)().default((0, drizzle_orm_1.sql) `gen_random_uuid()`).primaryKey(),
@@ -1271,9 +1436,9 @@ exports.intentAnalytics = (0, pg_core_1.pgTable)("intent_analytics", {
     successRate: (0, pg_core_1.numeric)("success_rate", { precision: 5, scale: 2 }).default(0.00),
     avgConfidence: (0, pg_core_1.numeric)("avg_confidence", { precision: 4, scale: 3 }),
     avgResponseTime: (0, pg_core_1.numeric)("avg_response_time", { precision: 8, scale: 2 }),
-    lastTriggered: (0, pg_core_1.timestamp)("last_triggered", { mode: 'string' }),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    lastTriggered: (0, pg_core_1.timestamp)("last_triggered", { mode: 'date' }),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
 }, (table) => [
     (0, pg_core_1.unique)("intent_analytics_intent_name_key").on(table.intentName),
 ]);
@@ -1282,21 +1447,21 @@ exports.invoiceTemplates = (0, pg_core_1.pgTable)("invoice_templates", {
     name: (0, pg_core_1.varchar)({ length: 255 }).notNull(),
     config: (0, pg_core_1.jsonb)().default({}).notNull(),
     isDefault: (0, pg_core_1.boolean)("is_default").default(false).notNull(),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
 });
 exports.ipPoolSessions = (0, pg_core_1.pgTable)("ip_pool_sessions", {
     id: (0, pg_core_1.integer)().default('nextval(ip_pool_sessions_id_seq').primaryKey(),
     ipPoolId: (0, pg_core_1.integer)("ip_pool_id").notNull(),
-    sessionStart: (0, pg_core_1.timestamp)("session_start", { mode: 'string' }).defaultNow().notNull(),
-    sessionEnd: (0, pg_core_1.timestamp)("session_end", { mode: 'string' }),
+    sessionStart: (0, pg_core_1.timestamp)("session_start", { mode: 'date' }).defaultNow().notNull(),
+    sessionEnd: (0, pg_core_1.timestamp)("session_end", { mode: 'date' }),
     ipAddress: (0, pg_core_1.varchar)("ip_address", { length: 100 }),
     postsCount: (0, pg_core_1.integer)("posts_count").default(0),
     successCount: (0, pg_core_1.integer)("success_count").default(0),
     failCount: (0, pg_core_1.integer)("fail_count").default(0),
     status: (0, pg_core_1.varchar)({ length: 50 }).default('active'),
     metadata: (0, pg_core_1.jsonb)().default({}),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
 });
 exports.ipPools = (0, pg_core_1.pgTable)("ip_pools", {
     id: (0, pg_core_1.integer)().default('nextval(ip_pools_id_seq').primaryKey(),
@@ -1307,13 +1472,13 @@ exports.ipPools = (0, pg_core_1.pgTable)("ip_pools", {
     config: (0, pg_core_1.jsonb)().default({}),
     healthScore: (0, pg_core_1.integer)("health_score").default(100),
     totalRotations: (0, pg_core_1.integer)("total_rotations").default(0),
-    lastRotatedAt: (0, pg_core_1.timestamp)("last_rotated_at", { mode: 'string' }),
+    lastRotatedAt: (0, pg_core_1.timestamp)("last_rotated_at", { mode: 'date' }),
     isEnabled: (0, pg_core_1.boolean)("is_enabled").default(true),
     priority: (0, pg_core_1.integer)().default(0),
     costPerMonth: (0, pg_core_1.numeric)("cost_per_month", { precision: 10, scale: 2 }),
     notes: (0, pg_core_1.text)(),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
 });
 exports.ipRotationLogs = (0, pg_core_1.pgTable)("ip_rotation_logs", {
     id: (0, pg_core_1.integer)().default('nextval(ip_rotation_logs_id_seq').primaryKey(),
@@ -1325,7 +1490,7 @@ exports.ipRotationLogs = (0, pg_core_1.pgTable)("ip_rotation_logs", {
     success: (0, pg_core_1.boolean)().default(false),
     errorMessage: (0, pg_core_1.text)("error_message"),
     metadata: (0, pg_core_1.jsonb)().default({}),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
 });
 exports.marketTrends = (0, pg_core_1.pgTable)("market_trends", {
     id: (0, pg_core_1.varchar)().default((0, drizzle_orm_1.sql) `gen_random_uuid()`).primaryKey(),
@@ -1351,9 +1516,20 @@ exports.marketTrends = (0, pg_core_1.pgTable)("market_trends", {
     confidenceScore: (0, pg_core_1.numeric)("confidence_score", { precision: 3, scale: 2 }).default(0.50).notNull(),
     recommendedAction: (0, pg_core_1.text)("recommended_action").default('maintain'),
     automationEnabled: (0, pg_core_1.boolean)("automation_enabled").default(false).notNull(),
-    lastCalculated: (0, pg_core_1.timestamp)("last_calculated", { mode: 'string' }).defaultNow(),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    lastCalculated: (0, pg_core_1.timestamp)("last_calculated", { mode: 'date' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
+});
+exports.notifications = (0, pg_core_1.pgTable)("notifications", {
+    id: (0, pg_core_1.varchar)().default((0, drizzle_orm_1.sql) `gen_random_uuid()`).primaryKey(),
+    customerId: (0, pg_core_1.varchar)("customer_id").notNull(),
+    type: (0, pg_core_1.text)().notNull(),
+    title: (0, pg_core_1.text)().notNull(),
+    message: (0, pg_core_1.text)().notNull(),
+    link: (0, pg_core_1.text)(),
+    isRead: (0, pg_core_1.boolean)("is_read").default(false).notNull(),
+    readAt: (0, pg_core_1.timestamp)("read_at", { mode: 'date' }),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow().notNull(),
 });
 exports.oauthConnections = (0, pg_core_1.pgTable)("oauth_connections", {
     id: (0, pg_core_1.varchar)().default((0, drizzle_orm_1.sql) `gen_random_uuid()`).primaryKey(),
@@ -1363,13 +1539,28 @@ exports.oauthConnections = (0, pg_core_1.pgTable)("oauth_connections", {
     email: (0, pg_core_1.varchar)(),
     accessToken: (0, pg_core_1.text)("access_token"),
     refreshToken: (0, pg_core_1.text)("refresh_token"),
-    tokenExpiresAt: (0, pg_core_1.timestamp)("token_expires_at", { mode: 'string' }),
+    tokenExpiresAt: (0, pg_core_1.timestamp)("token_expires_at", { mode: 'date' }),
     profileData: (0, pg_core_1.jsonb)("profile_data"),
     isPrimary: (0, pg_core_1.boolean)("is_primary").default(false).notNull(),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
 }, (table) => [
     (0, pg_core_1.unique)("unique_provider_user").on(table.provider, table.providerUserId),
+]);
+exports.oauthProviderSettings = (0, pg_core_1.pgTable)("oauth_provider_settings", {
+    id: (0, pg_core_1.varchar)().default((0, drizzle_orm_1.sql) `gen_random_uuid()`).primaryKey(),
+    provider: (0, pg_core_1.text)().notNull(),
+    displayName: (0, pg_core_1.text)("display_name").notNull(),
+    clientId: (0, pg_core_1.text)("client_id").notNull(),
+    clientSecret: (0, pg_core_1.text)("client_secret").notNull(),
+    redirectUri: (0, pg_core_1.text)("redirect_uri"),
+    scopes: (0, pg_core_1.text)(),
+    isActive: (0, pg_core_1.boolean)("is_active").default(true).notNull(),
+    metadata: (0, pg_core_1.jsonb)().default({}),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
+}, (table) => [
+    (0, pg_core_1.unique)("unique_provider_oauth_settings").on(table.provider),
 ]);
 exports.orderItems = (0, pg_core_1.pgTable)("order_items", {
     id: (0, pg_core_1.varchar)().default((0, drizzle_orm_1.sql) `gen_random_uuid()`).primaryKey(),
@@ -1393,12 +1584,12 @@ exports.orders = (0, pg_core_1.pgTable)("orders", {
     paymentMethod: (0, pg_core_1.varchar)("payment_method", { length: 50 }),
     status: (0, pg_core_1.varchar)({ length: 20 }).default('pending'),
     trackingNumber: (0, pg_core_1.varchar)("tracking_number", { length: 100 }),
-    estimatedDelivery: (0, pg_core_1.timestamp)("estimated_delivery", { mode: 'string' }),
-    deliveredAt: (0, pg_core_1.timestamp)("delivered_at", { mode: 'string' }),
+    estimatedDelivery: (0, pg_core_1.timestamp)("estimated_delivery", { mode: 'date' }),
+    deliveredAt: (0, pg_core_1.timestamp)("delivered_at", { mode: 'date' }),
     customerNotes: (0, pg_core_1.text)("customer_notes"),
     adminNotes: (0, pg_core_1.text)("admin_notes"),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
     source: (0, pg_core_1.text)().default('admin'),
     sourceOrderId: (0, pg_core_1.text)("source_order_id"),
     sourceReference: (0, pg_core_1.text)("source_reference"),
@@ -1411,13 +1602,13 @@ exports.orders = (0, pg_core_1.pgTable)("orders", {
     vtpStatus: (0, pg_core_1.text)("vtp_status"),
     vtpTrackingData: (0, pg_core_1.jsonb)("vtp_tracking_data"),
     vtpShippingInfo: (0, pg_core_1.jsonb)("vtp_shipping_info"),
-    vtpCreatedAt: (0, pg_core_1.timestamp)("vtp_created_at", { mode: 'string' }),
-    vtpUpdatedAt: (0, pg_core_1.timestamp)("vtp_updated_at", { mode: 'string' }),
+    vtpCreatedAt: (0, pg_core_1.timestamp)("vtp_created_at", { mode: 'date' }),
+    vtpUpdatedAt: (0, pg_core_1.timestamp)("vtp_updated_at", { mode: 'date' }),
     assignedDriverId: (0, pg_core_1.varchar)("assigned_driver_id"),
     affiliateId: (0, pg_core_1.varchar)("affiliate_id"),
     affiliateCommission: (0, pg_core_1.numeric)("affiliate_commission", { precision: 15, scale: 2 }).default(0.00),
     sendInvoiceToChat: (0, pg_core_1.boolean)("send_invoice_to_chat").default(false),
-    invoiceSentAt: (0, pg_core_1.timestamp)("invoice_sent_at", { mode: 'string' }),
+    invoiceSentAt: (0, pg_core_1.timestamp)("invoice_sent_at", { mode: 'date' }),
     invoiceSentVia: (0, pg_core_1.varchar)("invoice_sent_via"),
     tags: (0, pg_core_1.text)().default('ARRAY[]'),
 });
@@ -1427,8 +1618,8 @@ exports.pageTags = (0, pg_core_1.pgTable)("page_tags", {
     color: (0, pg_core_1.text)().default('#3B82F6').notNull(),
     description: (0, pg_core_1.text)(),
     isDefault: (0, pg_core_1.boolean)("is_default").default(false),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
 });
 exports.paymentGatewaySettings = (0, pg_core_1.pgTable)("payment_gateway_settings", {
     id: (0, pg_core_1.integer)().default('nextval(payment_gateway_settings_id_seq').primaryKey(),
@@ -1437,8 +1628,8 @@ exports.paymentGatewaySettings = (0, pg_core_1.pgTable)("payment_gateway_setting
     credentials: (0, pg_core_1.jsonb)().default({}).notNull(),
     testMode: (0, pg_core_1.boolean)("test_mode").default(true).notNull(),
     webhookSecret: (0, pg_core_1.text)("webhook_secret"),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
 }, (table) => [
     (0, pg_core_1.unique)("payment_gateway_settings_gateway_key").on(table.gateway),
 ]);
@@ -1451,15 +1642,15 @@ exports.payments = (0, pg_core_1.pgTable)("payments", {
     status: (0, pg_core_1.text)().default('pending').notNull(),
     transactionId: (0, pg_core_1.text)("transaction_id"),
     bankInfo: (0, pg_core_1.jsonb)("bank_info"),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
 });
 exports.performanceMetrics = (0, pg_core_1.pgTable)("performance_metrics", {
     id: (0, pg_core_1.varchar)().default((0, drizzle_orm_1.sql) `gen_random_uuid()`).primaryKey(),
     sellerId: (0, pg_core_1.varchar)("seller_id").notNull(),
     periodType: (0, pg_core_1.varchar)("period_type", { length: 20 }).notNull(),
-    periodStart: (0, pg_core_1.timestamp)("period_start", { mode: 'string' }).notNull(),
-    periodEnd: (0, pg_core_1.timestamp)("period_end", { mode: 'string' }).notNull(),
+    periodStart: (0, pg_core_1.timestamp)("period_start", { mode: 'date' }).notNull(),
+    periodEnd: (0, pg_core_1.timestamp)("period_end", { mode: 'date' }).notNull(),
     totalOrders: (0, pg_core_1.integer)("total_orders").default(0),
     successfulOrders: (0, pg_core_1.integer)("successful_orders").default(0),
     cancelledOrders: (0, pg_core_1.integer)("cancelled_orders").default(0),
@@ -1475,8 +1666,8 @@ exports.performanceMetrics = (0, pg_core_1.pgTable)("performance_metrics", {
     efficiencyScore: (0, pg_core_1.numeric)("efficiency_score", { precision: 3, scale: 2 }).default(0),
     qualityScore: (0, pg_core_1.numeric)("quality_score", { precision: 3, scale: 2 }).default(0),
     overallPerformanceScore: (0, pg_core_1.numeric)("overall_performance_score", { precision: 3, scale: 2 }).default(0),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
 });
 exports.priceSources = (0, pg_core_1.pgTable)("price_sources", {
     id: (0, pg_core_1.varchar)().default((0, drizzle_orm_1.sql) `gen_random_uuid()`).primaryKey(),
@@ -1486,8 +1677,8 @@ exports.priceSources = (0, pg_core_1.pgTable)("price_sources", {
     apiKey: (0, pg_core_1.varchar)("api_key", { length: 255 }),
     isActive: (0, pg_core_1.boolean)("is_active").default(true),
     priority: (0, pg_core_1.integer)().default(100),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
 });
 exports.pricingStrategies = (0, pg_core_1.pgTable)("pricing_strategies", {
     id: (0, pg_core_1.varchar)().default((0, drizzle_orm_1.sql) `gen_random_uuid()`).primaryKey(),
@@ -1517,11 +1708,27 @@ exports.pricingStrategies = (0, pg_core_1.pgTable)("pricing_strategies", {
     competitivenessScore: (0, pg_core_1.numeric)("competitiveness_score", { precision: 5, scale: 2 }).default(50.00).notNull(),
     salesVelocityImpact: (0, pg_core_1.numeric)("sales_velocity_impact", { precision: 7, scale: 4 }).default(0).notNull(),
     isActive: (0, pg_core_1.boolean)("is_active").default(true).notNull(),
-    lastAdjusted: (0, pg_core_1.timestamp)("last_adjusted", { mode: 'string' }),
-    nextAdjustment: (0, pg_core_1.timestamp)("next_adjustment", { mode: 'string' }),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    lastAdjusted: (0, pg_core_1.timestamp)("last_adjusted", { mode: 'date' }),
+    nextAdjustment: (0, pg_core_1.timestamp)("next_adjustment", { mode: 'date' }),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
 });
+exports.preorderProducts = (0, pg_core_1.pgTable)("preorder_products", {
+    id: (0, pg_core_1.varchar)().default((0, drizzle_orm_1.sql) `gen_random_uuid()`).primaryKey(),
+    productId: (0, pg_core_1.varchar)("product_id"),
+    slug: (0, pg_core_1.varchar)({ length: 200 }).notNull(),
+    title: (0, pg_core_1.text)().notNull(),
+    description: (0, pg_core_1.text)(),
+    price: (0, pg_core_1.numeric)({ precision: 15, scale: 2 }).notNull(),
+    estimatedDate: (0, pg_core_1.timestamp)("estimated_date", { mode: 'date' }).notNull(),
+    bannerImage: (0, pg_core_1.text)("banner_image"),
+    unit: (0, pg_core_1.text)().default('cái'),
+    isActive: (0, pg_core_1.boolean)("is_active").default(true).notNull(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
+}, (table) => [
+    (0, pg_core_1.unique)("preorder_products_slug_key").on(table.slug),
+]);
 exports.productFaqs = (0, pg_core_1.pgTable)("product_faqs", {
     id: (0, pg_core_1.varchar)().default((0, drizzle_orm_1.sql) `gen_random_uuid()`).primaryKey(),
     productId: (0, pg_core_1.varchar)("product_id").notNull(),
@@ -1529,8 +1736,8 @@ exports.productFaqs = (0, pg_core_1.pgTable)("product_faqs", {
     answer: (0, pg_core_1.text)().notNull(),
     sortOrder: (0, pg_core_1.integer)("sort_order").default(0).notNull(),
     isActive: (0, pg_core_1.boolean)("is_active").default(true).notNull(),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
     faqId: (0, pg_core_1.varchar)("faq_id"),
     isAutoGenerated: (0, pg_core_1.boolean)("is_auto_generated").default(false).notNull(),
     category: (0, pg_core_1.text)(),
@@ -1556,8 +1763,8 @@ exports.productLandingClicks = (0, pg_core_1.pgTable)("product_landing_clicks", 
     converted: (0, pg_core_1.boolean)().default(false).notNull(),
     orderId: (0, pg_core_1.varchar)("order_id"),
     conversionValue: (0, pg_core_1.numeric)("conversion_value", { precision: 15, scale: 2 }),
-    clickedAt: (0, pg_core_1.timestamp)("clicked_at", { mode: 'string' }).defaultNow().notNull(),
-    convertedAt: (0, pg_core_1.timestamp)("converted_at", { mode: 'string' }),
+    clickedAt: (0, pg_core_1.timestamp)("clicked_at", { mode: 'date' }).defaultNow().notNull(),
+    convertedAt: (0, pg_core_1.timestamp)("converted_at", { mode: 'date' }),
 });
 exports.productLandingPages = (0, pg_core_1.pgTable)("product_landing_pages", {
     id: (0, pg_core_1.varchar)().default((0, drizzle_orm_1.sql) `gen_random_uuid()`).primaryKey(),
@@ -1582,8 +1789,8 @@ exports.productLandingPages = (0, pg_core_1.pgTable)("product_landing_pages", {
     orderCount: (0, pg_core_1.integer)("order_count").default(0).notNull(),
     conversionRate: (0, pg_core_1.numeric)("conversion_rate", { precision: 5, scale: 2 }).default(0.00).notNull(),
     paymentMethods: (0, pg_core_1.jsonb)("payment_methods").default((0, drizzle_orm_1.sql) `'{"cod": true, "online": false, "bankTransfer": true}'::jsonb`).notNull(),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
     themeConfigId: (0, pg_core_1.varchar)("theme_config_id"),
     advancedThemeConfig: (0, pg_core_1.jsonb)("advanced_theme_config"),
     affiliateId: (0, pg_core_1.varchar)("affiliate_id"),
@@ -1600,30 +1807,33 @@ exports.productPolicies = (0, pg_core_1.pgTable)("product_policies", {
     type: (0, pg_core_1.text)().notNull(),
     isActive: (0, pg_core_1.boolean)("is_active").default(true).notNull(),
     sortOrder: (0, pg_core_1.integer)("sort_order").default(0).notNull(),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
 });
 exports.productPolicyAssociations = (0, pg_core_1.pgTable)("product_policy_associations", {
     productId: (0, pg_core_1.varchar)("product_id").primaryKey(),
     policyId: (0, pg_core_1.varchar)("policy_id").primaryKey(),
     sortOrder: (0, pg_core_1.integer)("sort_order").default(0).notNull(),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
 });
 exports.productReviews = (0, pg_core_1.pgTable)("product_reviews", {
     id: (0, pg_core_1.varchar)().default((0, drizzle_orm_1.sql) `gen_random_uuid()`).primaryKey(),
     productId: (0, pg_core_1.varchar)("product_id").notNull(),
-    customerId: (0, pg_core_1.varchar)("customer_id"),
-    customerName: (0, pg_core_1.text)("customer_name").notNull(),
-    customerAvatar: (0, pg_core_1.text)("customer_avatar"),
+    userId: (0, pg_core_1.varchar)("user_id"),
     rating: (0, pg_core_1.integer)().notNull(),
-    title: (0, pg_core_1.text)(),
-    content: (0, pg_core_1.text)().notNull(),
-    isVerified: (0, pg_core_1.boolean)("is_verified").default(false).notNull(),
-    isApproved: (0, pg_core_1.boolean)("is_approved").default(true).notNull(),
+    title: (0, pg_core_1.varchar)(),
+    comment: (0, pg_core_1.text)().notNull(),
+    verifiedPurchase: (0, pg_core_1.boolean)("verified_purchase").default(false),
     helpfulCount: (0, pg_core_1.integer)("helpful_count").default(0).notNull(),
-    images: (0, pg_core_1.jsonb)().default([]),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    notHelpfulCount: (0, pg_core_1.integer)("not_helpful_count").default(0).notNull(),
+    reviewerName: (0, pg_core_1.varchar)("reviewer_name").notNull(),
+    reviewerLocation: (0, pg_core_1.varchar)("reviewer_location"),
+    reviewerAvatar: (0, pg_core_1.varchar)("reviewer_avatar"),
+    reviewImages: (0, pg_core_1.jsonb)("review_images").default([]),
+    status: (0, pg_core_1.varchar)().default('pending').notNull(),
+    adminNotes: (0, pg_core_1.text)("admin_notes"),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
 });
 exports.products = (0, pg_core_1.pgTable)("products", {
     id: (0, pg_core_1.varchar)().default((0, drizzle_orm_1.sql) `gen_random_uuid()`).primaryKey(),
@@ -1634,8 +1844,8 @@ exports.products = (0, pg_core_1.pgTable)("products", {
     categoryId: (0, pg_core_1.varchar)("category_id"),
     status: (0, pg_core_1.text)().default('active').notNull(),
     image: (0, pg_core_1.text)(),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
     sku: (0, pg_core_1.text)(),
     images: (0, pg_core_1.jsonb)().default([]),
     videos: (0, pg_core_1.jsonb)().default([]),
@@ -1695,20 +1905,20 @@ exports.projectTemplates = (0, pg_core_1.pgTable)("project_templates", {
     templateType: (0, pg_core_1.varchar)("template_type").notNull(),
     templateName: (0, pg_core_1.text)("template_name").notNull(),
     appliedCustomizations: (0, pg_core_1.jsonb)("applied_customizations").notNull(),
-    appliedAt: (0, pg_core_1.timestamp)("applied_at", { mode: 'string' }).defaultNow(),
+    appliedAt: (0, pg_core_1.timestamp)("applied_at", { mode: 'date' }).defaultNow(),
     isActive: (0, pg_core_1.boolean)("is_active").default(true).notNull(),
     platform: (0, pg_core_1.varchar)().notNull(),
     loadTime: (0, pg_core_1.integer)("load_time"),
     compilationTime: (0, pg_core_1.integer)("compilation_time"),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
 });
 exports.pushSubscriptions = (0, pg_core_1.pgTable)("push_subscriptions", {
     id: (0, pg_core_1.varchar)().default((0, drizzle_orm_1.sql) `gen_random_uuid()`).primaryKey(),
     customerId: (0, pg_core_1.varchar)("customer_id"),
     userId: (0, pg_core_1.varchar)("user_id"),
     endpoint: (0, pg_core_1.text)().notNull(),
-    expirationTime: (0, pg_core_1.timestamp)("expiration_time", { mode: 'string' }),
+    expirationTime: (0, pg_core_1.timestamp)("expiration_time", { mode: 'date' }),
     keys: (0, pg_core_1.jsonb)().notNull(),
     userAgent: (0, pg_core_1.text)("user_agent"),
     deviceType: (0, pg_core_1.text)("device_type").default('unknown'),
@@ -1716,11 +1926,11 @@ exports.pushSubscriptions = (0, pg_core_1.pgTable)("push_subscriptions", {
     notificationTypes: (0, pg_core_1.jsonb)("notification_types").default((0, drizzle_orm_1.sql) `'["order_updates", "messages", "promotions"]'::jsonb`),
     isActive: (0, pg_core_1.boolean)("is_active").default(true).notNull(),
     isTestSubscription: (0, pg_core_1.boolean)("is_test_subscription").default(false),
-    lastUsedAt: (0, pg_core_1.timestamp)("last_used_at", { mode: 'string' }),
+    lastUsedAt: (0, pg_core_1.timestamp)("last_used_at", { mode: 'date' }),
     failureCount: (0, pg_core_1.integer)("failure_count").default(0),
     lastError: (0, pg_core_1.text)("last_error"),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
 }, (table) => [
     (0, pg_core_1.unique)("push_subscriptions_endpoint_key").on(table.endpoint),
 ]);
@@ -1736,8 +1946,8 @@ exports.queueAutofillSettings = (0, pg_core_1.pgTable)("queue_autofill_settings"
     similarityThreshold: (0, pg_core_1.numeric)("similarity_threshold", { precision: 3, scale: 2 }).default(0.8),
     forceVariation: (0, pg_core_1.boolean)("force_variation").default(true),
     variationModel: (0, pg_core_1.text)("variation_model").default('gemini-pro'),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
 });
 exports.queueHistory = (0, pg_core_1.pgTable)("queue_history", {
     id: (0, pg_core_1.varchar)().default((0, drizzle_orm_1.sql) `gen_random_uuid()`).primaryKey(),
@@ -1749,7 +1959,7 @@ exports.queueHistory = (0, pg_core_1.pgTable)("queue_history", {
     errorMessage: (0, pg_core_1.text)("error_message"),
     metadata: (0, pg_core_1.jsonb)(),
     performedBy: (0, pg_core_1.varchar)("performed_by"),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
 });
 exports.registrationTokens = (0, pg_core_1.pgTable)("registration_tokens", {
     id: (0, pg_core_1.varchar)().default((0, drizzle_orm_1.sql) `gen_random_uuid()`).primaryKey(),
@@ -1757,11 +1967,11 @@ exports.registrationTokens = (0, pg_core_1.pgTable)("registration_tokens", {
     tier: (0, pg_core_1.text)().default('gold').notNull(),
     maxUses: (0, pg_core_1.integer)("max_uses").default(100),
     usedCount: (0, pg_core_1.integer)("used_count").default(0).notNull(),
-    expiresAt: (0, pg_core_1.timestamp)("expires_at", { mode: 'string' }).notNull(),
+    expiresAt: (0, pg_core_1.timestamp)("expires_at", { mode: 'date' }).notNull(),
     createdBy: (0, pg_core_1.varchar)("created_by"),
     notes: (0, pg_core_1.text)(),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
 }, (table) => [
     (0, pg_core_1.unique)("registration_tokens_token_key").on(table.token),
 ]);
@@ -1775,10 +1985,10 @@ exports.returnRequests = (0, pg_core_1.pgTable)("return_requests", {
     refundAmount: (0, pg_core_1.text)("refund_amount").notNull(),
     status: (0, pg_core_1.varchar)().default('pending').notNull(),
     adminNotes: (0, pg_core_1.text)("admin_notes"),
-    processedAt: (0, pg_core_1.timestamp)("processed_at", { mode: 'string' }),
+    processedAt: (0, pg_core_1.timestamp)("processed_at", { mode: 'date' }),
     proofImages: (0, pg_core_1.jsonb)("proof_images").default([]),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow().notNull(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow().notNull(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow().notNull(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow().notNull(),
 });
 exports.salesAutomationConfigs = (0, pg_core_1.pgTable)("sales_automation_configs", {
     id: (0, pg_core_1.text)().default((0, drizzle_orm_1.sql) `gen_random_uuid()`).primaryKey(),
@@ -1792,12 +2002,12 @@ exports.salesAutomationConfigs = (0, pg_core_1.pgTable)("sales_automation_config
     customerSimulation: (0, pg_core_1.jsonb)("customer_simulation"),
     performanceParams: (0, pg_core_1.jsonb)("performance_params"),
     advancedSettings: (0, pg_core_1.jsonb)("advanced_settings"),
-    lastRunAt: (0, pg_core_1.timestamp)("last_run_at", { mode: 'string' }),
-    nextRunAt: (0, pg_core_1.timestamp)("next_run_at", { mode: 'string' }),
+    lastRunAt: (0, pg_core_1.timestamp)("last_run_at", { mode: 'date' }),
+    nextRunAt: (0, pg_core_1.timestamp)("next_run_at", { mode: 'date' }),
     totalAutomatedOrders: (0, pg_core_1.integer)("total_automated_orders").default(0),
     totalAutomatedRevenue: (0, pg_core_1.numeric)("total_automated_revenue", { precision: 15, scale: 2 }).default(0),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
 });
 exports.salesAutomationHistory = (0, pg_core_1.pgTable)("sales_automation_history", {
     id: (0, pg_core_1.text)().default((0, drizzle_orm_1.sql) `gen_random_uuid()`).primaryKey(),
@@ -1809,9 +2019,9 @@ exports.salesAutomationHistory = (0, pg_core_1.pgTable)("sales_automation_histor
     results: (0, pg_core_1.jsonb)(),
     duration: (0, pg_core_1.integer)(),
     errorLog: (0, pg_core_1.jsonb)("error_log"),
-    startedAt: (0, pg_core_1.timestamp)("started_at", { mode: 'string' }).defaultNow(),
-    completedAt: (0, pg_core_1.timestamp)("completed_at", { mode: 'string' }),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
+    startedAt: (0, pg_core_1.timestamp)("started_at", { mode: 'date' }).defaultNow(),
+    completedAt: (0, pg_core_1.timestamp)("completed_at", { mode: 'date' }),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
     vietnameseSimulationData: (0, pg_core_1.jsonb)("vietnamese_simulation_data").default({}),
     performanceMetrics: (0, pg_core_1.jsonb)("performance_metrics").default({}),
 });
@@ -1834,9 +2044,9 @@ exports.satisfactionSurveys = (0, pg_core_1.pgTable)("satisfaction_surveys", {
     improvementSuggestions: (0, pg_core_1.text)("improvement_suggestions"),
     surveyLanguage: (0, pg_core_1.varchar)("survey_language", { length: 10 }).default('vi'),
     isAutoGenerated: (0, pg_core_1.boolean)("is_auto_generated").default(false),
-    completedAt: (0, pg_core_1.timestamp)("completed_at", { mode: 'string' }),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    completedAt: (0, pg_core_1.timestamp)("completed_at", { mode: 'date' }),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
 });
 exports.scheduledPosts = (0, pg_core_1.pgTable)("scheduled_posts", {
     id: (0, pg_core_1.varchar)().default((0, drizzle_orm_1.sql) `gen_random_uuid()`).primaryKey(),
@@ -1845,18 +2055,18 @@ exports.scheduledPosts = (0, pg_core_1.pgTable)("scheduled_posts", {
     assetIds: (0, pg_core_1.jsonb)("asset_ids").default([]),
     socialAccountId: (0, pg_core_1.varchar)("social_account_id").notNull(),
     platform: (0, pg_core_1.text)().notNull(),
-    scheduledTime: (0, pg_core_1.timestamp)("scheduled_time", { mode: 'string' }).notNull(),
+    scheduledTime: (0, pg_core_1.timestamp)("scheduled_time", { mode: 'date' }).notNull(),
     timezone: (0, pg_core_1.varchar)({ length: 50 }).default('Asia/Ho_Chi_Minh'),
     status: (0, pg_core_1.text)().default('draft').notNull(),
-    publishedAt: (0, pg_core_1.timestamp)("published_at", { mode: 'string' }),
+    publishedAt: (0, pg_core_1.timestamp)("published_at", { mode: 'date' }),
     platformPostId: (0, pg_core_1.varchar)("platform_post_id", { length: 255 }),
     platformUrl: (0, pg_core_1.text)("platform_url"),
     errorMessage: (0, pg_core_1.text)("error_message"),
     retryCount: (0, pg_core_1.integer)("retry_count").default(0),
-    lastRetryAt: (0, pg_core_1.timestamp)("last_retry_at", { mode: 'string' }),
+    lastRetryAt: (0, pg_core_1.timestamp)("last_retry_at", { mode: 'date' }),
     analytics: (0, pg_core_1.jsonb)(),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
     priority: (0, pg_core_1.integer)().default(5).notNull(),
     ipPoolId: (0, pg_core_1.integer)("ip_pool_id"),
     ipSnapshot: (0, pg_core_1.varchar)("ip_snapshot", { length: 100 }),
@@ -1867,8 +2077,8 @@ exports.seasonalRules = (0, pg_core_1.pgTable)("seasonal_rules", {
     ruleName: (0, pg_core_1.text)("rule_name").notNull(),
     ruleType: (0, pg_core_1.text)("rule_type").notNull(),
     seasonType: (0, pg_core_1.text)("season_type").notNull(),
-    startDate: (0, pg_core_1.timestamp)("start_date", { mode: 'string' }),
-    endDate: (0, pg_core_1.timestamp)("end_date", { mode: 'string' }),
+    startDate: (0, pg_core_1.timestamp)("start_date", { mode: 'date' }),
+    endDate: (0, pg_core_1.timestamp)("end_date", { mode: 'date' }),
     isRecurring: (0, pg_core_1.boolean)("is_recurring").default(true).notNull(),
     targetCategories: (0, pg_core_1.jsonb)("target_categories").default([]),
     targetSellerTiers: (0, pg_core_1.jsonb)("target_seller_tiers").default((0, drizzle_orm_1.sql) `'["standard", "professional", "top_seller", "premium"]'::jsonb`),
@@ -1889,11 +2099,11 @@ exports.seasonalRules = (0, pg_core_1.pgTable)("seasonal_rules", {
     priority: (0, pg_core_1.integer)().default(50).notNull(),
     isActive: (0, pg_core_1.boolean)("is_active").default(true).notNull(),
     autoApply: (0, pg_core_1.boolean)("auto_apply").default(false).notNull(),
-    lastApplied: (0, pg_core_1.timestamp)("last_applied", { mode: 'string' }),
+    lastApplied: (0, pg_core_1.timestamp)("last_applied", { mode: 'date' }),
     timesApplied: (0, pg_core_1.integer)("times_applied").default(0).notNull(),
     avgImpactScore: (0, pg_core_1.numeric)("avg_impact_score", { precision: 5, scale: 2 }).default(0).notNull(),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
 });
 exports.sellerPaymentConfigs = (0, pg_core_1.pgTable)("seller_payment_configs", {
     id: (0, pg_core_1.integer)().default('nextval(seller_payment_configs_id_seq').primaryKey(),
@@ -1904,8 +2114,8 @@ exports.sellerPaymentConfigs = (0, pg_core_1.pgTable)("seller_payment_configs", 
     autoPayoutEnabled: (0, pg_core_1.boolean)("auto_payout_enabled").default(false).notNull(),
     payoutSchedule: (0, pg_core_1.text)("payout_schedule").default('weekly'),
     bankDetails: (0, pg_core_1.jsonb)("bank_details").default({}),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
 }, (table) => [
     (0, pg_core_1.unique)("seller_payment_configs_seller_id_key").on(table.sellerId),
 ]);
@@ -1922,19 +2132,19 @@ exports.sellerRatings = (0, pg_core_1.pgTable)("seller_ratings", {
     culturalSensitivityRating: (0, pg_core_1.numeric)("cultural_sensitivity_rating", { precision: 3, scale: 2 }).default(0).notNull(),
     responseTimeHours: (0, pg_core_1.numeric)("response_time_hours", { precision: 5, scale: 2 }).default(0).notNull(),
     fulfillmentAccuracyPercent: (0, pg_core_1.numeric)("fulfillment_accuracy_percent", { precision: 5, scale: 2 }).default(0).notNull(),
-    lastUpdatedAt: (0, pg_core_1.timestamp)("last_updated_at", { mode: 'string' }).defaultNow(),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    lastUpdatedAt: (0, pg_core_1.timestamp)("last_updated_at", { mode: 'date' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
 });
 exports.sessions = (0, pg_core_1.pgTable)("sessions", {
     sid: (0, pg_core_1.varchar)().primaryKey(),
     sess: (0, pg_core_1.jsonb)().notNull(),
-    expire: (0, pg_core_1.timestamp)({ mode: 'string' }).notNull(),
+    expire: (0, pg_core_1.timestamp)({ mode: 'date' }).notNull(),
 });
 exports.shareVerifications = (0, pg_core_1.pgTable)("share_verifications", {
     id: (0, pg_core_1.varchar)().default((0, drizzle_orm_1.sql) `gen_random_uuid()`).primaryKey(),
     participationId: (0, pg_core_1.varchar)("participation_id").notNull(),
-    verifiedAt: (0, pg_core_1.timestamp)("verified_at", { mode: 'string' }).defaultNow().notNull(),
+    verifiedAt: (0, pg_core_1.timestamp)("verified_at", { mode: 'date' }).defaultNow().notNull(),
     attemptNumber: (0, pg_core_1.integer)("attempt_number").notNull(),
     postExists: (0, pg_core_1.boolean)("post_exists").notNull(),
     postId: (0, pg_core_1.text)("post_id"),
@@ -1945,7 +2155,7 @@ exports.shareVerifications = (0, pg_core_1.pgTable)("share_verifications", {
     passed: (0, pg_core_1.boolean)().notNull(),
     failureReason: (0, pg_core_1.text)("failure_reason"),
     rawResponse: (0, pg_core_1.jsonb)("raw_response").default({}),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow().notNull(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow().notNull(),
 });
 exports.shippingZones = (0, pg_core_1.pgTable)("shipping_zones", {
     id: (0, pg_core_1.varchar)().default((0, drizzle_orm_1.sql) `gen_random_uuid()`).primaryKey(),
@@ -1962,8 +2172,8 @@ exports.shippingZones = (0, pg_core_1.pgTable)("shipping_zones", {
     zoneType: (0, pg_core_1.text)("zone_type").default('standard').notNull(),
     isActive: (0, pg_core_1.boolean)("is_active").default(true).notNull(),
     sortOrder: (0, pg_core_1.integer)("sort_order").default(0).notNull(),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
 });
 exports.shopSettings = (0, pg_core_1.pgTable)("shop_settings", {
     id: (0, pg_core_1.varchar)().default((0, drizzle_orm_1.sql) `gen_random_uuid()`).primaryKey(),
@@ -1975,8 +2185,8 @@ exports.shopSettings = (0, pg_core_1.pgTable)("shop_settings", {
     website: (0, pg_core_1.text)(),
     logo: (0, pg_core_1.text)(),
     isDefault: (0, pg_core_1.boolean)("is_default").default(true).notNull(),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
     tagline: (0, pg_core_1.text)(),
     logoUrl: (0, pg_core_1.text)("logo_url"),
     zaloNumber: (0, pg_core_1.text)("zalo_number"),
@@ -1998,6 +2208,8 @@ exports.shopSettings = (0, pg_core_1.pgTable)("shop_settings", {
     featureBoxes: (0, pg_core_1.jsonb)("feature_boxes").default([]),
     quickLinks: (0, pg_core_1.jsonb)("quick_links").default([]),
     heroSlider: (0, pg_core_1.jsonb)("hero_slider").default([]),
+    featuredProducts: (0, pg_core_1.text)("featured_products").array().default((0, drizzle_orm_1.sql) `ARRAY[]::text[]`),
+    customBanners: (0, pg_core_1.jsonb)("custom_banners").default([]),
     shopLatitude: (0, pg_core_1.numeric)("shop_latitude", { precision: 10, scale: 8 }),
     shopLongitude: (0, pg_core_1.numeric)("shop_longitude", { precision: 11, scale: 8 }),
     localRadiusKm: (0, pg_core_1.numeric)("local_radius_km", { precision: 6, scale: 2 }).default(20.00),
@@ -2011,7 +2223,7 @@ exports.shopeeBusinessAccounts = (0, pg_core_1.pgTable)("shopee_business_account
     shopLogo: (0, pg_core_1.text)("shop_logo"),
     accessToken: (0, pg_core_1.text)("access_token"),
     refreshToken: (0, pg_core_1.text)("refresh_token"),
-    tokenExpiresAt: (0, pg_core_1.timestamp)("token_expires_at", { mode: 'string' }),
+    tokenExpiresAt: (0, pg_core_1.timestamp)("token_expires_at", { mode: 'date' }),
     partnerKey: (0, pg_core_1.text)("partner_key"),
     shopType: (0, pg_core_1.text)("shop_type"),
     shopStatus: (0, pg_core_1.text)("shop_status").default('normal'),
@@ -2030,13 +2242,13 @@ exports.shopeeBusinessAccounts = (0, pg_core_1.pgTable)("shopee_business_account
     totalOrders: (0, pg_core_1.integer)("total_orders").default(0),
     totalRevenue: (0, pg_core_1.numeric)("total_revenue", { precision: 15, scale: 2 }).default(0),
     avgOrderValue: (0, pg_core_1.numeric)("avg_order_value", { precision: 15, scale: 2 }).default(0),
-    lastOrderAt: (0, pg_core_1.timestamp)("last_order_at", { mode: 'string' }),
-    lastSync: (0, pg_core_1.timestamp)("last_sync", { mode: 'string' }),
+    lastOrderAt: (0, pg_core_1.timestamp)("last_order_at", { mode: 'date' }),
+    lastSync: (0, pg_core_1.timestamp)("last_sync", { mode: 'date' }),
     tagIds: (0, pg_core_1.jsonb)("tag_ids").default([]),
     isActive: (0, pg_core_1.boolean)("is_active").default(true),
     connected: (0, pg_core_1.boolean)().default(false),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
 }, (table) => [
     (0, pg_core_1.unique)("shopee_business_accounts_shop_id_key").on(table.shopId),
 ]);
@@ -2058,8 +2270,8 @@ exports.shopeeShopOrders = (0, pg_core_1.pgTable)("shopee_shop_orders", {
     items: (0, pg_core_1.jsonb)().notNull(),
     shippingCarrier: (0, pg_core_1.text)("shipping_carrier"),
     trackingNumber: (0, pg_core_1.text)("tracking_number"),
-    shipTime: (0, pg_core_1.timestamp)("ship_time", { mode: 'string' }),
-    deliveryTime: (0, pg_core_1.timestamp)("delivery_time", { mode: 'string' }),
+    shipTime: (0, pg_core_1.timestamp)("ship_time", { mode: 'date' }),
+    deliveryTime: (0, pg_core_1.timestamp)("delivery_time", { mode: 'date' }),
     actualShippingFeeConfirmed: (0, pg_core_1.boolean)("actual_shipping_fee_confirmed").default(false),
     paymentMethod: (0, pg_core_1.text)("payment_method"),
     creditCardNumber: (0, pg_core_1.text)("credit_card_number"),
@@ -2077,11 +2289,11 @@ exports.shopeeShopOrders = (0, pg_core_1.pgTable)("shopee_shop_orders", {
     serviceFee: (0, pg_core_1.numeric)("service_fee", { precision: 15, scale: 2 }).default(0),
     tagIds: (0, pg_core_1.jsonb)("tag_ids").default([]),
     notes: (0, pg_core_1.text)(),
-    createTime: (0, pg_core_1.timestamp)("create_time", { mode: 'string' }).notNull(),
-    updateTime: (0, pg_core_1.timestamp)("update_time", { mode: 'string' }),
-    payTime: (0, pg_core_1.timestamp)("pay_time", { mode: 'string' }),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    createTime: (0, pg_core_1.timestamp)("create_time", { mode: 'date' }).notNull(),
+    updateTime: (0, pg_core_1.timestamp)("update_time", { mode: 'date' }),
+    payTime: (0, pg_core_1.timestamp)("pay_time", { mode: 'date' }),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
 }, (table) => [
     (0, pg_core_1.unique)("shopee_shop_orders_shopee_order_id_key").on(table.shopeeOrderId),
 ]);
@@ -2114,11 +2326,11 @@ exports.shopeeShopProducts = (0, pg_core_1.pgTable)("shopee_shop_products", {
     ratingCount: (0, pg_core_1.integer)("rating_count").default(0),
     logisticEnabled: (0, pg_core_1.boolean)("logistic_enabled").default(true),
     daysToShip: (0, pg_core_1.integer)("days_to_ship").default(3),
-    lastSyncAt: (0, pg_core_1.timestamp)("last_sync_at", { mode: 'string' }),
+    lastSyncAt: (0, pg_core_1.timestamp)("last_sync_at", { mode: 'date' }),
     syncStatus: (0, pg_core_1.text)("sync_status").default('pending'),
     syncError: (0, pg_core_1.text)("sync_error"),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
 }, (table) => [
     (0, pg_core_1.unique)("shopee_shop_products_shopee_item_id_shop_id_key").on(table.shopeeItemId, table.shopId),
 ]);
@@ -2130,21 +2342,21 @@ exports.socialAccounts = (0, pg_core_1.pgTable)("social_accounts", {
     accessToken: (0, pg_core_1.text)("access_token"),
     followers: (0, pg_core_1.integer)().default(0),
     connected: (0, pg_core_1.boolean)().default(false),
-    lastPost: (0, pg_core_1.timestamp)("last_post", { mode: 'string' }),
+    lastPost: (0, pg_core_1.timestamp)("last_post", { mode: 'date' }),
     engagement: (0, pg_core_1.numeric)({ precision: 5, scale: 2 }).default(0),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
     refreshToken: (0, pg_core_1.text)("refresh_token"),
-    tokenExpiresAt: (0, pg_core_1.timestamp)("token_expires_at", { mode: 'string' }),
+    tokenExpiresAt: (0, pg_core_1.timestamp)("token_expires_at", { mode: 'date' }),
     pageAccessTokens: (0, pg_core_1.jsonb)("page_access_tokens").default([]),
     webhookSubscriptions: (0, pg_core_1.jsonb)("webhook_subscriptions").default([]),
-    lastSync: (0, pg_core_1.timestamp)("last_sync", { mode: 'string' }),
+    lastSync: (0, pg_core_1.timestamp)("last_sync", { mode: 'date' }),
     isActive: (0, pg_core_1.boolean)("is_active").default(true),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
     tagIds: (0, pg_core_1.jsonb)("tag_ids").default([]),
     contentPreferences: (0, pg_core_1.jsonb)("content_preferences").default((0, drizzle_orm_1.sql) `'{"brandVoice": "friendly", "mediaRatio": {"image": 70, "video": 25, "textOnly": 5}, "excludedTags": [], "hashtagCount": 5, "postingTimes": ["09:00", "14:00", "21:00"], "contentLength": "medium", "preferredTags": [], "topicCategories": []}'::jsonb`),
     schedulingRules: (0, pg_core_1.jsonb)("scheduling_rules").default((0, drizzle_orm_1.sql) `'{"enabled": true, "timeSpacing": 60, "maxPostsPerDay": 8, "distributionMode": "weighted", "respectPeakHours": true, "conflictResolution": "ask"}'::jsonb`),
     performanceScore: (0, pg_core_1.numeric)("performance_score", { precision: 5, scale: 2 }).default(0),
-    lastOptimization: (0, pg_core_1.timestamp)("last_optimization", { mode: 'string' }),
+    lastOptimization: (0, pg_core_1.timestamp)("last_optimization", { mode: 'date' }),
     botConfig: (0, pg_core_1.jsonb)("bot_config").default({}),
     facebookAppId: (0, pg_core_1.varchar)("facebook_app_id"),
 });
@@ -2155,12 +2367,12 @@ exports.stockReservations = (0, pg_core_1.pgTable)("stock_reservations", {
     orderId: (0, pg_core_1.varchar)("order_id"),
     quantity: (0, pg_core_1.integer)().notNull(),
     reservationType: (0, pg_core_1.text)("reservation_type").default('cart').notNull(),
-    reservedAt: (0, pg_core_1.timestamp)("reserved_at", { mode: 'string' }).defaultNow().notNull(),
-    expiresAt: (0, pg_core_1.timestamp)("expires_at", { mode: 'string' }).notNull(),
-    releasedAt: (0, pg_core_1.timestamp)("released_at", { mode: 'string' }),
+    reservedAt: (0, pg_core_1.timestamp)("reserved_at", { mode: 'date' }).defaultNow().notNull(),
+    expiresAt: (0, pg_core_1.timestamp)("expires_at", { mode: 'date' }).notNull(),
+    releasedAt: (0, pg_core_1.timestamp)("released_at", { mode: 'date' }),
     status: (0, pg_core_1.text)().default('active').notNull(),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
 });
 exports.storefrontConfig = (0, pg_core_1.pgTable)("storefront_config", {
     id: (0, pg_core_1.varchar)().default((0, drizzle_orm_1.sql) `gen_random_uuid()`).primaryKey(),
@@ -2172,7 +2384,7 @@ exports.storefrontConfig = (0, pg_core_1.pgTable)("storefront_config", {
     theme: (0, pg_core_1.text)().default('organic').notNull(),
     primaryColor: (0, pg_core_1.text)("primary_color").default('#4ade80').notNull(),
     contactInfo: (0, pg_core_1.jsonb)("contact_info").notNull(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
 }, (table) => [
     (0, pg_core_1.unique)("storefront_config_name_unique").on(table.name),
 ]);
@@ -2191,8 +2403,8 @@ exports.storefrontOrders = (0, pg_core_1.pgTable)("storefront_orders", {
     deliveryType: (0, pg_core_1.text)("delivery_type").default('local_delivery').notNull(),
     status: (0, pg_core_1.text)().default('pending').notNull(),
     notes: (0, pg_core_1.text)(),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
     affiliateCode: (0, pg_core_1.text)("affiliate_code"),
 });
 exports.templateCompilations = (0, pg_core_1.pgTable)("template_compilations", {
@@ -2207,8 +2419,8 @@ exports.templateCompilations = (0, pg_core_1.pgTable)("template_compilations", {
     appliedTheme: (0, pg_core_1.jsonb)("applied_theme"),
     version: (0, pg_core_1.varchar)().default(1.0).notNull(),
     isValid: (0, pg_core_1.boolean)("is_valid").default(true).notNull(),
-    expiresAt: (0, pg_core_1.timestamp)("expires_at", { mode: 'string' }),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
+    expiresAt: (0, pg_core_1.timestamp)("expires_at", { mode: 'date' }),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
 }, (table) => [
     (0, pg_core_1.unique)("template_compilations_template_id_template_type_customizati_key").on(table.templateId, table.templateType, table.customizationHash, table.framework),
 ]);
@@ -2229,8 +2441,8 @@ exports.themeConfigurations = (0, pg_core_1.pgTable)("theme_configurations", {
     createdBy: (0, pg_core_1.varchar)("created_by"),
     isPublic: (0, pg_core_1.boolean)("is_public").default(false).notNull(),
     usageCount: (0, pg_core_1.integer)("usage_count").default(0).notNull(),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
 });
 exports.tiktokBusinessAccounts = (0, pg_core_1.pgTable)("tiktok_business_accounts", {
     id: (0, pg_core_1.varchar)().default((0, drizzle_orm_1.sql) `gen_random_uuid()`).primaryKey(),
@@ -2240,7 +2452,7 @@ exports.tiktokBusinessAccounts = (0, pg_core_1.pgTable)("tiktok_business_account
     avatarUrl: (0, pg_core_1.text)("avatar_url"),
     accessToken: (0, pg_core_1.text)("access_token"),
     refreshToken: (0, pg_core_1.text)("refresh_token"),
-    tokenExpiresAt: (0, pg_core_1.timestamp)("token_expires_at", { mode: 'string' }),
+    tokenExpiresAt: (0, pg_core_1.timestamp)("token_expires_at", { mode: 'date' }),
     scope: (0, pg_core_1.jsonb)().default([]),
     businessType: (0, pg_core_1.text)("business_type"),
     industry: (0, pg_core_1.text)(),
@@ -2255,12 +2467,12 @@ exports.tiktokBusinessAccounts = (0, pg_core_1.pgTable)("tiktok_business_account
     likeCount: (0, pg_core_1.integer)("like_count").default(0),
     engagement: (0, pg_core_1.numeric)({ precision: 5, scale: 2 }).default(0),
     avgViews: (0, pg_core_1.integer)("avg_views").default(0),
-    lastPost: (0, pg_core_1.timestamp)("last_post", { mode: 'string' }),
-    lastSync: (0, pg_core_1.timestamp)("last_sync", { mode: 'string' }),
+    lastPost: (0, pg_core_1.timestamp)("last_post", { mode: 'date' }),
+    lastSync: (0, pg_core_1.timestamp)("last_sync", { mode: 'date' }),
     isActive: (0, pg_core_1.boolean)("is_active").default(true),
     connected: (0, pg_core_1.boolean)().default(false),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
     tagIds: (0, pg_core_1.jsonb)("tag_ids").default([]),
 }, (table) => [
     (0, pg_core_1.unique)("tiktok_business_accounts_business_id_unique").on(table.businessId),
@@ -2282,15 +2494,15 @@ exports.tiktokShopOrders = (0, pg_core_1.pgTable)("tiktok_shop_orders", {
     fulfillmentStatus: (0, pg_core_1.text)("fulfillment_status").default('pending'),
     trackingNumber: (0, pg_core_1.text)("tracking_number"),
     shippingCarrier: (0, pg_core_1.text)("shipping_carrier"),
-    shippedAt: (0, pg_core_1.timestamp)("shipped_at", { mode: 'string' }),
-    deliveredAt: (0, pg_core_1.timestamp)("delivered_at", { mode: 'string' }),
+    shippedAt: (0, pg_core_1.timestamp)("shipped_at", { mode: 'date' }),
+    deliveredAt: (0, pg_core_1.timestamp)("delivered_at", { mode: 'date' }),
     paymentMethod: (0, pg_core_1.text)("payment_method"),
     paymentStatus: (0, pg_core_1.text)("payment_status"),
     tiktokFees: (0, pg_core_1.numeric)("tiktok_fees", { precision: 15, scale: 2 }).default(0),
     notes: (0, pg_core_1.text)(),
-    orderDate: (0, pg_core_1.timestamp)("order_date", { mode: 'string' }).notNull(),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    orderDate: (0, pg_core_1.timestamp)("order_date", { mode: 'date' }).notNull(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
     tagIds: (0, pg_core_1.jsonb)("tag_ids").default([]),
 }, (table) => [
     (0, pg_core_1.unique)("tiktok_shop_orders_tiktok_order_id_unique").on(table.tiktokOrderId),
@@ -2314,11 +2526,11 @@ exports.tiktokShopProducts = (0, pg_core_1.pgTable)("tiktok_shop_products", {
     orders: (0, pg_core_1.integer)().default(0),
     revenue: (0, pg_core_1.numeric)({ precision: 15, scale: 2 }).default(0),
     conversionRate: (0, pg_core_1.numeric)("conversion_rate", { precision: 5, scale: 2 }).default(0),
-    lastSyncAt: (0, pg_core_1.timestamp)("last_sync_at", { mode: 'string' }),
+    lastSyncAt: (0, pg_core_1.timestamp)("last_sync_at", { mode: 'date' }),
     syncStatus: (0, pg_core_1.text)("sync_status").default('pending'),
     syncError: (0, pg_core_1.text)("sync_error"),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
     tagIds: (0, pg_core_1.jsonb)("tag_ids").default([]),
 });
 exports.tiktokVideos = (0, pg_core_1.pgTable)("tiktok_videos", {
@@ -2339,9 +2551,9 @@ exports.tiktokVideos = (0, pg_core_1.pgTable)("tiktok_videos", {
     salesFromVideo: (0, pg_core_1.numeric)("sales_from_video", { precision: 15, scale: 2 }).default(0),
     clickthroughRate: (0, pg_core_1.numeric)("clickthrough_rate", { precision: 5, scale: 2 }).default(0),
     status: (0, pg_core_1.text)().default('published'),
-    publishedAt: (0, pg_core_1.timestamp)("published_at", { mode: 'string' }),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    publishedAt: (0, pg_core_1.timestamp)("published_at", { mode: 'date' }),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
     tagIds: (0, pg_core_1.jsonb)("tag_ids").default([]),
 }, (table) => [
     (0, pg_core_1.unique)("tiktok_videos_video_id_unique").on(table.videoId),
@@ -2355,9 +2567,9 @@ exports.trips = (0, pg_core_1.pgTable)("trips", {
     arrivalLocation: (0, pg_core_1.text)("arrival_location").notNull(),
     stops: (0, pg_core_1.jsonb)().default([]),
     distance: (0, pg_core_1.numeric)({ precision: 10, scale: 2 }),
-    departureTime: (0, pg_core_1.timestamp)("departure_time", { mode: 'string' }).notNull(),
-    arrivalTime: (0, pg_core_1.timestamp)("arrival_time", { mode: 'string' }).notNull(),
-    actualArrivalTime: (0, pg_core_1.timestamp)("actual_arrival_time", { mode: 'string' }),
+    departureTime: (0, pg_core_1.timestamp)("departure_time", { mode: 'date' }).notNull(),
+    arrivalTime: (0, pg_core_1.timestamp)("arrival_time", { mode: 'date' }).notNull(),
+    actualArrivalTime: (0, pg_core_1.timestamp)("actual_arrival_time", { mode: 'date' }),
     ticketPrice: (0, pg_core_1.numeric)("ticket_price", { precision: 15, scale: 2 }).notNull(),
     currency: (0, pg_core_1.text)().default('VND').notNull(),
     totalSeats: (0, pg_core_1.integer)("total_seats").notNull(),
@@ -2370,9 +2582,9 @@ exports.trips = (0, pg_core_1.pgTable)("trips", {
     netProfit: (0, pg_core_1.numeric)("net_profit", { precision: 15, scale: 2 }).default(0),
     notes: (0, pg_core_1.text)(),
     cancellationReason: (0, pg_core_1.text)("cancellation_reason"),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
-    completedAt: (0, pg_core_1.timestamp)("completed_at", { mode: 'string' }),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
+    completedAt: (0, pg_core_1.timestamp)("completed_at", { mode: 'date' }),
 });
 exports.unifiedTags = (0, pg_core_1.pgTable)("unified_tags", {
     id: (0, pg_core_1.varchar)().default((0, drizzle_orm_1.sql) `gen_random_uuid()`).primaryKey(),
@@ -2385,12 +2597,12 @@ exports.unifiedTags = (0, pg_core_1.pgTable)("unified_tags", {
     description: (0, pg_core_1.text)(),
     keywords: (0, pg_core_1.jsonb)().default([]),
     usageCount: (0, pg_core_1.integer)("usage_count").default(0),
-    lastUsed: (0, pg_core_1.timestamp)("last_used", { mode: 'string' }),
+    lastUsed: (0, pg_core_1.timestamp)("last_used", { mode: 'date' }),
     isSystemDefault: (0, pg_core_1.boolean)("is_system_default").default(false),
     isActive: (0, pg_core_1.boolean)("is_active").default(true),
     sortOrder: (0, pg_core_1.integer)("sort_order").default(0),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
 }, (table) => [
     (0, pg_core_1.unique)("unified_tags_slug_unique").on(table.slug),
 ]);
@@ -2406,12 +2618,12 @@ exports.userSatisfactionScores = (0, pg_core_1.pgTable)("user_satisfaction_score
     speedSatisfaction: (0, pg_core_1.integer)("speed_satisfaction"),
     overallExperience: (0, pg_core_1.text)("overall_experience"),
     wouldRecommend: (0, pg_core_1.boolean)("would_recommend"),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
 });
 exports.userSessions = (0, pg_core_1.pgTable)("user_sessions", {
     sid: (0, pg_core_1.varchar)().primaryKey(),
     sess: (0, pg_core_1.text)().notNull(),
-    expire: (0, pg_core_1.timestamp)({ mode: 'string' }).notNull(),
+    expire: (0, pg_core_1.timestamp)({ mode: 'date' }).notNull(),
 });
 exports.userTemplates = (0, pg_core_1.pgTable)("user_templates", {
     id: (0, pg_core_1.varchar)().default((0, drizzle_orm_1.sql) `gen_random_uuid()`).primaryKey(),
@@ -2427,8 +2639,8 @@ exports.userTemplates = (0, pg_core_1.pgTable)("user_templates", {
     tags: (0, pg_core_1.jsonb)().default([]),
     usageCount: (0, pg_core_1.integer)("usage_count").default(0).notNull(),
     rating: (0, pg_core_1.numeric)({ precision: 3, scale: 2 }).default(0.00),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
 });
 exports.users = (0, pg_core_1.pgTable)("users", {
     id: (0, pg_core_1.varchar)().default((0, drizzle_orm_1.sql) `gen_random_uuid()`).primaryKey(),
@@ -2441,7 +2653,7 @@ exports.vehicleGroupAssignments = (0, pg_core_1.pgTable)("vehicle_group_assignme
     id: (0, pg_core_1.varchar)().default((0, drizzle_orm_1.sql) `gen_random_uuid()`).primaryKey(),
     vehicleId: (0, pg_core_1.varchar)("vehicle_id").notNull(),
     groupId: (0, pg_core_1.varchar)("group_id").notNull(),
-    assignedAt: (0, pg_core_1.timestamp)("assigned_at", { mode: 'string' }).defaultNow(),
+    assignedAt: (0, pg_core_1.timestamp)("assigned_at", { mode: 'date' }).defaultNow(),
     assignedBy: (0, pg_core_1.varchar)("assigned_by"),
     notes: (0, pg_core_1.text)(),
 }, (table) => [
@@ -2459,15 +2671,15 @@ exports.vehicles = (0, pg_core_1.pgTable)("vehicles", {
     seatingCapacity: (0, pg_core_1.integer)("seating_capacity"),
     cargoCapacity: (0, pg_core_1.numeric)("cargo_capacity", { precision: 10, scale: 2 }),
     registrationNumber: (0, pg_core_1.text)("registration_number"),
-    registrationExpiry: (0, pg_core_1.timestamp)("registration_expiry", { mode: 'string' }),
+    registrationExpiry: (0, pg_core_1.timestamp)("registration_expiry", { mode: 'date' }),
     insuranceNumber: (0, pg_core_1.text)("insurance_number"),
-    insuranceExpiry: (0, pg_core_1.timestamp)("insurance_expiry", { mode: 'string' }),
+    insuranceExpiry: (0, pg_core_1.timestamp)("insurance_expiry", { mode: 'date' }),
     status: (0, pg_core_1.text)().default('active').notNull(),
     isVerified: (0, pg_core_1.boolean)("is_verified").default(false).notNull(),
     images: (0, pg_core_1.jsonb)().default([]),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
-    verifiedAt: (0, pg_core_1.timestamp)("verified_at", { mode: 'string' }),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
+    verifiedAt: (0, pg_core_1.timestamp)("verified_at", { mode: 'date' }),
     verifiedBy: (0, pg_core_1.varchar)("verified_by"),
 }, (table) => [
     (0, pg_core_1.unique)("vehicles_license_plate_key").on(table.licensePlate),
@@ -2487,12 +2699,12 @@ exports.vendorOrders = (0, pg_core_1.pgTable)("vendor_orders", {
     commissionAmount: (0, pg_core_1.numeric)("commission_amount", { precision: 15, scale: 2 }),
     depositDeducted: (0, pg_core_1.boolean)("deposit_deducted").default(false),
     status: (0, pg_core_1.varchar)().default('pending'),
-    processingAt: (0, pg_core_1.timestamp)("processing_at", { mode: 'string' }),
-    shippedAt: (0, pg_core_1.timestamp)("shipped_at", { mode: 'string' }),
-    deliveredAt: (0, pg_core_1.timestamp)("delivered_at", { mode: 'string' }),
-    cancelledAt: (0, pg_core_1.timestamp)("cancelled_at", { mode: 'string' }),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow().notNull(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow().notNull(),
+    processingAt: (0, pg_core_1.timestamp)("processing_at", { mode: 'date' }),
+    shippedAt: (0, pg_core_1.timestamp)("shipped_at", { mode: 'date' }),
+    deliveredAt: (0, pg_core_1.timestamp)("delivered_at", { mode: 'date' }),
+    cancelledAt: (0, pg_core_1.timestamp)("cancelled_at", { mode: 'date' }),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow().notNull(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow().notNull(),
 });
 exports.vendorProducts = (0, pg_core_1.pgTable)("vendor_products", {
     id: (0, pg_core_1.varchar)().default((0, drizzle_orm_1.sql) `gen_random_uuid()`).primaryKey(),
@@ -2503,11 +2715,11 @@ exports.vendorProducts = (0, pg_core_1.pgTable)("vendor_products", {
     quantityReturned: (0, pg_core_1.integer)("quantity_returned").default(0).notNull(),
     consignmentPrice: (0, pg_core_1.numeric)("consignment_price", { precision: 15, scale: 2 }).notNull(),
     discountPercent: (0, pg_core_1.numeric)("discount_percent", { precision: 5, scale: 2 }).default(0),
-    consignmentDate: (0, pg_core_1.timestamp)("consignment_date", { mode: 'string' }).defaultNow().notNull(),
-    expiryDate: (0, pg_core_1.timestamp)("expiry_date", { mode: 'string' }),
+    consignmentDate: (0, pg_core_1.timestamp)("consignment_date", { mode: 'date' }).defaultNow().notNull(),
+    expiryDate: (0, pg_core_1.timestamp)("expiry_date", { mode: 'date' }),
     status: (0, pg_core_1.varchar)().default('active'),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow().notNull(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow().notNull(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow().notNull(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow().notNull(),
     commissionPerUnit: (0, pg_core_1.numeric)("commission_per_unit", { precision: 15, scale: 2 }).default(0.00),
 }, (table) => [
     (0, pg_core_1.unique)("vendor_products_vendor_id_product_id_key").on(table.vendorId, table.productId),
@@ -2531,10 +2743,10 @@ exports.vendors = (0, pg_core_1.pgTable)("vendors", {
     commissionRate: (0, pg_core_1.numeric)("commission_rate", { precision: 5, scale: 2 }).default(0.30).notNull(),
     notificationPreferences: (0, pg_core_1.jsonb)("notification_preferences").default({}),
     status: (0, pg_core_1.varchar)().default('pending'),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow().notNull(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow().notNull(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow().notNull(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow().notNull(),
     password: (0, pg_core_1.text)().default('').notNull(),
-    lastLoginAt: (0, pg_core_1.timestamp)("last_login_at", { mode: 'string' }),
+    lastLoginAt: (0, pg_core_1.timestamp)("last_login_at", { mode: 'date' }),
     warehousePostalCode: (0, pg_core_1.text)("warehouse_postal_code"),
     warehousePhone: (0, pg_core_1.text)("warehouse_phone"),
     paymentModel: (0, pg_core_1.text)("payment_model").default('deposit').notNull(),
@@ -2557,8 +2769,8 @@ exports.vietnameseReviewTemplates = (0, pg_core_1.pgTable)("vietnamese_review_te
     usageCount: (0, pg_core_1.integer)("usage_count").default(0),
     isActive: (0, pg_core_1.boolean)("is_active").default(true),
     tags: (0, pg_core_1.text)().default('{}'),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
 });
 exports.workers = (0, pg_core_1.pgTable)("workers", {
     id: (0, pg_core_1.varchar)().default((0, drizzle_orm_1.sql) `gen_random_uuid()`).primaryKey(),
@@ -2578,8 +2790,8 @@ exports.workers = (0, pg_core_1.pgTable)("workers", {
     endpointUrl: (0, pg_core_1.text)("endpoint_url").notNull(),
     status: (0, pg_core_1.text)().default('active').notNull(),
     isOnline: (0, pg_core_1.boolean)("is_online").default(false).notNull(),
-    lastPingAt: (0, pg_core_1.timestamp)("last_ping_at", { mode: 'string' }),
-    lastJobAt: (0, pg_core_1.timestamp)("last_job_at", { mode: 'string' }),
+    lastPingAt: (0, pg_core_1.timestamp)("last_ping_at", { mode: 'date' }),
+    lastJobAt: (0, pg_core_1.timestamp)("last_job_at", { mode: 'date' }),
     currentLoad: (0, pg_core_1.integer)("current_load").default(0).notNull(),
     totalJobsCompleted: (0, pg_core_1.integer)("total_jobs_completed").default(0).notNull(),
     totalJobsFailed: (0, pg_core_1.integer)("total_jobs_failed").default(0).notNull(),
@@ -2587,13 +2799,13 @@ exports.workers = (0, pg_core_1.pgTable)("workers", {
     avgResponseTime: (0, pg_core_1.integer)("avg_response_time").default(0).notNull(),
     registrationSecret: (0, pg_core_1.text)("registration_secret"),
     authToken: (0, pg_core_1.text)("auth_token"),
-    tokenExpiresAt: (0, pg_core_1.timestamp)("token_expires_at", { mode: 'string' }),
+    tokenExpiresAt: (0, pg_core_1.timestamp)("token_expires_at", { mode: 'date' }),
     tags: (0, pg_core_1.jsonb)(),
     priority: (0, pg_core_1.integer)().default(1).notNull(),
     isEnabled: (0, pg_core_1.boolean)("is_enabled").default(true).notNull(),
     metadata: (0, pg_core_1.jsonb)(),
-    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'string' }).defaultNow().notNull(),
-    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'string' }).defaultNow().notNull(),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow().notNull(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow().notNull(),
     ipAddress: (0, pg_core_1.text)("ip_address"),
     ipCountry: (0, pg_core_1.text)("ip_country"),
     ipRegion: (0, pg_core_1.text)("ip_region"),
@@ -2613,6 +2825,24 @@ exports.insertAffiliateProductAssignmentsSchema = (0, drizzle_zod_1.createInsert
 exports.selectAffiliateProductAssignmentsSchema = (0, drizzle_zod_1.createSelectSchema)(exports.affiliateProductAssignments);
 exports.insertAffiliateProductRequestsSchema = (0, drizzle_zod_1.createInsertSchema)(exports.affiliateProductRequests);
 exports.selectAffiliateProductRequestsSchema = (0, drizzle_zod_1.createSelectSchema)(exports.affiliateProductRequests);
+exports.insertAffiliateOrdersSchema = (0, drizzle_zod_1.createInsertSchema)(exports.affiliateOrders);
+exports.selectAffiliateOrdersSchema = (0, drizzle_zod_1.createSelectSchema)(exports.affiliateOrders);
+exports.insertAffiliateShareLogsSchema = (0, drizzle_zod_1.createInsertSchema)(exports.affiliateShareLogs);
+exports.selectAffiliateShareLogsSchema = (0, drizzle_zod_1.createSelectSchema)(exports.affiliateShareLogs);
+exports.insertAbebooksSearchHistorySchema = (0, drizzle_zod_1.createInsertSchema)(exports.abebooksSearchHistory);
+exports.selectAbebooksSearchHistorySchema = (0, drizzle_zod_1.createSelectSchema)(exports.abebooksSearchHistory);
+exports.insertAbebooksAccountsSchema = (0, drizzle_zod_1.createInsertSchema)(exports.abebooksAccounts);
+exports.selectAbebooksAccountsSchema = (0, drizzle_zod_1.createSelectSchema)(exports.abebooksAccounts);
+exports.insertAbebooksListingsSchema = (0, drizzle_zod_1.createInsertSchema)(exports.abebooksListings);
+exports.selectAbebooksListingsSchema = (0, drizzle_zod_1.createSelectSchema)(exports.abebooksListings);
+exports.insertQueueAutoFillSettingsSchema = (0, drizzle_zod_1.createInsertSchema)(exports.queueAutoFillSettings);
+exports.selectQueueAutoFillSettingsSchema = (0, drizzle_zod_1.createSelectSchema)(exports.queueAutoFillSettings);
+exports.insertGroupAccountsSchema = (0, drizzle_zod_1.createInsertSchema)(exports.groupAccounts);
+exports.selectGroupAccountsSchema = (0, drizzle_zod_1.createSelectSchema)(exports.groupAccounts);
+exports.insertProductFAQsSchema = (0, drizzle_zod_1.createInsertSchema)(exports.productFAQs);
+exports.selectProductFAQsSchema = (0, drizzle_zod_1.createSelectSchema)(exports.productFAQs);
+exports.insertVendorPushSubscriptionsSchema = (0, drizzle_zod_1.createInsertSchema)(exports.vendorPushSubscriptions);
+exports.selectVendorPushSubscriptionsSchema = (0, drizzle_zod_1.createSelectSchema)(exports.vendorPushSubscriptions);
 exports.insertApiConfigurationsSchema = (0, drizzle_zod_1.createInsertSchema)(exports.apiConfigurations);
 exports.selectApiConfigurationsSchema = (0, drizzle_zod_1.createSelectSchema)(exports.apiConfigurations);
 exports.insertAuthUsersSchema = (0, drizzle_zod_1.createInsertSchema)(exports.authUsers);
@@ -2695,6 +2925,8 @@ exports.insertCustomerReviewsSchema = (0, drizzle_zod_1.createInsertSchema)(expo
 exports.selectCustomerReviewsSchema = (0, drizzle_zod_1.createSelectSchema)(exports.customerReviews);
 exports.insertCustomerVouchersSchema = (0, drizzle_zod_1.createInsertSchema)(exports.customerVouchers);
 exports.selectCustomerVouchersSchema = (0, drizzle_zod_1.createSelectSchema)(exports.customerVouchers);
+exports.insertWishlistsSchema = (0, drizzle_zod_1.createInsertSchema)(exports.wishlists);
+exports.selectWishlistsSchema = (0, drizzle_zod_1.createSelectSchema)(exports.wishlists);
 exports.insertCustomersSchema = (0, drizzle_zod_1.createInsertSchema)(exports.customers);
 exports.selectCustomersSchema = (0, drizzle_zod_1.createSelectSchema)(exports.customers);
 exports.insertDepositTransactionsSchema = (0, drizzle_zod_1.createInsertSchema)(exports.depositTransactions);
@@ -2728,6 +2960,8 @@ exports.updateFaqLibrarySchema = (0, drizzle_zod_1.createInsertSchema)(exports.f
     usageCount: true,
     lastUsed: true,
 }).partial();
+exports.insertFlashSalesSchema = (0, drizzle_zod_1.createInsertSchema)(exports.flashSales);
+exports.selectFlashSalesSchema = (0, drizzle_zod_1.createSelectSchema)(exports.flashSales);
 exports.insertFrontendCategoryAssignmentsSchema = (0, drizzle_zod_1.createInsertSchema)(exports.frontendCategoryAssignments);
 exports.selectFrontendCategoryAssignmentsSchema = (0, drizzle_zod_1.createSelectSchema)(exports.frontendCategoryAssignments);
 exports.insertGeneralCategoriesSchema = (0, drizzle_zod_1.createInsertSchema)(exports.generalCategories);
@@ -2766,8 +3000,12 @@ exports.insertIpRotationLogsSchema = (0, drizzle_zod_1.createInsertSchema)(expor
 exports.selectIpRotationLogsSchema = (0, drizzle_zod_1.createSelectSchema)(exports.ipRotationLogs);
 exports.insertMarketTrendsSchema = (0, drizzle_zod_1.createInsertSchema)(exports.marketTrends);
 exports.selectMarketTrendsSchema = (0, drizzle_zod_1.createSelectSchema)(exports.marketTrends);
+exports.insertNotificationsSchema = (0, drizzle_zod_1.createInsertSchema)(exports.notifications);
+exports.selectNotificationsSchema = (0, drizzle_zod_1.createSelectSchema)(exports.notifications);
 exports.insertOauthConnectionsSchema = (0, drizzle_zod_1.createInsertSchema)(exports.oauthConnections);
 exports.selectOauthConnectionsSchema = (0, drizzle_zod_1.createSelectSchema)(exports.oauthConnections);
+exports.insertOauthProviderSettingsSchema = (0, drizzle_zod_1.createInsertSchema)(exports.oauthProviderSettings);
+exports.selectOauthProviderSettingsSchema = (0, drizzle_zod_1.createSelectSchema)(exports.oauthProviderSettings);
 exports.insertOrderItemsSchema = (0, drizzle_zod_1.createInsertSchema)(exports.orderItems);
 exports.selectOrderItemsSchema = (0, drizzle_zod_1.createSelectSchema)(exports.orderItems);
 exports.insertOrdersSchema = (0, drizzle_zod_1.createInsertSchema)(exports.orders);
@@ -2784,6 +3022,8 @@ exports.insertPriceSourcesSchema = (0, drizzle_zod_1.createInsertSchema)(exports
 exports.selectPriceSourcesSchema = (0, drizzle_zod_1.createSelectSchema)(exports.priceSources);
 exports.insertPricingStrategiesSchema = (0, drizzle_zod_1.createInsertSchema)(exports.pricingStrategies);
 exports.selectPricingStrategiesSchema = (0, drizzle_zod_1.createSelectSchema)(exports.pricingStrategies);
+exports.insertPreorderProductsSchema = (0, drizzle_zod_1.createInsertSchema)(exports.preorderProducts);
+exports.selectPreorderProductsSchema = (0, drizzle_zod_1.createSelectSchema)(exports.preorderProducts);
 exports.insertProductFaqsSchema = (0, drizzle_zod_1.createInsertSchema)(exports.productFaqs);
 exports.selectProductFaqsSchema = (0, drizzle_zod_1.createSelectSchema)(exports.productFaqs);
 exports.insertProductLandingClicksSchema = (0, drizzle_zod_1.createInsertSchema)(exports.productLandingClicks);
@@ -2892,3 +3132,46 @@ exports.SUPPORTED_WORKER_PLATFORMS = [
     'youtube',
     'linkedin'
 ];
+// Missing tables for compatibility
+exports.fanpageContentPreferences = (0, pg_core_1.pgTable)("fanpage_content_preferences", {
+    id: (0, pg_core_1.varchar)().default((0, drizzle_orm_1.sql) `gen_random_uuid()`).primaryKey(),
+    socialAccountId: (0, pg_core_1.varchar)("social_account_id").notNull(),
+    preferredTags: (0, pg_core_1.jsonb)("preferred_tags").default([]),
+    excludedTags: (0, pg_core_1.jsonb)("excluded_tags").default([]),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
+});
+exports.smartSchedulingRules = (0, pg_core_1.pgTable)("smart_scheduling_rules", {
+    id: (0, pg_core_1.varchar)().default((0, drizzle_orm_1.sql) `gen_random_uuid()`).primaryKey(),
+    name: (0, pg_core_1.text)().notNull(),
+    conditions: (0, pg_core_1.jsonb)().default({}),
+    actions: (0, pg_core_1.jsonb)().default({}),
+    isActive: (0, pg_core_1.boolean)("is_active").default(true),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
+});
+exports.customDescriptionTemplates = (0, pg_core_1.pgTable)("custom_description_templates", {
+    id: (0, pg_core_1.varchar)().default((0, drizzle_orm_1.sql) `gen_random_uuid()`).primaryKey(),
+    name: (0, pg_core_1.text)().notNull(),
+    template: (0, pg_core_1.text)().notNull(),
+    isActive: (0, pg_core_1.boolean)("is_active").default(true),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
+});
+exports.fieldCategories = (0, pg_core_1.pgTable)("field_categories", {
+    id: (0, pg_core_1.varchar)().default((0, drizzle_orm_1.sql) `gen_random_uuid()`).primaryKey(),
+    name: (0, pg_core_1.text)().notNull(),
+    description: (0, pg_core_1.text)(),
+    isActive: (0, pg_core_1.boolean)("is_active").default(true),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
+});
+exports.viettelpostConfigs = (0, pg_core_1.pgTable)("viettelpost_configs", {
+    id: (0, pg_core_1.varchar)().default((0, drizzle_orm_1.sql) `gen_random_uuid()`).primaryKey(),
+    name: (0, pg_core_1.text)().notNull(),
+    apiKey: (0, pg_core_1.text)("api_key").notNull(),
+    isActive: (0, pg_core_1.boolean)("is_active").default(true),
+    isDefault: (0, pg_core_1.boolean)("is_default").default(false),
+    createdAt: (0, pg_core_1.timestamp)("created_at", { mode: 'date' }).defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at", { mode: 'date' }).defaultNow(),
+});

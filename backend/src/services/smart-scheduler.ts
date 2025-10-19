@@ -2,8 +2,8 @@ import { db } from '../db';
 import { socialAccounts, contentLibrary, scheduledPosts, unifiedTags, facebookApps } from '../../shared/schema';
 import { eq, and, inArray, sql } from 'drizzle-orm';
 import type { 
-  SocialAccount, 
-  ContentLibrary, 
+  SocialAccounts, 
+  ContentLibraries, 
   FanpageContentPreferences, 
   SmartSchedulingRules 
 } from '../../shared/schema';
@@ -151,8 +151,8 @@ export class SmartSchedulerService {
    * Generate smart content-fanpage matches
    */
   private async generateSmartMatches(
-    fanpages: SocialAccount[],
-    content: ContentLibrary[],
+    fanpages: SocialAccounts[],
+    content: ContentLibraries[],
     config: SmartSchedulingConfig,
     tagsMap: Map<string, string>
   ): Promise<ContentMatch[]> {
@@ -251,8 +251,8 @@ export class SmartSchedulerService {
    * Calculate compatibility score between content and fanpage
    */
   private calculateContentFanpageScore(
-    content: ContentLibrary,
-    fanpage: SocialAccount,
+    content: ContentLibraries,
+    fanpage: SocialAccounts,
     selectedTags: string[],
     tagsMap: Map<string, string>
   ): number {
@@ -268,11 +268,11 @@ export class SmartSchedulerService {
     const excludedTags = preferences.excludedTags || [];
 
     // Check for excluded tags (immediate disqualification)
-    const hasExcludedTag = contentTags.some(tagId => excludedTags.includes(tagId));
+    const hasExcludedTag = contentTags.some((tagId: any) => excludedTags.includes(tagId));
     if (hasExcludedTag) return 0;
 
     // Calculate preferred tag matches
-    const matchingPreferredTags = contentTags.filter(tagId => preferredTags.includes(tagId));
+    const matchingPreferredTags = contentTags.filter((tagId: any) => preferredTags.includes(tagId));
     const preferredTagScore = preferredTags.length > 0 
       ? (matchingPreferredTags.length / preferredTags.length) * 40 
       : 20; // Neutral if no preferences set
@@ -285,7 +285,7 @@ export class SmartSchedulerService {
     score += contentTypeScore * 0.3;
 
     // 3. Selected Tag Relevance (20% weight)
-    const selectedTagMatches = contentTags.filter(tagId => selectedTags.includes(tagId));
+    const selectedTagMatches = contentTags.filter((tagId: any) => selectedTags.includes(tagId));
     const selectedTagScore = selectedTags.length > 0 
       ? (selectedTagMatches.length / selectedTags.length) * 20 
       : 10;
@@ -315,8 +315,8 @@ export class SmartSchedulerService {
    * Get matching reasons for debugging/transparency
    */
   private getMatchingReasons(
-    content: ContentLibrary,
-    fanpage: SocialAccount,
+    content: ContentLibraries,
+    fanpage: SocialAccounts,
     selectedTags: string[],
     tagsMap: Map<string, string>
   ): string[] {
@@ -331,9 +331,9 @@ export class SmartSchedulerService {
     const contentTags = content.tagIds || [];
     
     // Check preferred tags
-    const matchingPreferred = contentTags.filter(tagId => preferences.preferredTags.includes(tagId));
+    const matchingPreferred = contentTags.filter((tagId: any) => preferences.preferredTags.includes(tagId));
     if (matchingPreferred.length > 0) {
-      const tagNames = matchingPreferred.map(id => tagsMap.get(id) || id).join(', ');
+      const tagNames = matchingPreferred.map((id: any) => tagsMap.get(id) || id).join(', ');
       reasons.push(`Preferred tags: ${tagNames}`);
     }
 
@@ -345,9 +345,9 @@ export class SmartSchedulerService {
     }
 
     // Check selected tag overlap
-    const selectedTagMatches = contentTags.filter(tagId => selectedTags.includes(tagId));
+    const selectedTagMatches = contentTags.filter((tagId: any) => selectedTags.includes(tagId));
     if (selectedTagMatches.length > 0) {
-      const tagNames = selectedTagMatches.map(id => tagsMap.get(id) || id).join(', ');
+      const tagNames = selectedTagMatches.map((id: any) => tagsMap.get(id) || id).join(', ');
       reasons.push(`Campaign tags: ${tagNames}`);
     }
 
@@ -358,9 +358,9 @@ export class SmartSchedulerService {
    * Select fanpages for content based on distribution mode
    */
   private selectFanpagesForContent(
-    fanpageScores: Array<{fanpage: SocialAccount, score: number, reasons: string[]}>,
+    fanpageScores: Array<{fanpage: SocialAccounts, score: number, reasons: string[]}>,
     distributionMode: string
-  ): Array<{fanpage: SocialAccount, score: number, reasons: string[]}> {
+  ): Array<{fanpage: SocialAccounts, score: number, reasons: string[]}> {
     
     if (fanpageScores.length === 0) return [];
 
@@ -464,7 +464,7 @@ export class SmartSchedulerService {
   /**
    * Helper: Get fanpages by IDs
    */
-  private async getFanpagesByIds(fanpageIds: string[]): Promise<SocialAccount[]> {
+  private async getFanpagesByIds(fanpageIds: string[]): Promise<SocialAccounts[]> {
     if (fanpageIds.length === 0) return [];
     
     return await db.select()
@@ -475,7 +475,7 @@ export class SmartSchedulerService {
   /**
    * Helper: Auto-select fanpages based on Facebook Apps tags
    */
-  private async getFanpagesByTags(selectedTags: string[]): Promise<SocialAccount[]> {
+  private async getFanpagesByTags(selectedTags: string[]): Promise<SocialAccounts[]> {
     if (selectedTags.length === 0) {
       // If no tags selected, return all Facebook social accounts as fallback
       return await db.select()
@@ -541,7 +541,7 @@ export class SmartSchedulerService {
   private async getMatchingContent(
     tagIds: string[], 
     contentTypes: string[]
-  ): Promise<ContentLibrary[]> {
+  ): Promise<ContentLibraries[]> {
     
     // Handle empty tagIds case - return all content matching types
     if (tagIds.length === 0) {
@@ -554,7 +554,7 @@ export class SmartSchedulerService {
       .from(contentLibrary)
       .where(
         and(
-          sql`${contentLibrary.tagIds} ?| array[${sql.join(tagIds.map(id => sql`${id}`), sql`, `)}]`, // PostgreSQL JSONB ?| operator for array overlap
+          sql`${contentLibrary.tagIds} ?| array[${sql.join(tagIds.map((id: any) => sql`${id}`), sql`, `)}]`, // PostgreSQL JSONB ?| operator for array overlap
           inArray(contentLibrary.contentType, contentTypes as any)
         )
       );

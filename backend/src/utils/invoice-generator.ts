@@ -40,7 +40,7 @@ interface InvoiceData {
   accountName?: string;
 }
 
-const DEFAULT_CONFIG: InvoiceTemplateConfig = {
+const DEFAULT_CONFIG: any = {
   layout: {
     orientation: 'portrait',
     paperSize: 'a4',
@@ -99,7 +99,7 @@ export async function generateInvoiceImage(
   const orderResult = await db
     .select()
     .from(orders)
-    .leftJoin(customers, eq(orders.customerId, customers.id))
+    .leftJoin(customers, eq(orders.userId, customers.id))
     .where(eq(orders.id, orderId))
     .limit(1);
 
@@ -115,14 +115,14 @@ export async function generateInvoiceImage(
 
   const invoiceData: InvoiceData = {
     orderId: order.id,
-    customerName: customer?.name || order.shippingInfo?.name || 'Khách hàng',
-    customerPhone: customer?.phone || order.shippingInfo?.phone || '',
+    customerName: customer?.name || (order.shippingInfo as any)?.name || 'Khách hàng',
+    customerPhone: customer?.phone || (order.shippingInfo as any)?.phone || '',
     items: order.items as any[],
     subtotal: parseFloat(order.subtotal as string),
     shippingFee: parseFloat(order.shippingFee as string),
     tax: parseFloat(order.tax as string),
     total: parseFloat(order.total as string),
-    createdAt: order.createdAt,
+    createdAt: order.createdAt || new Date(),
     shopName: shop?.businessName || 'Cửa hàng',
     shopPhone: shop?.phone,
     shopAddress: shop?.address,
@@ -145,42 +145,49 @@ function mergeConfig(
   }
 
   return {
-    layout: {
-      ...defaultConfig.layout,
-      ...customConfig.layout,
+    name: defaultConfig.name,
+    id: defaultConfig.id,
+    createdAt: defaultConfig.createdAt,
+    updatedAt: defaultConfig.updatedAt,
+    isDefault: defaultConfig.isDefault,
+    config: {
+      layout: {
+      ...(defaultConfig as any).layout,
+      ...(customConfig as any).layout,
       margins: {
-        ...defaultConfig.layout?.margins,
-        ...customConfig.layout?.margins,
+        ...(defaultConfig as any).layout?.margins,
+        ...(customConfig as any).layout?.margins,
       },
     },
     colors: {
-      ...defaultConfig.colors,
-      ...customConfig.colors,
+      ...(defaultConfig as any).colors,
+      ...(customConfig as any).colors,
     },
     fonts: {
-      ...defaultConfig.fonts,
-      ...customConfig.fonts,
+      ...(defaultConfig as any).fonts,
+      ...(customConfig as any).fonts,
       size: {
-        ...defaultConfig.fonts?.size,
-        ...customConfig.fonts?.size,
+        ...(defaultConfig as any).fonts?.size,
+        ...(customConfig as any).fonts?.size,
       },
     },
     qr_settings: {
-      ...defaultConfig.qr_settings,
-      ...customConfig.qr_settings,
+      ...(defaultConfig as any).qr_settings,
+      ...(customConfig as any).qr_settings,
     },
-    logo_url: customConfig.logo_url ?? defaultConfig.logo_url,
+    logo_url: (customConfig as any).logo_url ?? (defaultConfig as any).logo_url,
     header: {
-      ...defaultConfig.header,
-      ...customConfig.header,
+      ...(defaultConfig as any).header,
+      ...(customConfig as any).header,
     },
     footer: {
-      ...defaultConfig.footer,
-      ...customConfig.footer,
+      ...(defaultConfig as any).footer,
+      ...(customConfig as any).footer,
     },
     fields: {
-      ...defaultConfig.fields,
-      ...customConfig.fields,
+      ...(defaultConfig as any).fields,
+      ...(customConfig as any).fields,
+    },
     },
   };
 }
@@ -204,12 +211,12 @@ async function renderInvoice(data: InvoiceData, config: InvoiceTemplateConfig): 
   const canvas = createCanvas(width, totalHeight);
   const ctx = canvas.getContext('2d');
 
-  const colors = config.colors!;
-  const fonts = config.fonts!;
-  const margins = config.layout?.margins!;
-  const qrSettings = config.qr_settings!;
-  const header = config.header!;
-  const footer = config.footer!;
+  const colors = (config as any).colors!;
+  const fonts = (config as any).fonts!;
+  const margins = (config as any).layout?.margins!;
+  const qrSettings = (config as any).qr_settings!;
+  const header = (config as any).header!;
+  const footer = (config as any).footer!;
 
   ctx.fillStyle = colors.background!;
   ctx.fillRect(0, 0, width, totalHeight);
@@ -227,9 +234,9 @@ async function renderInvoice(data: InvoiceData, config: InvoiceTemplateConfig): 
 
     let logoRendered = false;
 
-    if (config.logo_url) {
+    if ((config as any).logo_url) {
       try {
-        const logoImage = await loadImage(config.logo_url);
+        const logoImage = await loadImage((config as any).logo_url);
         
         ctx.save();
         ctx.beginPath();

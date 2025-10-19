@@ -268,13 +268,13 @@ class PostScheduler {
     });
 
     if (!response.ok) {
-      const errorData = await response.json();
+      const errorData = await response.json() as any;
       throw new Error(
         `Facebook API error: ${errorData.error?.message || response.statusText}`
       );
     }
 
-    const data = await response.json();
+    const data = await response.json() as any;
 
     // Return post ID and URL
     return {

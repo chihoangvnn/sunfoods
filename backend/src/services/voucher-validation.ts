@@ -15,7 +15,7 @@ import {
   discountCodeUsages,
   customers,
   orders,
-  type DiscountCode
+  type DiscountCodes
 } from '@shared/schema';
 import { eq, and, count } from 'drizzle-orm';
 
@@ -113,7 +113,7 @@ export async function validateVoucherForOrder(
     }
 
     // 4. Check global usage limit
-    if (voucher.maxUsage && voucher.usageCount >= voucher.maxUsage) {
+    if (voucher.maxUsage && (voucher.usageCount || 0) >= voucher.maxUsage) {
       return {
         valid: false,
         error: "Mã giảm giá đã hết lượt sử dụng"
@@ -219,7 +219,7 @@ export async function validateVoucherForOrder(
 /**
  * Calculate discount amount based on voucher type
  */
-export function calculateDiscount(voucher: DiscountCode, orderAmount: number) {
+export function calculateDiscount(voucher: DiscountCodes, orderAmount: number) {
   let discountAmount = 0;
   let appliedTier = '';
 
@@ -272,7 +272,7 @@ export function calculateDiscount(voucher: DiscountCode, orderAmount: number) {
 /**
  * Build success message for voucher validation
  */
-function buildSuccessMessage(voucher: DiscountCode, calculation: { discountAmount: number, appliedTier: string }): string {
+function buildSuccessMessage(voucher: DiscountCodes, calculation: { discountAmount: number, appliedTier: string }): string {
   const { discountAmount } = calculation;
   
   const messages = voucher.localizedMessages as any;
@@ -299,7 +299,7 @@ function buildSuccessMessage(voucher: DiscountCode, calculation: { discountAmoun
 /**
  * Check customer eligibility based on tier rules
  */
-export async function checkEligibility(voucher: DiscountCode, customerId: string): Promise<{ isEligible: boolean, message: string }> {
+export async function checkEligibility(voucher: DiscountCodes, customerId: string): Promise<{ isEligible: boolean, message: string }> {
   if (!voucher.tierRules) {
     return { isEligible: true, message: '' };
   }
@@ -338,7 +338,7 @@ export async function checkEligibility(voucher: DiscountCode, customerId: string
     const [orderCount] = await db
       .select({ count: count() })
       .from(orders)
-      .where(eq(orders.customerId, customerId));
+      .where(eq(orders.userId, customerId));
 
     if (orderCount && orderCount.count > 0) {
       return { 
@@ -354,7 +354,7 @@ export async function checkEligibility(voucher: DiscountCode, customerId: string
 /**
  * Check product/category scope restrictions
  */
-export async function checkScopeRestrictions(voucher: DiscountCode, items: Array<{ productId: string, categoryId?: string }>): Promise<{ isValid: boolean, message: string }> {
+export async function checkScopeRestrictions(voucher: DiscountCodes, items: Array<{ productId: string, categoryId?: string }>): Promise<{ isValid: boolean, message: string }> {
   const scopeAssignments = await db
     .select()
     .from(discountScopeAssignments)

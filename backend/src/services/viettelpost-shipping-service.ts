@@ -90,7 +90,7 @@ class ViettelPostShippingService {
 
       // Lấy thông tin người gửi mặc định
       const defaultConfig = await this.getDefaultConfig();
-      const senderInfo = defaultConfig.defaultSenderInfo;
+      const senderInfo = (defaultConfig as any).defaultSenderInfo;
 
       // Tạo ORDER_NUMBER unique
       const orderNumber = `ORD-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`;
@@ -98,7 +98,7 @@ class ViettelPostShippingService {
       // Chuẩn bị dữ liệu đơn hàng VTP
       const vtpOrderData: VTPOrderRequest = {
         ORDER_NUMBER: orderNumber,
-        GROUPADDRESS_ID: defaultConfig.groupAddressId || 1,
+        GROUPADDRESS_ID: (defaultConfig as any).groupAddressId || 1,
         
         // Thông tin người gửi
         SENDER_FULLNAME: senderInfo.fullName,
@@ -239,7 +239,7 @@ class ViettelPostShippingService {
         await this.updateOrderVTPInfo(orderId, {
           vtpStatus: internalStatus,
           vtpTrackingData: {
-            ...order[0].vtpTrackingData,
+            ...(order[0] as any).vtpTrackingData,
             lastUpdate: latestStatus.UPDATE_DATE,
             currentLocation: latestStatus.LOCATION_CURRENT,
             statusHistory: trackingResponse.data.map(status => ({

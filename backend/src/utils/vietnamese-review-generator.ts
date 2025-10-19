@@ -518,14 +518,14 @@ export function generateBookContext(category: string): any {
   ];
   
   const conditions = ["new", "like_new", "good", "fair"];
-  const reasons = BOOK_CATEGORY_TERMS[category]?.reasons || ["đọc", "học tập", "tham khảo"];
+  const reasons = (BOOK_CATEGORY_TERMS as any)[category]?.reasons || ["đọc", "học tập", "tham khảo"];
   
-  const categoryTitles = bookTitles[category] || bookTitles.literature;
+  const categoryTitles = (bookTitles as any)[category] || bookTitles.literature;
   
   return {
     bookTitle: categoryTitles[Math.floor(Math.random() * categoryTitles.length)],
     bookAuthor: authors[Math.floor(Math.random() * authors.length)],
-    bookCategory: BOOK_CATEGORY_TERMS[category]?.vi || category,
+    bookCategory: (BOOK_CATEGORY_TERMS as any)[category]?.vi || category,
     bookCondition: conditions[Math.floor(Math.random() * conditions.length)],
     purchaseReason: reasons[Math.floor(Math.random() * reasons.length)],
     isbn: `978${Math.floor(Math.random() * 9000000000) + 1000000000}`
@@ -567,11 +567,11 @@ export function generateVietnameseReview(
   }
   
   // Generate title
-  const titles = template.titles[region] || template.titles['Miền Nam'];
+  const titles = (template.titles as any)[region] || template.titles['Miền Nam'];
   const reviewTitle = titles[Math.floor(Math.random() * titles.length)];
   
   // Generate content
-  const contentTemplates = template.content_templates[region] || template.content_templates['Miền Nam'];
+  const contentTemplates = (template.content_templates as any)[region] || template.content_templates['Miền Nam'];
   let reviewContent = contentTemplates[Math.floor(Math.random() * contentTemplates.length)];
   
   // Replace placeholders with actual content
@@ -581,7 +581,7 @@ export function generateVietnameseReview(
     .replace('{seller_appreciation}', CONTENT_PLACEHOLDERS.seller_appreciation[qualityLevel][Math.floor(Math.random() * CONTENT_PLACEHOLDERS.seller_appreciation[qualityLevel].length)])
     .replace('{purchase_reason}', bookContext.purchaseReason)
     .replace('{family_context}', characteristics.mentionsFamily ? CULTURAL_ELEMENTS.family_mentions[Math.floor(Math.random() * CULTURAL_ELEMENTS.family_mentions.length)] : '')
-    .replace('{courtesy_closing}', COURTESY_EXPRESSIONS[politenessLevel].closings[Math.floor(Math.random() * COURTESY_EXPRESSIONS[politenessLevel].closings.length)]);
+    .replace('{courtesy_closing}', (COURTESY_EXPRESSIONS as any)[politenessLevel].closings[Math.floor(Math.random() * (COURTESY_EXPRESSIONS as any)[politenessLevel].closings.length)]);
   
   // Generate ratings
   const overallRating = Math.floor(Math.random() * (template.ratings.max - template.ratings.min + 1)) + template.ratings.min;

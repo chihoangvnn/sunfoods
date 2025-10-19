@@ -254,7 +254,7 @@ export class WorkerManagementService {
 
       // Filter by job type capabilities
       const capableWorkers = availableWorkers.filter(worker => 
-        worker.capabilities.some(cap => 
+        (worker.capabilities as any[]).some(cap => 
           cap.platform === criteria.platform && 
           cap.actions.includes(criteria.jobType)
         )
@@ -493,7 +493,7 @@ export class WorkerManagementService {
     
     // Filter by platform capability
     return workers.filter(worker => 
-      worker.platforms.includes(platform) &&
+      (worker.platforms as string[]).includes(platform) &&
       worker.isEnabled &&
       worker.currentLoad < worker.maxConcurrentJobs
     );

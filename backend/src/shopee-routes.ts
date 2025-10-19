@@ -8,7 +8,7 @@ import { shopeeFulfillmentService } from './shopee-fulfillment.js';
 import { createShopeeApiSync } from './shopee-api-sync.js';
 import { db } from './db.js';
 import { eq } from 'drizzle-orm';
-import { shopeeBusinessAccounts, shopeeShopOrders, insertShopeeBusinessAccountSchema, insertShopeeShopOrderSchema, insertShopeeShopProductSchema } from '../shared/schema.js';
+import { shopeeBusinessAccounts, shopeeShopOrders, insertShopeeBusinessAccountsSchema, insertShopeeShopOrdersSchema, insertShopeeShopProductsSchema } from '../shared/schema.js';
 
 // 🚨 PRODUCTION WARNING: In-memory state will break on server restart
 // TODO: Use Redis or persistent storage for OAuth state

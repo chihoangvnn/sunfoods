@@ -18,88 +18,96 @@ import {
   pushSubscriptions,
   vehicles, trips, driverReports,
   carGroups, vehicleGroupAssignments,
-  affiliateProductRequests, affiliateProductAssignments, stockReservations,
+  affiliateProductRequests, affiliateProductAssignments, affiliateOrders, affiliateShareLogs, abebooksSearchHistory, abebooksAccounts, abebooksListings, queueAutoFillSettings, groupAccounts, productFAQs, vendorPushSubscriptions, stockReservations,
   ipPools, ipPoolSessions, ipRotationLogs,
   notifications,
   flashSales,
   preorderProducts,
-  type User, type InsertUser, type Product, type InsertProduct, 
-  type Customer, type InsertCustomer, type Order, type InsertOrder,
-  type OrderItem, type InsertOrderItem, type SocialAccount, type InsertSocialAccount,
-  type ChatbotConversation, type InsertChatbotConversation,
+  type Users, type InsertUsers, type Products, type InsertProducts, 
+  type Customers, type InsertCustomers, type Orders, type InsertOrders,
+  type OrderItems, type InsertOrderItems, type SocialAccounts, type InsertSocialAccounts,
+  type ChatbotConversations, type InsertChatbotConversations,
   type StorefrontConfig, type InsertStorefrontConfig,
-  type StorefrontOrder, type InsertStorefrontOrder,
-  type Category, type InsertCategory, type Industry, type InsertIndustry,
-  type FrontendCategoryAssignment, type InsertFrontendCategoryAssignment,
-  type Payment, type InsertPayment, type ShopSettings, type InsertShopSettings,
-  type ProductLandingPage, type InsertProductLandingPage,
-  type ProductLandingClick, type InsertProductLandingClick,
-  type ProductReview, type InsertProductReview,
-  type ProductFaq, type InsertProductFaq,
-  type ProductPolicy, type InsertProductPolicy,
-  type ProductPolicyAssociation, type InsertProductPolicyAssociation,
-  type FacebookConversation, type InsertFacebookConversation,
-  type FacebookMessage, type InsertFacebookMessage,
-  type PageTag, type InsertPageTag, type UnifiedTag, type InsertUnifiedTag,
-  type TikTokBusinessAccount, type InsertTikTokBusinessAccount,
-  type TikTokShopOrder, type InsertTikTokShopOrder,
-  type TikTokShopProduct, type InsertTikTokShopProduct,
-  type TikTokVideo, type InsertTikTokVideo,
-  type ContentCategory, type InsertContentCategory,
-  type ContentAsset, type InsertContentAsset,
-  type ScheduledPost, type InsertScheduledPost,
-  type ContentLibrary, type InsertContentLibrary, type UpdateContentLibrary,
+  type StorefrontOrders, type InsertStorefrontOrders,
+  type Categories, type InsertCategories, type Industries, type InsertIndustries,
+  type FrontendCategoryAssignments, type InsertFrontendCategoryAssignments,
+  type Payments, type InsertPayments, type ShopSettings, type InsertShopSettings,
+  type ProductLandingPages, type InsertProductLandingPages,
+  type ProductLandingClicks, type InsertProductLandingClicks,
+  type ProductReviews, type InsertProductReviews,
+  type ProductPolicies, type InsertProductPolicies,
+  type ProductPolicyAssociations, type InsertProductPolicyAssociations,
+  type FacebookConversations, type InsertFacebookConversations,
+  type FacebookMessages, type InsertFacebookMessages,
+  type PageTags, type InsertPageTags, type UnifiedTags, type InsertUnifiedTags,
+  type TiktokBusinessAccounts, type InsertTiktokBusinessAccounts,
+  type TiktokShopOrders, type InsertTiktokShopOrders,
+  type TiktokShopProducts, type InsertTiktokShopProducts,
+  type TiktokVideos, type InsertTiktokVideos,
+  type ContentCategories, type InsertContentCategories,
+  type ContentAssets, type InsertContentAssets,
+  type ScheduledPosts, type InsertScheduledPosts,
+  type ContentLibraries, type InsertContentLibraries,
   type ContentQueue, type InsertContentQueue,
   type QueueAutofillSettings, type InsertQueueAutofillSettings,
   type QueueHistory, type InsertQueueHistory,
-  type FacebookApp, type InsertFacebookApp,
-  type FacebookWebhookEvent, type InsertFacebookWebhookEvent,
+  type FacebookApps, type InsertFacebookApps,
+  type FacebookWebhookEvents, type InsertFacebookWebhookEvents,
   type BotSettings, type InsertBotSettings,
-  type ApiConfiguration, type InsertApiConfiguration, type UpdateApiConfiguration,
-  type AccountGroup, type InsertAccountGroup,
+  type ApiConfigurations, type InsertApiConfigurations,
+  type AccountGroups, type InsertAccountGroups,
   type Worker, type InsertWorker,
-  type BookCustomer, type InsertBookCustomer, type BookSeller, type InsertBookSeller,
-  type BookPricingRule, type InsertBookPricingRule, type BookSellerInventory, type InsertBookSellerInventory,
-  type BookMarketingCampaign, type InsertBookMarketingCampaign,
-  type BookOrder, type InsertBookOrder, type BookOrderItem, type InsertBookOrderItem,
-  type MarketTrend, type InsertMarketTrend, type UpdateMarketTrend,
-  type CompetitorProfile, type InsertCompetitorProfile, type UpdateCompetitorProfile,
-  type SeasonalRule, type InsertSeasonalRule, type UpdateSeasonalRule,
-  type PricingStrategy, type InsertPricingStrategy, type UpdatePricingStrategy,
-  type AuthUser, type UpsertAuthUser,
-  type Admin, type InsertAdmin, type UpdateAdmin,
-  type Vendor, type InsertVendor,
-  type CookieProfile, type UpsertCookieProfile, type UpdateCookieProfile,
-  type CustomerEvent, type InsertCustomerEvent,
-  type PaymentGatewaySetting, type InsertPaymentGatewaySetting, type UpdatePaymentGatewaySetting,
-  type BookPaymentTransaction, type InsertBookPaymentTransaction, type UpdateBookPaymentTransaction,
-  type SellerPaymentConfig, type InsertSellerPaymentConfig, type UpdateSellerPaymentConfig,
-  type PushSubscription, type InsertPushSubscription,
-  type CarGroup, type InsertCarGroup,
-  type VehicleGroupAssignment, type InsertVehicleGroupAssignment,
-  type AffiliateProductRequest, type InsertAffiliateProductRequest, type UpdateAffiliateProductRequest,
-  type StockReservation, type InsertStockReservation, type UpdateStockReservation,
-  type AffiliateProductAssignment, type InsertAffiliateProductAssignment, type UpdateAffiliateProductAssignment,
-  type AffiliateOrder, type InsertAffiliateOrder,
-  type AffiliateShareLog, type InsertAffiliateShareLog,
-  type FanpageBotConfig,
-  type IpPool, type InsertIpPool, type UpdateIpPool,
-  type IpPoolSession, type InsertIpPoolSession, type UpdateIpPoolSession,
-  type IpRotationLog, type InsertIpRotationLog,
+  type BookCustomers, type InsertBookCustomers, type BookSellers, type InsertBookSellers,
+  type BookPricingRules, type InsertBookPricingRules,
+  type BookSellerInventories, type InsertBookSellerInventories,
+  type BookMarketingCampaigns, type InsertBookMarketingCampaigns,
+  type BookOrders, type InsertBookOrders, type BookOrderItems, type InsertBookOrderItems,
+  type MarketTrends, type InsertMarketTrends,
+  type CompetitorProfiles, type InsertCompetitorProfiles,
+  type SeasonalRules, type InsertSeasonalRules,
+  type PricingStrategies, type InsertPricingStrategies,
+  type AuthUsers, type InsertAuthUsers,
+  type Admins, type InsertAdmins,
+  type Vendors, type InsertVendors,
+  type CookieProfiles, type InsertCookieProfiles,
+  type CustomerEvents, type InsertCustomerEvents,
+  type PaymentGatewaySettings, type InsertPaymentGatewaySettings,
+  type BookPaymentTransactions, type InsertBookPaymentTransactions,
+  type SellerPaymentConfigs, type InsertSellerPaymentConfigs,
+  type PushSubscriptions, type InsertPushSubscriptions,
+  type CarGroups, type InsertCarGroups,
+  type VehicleGroupAssignments, type InsertVehicleGroupAssignments,
+  type AffiliateProductRequests, type InsertAffiliateProductRequests,
+  type StockReservations, type InsertStockReservations,
+  type AffiliateProductAssignments, type InsertAffiliateProductAssignments,
+  type AffiliateOrders, type InsertAffiliateOrders,
+  type AffiliateShareLogs, type InsertAffiliateShareLogs,
+  type AbebooksSearchHistory, type InsertAbebooksSearchHistory,
+  type AbebooksAccounts, type InsertAbebooksAccounts,
+  type AbebooksListings, type InsertAbebooksListings,
+  type AbebooksAccount, type InsertAbebooksAccount,
+  type AbebooksListing, type InsertAbebooksListing,
+  type QueueAutoFillSettings, type InsertQueueAutoFillSettings,
+  type GroupAccounts, type InsertGroupAccounts,
+  type ProductFAQ, type InsertProductFAQ,
+  type VendorPushSubscriptions, type InsertVendorPushSubscriptions,
+  type IpPools, type InsertIpPools,
+  type IpPoolSessions, type InsertIpPoolSessions,
+  type IpRotationLogs, type InsertIpRotationLogs,
   type Notifications, type InsertNotifications,
   type FlashSales, type InsertFlashSales,
   type PreorderProducts, type InsertPreorderProducts
 } from "@shared/schema";
 import { db } from "./db";
-import { eq, desc, asc, and, count, sum, sql, ilike, or, gte, lte, isNull, inArray } from "drizzle-orm";
+import { eq, desc, asc, and, count, sum, sql, ilike, or, gte, lte, isNull, isNotNull, inArray } from "drizzle-orm";
 import { assignOrderToVendors } from './services/vendor-order-assignment';
 
 export interface IStorage {
   // User methods
-  getUser(id: string): Promise<User | undefined>;
-  getUserById(id: string): Promise<User | undefined>;
-  getUserByUsername(username: string): Promise<User | undefined>;
-  createUser(user: InsertUser): Promise<User>;
+  getUser(id: string): Promise<Users | undefined>;
+  getUserById(id: string): Promise<Users | undefined>;
+  getUserByUsername(username: string): Promise<Users | undefined>;
+  createUser(user: InsertUsers): Promise<Users>;
 
   // Cookie Profile methods
   getCookieProfiles(filters?: {
@@ -110,10 +118,10 @@ export interface IStorage {
   }, pagination?: {
     limit?: number;
     offset?: number;
-  }): Promise<CookieProfile[]>;
-  getCookieProfileById(id: string): Promise<CookieProfile | undefined>;
-  createCookieProfile(profile: UpsertCookieProfile): Promise<CookieProfile>;
-  updateCookieProfile(id: string, profile: UpdateCookieProfile): Promise<CookieProfile | undefined>;
+  }): Promise<CookieProfiles[]>;
+  getCookieProfileById(id: string): Promise<CookieProfiles | undefined>;
+  createCookieProfile(profile: InsertCookieProfiles): Promise<CookieProfiles>;
+  updateCookieProfile(id: string, profile: Partial<CookieProfiles>): Promise<CookieProfiles | undefined>;
   deleteCookieProfile(id: string): Promise<boolean>;
   getCookieProfileStats(): Promise<{
     totalProfiles: number;
@@ -137,100 +145,100 @@ export interface IStorage {
   }, pagination?: {
     limit?: number;
     offset?: number;
-  }): Promise<CookieProfile[]>;
+  }): Promise<CookieProfiles[]>;
   getLastSyncTimestamp(userId?: string): Promise<string | null>;
-  getAuthUsers(): Promise<AuthUser[]>;
+  getAuthUsers(): Promise<AuthUsers[]>;
   validateUsersBatch(userIds: string[]): Promise<Set<string>>;
   getCookieProfilesByCompositeKeys(keys: Array<{
     userId: string;
     socialNetwork: string;
     groupTag: string;
     accountName: string;
-  }>): Promise<Map<string, CookieProfile>>;
+  }>): Promise<Map<string, CookieProfiles>>;
 
   // 🔐 Auth methods (Replit Auth integration)
-  getAuthUser(id: string): Promise<AuthUser | undefined>;
-  getAuthUserByEmail(email: string): Promise<AuthUser | undefined>;
-  createAuthUser(user: UpsertAuthUser): Promise<AuthUser>;
-  updateAuthUser(id: string, user: Partial<UpsertAuthUser>): Promise<AuthUser | undefined>;
+  getAuthUser(id: string): Promise<AuthUsers | undefined>;
+  getAuthUserByEmail(email: string): Promise<AuthUsers | undefined>;
+  createAuthUser(user: InsertAuthUsers): Promise<AuthUsers>;
+  updateAuthUser(id: string, user: Partial<InsertAuthUsers>): Promise<AuthUsers | undefined>;
   deleteAuthUser(id: string): Promise<boolean>;
-  linkCustomerToAuthUser(customerId: string, authUserId: string): Promise<Customer | undefined>;
-  getCustomerByAuthUser(authUserId: string): Promise<Customer | undefined>;
-  getCustomerByFacebookId(facebookId: string): Promise<Customer | undefined>;
-  getCustomerByPhone(phone: string): Promise<Customer | undefined>;
-  getCustomerByPSID(psid: string): Promise<Customer | null>;
-  getCustomerByAffiliateCode(affiliateCode: string): Promise<Customer | undefined>;
-  getOrdersByCustomerId(customerId: string, limit?: number): Promise<Order[]>;
-  getOrderItemsByOrderIds(orderIds: string[]): Promise<OrderItem[]>;
-  getProductsByIds(productIds: string[]): Promise<Product[]>;
-  getCategoriesByIds(categoryIds: string[]): Promise<Category[]>;
+  linkCustomerToAuthUser(customerId: string, authUserId: string): Promise<Customers | undefined>;
+  getCustomerByAuthUser(authUserId: string): Promise<Customers | undefined>;
+  getCustomerByFacebookId(facebookId: string): Promise<Customers | undefined>;
+  getCustomerByPhone(phone: string): Promise<Customers | undefined>;
+  getCustomerByPSID(psid: string): Promise<Customers | null>;
+  getCustomerByAffiliateCode(affiliateCode: string): Promise<Customers | undefined>;
+  getOrdersByCustomerId(customerId: string, limit?: number): Promise<Orders[]>;
+  getOrderItemsByOrderIds(orderIds: string[]): Promise<OrderItems[]>;
+  getProductsByIds(productIds: string[]): Promise<Products[]>;
+  getCategoriesByIds(categoryIds: string[]): Promise<Categories[]>;
 
   // 🔐 Admin Authentication methods (Role-based access control)
-  getAdmins(): Promise<Admin[]>;
-  getAdminById(id: string): Promise<Admin | undefined>;
-  getAdminByEmail(email: string): Promise<Admin | undefined>;
-  createAdmin(admin: InsertAdmin): Promise<Admin>;
-  updateAdmin(id: string, admin: UpdateAdmin): Promise<Admin | undefined>;
+  getAdmins(): Promise<Admins[]>;
+  getAdminById(id: string): Promise<Admins | undefined>;
+  getAdminByEmail(email: string): Promise<Admins | undefined>;
+  createAdmin(admin: InsertAdmins): Promise<Admins>;
+  updateAdmin(id: string, admin: Partial<Admins>): Promise<Admins | undefined>;
   deleteAdmin(id: string): Promise<boolean>;
-  updateAdminLastLogin(id: string): Promise<Admin | undefined>;
+  updateAdminLastLogin(id: string): Promise<Admins | undefined>;
 
   // 🔐 Vendor Authentication methods
-  getVendors(): Promise<Vendor[]>;
-  getVendorById(id: string): Promise<Vendor | undefined>;
-  getVendorByEmail(email: string): Promise<Vendor | undefined>;
-  createVendor(vendor: InsertVendor): Promise<Vendor>;
-  updateVendor(id: string, vendor: Partial<InsertVendor>): Promise<Vendor | undefined>;
-  updateVendorLastLogin(id: string): Promise<Vendor | undefined>;
+  getVendors(): Promise<Vendors[]>;
+  getVendorById(id: string): Promise<Vendors | undefined>;
+  getVendorByEmail(email: string): Promise<Vendors | undefined>;
+  createVendor(vendor: InsertVendors): Promise<Vendors>;
+  updateVendor(id: string, vendor: Partial<InsertVendors>): Promise<Vendors | undefined>;
+  updateVendorLastLogin(id: string): Promise<Vendors | undefined>;
 
   // 📱 Vendor Push Subscriptions methods
-  getVendorPushSubscriptions(vendorId: string): Promise<VendorPushSubscription[]>;
-  getVendorPushSubscriptionById(id: string): Promise<VendorPushSubscription | undefined>;
-  createVendorPushSubscription(subscription: InsertVendorPushSubscription): Promise<VendorPushSubscription>;
+  getVendorPushSubscriptions(vendorId: string): Promise<VendorPushSubscriptions[]>;
+  getVendorPushSubscriptionById(id: string): Promise<VendorPushSubscriptions | undefined>;
+  createVendorPushSubscription(subscription: InsertVendorPushSubscriptions): Promise<VendorPushSubscriptions>;
   deleteVendorPushSubscription(id: string): Promise<boolean>;
   markVendorPushSubscriptionInactive(id: string): Promise<void>;
   updateVendorLastNotifiedAt(vendorId: string): Promise<void>;
 
   // Industry methods
-  getIndustries(): Promise<Industry[]>;
-  getIndustry(id: string): Promise<Industry | undefined>;
-  createIndustry(industry: InsertIndustry): Promise<Industry>;
-  updateIndustry(id: string, industry: Partial<InsertIndustry>): Promise<Industry | undefined>;
+  getIndustries(): Promise<Industries[]>;
+  getIndustry(id: string): Promise<Industries | undefined>;
+  createIndustry(industry: InsertIndustries): Promise<Industries>;
+  updateIndustry(id: string, industry: Partial<InsertIndustries>): Promise<Industries | undefined>;
   deleteIndustry(id: string): Promise<boolean>;
 
   // Category methods
-  getCategories(industryId?: string): Promise<Category[]>;
-  getCategory(id: string): Promise<Category | undefined>;
-  createCategory(category: InsertCategory): Promise<Category>;
-  updateCategory(id: string, category: Partial<InsertCategory>): Promise<Category | undefined>;
+  getCategories(industryId?: string): Promise<Categories[]>;
+  getCategory(id: string): Promise<Categories | undefined>;
+  createCategory(category: InsertCategories): Promise<Categories>;
+  updateCategory(id: string, category: Partial<InsertCategories>): Promise<Categories | undefined>;
   deleteCategory(id: string): Promise<boolean>;
 
   // Frontend Category Assignment methods
-  getFrontendCategoryAssignments(): Promise<FrontendCategoryAssignment[]>;
-  getFrontendCategoryAssignmentsByFrontend(frontendId: string): Promise<FrontendCategoryAssignment[]>;
-  createFrontendCategoryAssignment(assignment: InsertFrontendCategoryAssignment): Promise<FrontendCategoryAssignment>;
-  updateFrontendCategoryAssignment(id: string, assignment: Partial<InsertFrontendCategoryAssignment>): Promise<FrontendCategoryAssignment | undefined>;
+  getFrontendCategoryAssignments(): Promise<FrontendCategoryAssignments[]>;
+  getFrontendCategoryAssignmentsByFrontend(frontendId: string): Promise<FrontendCategoryAssignments[]>;
+  createFrontendCategoryAssignment(assignment: InsertFrontendCategoryAssignments): Promise<FrontendCategoryAssignments>;
+  updateFrontendCategoryAssignment(id: string, assignment: Partial<InsertFrontendCategoryAssignments>): Promise<FrontendCategoryAssignments | undefined>;
   deleteFrontendCategoryAssignment(id: string): Promise<boolean>;
 
   // Dynamic Category Filtering methods
-  getCategoriesForFrontend(frontendId: string, isLocalCustomer?: boolean): Promise<Category[]>;
-  getProductsForFrontend(frontendId: string, isLocalCustomer?: boolean, limit?: number, search?: string, offset?: number): Promise<Product[]>;
+  getCategoriesForFrontend(frontendId: string, isLocalCustomer?: boolean): Promise<Categories[]>;
+  getProductsForFrontend(frontendId: string, isLocalCustomer?: boolean, limit?: number, search?: string, offset?: number): Promise<Products[]>;
 
   // Product methods
-  getProducts(limit?: number, categoryId?: string, search?: string, offset?: number, sortBy?: string, sortOrder?: string): Promise<Product[]>;
-  getProduct(id: string): Promise<Product | undefined>;
-  getProductBySKU(sku: string): Promise<Product | undefined>;
-  getProductBySlug(slug: string): Promise<Product | undefined>;
-  getProductsWithoutSKU(): Promise<Product[]>;
-  createProduct(product: InsertProduct): Promise<Product>;
-  updateProduct(id: string, product: Partial<InsertProduct>): Promise<Product | undefined>;
+  getProducts(limit?: number, categoryId?: string, search?: string, offset?: number, sortBy?: string, sortOrder?: string): Promise<Products[]>;
+  getProduct(id: string): Promise<Products | undefined>;
+  getProductBySKU(sku: string): Promise<Products | undefined>;
+  getProductBySlug(slug: string): Promise<Products | undefined>;
+  getProductsWithoutSKU(): Promise<Products[]>;
+  createProduct(product: InsertProducts): Promise<Products>;
+  updateProduct(id: string, product: Partial<InsertProducts>): Promise<Products | undefined>;
   deleteProduct(id: string): Promise<boolean>;
-  getProductsWithCategory(limit?: number, categoryId?: string, search?: string, offset?: number): Promise<(Product & { categoryName?: string })[]>;
+  getProductsWithCategory(limit?: number, categoryId?: string, search?: string, offset?: number): Promise<(Products & { categoryName?: string })[]>;
 
   // 💎 VIP System methods
-  getVipProducts(limit?: number, search?: string, offset?: number): Promise<Product[]>;
-  getVipCategories(): Promise<Category[]>;
-  updateProductVipStatus(id: string, isVipOnly: boolean): Promise<Product | undefined>;
-  updateCategoryVipStatus(id: string, isVipOnly: boolean): Promise<Category | undefined>;
+  getVipProducts(limit?: number, search?: string, offset?: number): Promise<Products[]>;
+  getVipCategories(): Promise<Categories[]>;
+  updateProductVipStatus(id: string, isVipOnly: boolean): Promise<Products | undefined>;
+  updateCategoryVipStatus(id: string, isVipOnly: boolean): Promise<Categories | undefined>;
 
   // 🚗 Driver System methods
   getDriverVehicles(driverId: string): Promise<any[]>;
@@ -248,11 +256,11 @@ export interface IStorage {
   deleteVehicle(id: string): Promise<boolean>;
 
   // Customer methods
-  getCustomers(limit?: number): Promise<(Customer & { totalOrders: number; totalSpent: number; lastOrderDate: string; totalDebt: string; creditLimit: string })[]>;
-  getLocalCustomers(limit?: number): Promise<(Customer & { totalOrders: number; totalSpent: number; lastOrderDate: string; totalDebt: string; creditLimit: string })[]>;
-  getCustomer(id: string): Promise<(Customer & { totalDebt: string; creditLimit: string }) | undefined>;
-  createCustomer(customer: InsertCustomer): Promise<Customer>;
-  updateCustomer(id: string, customer: Partial<InsertCustomer>): Promise<Customer | undefined>;
+  getCustomers(limit?: number): Promise<(Customers & { totalOrders: number; totalSpent: number; lastOrderDate: string; totalDebt: string; creditLimit: string })[]>;
+  getLocalCustomers(limit?: number): Promise<(Customers & { totalOrders: number; totalSpent: number; lastOrderDate: string; totalDebt: string; creditLimit: string })[]>;
+  getCustomer(id: string): Promise<(Customers & { totalDebt: string; creditLimit: string }) | undefined>;
+  createCustomer(customer: InsertCustomers): Promise<Customers>;
+  updateCustomer(id: string, customer: Partial<InsertCustomers>): Promise<Customers | undefined>;
   updateCustomerMembership(params: {
     customerId: string;
     totalSpent: string;
@@ -261,21 +269,21 @@ export interface IStorage {
     membershipTier: string;
     lastTierUpdate?: Date | null;
     membershipData?: any;
-  }): Promise<Customer | undefined>;
+  }): Promise<Customers | undefined>;
   deleteCustomer(id: string): Promise<boolean>;
   getCustomerRecentAddress(customerId: string): Promise<string | null>;
   
   // Customer analytics methods for POS suggestions
-  searchCustomers(searchTerm: string, limit?: number): Promise<(Customer & { totalOrders: number; totalSpent: number; lastOrderDate: string; totalDebt: string; creditLimit: string })[]>;
-  getRecentCustomers(limit?: number): Promise<(Customer & { totalOrders: number; totalSpent: number; lastOrderDate: string; totalDebt: string; creditLimit: string })[]>;
-  getVipCustomers(limit?: number): Promise<(Customer & { totalOrders: number; totalSpent: number; lastOrderDate: string; totalDebt: string; creditLimit: string })[]>;
-  getFrequentCustomers(limit?: number): Promise<(Customer & { totalOrders: number; totalSpent: number; lastOrderDate: string; totalDebt: string; creditLimit: string })[]>;
+  searchCustomers(searchTerm: string, limit?: number): Promise<(Customers & { totalOrders: number; totalSpent: number; lastOrderDate: string; totalDebt: string; creditLimit: string })[]>;
+  getRecentCustomers(limit?: number): Promise<(Customers & { totalOrders: number; totalSpent: number; lastOrderDate: string; totalDebt: string; creditLimit: string })[]>;
+  getVipCustomers(limit?: number): Promise<(Customers & { totalOrders: number; totalSpent: number; lastOrderDate: string; totalDebt: string; creditLimit: string })[]>;
+  getFrequentCustomers(limit?: number): Promise<(Customers & { totalOrders: number; totalSpent: number; lastOrderDate: string; totalDebt: string; creditLimit: string })[]>;
 
   // 📊 Customer Events Tracking
-  trackCustomerEvent(event: InsertCustomerEvent): Promise<CustomerEvent>;
-  getCustomerEvents(customerId: string, limit?: number): Promise<CustomerEvent[]>;
-  getCustomerEventsByType(customerId: string, eventType: string, limit?: number): Promise<CustomerEvent[]>;
-  updateCustomerSummary(customerId: string): Promise<Customer | undefined>;
+  trackCustomerEvent(event: InsertCustomerEvents): Promise<CustomerEvents>;
+  getCustomerEvents(customerId: string, limit?: number): Promise<CustomerEvents[]>;
+  getCustomerEventsByType(customerId: string, eventType: string, limit?: number): Promise<CustomerEvents[]>;
+  updateCustomerSummary(customerId: string): Promise<Customers | undefined>;
 
   // 🔔 Notifications methods
   getNotifications(customerId: string): Promise<Notifications[]>;
@@ -286,8 +294,8 @@ export interface IStorage {
   // 🔥 Flash Sales methods
   getFlashSales(limit?: number, offset?: number): Promise<FlashSales[]>;
   getFlashSaleById(id: string): Promise<FlashSales | undefined>;
-  getFlashSaleBySlug(slug: string): Promise<(FlashSales & { product: Product }) | undefined>;
-  getActiveFlashSales(): Promise<(FlashSales & { product: Product })[]>;
+  getFlashSaleBySlug(slug: string): Promise<(FlashSales & { product: Products }) | undefined>;
+  getActiveFlashSales(): Promise<(FlashSales & { product: Products })[]>;
   createFlashSale(data: InsertFlashSales): Promise<FlashSales>;
   updateFlashSale(id: string, data: Partial<InsertFlashSales>): Promise<FlashSales | undefined>;
   deleteFlashSale(id: string): Promise<boolean>;
@@ -295,129 +303,129 @@ export interface IStorage {
   // 📦 Pre-orders methods
   getPreorders(limit?: number, offset?: number): Promise<PreorderProducts[]>;
   getPreorderById(id: string): Promise<PreorderProducts | undefined>;
-  getPreorderBySlug(slug: string): Promise<PreorderProducts & { product?: Product }>;
-  getActivePreorders(): Promise<(PreorderProducts & { product?: Product })[]>;
+  getPreorderBySlug(slug: string): Promise<PreorderProducts & { product?: Products }>;
+  getActivePreorders(): Promise<(PreorderProducts & { product?: Products })[]>;
   createPreorder(data: InsertPreorderProducts): Promise<PreorderProducts>;
   updatePreorder(id: string, data: Partial<InsertPreorderProducts>): Promise<PreorderProducts | undefined>;
   deletePreorder(id: string): Promise<boolean>;
 
   // Order methods
-  getOrders(limit?: number): Promise<(Order & { customerName: string; customerEmail: string })[]>;
-  getOrder(id: string): Promise<Order | undefined>;
-  getOrderWithDetails(id: string): Promise<(Order & { customerName: string; customerEmail: string; orderItems: (OrderItem & { productName: string })[] }) | undefined>;
-  createOrder(order: InsertOrder): Promise<Order>;
-  updateOrder(id: string, order: Partial<InsertOrder>): Promise<Order | undefined>;
-  updateOrderStatus(id: string, status: string): Promise<Order | undefined>;
+  getOrders(limit?: number): Promise<(Orders & { customerName: string; customerEmail: string })[]>;
+  getOrder(id: string): Promise<Orders | undefined>;
+  getOrderWithDetails(id: string): Promise<(Orders & { customerName: string; customerEmail: string; orderItems: (OrderItems & { productName: string })[] }) | undefined>;
+  createOrder(order: InsertOrders): Promise<Orders>;
+  updateOrder(id: string, order: Partial<InsertOrders>): Promise<Orders | undefined>;
+  updateOrderStatus(id: string, status: string): Promise<Orders | undefined>;
   deleteOrder(id: string): Promise<boolean>;
 
   // Order items methods
-  getOrderItems(orderId: string): Promise<OrderItem[]>;
-  createOrderItem(orderItem: InsertOrderItem): Promise<OrderItem>;
+  getOrderItems(orderId: string): Promise<OrderItems[]>;
+  createOrderItem(orderItem: InsertOrderItems): Promise<OrderItems>;
   deleteOrderItem(id: string): Promise<boolean>;
 
   // Debt management methods
-  updateCustomerDebt(customerId: string, paymentAmount: number): Promise<Customer | undefined>;
+  updateCustomerDebt(customerId: string, paymentAmount: number): Promise<Customers | undefined>;
   getCustomerDebtInfo(customerId: string): Promise<{ totalDebt: number; creditLimit: number } | undefined>;
 
   // Social account methods
-  getSocialAccounts(): Promise<SocialAccount[]>;
-  getSocialAccount(id: string): Promise<SocialAccount | undefined>;
-  getSocialAccountById(id: string): Promise<SocialAccount | undefined>;
-  getSocialAccountByPlatform(platform: string): Promise<SocialAccount | undefined>;
-  getSocialAccountsByPlatform(platform: string): Promise<SocialAccount[]>;
-  createSocialAccount(account: InsertSocialAccount): Promise<SocialAccount>;
+  getSocialAccounts(): Promise<SocialAccounts[]>;
+  getSocialAccount(id: string): Promise<SocialAccounts | undefined>;
+  getSocialAccountById(id: string): Promise<SocialAccounts | undefined>;
+  getSocialAccountByPlatform(platform: string): Promise<SocialAccounts | undefined>;
+  getSocialAccountsByPlatform(platform: string): Promise<SocialAccounts[]>;
+  createSocialAccount(account: InsertSocialAccounts): Promise<SocialAccounts>;
   
   // Account Groups methods
   getAccountGroups(): Promise<any[]>;
-  getGroupAccounts(groupId: string): Promise<SocialAccount[]>;
+  getGroupAccounts(groupId: string): Promise<SocialAccounts[]>;
 
   // Page tag methods
-  getPageTags(): Promise<PageTag[]>;
-  getPageTag(id: string): Promise<PageTag | undefined>;
-  createPageTag(tag: InsertPageTag): Promise<PageTag>;
-  updatePageTag(id: string, tag: Partial<InsertPageTag>): Promise<PageTag | undefined>;
+  getPageTags(): Promise<PageTags[]>;
+  getPageTag(id: string): Promise<PageTags | undefined>;
+  createPageTag(tag: InsertPageTags): Promise<PageTags>;
+  updatePageTag(id: string, tag: Partial<InsertPageTags>): Promise<PageTags | undefined>;
   deletePageTag(id: string): Promise<boolean>;
   
   // Unified tag methods (Cross-platform tag system)
-  getUnifiedTags(): Promise<UnifiedTag[]>;
-  getUnifiedTag(id: string): Promise<UnifiedTag | undefined>;
-  createUnifiedTag(tag: InsertUnifiedTag): Promise<UnifiedTag>;
-  updateUnifiedTag(id: string, tag: Partial<InsertUnifiedTag>): Promise<UnifiedTag | undefined>;
+  getUnifiedTags(): Promise<UnifiedTags[]>;
+  getUnifiedTag(id: string): Promise<UnifiedTags | undefined>;
+  createUnifiedTag(tag: InsertUnifiedTags): Promise<UnifiedTags>;
+  updateUnifiedTag(id: string, tag: Partial<InsertUnifiedTags>): Promise<UnifiedTags | undefined>;
   deleteUnifiedTag(id: string): Promise<boolean>;
 
   // TikTok Business Account methods
-  getTikTokBusinessAccounts(): Promise<TikTokBusinessAccount[]>;
-  getTikTokBusinessAccount(id: string): Promise<TikTokBusinessAccount | undefined>;
-  getTikTokBusinessAccountByBusinessId(businessId: string): Promise<TikTokBusinessAccount | undefined>;
-  createTikTokBusinessAccount(account: InsertTikTokBusinessAccount): Promise<TikTokBusinessAccount>;
-  updateTikTokBusinessAccount(id: string, account: Partial<InsertTikTokBusinessAccount>): Promise<TikTokBusinessAccount | undefined>;
+  getTikTokBusinessAccounts(): Promise<TiktokBusinessAccounts[]>;
+  getTikTokBusinessAccount(id: string): Promise<TiktokBusinessAccounts | undefined>;
+  getTikTokBusinessAccountByBusinessId(businessId: string): Promise<TiktokBusinessAccounts | undefined>;
+  createTikTokBusinessAccount(account: InsertTiktokBusinessAccounts): Promise<TiktokBusinessAccounts>;
+  updateTikTokBusinessAccount(id: string, account: Partial<InsertTiktokBusinessAccounts>): Promise<TiktokBusinessAccounts | undefined>;
   deleteTikTokBusinessAccount(id: string): Promise<boolean>;
 
   // Facebook Apps methods
-  getAllFacebookApps(): Promise<FacebookApp[]>;
-  getFacebookAppById(id: string): Promise<FacebookApp | undefined>;
-  getFacebookAppByAppId(appId: string): Promise<FacebookApp | undefined>;
-  createFacebookApp(app: InsertFacebookApp): Promise<FacebookApp>;
-  updateFacebookApp(id: string, app: Partial<InsertFacebookApp>): Promise<FacebookApp | undefined>;
+  getAllFacebookApps(): Promise<FacebookApps[]>;
+  getFacebookAppById(id: string): Promise<FacebookApps | undefined>;
+  getFacebookAppByAppId(appId: string): Promise<FacebookApps | undefined>;
+  createFacebookApp(app: InsertFacebookApps): Promise<FacebookApps>;
+  updateFacebookApp(id: string, app: Partial<InsertFacebookApps>): Promise<FacebookApps | undefined>;
   deleteFacebookApp(id: string): Promise<boolean>;
 
   // TikTok Shop Order methods
-  getTikTokShopOrders(limit?: number): Promise<TikTokShopOrder[]>;
-  getTikTokShopOrder(id: string): Promise<TikTokShopOrder | undefined>;
-  getTikTokShopOrderByTikTokId(tiktokOrderId: string): Promise<TikTokShopOrder | undefined>;
-  createTikTokShopOrder(order: InsertTikTokShopOrder): Promise<TikTokShopOrder>;
-  updateTikTokShopOrder(id: string, order: Partial<InsertTikTokShopOrder>): Promise<TikTokShopOrder | undefined>;
+  getTikTokShopOrders(limit?: number): Promise<TiktokShopOrders[]>;
+  getTikTokShopOrder(id: string): Promise<TiktokShopOrders | undefined>;
+  getTikTokShopOrderByTikTokId(tiktokOrderId: string): Promise<TiktokShopOrders | undefined>;
+  createTikTokShopOrder(order: InsertTiktokShopOrders): Promise<TiktokShopOrders>;
+  updateTikTokShopOrder(id: string, order: Partial<InsertTiktokShopOrders>): Promise<TiktokShopOrders | undefined>;
   deleteTikTokShopOrder(id: string): Promise<boolean>;
 
   // TikTok Shop Product methods
-  getTikTokShopProducts(): Promise<TikTokShopProduct[]>;
-  getTikTokShopProduct(id: string): Promise<TikTokShopProduct | undefined>;
-  getTikTokShopProductByTikTokId(tiktokProductId: string): Promise<TikTokShopProduct | undefined>;
-  createTikTokShopProduct(product: InsertTikTokShopProduct): Promise<TikTokShopProduct>;
-  updateTikTokShopProduct(id: string, product: Partial<InsertTikTokShopProduct>): Promise<TikTokShopProduct | undefined>;
+  getTikTokShopProducts(): Promise<TiktokShopProducts[]>;
+  getTikTokShopProduct(id: string): Promise<TiktokShopProducts | undefined>;
+  getTikTokShopProductByTikTokId(tiktokProductId: string): Promise<TiktokShopProducts | undefined>;
+  createTikTokShopProduct(product: InsertTiktokShopProducts): Promise<TiktokShopProducts>;
+  updateTikTokShopProduct(id: string, product: Partial<InsertTiktokShopProducts>): Promise<TiktokShopProducts | undefined>;
   deleteTikTokShopProduct(id: string): Promise<boolean>;
 
   // TikTok Video methods
-  getTikTokVideos(businessAccountId?: string): Promise<TikTokVideo[]>;
-  getTikTokVideo(id: string): Promise<TikTokVideo | undefined>;
-  getTikTokVideoByVideoId(videoId: string): Promise<TikTokVideo | undefined>;
-  createTikTokVideo(video: InsertTikTokVideo): Promise<TikTokVideo>;
-  updateTikTokVideo(id: string, video: Partial<InsertTikTokVideo>): Promise<TikTokVideo | undefined>;
+  getTikTokVideos(businessAccountId?: string): Promise<TiktokVideos[]>;
+  getTikTokVideo(id: string): Promise<TiktokVideos | undefined>;
+  getTikTokVideoByVideoId(videoId: string): Promise<TiktokVideos | undefined>;
+  createTikTokVideo(video: InsertTiktokVideos): Promise<TiktokVideos>;
+  updateTikTokVideo(id: string, video: Partial<InsertTiktokVideos>): Promise<TiktokVideos | undefined>;
   deleteTikTokVideo(id: string): Promise<boolean>;
-  updateSocialAccount(id: string, account: Partial<InsertSocialAccount>): Promise<SocialAccount | undefined>;
-  getSocialAccountByPageId(pageId: string): Promise<SocialAccount | undefined>;
+  updateSocialAccount(id: string, account: Partial<InsertSocialAccounts>): Promise<SocialAccounts | undefined>;
+  getSocialAccountByPageId(pageId: string): Promise<SocialAccounts | undefined>;
   
   // 🤖 Bot Config methods
-  getSocialAccountBotConfig(id: string): Promise<FanpageBotConfig | null>;
-  updateSocialAccountBotConfig(id: string, botConfig: FanpageBotConfig): Promise<SocialAccount | undefined>;
+  getSocialAccountBotConfig(id: string): Promise<any | null>;
+  updateSocialAccountBotConfig(id: string, botConfig: any): Promise<SocialAccounts | undefined>;
 
   // Facebook Management methods
-  getPageTags(): Promise<PageTag[]>;
-  getPageTag(id: string): Promise<PageTag | undefined>;
-  createPageTag(tag: InsertPageTag): Promise<PageTag>;
-  updatePageTag(id: string, tag: Partial<InsertPageTag>): Promise<PageTag | undefined>;
+  getPageTags(): Promise<PageTags[]>;
+  getPageTag(id: string): Promise<PageTags | undefined>;
+  createPageTag(tag: InsertPageTags): Promise<PageTags>;
+  updatePageTag(id: string, tag: Partial<InsertPageTags>): Promise<PageTags | undefined>;
   deletePageTag(id: string): Promise<boolean>;
 
   // Facebook Conversations
-  getFacebookConversations(pageId?: string, limit?: number): Promise<FacebookConversation[]>;
-  getFacebookConversation(id: string): Promise<FacebookConversation | undefined>;
-  getFacebookConversationByParticipant(pageId: string, participantId: string): Promise<FacebookConversation | undefined>;
-  createFacebookConversation(conversation: InsertFacebookConversation): Promise<FacebookConversation>;
-  updateFacebookConversation(id: string, conversation: Partial<InsertFacebookConversation>): Promise<FacebookConversation | undefined>;
+  getFacebookConversations(pageId?: string, limit?: number): Promise<FacebookConversations[]>;
+  getFacebookConversation(id: string): Promise<FacebookConversations | undefined>;
+  getFacebookConversationByParticipant(pageId: string, participantId: string): Promise<FacebookConversations | undefined>;
+  createFacebookConversation(conversation: InsertFacebookConversations): Promise<FacebookConversations>;
+  updateFacebookConversation(id: string, conversation: Partial<InsertFacebookConversations>): Promise<FacebookConversations | undefined>;
 
   // Facebook Messages
-  getFacebookMessages(conversationId: string, limit?: number): Promise<FacebookMessage[]>;
-  createFacebookMessage(message: InsertFacebookMessage): Promise<FacebookMessage>;
+  getFacebookMessages(conversationId: string, limit?: number): Promise<FacebookMessages[]>;
+  createFacebookMessage(message: InsertFacebookMessages): Promise<FacebookMessages>;
   markConversationAsRead(conversationId: string): Promise<boolean>;
 
   // Chatbot methods
-  getChatbotConversations(limit?: number): Promise<ChatbotConversation[]>;
-  getChatbotConversation(id: string): Promise<ChatbotConversation | undefined>;
-  getChatbotConversationBySession(sessionId: string): Promise<ChatbotConversation | undefined>;
-  getChatbotConversationByCustomer(customerId: string): Promise<ChatbotConversation | undefined>;
-  createChatbotConversation(conversation: InsertChatbotConversation): Promise<ChatbotConversation>;
-  updateChatbotConversation(id: string, conversation: Partial<InsertChatbotConversation>): Promise<ChatbotConversation | undefined>;
-  addMessageToChatbotConversation(conversationId: string, message: any): Promise<ChatbotConversation | undefined>;
+  getChatbotConversations(limit?: number): Promise<ChatbotConversations[]>;
+  getChatbotConversation(id: string): Promise<ChatbotConversations | undefined>;
+  getChatbotConversationBySession(sessionId: string): Promise<ChatbotConversations | undefined>;
+  getChatbotConversationByCustomer(customerId: string): Promise<ChatbotConversations | undefined>;
+  createChatbotConversation(conversation: InsertChatbotConversations): Promise<ChatbotConversations>;
+  updateChatbotConversation(id: string, conversation: Partial<InsertChatbotConversations>): Promise<ChatbotConversations | undefined>;
+  addMessageToChatbotConversation(conversationId: string, message: any): Promise<ChatbotConversations | undefined>;
   getChatbotMessages(conversationId: string): Promise<any[]>;
 
   // Bot Settings methods
@@ -427,17 +435,17 @@ export interface IStorage {
   getBotSettingsOrDefault(): Promise<BotSettings>;
 
   // API Management methods
-  getApiConfigurations(): Promise<ApiConfiguration[]>;
-  getApiConfiguration(id: string): Promise<ApiConfiguration | undefined>;
-  getApiConfigurationByEndpoint(endpoint: string, method?: string): Promise<ApiConfiguration | undefined>;
-  getApiConfigurationsByCategory(category: string): Promise<ApiConfiguration[]>;
-  createApiConfiguration(config: InsertApiConfiguration): Promise<ApiConfiguration>;
-  updateApiConfiguration(id: string, config: Partial<UpdateApiConfiguration>): Promise<ApiConfiguration | undefined>;
+  getApiConfigurations(): Promise<ApiConfigurations[]>;
+  getApiConfiguration(id: string): Promise<ApiConfigurations | undefined>;
+  getApiConfigurationByEndpoint(endpoint: string, method?: string): Promise<ApiConfigurations | undefined>;
+  getApiConfigurationsByCategory(category: string): Promise<ApiConfigurations[]>;
+  createApiConfiguration(config: InsertApiConfigurations): Promise<ApiConfigurations>;
+  updateApiConfiguration(id: string, config: Partial<ApiConfigurations>): Promise<ApiConfigurations | undefined>;
   deleteApiConfiguration(id: string): Promise<boolean>;
-  toggleApiEnabled(id: string, enabled: boolean): Promise<ApiConfiguration | undefined>;
+  toggleApiEnabled(id: string, enabled: boolean): Promise<ApiConfigurations | undefined>;
   incrementApiAccess(id: string, responseTime?: number): Promise<void>;
   incrementApiError(id: string): Promise<void>;
-  getEnabledApiConfigurations(): Promise<ApiConfiguration[]>;
+  getEnabledApiConfigurations(): Promise<ApiConfigurations[]>;
   updateApiStats(id: string, stats: { accessCount?: number; errorCount?: number; avgResponseTime?: number }): Promise<void>;
 
   // Dashboard stats
@@ -454,27 +462,27 @@ export interface IStorage {
   getStorefrontConfigByName(name: string): Promise<StorefrontConfig | undefined>;
   createStorefrontConfig(config: InsertStorefrontConfig): Promise<StorefrontConfig>;
   updateStorefrontConfig(id: string, config: Partial<InsertStorefrontConfig>): Promise<StorefrontConfig | undefined>;
-  getTopProductsForStorefront(configId: string): Promise<Product[]>;
-  getStorefrontOrders(configId?: string, limit?: number): Promise<StorefrontOrder[]>;
-  getStorefrontOrder(id: string): Promise<StorefrontOrder | undefined>;
-  createStorefrontOrder(order: InsertStorefrontOrder): Promise<StorefrontOrder>;
-  updateStorefrontOrderStatus(id: string, status: string): Promise<StorefrontOrder | undefined>;
+  getTopProductsForStorefront(configId: string): Promise<Products[]>;
+  getStorefrontOrders(configId?: string, limit?: number): Promise<StorefrontOrders[]>;
+  getStorefrontOrder(id: string): Promise<StorefrontOrders | undefined>;
+  createStorefrontOrder(order: InsertStorefrontOrders): Promise<StorefrontOrders>;
+  updateStorefrontOrderStatus(id: string, status: string): Promise<StorefrontOrders | undefined>;
   
   // Affiliate-specific storefront order methods
-  getStorefrontOrdersByAffiliateCode(affiliateCode: string, limit?: number): Promise<StorefrontOrder[]>;
-  getStorefrontOrdersByAffiliateCodeAndDateRange(affiliateCode: string, startDate: Date, endDate: Date): Promise<StorefrontOrder[]>;
-  getStorefrontOrdersByAffiliateCodeWithFilters(filters: any, limit?: number, offset?: number): Promise<StorefrontOrder[]>;
+  getStorefrontOrdersByAffiliateCode(affiliateCode: string, limit?: number): Promise<StorefrontOrders[]>;
+  getStorefrontOrdersByAffiliateCodeAndDateRange(affiliateCode: string, startDate: Date, endDate: Date): Promise<StorefrontOrders[]>;
+  getStorefrontOrdersByAffiliateCodeWithFilters(filters: any, limit?: number, offset?: number): Promise<StorefrontOrders[]>;
   getStorefrontOrdersCountByAffiliateCode(affiliateCode: string, filters?: any): Promise<number>;
-  getCustomerByEmail(email: string): Promise<Customer | undefined>;
+  getCustomerByEmail(email: string): Promise<Customers | undefined>;
 
   // Inventory methods for RASA API
   getProductStock(productId: string): Promise<number>;
   updateProductStock(productId: string, newStock: number): Promise<void>;
 
   // Payment methods
-  getPayment(orderId: string): Promise<Payment | undefined>;
-  createPayment(payment: InsertPayment): Promise<Payment>;
-  updatePaymentStatus(id: string, status: string, transactionId?: string): Promise<Payment | undefined>;
+  getPayment(orderId: string): Promise<Payments | undefined>;
+  createPayment(payment: InsertPayments): Promise<Payments>;
+  updatePaymentStatus(id: string, status: string, transactionId?: string): Promise<Payments | undefined>;
 
   // Shop settings methods
   getShopSettings(): Promise<ShopSettings | undefined>; // Get default shop settings
@@ -487,26 +495,26 @@ export interface IStorage {
   setDefaultShopSettings(id: string): Promise<ShopSettings | undefined>;
 
   // Product Landing Page methods
-  getAllProductLandingPages(): Promise<ProductLandingPage[]>;
-  getProductLandingPageById(id: string): Promise<ProductLandingPage | undefined>;
-  getProductLandingPageBySlug(slug: string): Promise<ProductLandingPage | undefined>;
-  createProductLandingPage(data: InsertProductLandingPage): Promise<ProductLandingPage>;
-  updateProductLandingPage(id: string, data: Partial<InsertProductLandingPage>): Promise<ProductLandingPage | undefined>;
+  getAllProductLandingPages(): Promise<ProductLandingPages[]>;
+  getProductLandingPageById(id: string): Promise<ProductLandingPages | undefined>;
+  getProductLandingPageBySlug(slug: string): Promise<ProductLandingPages | undefined>;
+  createProductLandingPage(data: InsertProductLandingPages): Promise<ProductLandingPages>;
+  updateProductLandingPage(id: string, data: Partial<InsertProductLandingPages>): Promise<ProductLandingPages | undefined>;
   deleteProductLandingPage(id: string): Promise<boolean>;
   incrementLandingPageView(id: string): Promise<void>;
   incrementLandingPageOrder(id: string): Promise<void>;
   getProductLandingPageWithDetails(idOrSlug: string): Promise<any>;
 
   // Product Landing Click Tracking methods
-  createProductLandingClick(data: InsertProductLandingClick): Promise<ProductLandingClick>;
-  getProductLandingClickByCookie(trackingCookie: string): Promise<ProductLandingClick | undefined>;
+  createProductLandingClick(data: InsertProductLandingClicks): Promise<ProductLandingClicks>;
+  getProductLandingClickByCookie(trackingCookie: string): Promise<ProductLandingClicks | undefined>;
   updateProductLandingClickConversion(clickId: number, orderId: string, conversionValue: string): Promise<void>;
 
   // Product Review methods
-  getProductReviews(productId: string, limit?: number): Promise<ProductReview[]>;
-  getProductReviewsWithStats(productId: string): Promise<{ reviews: ProductReview[]; averageRating: number; totalReviews: number; ratingCounts: { [key: number]: number } }>;
-  createProductReview(review: InsertProductReview): Promise<ProductReview>;
-  updateProductReview(id: string, review: Partial<InsertProductReview>): Promise<ProductReview | undefined>;
+  getProductReviews(productId: string, limit?: number): Promise<ProductReviews[]>;
+  getProductReviewsWithStats(productId: string): Promise<{ reviews: ProductReviews[]; averageRating: number; totalReviews: number; ratingCounts: { [key: number]: number } }>;
+  createProductReview(review: InsertProductReviews): Promise<ProductReviews>;
+  updateProductReview(id: string, review: Partial<InsertProductReviews>): Promise<ProductReviews | undefined>;
   deleteProductReview(id: string): Promise<boolean>;
   incrementHelpfulCount(id: string): Promise<boolean>;
 
@@ -519,28 +527,28 @@ export interface IStorage {
   updateProductFAQOrder(productId: string, faqIds: string[]): Promise<boolean>;
 
   // Product Policy methods
-  getProductPolicies(): Promise<ProductPolicy[]>;
-  getProductPolicy(id: string): Promise<ProductPolicy | undefined>;
-  createProductPolicy(policy: InsertProductPolicy): Promise<ProductPolicy>;
-  updateProductPolicy(id: string, policy: Partial<InsertProductPolicy>): Promise<ProductPolicy | undefined>;
+  getProductPolicies(): Promise<ProductPolicies[]>;
+  getProductPolicy(id: string): Promise<ProductPolicies | undefined>;
+  createProductPolicy(policy: InsertProductPolicies): Promise<ProductPolicies>;
+  updateProductPolicy(id: string, policy: Partial<InsertProductPolicies>): Promise<ProductPolicies | undefined>;
   deleteProductPolicy(id: string): Promise<boolean>;
 
   // Product Policy Association methods
-  getProductPolicyAssociations(productId: string): Promise<(ProductPolicyAssociation & { policy: ProductPolicy })[]>;
-  addProductPolicyAssociation(productId: string, policyId: string, sortOrder?: number): Promise<ProductPolicyAssociation>;
+  getProductPolicyAssociations(productId: string): Promise<(ProductPolicyAssociations & { policy: ProductPolicies })[]>;
+  addProductPolicyAssociation(productId: string, policyId: string, sortOrder?: number): Promise<ProductPolicyAssociations>;
   removeProductPolicyAssociation(productId: string, policyId: string): Promise<boolean>;
   updateProductPolicyAssociationOrder(productId: string, policyIds: string[]): Promise<boolean>;
 
   // Content Library methods
-  getContentLibraryItems(filters?: { tags?: string[]; status?: string; contentType?: string; priority?: string }): Promise<ContentLibrary[]>;
-  getContentLibraryItem(id: string): Promise<ContentLibrary | undefined>;
-  createContentLibraryItem(item: InsertContentLibrary): Promise<ContentLibrary>;
-  updateContentLibraryItem(id: string, item: UpdateContentLibrary): Promise<ContentLibrary | undefined>;
+  getContentLibraryItems(filters?: { tags?: string[]; status?: string; contentType?: string; priority?: string }): Promise<ContentLibraries[]>;
+  getContentLibraryItem(id: string): Promise<ContentLibraries | undefined>;
+  createContentLibraryItem(item: InsertContentLibraries): Promise<ContentLibraries>;
+  updateContentLibraryItem(id: string, item: Partial<ContentLibraries>): Promise<ContentLibraries | undefined>;
   deleteContentLibraryItem(id: string): Promise<boolean>;
   incrementContentUsage(id: string): Promise<void>;
-  addAIVariation(id: string, variation: { content: string; tone: string; style: string }): Promise<ContentLibrary | undefined>;
-  getContentLibraryByTags(tagIds: string[]): Promise<ContentLibrary[]>;
-  getContentLibraryByPriority(priority: string): Promise<ContentLibrary[]>;
+  addAIVariation(id: string, variation: { content: string; tone: string; style: string }): Promise<ContentLibraries | undefined>;
+  getContentLibraryByTags(tagIds: string[]): Promise<ContentLibraries[]>;
+  getContentLibraryByPriority(priority: string): Promise<ContentLibraries[]>;
 
   // Content Queue methods
   getQueueItems(filters?: { status?: string; targetGroupId?: string; autoFill?: boolean; priority?: number }): Promise<ContentQueue[]>;
@@ -587,12 +595,12 @@ export interface IStorage {
   createAbebooksSearchHistory(history: InsertAbebooksSearchHistory): Promise<AbebooksSearchHistory>;
 
   // 📚 Book Orders & Sellers Integration methods
-  getBookOrders(filters?: { status?: string; sellerId?: string; limit?: number; offset?: number }): Promise<BookOrder[]>;
-  getBookOrder(id: string): Promise<BookOrder | undefined>;
-  createBookOrder(order: InsertBookOrder): Promise<BookOrder>;
-  updateBookOrder(id: string, order: Partial<InsertBookOrder>): Promise<BookOrder | undefined>;
-  updateBookOrderStatus(id: string, status: string): Promise<BookOrder | undefined>;
-  getBookOrdersBySellerId(sellerId: string, limit?: number): Promise<BookOrder[]>;
+  getBookOrders(filters?: { status?: string; sellerId?: string; limit?: number; offset?: number }): Promise<BookOrders[]>;
+  getBookOrder(id: string): Promise<BookOrders | undefined>;
+  createBookOrder(order: InsertBookOrders): Promise<BookOrders>;
+  updateBookOrder(id: string, order: Partial<InsertBookOrders>): Promise<BookOrders | undefined>;
+  updateBookOrderStatus(id: string, status: string): Promise<BookOrders | undefined>;
+  getBookOrdersBySellerId(sellerId: string, limit?: number): Promise<BookOrders[]>;
   updateSellerInventoryFromOrder(orderId: string, action: 'reserve' | 'allocate' | 'release' | 'ship'): Promise<boolean>;
   calculateSellerCommission(orderId: string): Promise<{ success: boolean; commission: number; message: string }>;
   getSellerPerformanceMetrics(sellerId: string): Promise<{
@@ -605,23 +613,23 @@ export interface IStorage {
     topSellingBooks: Array<{ productId: string; productName: string; totalSold: number; revenue: number }>;
     monthlyStats: Array<{ month: string; orders: number; sales: number; commission: number }>;
   }>;
-  updateSellerRating(sellerId: string, rating: number, feedback?: string): Promise<BookSeller | undefined>;
-  getBookOrdersBySellerAndStatus(sellerId: string, status: string): Promise<BookOrder[]>;
+  updateSellerRating(sellerId: string, rating: number, feedback?: string): Promise<BookSellers | undefined>;
+  getBookOrdersBySellerAndStatus(sellerId: string, status: string): Promise<BookOrders[]>;
   allocateInventoryForOrder(orderId: string): Promise<boolean>;
   releaseInventoryForOrder(orderId: string): Promise<boolean>;
-  getSellerInventoryBySellerId(sellerId: string): Promise<BookSellerInventory[]>;
-  updateSellerPerformanceStats(sellerId: string, orderTotal: number, commission: number): Promise<BookSeller | undefined>;
+  getSellerInventoryBySellerId(sellerId: string): Promise<BookSellerInventories[]>;
+  updateSellerPerformanceStats(sellerId: string, orderTotal: number, commission: number): Promise<BookSellers | undefined>;
   
   // 🔔 Push Notification Subscription methods
-  getPushSubscriptionsByCustomer(customerId: string): Promise<PushSubscription[]>;
-  getPushSubscription(id: string): Promise<PushSubscription | undefined>;
-  getPushSubscriptionByEndpoint(endpoint: string): Promise<PushSubscription | undefined>;
-  createPushSubscription(subscription: InsertPushSubscription): Promise<PushSubscription>;
-  updatePushSubscription(id: string, subscription: Partial<InsertPushSubscription>): Promise<PushSubscription | undefined>;
+  getPushSubscriptionsByCustomer(customerId: string): Promise<PushSubscriptions[]>;
+  getPushSubscription(id: string): Promise<PushSubscriptions | undefined>;
+  getPushSubscriptionByEndpoint(endpoint: string): Promise<PushSubscriptions | undefined>;
+  createPushSubscription(subscription: InsertPushSubscriptions): Promise<PushSubscriptions>;
+  updatePushSubscription(id: string, subscription: Partial<InsertPushSubscriptions>): Promise<PushSubscriptions | undefined>;
   deletePushSubscription(id: string): Promise<boolean>;
 
   // 💎 VIP Management methods (Admin)
-  getVIPMembers(filters?: { status?: string; membershipTier?: string; limit?: number; offset?: number }): Promise<Customer[]>;
+  getVIPMembers(filters?: { status?: string; membershipTier?: string; limit?: number; offset?: number }): Promise<Customers[]>;
   getVIPDashboardStats(): Promise<{
     totalVIPs: number;
     pendingVIPs: number;
@@ -631,14 +639,14 @@ export interface IStorage {
     totalRevenue: number;
     monthlyGrowth: number;
   }>;
-  approvePendingVIP(customerId: string, membershipTier?: string): Promise<Customer | undefined>;
-  toggleVIPStatus(customerId: string, status: 'active' | 'suspended'): Promise<Customer | undefined>;
-  rejectVIPApplication(customerId: string, reason?: string): Promise<Customer | undefined>;
-  getVIPProducts(): Promise<Product[]>;
+  approvePendingVIP(customerId: string, membershipTier?: string): Promise<Customers | undefined>;
+  toggleVIPStatus(customerId: string, status: 'active' | 'suspended'): Promise<Customers | undefined>;
+  rejectVIPApplication(customerId: string, reason?: string): Promise<Customers | undefined>;
+  getVIPProducts(): Promise<Products[]>;
   bulkAssignVIPByCategory(categoryId: string, isVipOnly: boolean, requiredVipTier?: string | null): Promise<{ updatedCount: number }>;
 
   // 🚗 Driver Management methods (Admin)
-  getDriverMembers(filters?: { status?: string; limit?: number; offset?: number }): Promise<Customer[]>;
+  getDriverMembers(filters?: { status?: string; limit?: number; offset?: number }): Promise<Customers[]>;
   getDriverDashboardStats(): Promise<{
     totalDrivers: number;
     pendingDrivers: number;
@@ -647,9 +655,9 @@ export interface IStorage {
     totalDeliveries: number;
     totalRevenue: number;
   }>;
-  approvePendingDriver(customerId: string): Promise<Customer | undefined>;
-  toggleDriverStatus(customerId: string, status: 'active' | 'suspended'): Promise<Customer | undefined>;
-  rejectDriverApplication(customerId: string, reason?: string): Promise<Customer | undefined>;
+  approvePendingDriver(customerId: string): Promise<Customers | undefined>;
+  toggleDriverStatus(customerId: string, status: 'active' | 'suspended'): Promise<Customers | undefined>;
+  rejectDriverApplication(customerId: string, reason?: string): Promise<Customers | undefined>;
 
   // 🏪 Shop Settings methods
   getShopSettings(): Promise<ShopSettings | undefined>; // Get default shop settings (isDefault=true)
@@ -658,58 +666,62 @@ export interface IStorage {
   updateShopSettings(id: string, data: Partial<InsertShopSettings>): Promise<ShopSettings | undefined>;
 
   // IP Pool Management Methods
-  createIpPool(data: InsertIpPool): Promise<IpPool>;
-  getIpPool(id: string): Promise<IpPool | undefined>;
-  getIpPools(filters?: { type?: string; status?: string; isEnabled?: boolean }): Promise<IpPool[]>;
-  updateIpPool(id: string, data: UpdateIpPool): Promise<IpPool | undefined>;
+  createIpPool(data: InsertIpPools): Promise<IpPools>;
+  getIpPool(id: string): Promise<IpPools | undefined>;
+  getIpPools(filters?: { type?: string; status?: string; isEnabled?: boolean }): Promise<IpPools[]>;
+  updateIpPool(id: string, data: Partial<IpPools>): Promise<IpPools | undefined>;
   deleteIpPool(id: string): Promise<boolean>;
   
   // IP Pool Session Methods
-  createIpPoolSession(data: InsertIpPoolSession): Promise<IpPoolSession>;
-  getIpPoolSession(id: string): Promise<IpPoolSession | undefined>;
-  getIpPoolSessionsByPoolId(poolId: string): Promise<IpPoolSession[]>;
-  updateIpPoolSession(id: string, data: UpdateIpPoolSession): Promise<IpPoolSession | undefined>;
+  createIpPoolSession(data: InsertIpPoolSessions): Promise<IpPoolSessions>;
+  getIpPoolSession(id: string): Promise<IpPoolSessions | undefined>;
+  getIpPoolSessionsByPoolId(poolId: string): Promise<IpPoolSessions[]>;
+  updateIpPoolSession(id: string, data: Partial<IpPoolSessions>): Promise<IpPoolSessions | undefined>;
   
   // IP Rotation Log Methods
-  createIpRotationLog(data: InsertIpRotationLog): Promise<IpRotationLog>;
-  getIpRotationLogs(poolId?: string, limit?: number): Promise<IpRotationLog[]>;
+  createIpRotationLog(data: InsertIpRotationLogs): Promise<IpRotationLogs>;
+  getIpRotationLogs(poolId?: string, limit?: number): Promise<IpRotationLogs[]>;
+  
+  // Missing methods
+  getUserById(id: string): Promise<Users | undefined>;
+  getPageTag(id: string): Promise<any>;
 }
 
 export class DatabaseStorage implements IStorage {
   // User methods
-  async getUser(id: string): Promise<User | undefined> {
+  async getUser(id: string): Promise<Users | undefined> {
     const [user] = await db.select().from(users).where(eq(users.id, id));
     return user || undefined;
   }
 
-  async getUserByUsername(username: string): Promise<User | undefined> {
+  async getUserByUsername(username: string): Promise<Users | undefined> {
     const [user] = await db.select().from(users).where(eq(users.username, username));
     return user || undefined;
   }
 
-  async createUser(insertUser: InsertUser): Promise<User> {
-    const [user] = await db.insert(users).values(insertUser).returning();
+  async createUser(insertUser: InsertUsers): Promise<Users> {
+    const [user] = await db.insert(users).values(insertUser as any).returning();
     return user;
   }
 
   // 🔐 Auth methods implementation (Replit Auth integration)
-  async getAuthUser(id: string): Promise<AuthUser | undefined> {
+  async getAuthUser(id: string): Promise<AuthUsers | undefined> {
     const [authUser] = await db.select().from(authUsers).where(eq(authUsers.id, id));
     return authUser || undefined;
   }
 
-  async getAuthUserByEmail(email: string): Promise<AuthUser | undefined> {
+  async getAuthUserByEmail(email: string): Promise<AuthUsers | undefined> {
     if (!email) return undefined;
     const [authUser] = await db.select().from(authUsers).where(eq(authUsers.email, email));
     return authUser || undefined;
   }
 
-  async createAuthUser(user: UpsertAuthUser): Promise<AuthUser> {
-    const [authUser] = await db.insert(authUsers).values(user).returning();
+  async createAuthUser(user: InsertAuthUsers): Promise<AuthUsers> {
+    const [authUser] = await db.insert(authUsers).values(user as any).returning();
     return authUser;
   }
 
-  async updateAuthUser(id: string, user: Partial<UpsertAuthUser>): Promise<AuthUser | undefined> {
+  async updateAuthUser(id: string, user: Partial<InsertAuthUsers>): Promise<AuthUsers | undefined> {
     const [updatedUser] = await db
       .update(authUsers)
       .set({ ...user, updatedAt: new Date() })
@@ -723,7 +735,7 @@ export class DatabaseStorage implements IStorage {
     return (result.rowCount ?? 0) > 0;
   }
 
-  async linkCustomerToAuthUser(customerId: string, authUserId: string): Promise<Customer | undefined> {
+  async linkCustomerToAuthUser(customerId: string, authUserId: string): Promise<Customers | undefined> {
     const [updatedCustomer] = await db
       .update(customers)
       .set({ authUserId: authUserId })
@@ -732,12 +744,12 @@ export class DatabaseStorage implements IStorage {
     return updatedCustomer || undefined;
   }
 
-  async getCustomerByAuthUser(authUserId: string): Promise<Customer | undefined> {
+  async getCustomerByAuthUser(authUserId: string): Promise<Customers | undefined> {
     const [customer] = await db.select().from(customers).where(eq(customers.authUserId, authUserId));
     return customer || undefined;
   }
 
-  async getCustomerByFacebookId(facebookId: string): Promise<Customer | undefined> {
+  async getCustomerByFacebookId(facebookId: string): Promise<Customers | undefined> {
     const [customer] = await db
       .select()
       .from(customers)
@@ -745,7 +757,7 @@ export class DatabaseStorage implements IStorage {
     return customer || undefined;
   }
 
-  async getCustomerByPhone(phone: string): Promise<Customer | undefined> {
+  async getCustomerByPhone(phone: string): Promise<Customers | undefined> {
     // Import phone normalizer
     const { normalizePhoneToE164 } = await import('./utils/phone-normalizer');
     
@@ -778,7 +790,7 @@ export class DatabaseStorage implements IStorage {
     return customer || undefined;
   }
 
-  async getCustomerByAffiliateCode(affiliateCode: string): Promise<Customer | undefined> {
+  async getCustomerByAffiliateCode(affiliateCode: string): Promise<Customers | undefined> {
     const [customer] = await db
       .select()
       .from(customers)
@@ -786,7 +798,7 @@ export class DatabaseStorage implements IStorage {
     return customer || undefined;
   }
 
-  async getOrdersByCustomerId(customerId: string, limit = 50): Promise<Order[]> {
+  async getOrdersByCustomerId(customerId: string, limit = 50): Promise<Orders[]> {
     return await db
       .select()
       .from(orders)
@@ -795,7 +807,7 @@ export class DatabaseStorage implements IStorage {
       .limit(limit);
   }
 
-  async getOrderItemsByOrderIds(orderIds: string[]): Promise<OrderItem[]> {
+  async getOrderItemsByOrderIds(orderIds: string[]): Promise<OrderItems[]> {
     if (orderIds.length === 0) return [];
     return await db
       .select()
@@ -803,7 +815,7 @@ export class DatabaseStorage implements IStorage {
       .where(inArray(orderItems.orderId, orderIds));
   }
 
-  async getProductsByIds(productIds: string[]): Promise<Product[]> {
+  async getProductsByIds(productIds: string[]): Promise<Products[]> {
     if (productIds.length === 0) return [];
     return await db
       .select()
@@ -811,7 +823,7 @@ export class DatabaseStorage implements IStorage {
       .where(inArray(products.id, productIds));
   }
 
-  async getCategoriesByIds(categoryIds: string[]): Promise<Category[]> {
+  async getCategoriesByIds(categoryIds: string[]): Promise<Categories[]> {
     if (categoryIds.length === 0) return [];
     return await db
       .select()
@@ -820,27 +832,27 @@ export class DatabaseStorage implements IStorage {
   }
 
   // 🔐 Admin Authentication methods implementation (Role-based access control)
-  async getAdmins(): Promise<Admin[]> {
+  async getAdmins(): Promise<Admins[]> {
     return await db.select().from(admins).orderBy(desc(admins.createdAt));
   }
 
-  async getAdminById(id: string): Promise<Admin | undefined> {
+  async getAdminById(id: string): Promise<Admins | undefined> {
     const [admin] = await db.select().from(admins).where(eq(admins.id, id));
     return admin || undefined;
   }
 
-  async getAdminByEmail(email: string): Promise<Admin | undefined> {
+  async getAdminByEmail(email: string): Promise<Admins | undefined> {
     if (!email) return undefined;
     const [admin] = await db.select().from(admins).where(eq(admins.email, email));
     return admin || undefined;
   }
 
-  async createAdmin(insertAdmin: InsertAdmin): Promise<Admin> {
-    const [admin] = await db.insert(admins).values(insertAdmin).returning();
+  async createAdmin(insertAdmin: InsertAdmins): Promise<Admins> {
+    const [admin] = await db.insert(admins).values(insertAdmin as any).returning();
     return admin;
   }
 
-  async updateAdmin(id: string, updateData: UpdateAdmin): Promise<Admin | undefined> {
+  async updateAdmin(id: string, updateData: Partial<Admins>): Promise<Admins | undefined> {
     const [admin] = await db
       .update(admins)
       .set({ ...updateData, updatedAt: new Date() })
@@ -854,7 +866,7 @@ export class DatabaseStorage implements IStorage {
     return (result.rowCount ?? 0) > 0;
   }
 
-  async updateAdminLastLogin(id: string): Promise<Admin | undefined> {
+  async updateAdminLastLogin(id: string): Promise<Admins | undefined> {
     const [admin] = await db
       .update(admins)
       .set({ lastLoginAt: new Date() })
@@ -864,26 +876,26 @@ export class DatabaseStorage implements IStorage {
   }
 
   // 🔐 Vendor Authentication methods
-  async getVendors(): Promise<Vendor[]> {
+  async getVendors(): Promise<Vendors[]> {
     return await db.select().from(vendors).orderBy(desc(vendors.createdAt));
   }
 
-  async getVendorById(id: string): Promise<Vendor | undefined> {
+  async getVendorById(id: string): Promise<Vendors | undefined> {
     const [vendor] = await db.select().from(vendors).where(eq(vendors.id, id));
     return vendor || undefined;
   }
 
-  async getVendorByEmail(email: string): Promise<Vendor | undefined> {
+  async getVendorByEmail(email: string): Promise<Vendors | undefined> {
     const [vendor] = await db.select().from(vendors).where(eq(vendors.email, email));
     return vendor || undefined;
   }
 
-  async createVendor(vendor: InsertVendor): Promise<Vendor> {
-    const [newVendor] = await db.insert(vendors).values(vendor).returning();
+  async createVendor(vendor: InsertVendors): Promise<Vendors> {
+    const [newVendor] = await db.insert(vendors).values(vendor as any).returning();
     return newVendor;
   }
 
-  async updateVendor(id: string, vendor: Partial<InsertVendor>): Promise<Vendor | undefined> {
+  async updateVendor(id: string, vendor: Partial<InsertVendors>): Promise<Vendors | undefined> {
     const [updatedVendor] = await db
       .update(vendors)
       .set({ ...vendor, updatedAt: new Date() })
@@ -892,7 +904,7 @@ export class DatabaseStorage implements IStorage {
     return updatedVendor || undefined;
   }
 
-  async updateVendorLastLogin(id: string): Promise<Vendor | undefined> {
+  async updateVendorLastLogin(id: string): Promise<Vendors | undefined> {
     const [vendor] = await db
       .update(vendors)
       .set({ lastLoginAt: new Date() })
@@ -902,7 +914,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   // 📱 Vendor Push Subscriptions methods
-  async getVendorPushSubscriptions(vendorId: string): Promise<VendorPushSubscription[]> {
+  async getVendorPushSubscriptions(vendorId: string): Promise<VendorPushSubscriptions[]> {
     return await db
       .select()
       .from(vendorPushSubscriptions)
@@ -913,7 +925,7 @@ export class DatabaseStorage implements IStorage {
       .orderBy(desc(vendorPushSubscriptions.createdAt));
   }
 
-  async getVendorPushSubscriptionById(id: string): Promise<VendorPushSubscription | undefined> {
+  async getVendorPushSubscriptionById(id: string): Promise<VendorPushSubscriptions | undefined> {
     const [subscription] = await db
       .select()
       .from(vendorPushSubscriptions)
@@ -921,10 +933,10 @@ export class DatabaseStorage implements IStorage {
     return subscription || undefined;
   }
 
-  async createVendorPushSubscription(subscription: InsertVendorPushSubscription): Promise<VendorPushSubscription> {
+  async createVendorPushSubscription(subscription: InsertVendorPushSubscriptions): Promise<VendorPushSubscriptions> {
     const [newSubscription] = await db
       .insert(vendorPushSubscriptions)
-      .values(subscription)
+      .values(subscription as any)
       .returning();
     return newSubscription;
   }
@@ -951,21 +963,21 @@ export class DatabaseStorage implements IStorage {
   }
 
   // Industry methods
-  async getIndustries(): Promise<Industry[]> {
+  async getIndustries(): Promise<Industries[]> {
     return await db.select().from(industries).orderBy(industries.sortOrder, industries.name);
   }
 
-  async getIndustry(id: string): Promise<Industry | undefined> {
+  async getIndustry(id: string): Promise<Industries | undefined> {
     const [industry] = await db.select().from(industries).where(eq(industries.id, id));
     return industry || undefined;
   }
 
-  async createIndustry(industry: InsertIndustry): Promise<Industry> {
-    const [newIndustry] = await db.insert(industries).values(industry).returning();
+  async createIndustry(industry: InsertIndustries): Promise<Industries> {
+    const [newIndustry] = await db.insert(industries).values(industry as any).returning();
     return newIndustry;
   }
 
-  async updateIndustry(id: string, industry: Partial<InsertIndustry>): Promise<Industry | undefined> {
+  async updateIndustry(id: string, industry: Partial<InsertIndustries>): Promise<Industries | undefined> {
     const [updatedIndustry] = await db
       .update(industries)
       .set({ ...industry, updatedAt: new Date() })
@@ -980,7 +992,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   // Category methods
-  async getCategories(industryId?: string): Promise<Category[]> {
+  async getCategories(industryId?: string): Promise<Categories[]> {
     if (industryId) {
       return await db
         .select()
@@ -991,17 +1003,17 @@ export class DatabaseStorage implements IStorage {
     return await db.select().from(categories).orderBy(categories.sortOrder, categories.name);
   }
 
-  async getCategory(id: string): Promise<Category | undefined> {
+  async getCategory(id: string): Promise<Categories | undefined> {
     const [category] = await db.select().from(categories).where(eq(categories.id, id));
     return category || undefined;
   }
 
-  async createCategory(category: InsertCategory): Promise<Category> {
-    const [newCategory] = await db.insert(categories).values(category).returning();
+  async createCategory(category: InsertCategories): Promise<Categories> {
+    const [newCategory] = await db.insert(categories).values(category as any).returning();
     return newCategory;
   }
 
-  async updateCategory(id: string, category: Partial<InsertCategory>): Promise<Category | undefined> {
+  async updateCategory(id: string, category: Partial<InsertCategories>): Promise<Categories | undefined> {
     const [updatedCategory] = await db
       .update(categories)
       .set({ ...category, updatedAt: new Date() })
@@ -1016,14 +1028,14 @@ export class DatabaseStorage implements IStorage {
   }
 
   // Frontend Category Assignment methods
-  async getFrontendCategoryAssignments(): Promise<FrontendCategoryAssignment[]> {
+  async getFrontendCategoryAssignments(): Promise<FrontendCategoryAssignments[]> {
     return await db
       .select()
       .from(frontendCategoryAssignments)
       .orderBy(frontendCategoryAssignments.frontendId, frontendCategoryAssignments.sortOrder);
   }
 
-  async getFrontendCategoryAssignmentsByFrontend(frontendId: string): Promise<FrontendCategoryAssignment[]> {
+  async getFrontendCategoryAssignmentsByFrontend(frontendId: string): Promise<FrontendCategoryAssignments[]> {
     return await db
       .select()
       .from(frontendCategoryAssignments)
@@ -1031,12 +1043,12 @@ export class DatabaseStorage implements IStorage {
       .orderBy(frontendCategoryAssignments.sortOrder);
   }
 
-  async createFrontendCategoryAssignment(assignment: InsertFrontendCategoryAssignment): Promise<FrontendCategoryAssignment> {
-    const [newAssignment] = await db.insert(frontendCategoryAssignments).values(assignment).returning();
+  async createFrontendCategoryAssignment(assignment: InsertFrontendCategoryAssignments): Promise<FrontendCategoryAssignments> {
+    const [newAssignment] = await db.insert(frontendCategoryAssignments).values(assignment as any).returning();
     return newAssignment;
   }
 
-  async updateFrontendCategoryAssignment(id: string, assignment: Partial<InsertFrontendCategoryAssignment>): Promise<FrontendCategoryAssignment | undefined> {
+  async updateFrontendCategoryAssignment(id: string, assignment: Partial<InsertFrontendCategoryAssignments>): Promise<FrontendCategoryAssignments | undefined> {
     const [updatedAssignment] = await db
       .update(frontendCategoryAssignments)
       .set({ ...assignment, updatedAt: new Date() })
@@ -1051,7 +1063,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   // Dynamic Category Filtering methods
-  async getCategoriesForFrontend(frontendId: string, isLocalCustomer = false): Promise<Category[]> {
+  async getCategoriesForFrontend(frontendId: string, isLocalCustomer = false): Promise<Categories[]> {
     // Step 1: Get category IDs assigned to this frontend
     const assignments = await db
       .select({ categoryId: frontendCategoryAssignments.categoryId })
@@ -1103,7 +1115,7 @@ export class DatabaseStorage implements IStorage {
     limit = 50, 
     search?: string, 
     offset = 0
-  ): Promise<Product[]> {
+  ): Promise<Products[]> {
     // Step 1: Get allowed categories for this frontend + customer type
     const allowedCategories = await this.getCategoriesForFrontend(frontendId, isLocalCustomer);
     
@@ -1127,7 +1139,7 @@ export class DatabaseStorage implements IStorage {
           ilike(products.name, `%${search.trim()}%`),
           ilike(products.description, `%${search.trim()}%`),
           ilike(products.sku, `%${search.trim()}%`)
-        )
+        )!
       );
     }
 
@@ -1144,7 +1156,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   // Product methods
-  async getProducts(limit = 50, categoryId?: string, search?: string, offsetNum = 0, sortBy = 'newest', sortOrder = 'desc'): Promise<Product[]> {
+  async getProducts(limit = 50, categoryId?: string, search?: string, offsetNum = 0, sortBy = 'newest', sortOrder = 'desc'): Promise<Products[]> {
     // 🚀 OPTIMIZED: Select only 28 required fields (instead of 63 fields)
     // This reduces response size by 50-60% and speeds up page load 2-3x
     const lightweightSelect = {
@@ -1232,18 +1244,18 @@ export class DatabaseStorage implements IStorage {
         .where(conditions.length === 1 ? conditions[0] : and(...conditions))
         .orderBy(orderByClause)
         .limit(limit)
-        .offset(offsetNum) as Product[];
+        .offset(offsetNum) as Products[];
     } else {
       return await db
         .select(lightweightSelect)
         .from(products)
         .orderBy(orderByClause)
         .limit(limit)
-        .offset(offsetNum) as Product[];
+        .offset(offsetNum) as Products[];
     }
   }
 
-  async getProductsWithCategory(limit = 50, categoryId?: string, search?: string, offsetNum = 0): Promise<(Product & { categoryName?: string })[]> {
+  async getProductsWithCategory(limit = 50, categoryId?: string, search?: string, offsetNum = 0): Promise<(Products & { categoryName?: string })[]> {
     const baseQuery = {
       id: products.id,
       name: products.name,
@@ -1327,7 +1339,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   // Get popular products based on order items count
-  async getPopularProducts(limit = 10): Promise<Product[]> {
+  async getPopularProducts(limit = 10): Promise<Products[]> {
     try {
       // Get products ordered most frequently today
       const today = new Date();
@@ -1418,31 +1430,31 @@ export class DatabaseStorage implements IStorage {
     }
   }
 
-  async getProduct(id: string): Promise<Product | undefined> {
+  async getProduct(id: string): Promise<Products | undefined> {
     const [product] = await db.select().from(products).where(eq(products.id, id));
     return product || undefined;
   }
 
-  async getProductBySKU(sku: string): Promise<Product | undefined> {
+  async getProductBySKU(sku: string): Promise<Products | undefined> {
     const [product] = await db.select().from(products).where(eq(products.sku, sku));
     return product || undefined;
   }
 
-  async getProductBySlug(slug: string): Promise<Product | undefined> {
+  async getProductBySlug(slug: string): Promise<Products | undefined> {
     const [product] = await db.select().from(products).where(eq(products.slug, slug));
     return product || undefined;
   }
 
-  async getProductsWithoutSKU(): Promise<Product[]> {
+  async getProductsWithoutSKU(): Promise<Products[]> {
     return await db.select().from(products).where(isNull(products.sku));
   }
 
-  async createProduct(product: InsertProduct): Promise<Product> {
-    const [newProduct] = await db.insert(products).values(product).returning();
+  async createProduct(product: InsertProducts): Promise<Products> {
+    const [newProduct] = await db.insert(products).values(product as any).returning();
     return newProduct;
   }
 
-  async updateProduct(id: string, product: Partial<InsertProduct>): Promise<Product | undefined> {
+  async updateProduct(id: string, product: Partial<InsertProducts>): Promise<Products | undefined> {
     const [updatedProduct] = await db
       .update(products)
       .set({ ...product, updatedAt: new Date() })
@@ -1483,7 +1495,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   // 💎 VIP System methods
-  async getVipProducts(limit = 50, search?: string, offsetNum = 0): Promise<Product[]> {
+  async getVipProducts(limit = 50, search?: string, offsetNum = 0): Promise<Products[]> {
     const conditions = [eq(products.isVipOnly, true)];
 
     if (search) {
@@ -1504,11 +1516,11 @@ export class DatabaseStorage implements IStorage {
       .offset(offsetNum);
   }
 
-  async getVipCategories(): Promise<Category[]> {
+  async getVipCategories(): Promise<Categories[]> {
     return await db.select().from(categories).where(eq(categories.isVipOnly, true));
   }
 
-  async updateProductVipStatus(id: string, isVipOnly: boolean): Promise<Product | undefined> {
+  async updateProductVipStatus(id: string, isVipOnly: boolean): Promise<Products | undefined> {
     const [updatedProduct] = await db
       .update(products)
       .set({ isVipOnly, updatedAt: new Date() })
@@ -1517,7 +1529,7 @@ export class DatabaseStorage implements IStorage {
     return updatedProduct || undefined;
   }
 
-  async updateCategoryVipStatus(id: string, isVipOnly: boolean): Promise<Category | undefined> {
+  async updateCategoryVipStatus(id: string, isVipOnly: boolean): Promise<Categories | undefined> {
     const [updatedCategory] = await db
       .update(categories)
       .set({ isVipOnly, updatedAt: new Date() })
@@ -1655,7 +1667,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   // Customer methods
-  async getCustomers(limit = 50, profileStatus: 'complete' | 'incomplete' | 'all' = 'complete'): Promise<(Customer & { totalOrders: number; totalSpent: string; lastOrderDate: string; totalDebt: string; creditLimit: string })[]> {
+  async getCustomers(limit = 50, profileStatus: 'complete' | 'incomplete' | 'all' = 'complete'): Promise<(Customers & { totalOrders: number; totalSpent: string; lastOrderDate: string; totalDebt: string; creditLimit: string })[]> {
     // 🚀 Optimized: Single query with LEFT JOIN instead of N+1 queries
     const subquery = db
       .select({
@@ -1707,7 +1719,7 @@ export class DatabaseStorage implements IStorage {
 
     // 🎯 Filter by profileStatus (default: only 'complete' profiles)
     if (profileStatus !== 'all') {
-      query = query.where(eq(customers.profileStatus, profileStatus));
+      query = (query as any).where(eq(customers.profileStatus, profileStatus));
     }
 
     const results = await query
@@ -1749,7 +1761,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   // 🔍 Optimized search for customers by name or phone
-  async searchCustomers(searchTerm: string, limit = 20, profileStatus: 'complete' | 'incomplete' | 'all' = 'complete'): Promise<(Customer & { totalOrders: number; totalSpent: string; lastOrderDate: string; totalDebt: string; creditLimit: string })[]> {
+  async searchCustomers(searchTerm: string, limit = 20, profileStatus: 'complete' | 'incomplete' | 'all' = 'complete'): Promise<(Customers & { totalOrders: number; totalSpent: string; lastOrderDate: string; totalDebt: string; creditLimit: string })[]> {
     if (!searchTerm || searchTerm.length < 2) {
       return [];
     }
@@ -1829,7 +1841,7 @@ export class DatabaseStorage implements IStorage {
     }
 
     if (conditions.length > 0) {
-      query = query.where(and(...conditions));
+      query = (query as any).where(and(...conditions));
     }
 
     const results = await query
@@ -1870,7 +1882,7 @@ export class DatabaseStorage implements IStorage {
     }));
   }
 
-  async getLocalCustomers(limit = 50): Promise<(Customer & { totalOrders: number; totalSpent: string; lastOrderDate: string; totalDebt: string; creditLimit: string })[]> {
+  async getLocalCustomers(limit = 50): Promise<(Customers & { totalOrders: number; totalSpent: string; lastOrderDate: string; totalDebt: string; creditLimit: string })[]> {
     const baseCustomers = await db
       .select()
       .from(customers)
@@ -1909,7 +1921,7 @@ export class DatabaseStorage implements IStorage {
     return enrichedCustomers;
   }
 
-  async getCustomer(id: string): Promise<(Customer & { totalDebt: string; creditLimit: string }) | undefined> {
+  async getCustomer(id: string): Promise<(Customers & { totalDebt: string; creditLimit: string }) | undefined> {
     const [customer] = await db.select().from(customers).where(eq(customers.id, id));
     if (!customer) return undefined;
     
@@ -1920,7 +1932,7 @@ export class DatabaseStorage implements IStorage {
     };
   }
 
-  async createCustomer(customer: InsertCustomer): Promise<Customer> {
+  async createCustomer(customer: InsertCustomers): Promise<Customers> {
     // Import phone normalizer
     const { normalizePhoneToE164 } = await import('./utils/phone-normalizer');
     
@@ -1930,11 +1942,11 @@ export class DatabaseStorage implements IStorage {
       phone: customer.phone ? normalizePhoneToE164(customer.phone) : customer.phone
     };
     
-    const [newCustomer] = await db.insert(customers).values(customerData).returning();
+    const [newCustomer] = await db.insert(customers).values(customerData as any).returning();
     return newCustomer;
   }
 
-  async updateCustomer(id: string, customer: Partial<InsertCustomer>): Promise<Customer | undefined> {
+  async updateCustomer(id: string, customer: Partial<InsertCustomers>): Promise<Customers | undefined> {
     // If socialData is being updated, merge it with existing data
     if (customer.socialData) {
       const existingCustomer = await this.getCustomer(id);
@@ -1954,7 +1966,7 @@ export class DatabaseStorage implements IStorage {
     return updatedCustomer || undefined;
   }
 
-  async getCustomerByPSID(psid: string): Promise<Customer | null> {
+  async getCustomerByPSID(psid: string): Promise<Customers | null> {
     try {
       const allCustomers = await db.select().from(customers);
       
@@ -1991,7 +2003,7 @@ export class DatabaseStorage implements IStorage {
     membershipTier: string;
     lastTierUpdate?: Date | null;
     membershipData?: any;
-  }): Promise<Customer | undefined> {
+  }): Promise<Customers | undefined> {
     const updateData: any = {
       totalSpent: params.totalSpent,
       pointsBalance: params.pointsBalance,
@@ -2060,7 +2072,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   // Customer analytics methods for POS suggestions (Legacy - N+1 query)
-  async searchCustomersLegacy(searchTerm: string, limit = 10): Promise<(Customer & { totalOrders: number; totalSpent: number; lastOrderDate: string; totalDebt: string; creditLimit: string })[]> {
+  async searchCustomersLegacy(searchTerm: string, limit = 10): Promise<(Customers & { totalOrders: number; totalSpent: number; lastOrderDate: string; totalDebt: string; creditLimit: string })[]> {
     try {
       // Search customers by name, phone, or email
       const baseCustomers = await db
@@ -2111,7 +2123,7 @@ export class DatabaseStorage implements IStorage {
     }
   }
 
-  async getRecentCustomers(limit = 10): Promise<(Customer & { totalOrders: number; totalSpent: number; lastOrderDate: string; totalDebt: string; creditLimit: string })[]> {
+  async getRecentCustomers(limit = 10): Promise<(Customers & { totalOrders: number; totalSpent: number; lastOrderDate: string; totalDebt: string; creditLimit: string })[]> {
     try {
       // Get customers with orders in the last 30 days
       const thirtyDaysAgo = new Date();
@@ -2130,7 +2142,7 @@ export class DatabaseStorage implements IStorage {
       const baseCustomers = await db
         .select()
         .from(customers)
-        .where(inArray(customers.id, customerIds))
+        .where(inArray(customers.id, customerIds.filter(id => id !== null) as string[]))
         .orderBy(desc(customers.joinDate))
         .limit(limit);
 
@@ -2172,7 +2184,7 @@ export class DatabaseStorage implements IStorage {
     }
   }
 
-  async getVipCustomers(limit = 10): Promise<(Customer & { totalOrders: number; totalSpent: number; lastOrderDate: string; totalDebt: string; creditLimit: string })[]> {
+  async getVipCustomers(limit = 10): Promise<(Customers & { totalOrders: number; totalSpent: number; lastOrderDate: string; totalDebt: string; creditLimit: string })[]> {
     try {
       const baseCustomers = await db
         .select()
@@ -2217,7 +2229,7 @@ export class DatabaseStorage implements IStorage {
     }
   }
 
-  async getFrequentCustomers(limit = 10): Promise<(Customer & { totalOrders: number; totalSpent: number; lastOrderDate: string; totalDebt: string; creditLimit: string })[]> {
+  async getFrequentCustomers(limit = 10): Promise<(Customers & { totalOrders: number; totalSpent: number; lastOrderDate: string; totalDebt: string; creditLimit: string })[]> {
     try {
       // Get customers with their order counts
       const customerOrderCounts = await db
@@ -2243,7 +2255,7 @@ export class DatabaseStorage implements IStorage {
       const baseCustomers = await db
         .select()
         .from(customers)
-        .where(inArray(customers.id, customerIds));
+        .where(inArray(customers.id, customerIds.filter(id => id !== null) as string[]));
 
       // Combine customer data with order statistics
       const enrichedCustomers = baseCustomers.map(customer => {
@@ -2267,8 +2279,8 @@ export class DatabaseStorage implements IStorage {
   }
 
   // 📊 Customer Events Tracking Methods
-  async trackCustomerEvent(event: InsertCustomerEvent): Promise<CustomerEvent> {
-    const [newEvent] = await db.insert(customerEvents).values(event).returning();
+  async trackCustomerEvent(event: InsertCustomerEvents): Promise<CustomerEvents> {
+    const [newEvent] = await db.insert(customerEvents).values(event as any).returning();
     
     // Auto-update customer summary after tracking
     if (event.customerId) {
@@ -2278,7 +2290,7 @@ export class DatabaseStorage implements IStorage {
     return newEvent;
   }
 
-  async getCustomerEvents(customerId: string, limit = 100): Promise<CustomerEvent[]> {
+  async getCustomerEvents(customerId: string, limit = 100): Promise<CustomerEvents[]> {
     return await db
       .select()
       .from(customerEvents)
@@ -2287,7 +2299,7 @@ export class DatabaseStorage implements IStorage {
       .limit(limit);
   }
 
-  async getCustomerEventsByType(customerId: string, eventType: string, limit = 50): Promise<CustomerEvent[]> {
+  async getCustomerEventsByType(customerId: string, eventType: string, limit = 50): Promise<CustomerEvents[]> {
     return await db
       .select()
       .from(customerEvents)
@@ -2301,7 +2313,7 @@ export class DatabaseStorage implements IStorage {
       .limit(limit);
   }
 
-  async updateCustomerSummary(customerId: string): Promise<Customer | undefined> {
+  async updateCustomerSummary(customerId: string): Promise<Customers | undefined> {
     try {
       const customer = await this.getCustomer(customerId);
       if (!customer) return undefined;
@@ -2314,16 +2326,16 @@ export class DatabaseStorage implements IStorage {
         ['locale_detected', 'timezone_detected', 'gender_detected'].includes(e.eventType)
       );
       
-      const fbLocale = fbProfileEvents.find(e => e.eventType === 'locale_detected')?.eventData?.locale;
-      const fbTimezone = fbProfileEvents.find(e => e.eventType === 'timezone_detected')?.eventData?.timezone;
-      const fbGender = fbProfileEvents.find(e => e.eventType === 'gender_detected')?.eventData?.gender;
+      const fbLocale = (fbProfileEvents.find(e => e.eventType === 'locale_detected')?.eventData as any)?.locale;
+      const fbTimezone = (fbProfileEvents.find(e => e.eventType === 'timezone_detected')?.eventData as any)?.timezone;
+      const fbGender = (fbProfileEvents.find(e => e.eventType === 'gender_detected')?.eventData as any)?.gender;
 
       // Extract web analytics
       const utmEvents = recentEvents.filter(e => e.eventType === 'utm_tracked');
       const lastUtm = utmEvents[0]?.eventData;
       
       const referrerEvents = recentEvents.filter(e => e.eventType === 'referrer_tracked');
-      const lastReferrer = referrerEvents[0]?.eventData?.referrerUrl;
+      const lastReferrer = (referrerEvents[0]?.eventData as any)?.referrerUrl;
 
       const devicePreference = this.calculateDevicePreference(recentEvents);
       const channelPreference = this.calculateChannelPreference(recentEvents);
@@ -2347,9 +2359,9 @@ export class DatabaseStorage implements IStorage {
           membershipData: {
             ...(customer.membershipData || {}),
             webAnalytics: {
-              lastUtmSource: lastUtm?.utmSource,
-              lastUtmMedium: lastUtm?.utmMedium,
-              lastUtmCampaign: lastUtm?.utmCampaign,
+              lastUtmSource: (lastUtm as any)?.utmSource,
+              lastUtmMedium: (lastUtm as any)?.utmMedium,
+              lastUtmCampaign: (lastUtm as any)?.utmCampaign,
               lastReferrer,
               devicePreference,
               totalPageViews: recentEvents.filter(e => e.eventType === 'page_view').length,
@@ -2363,7 +2375,7 @@ export class DatabaseStorage implements IStorage {
               cartAbandonCount: cartAbandons,
               avgSessionTime,
               channelPreference,
-              lastProductViewed: recentEvents.find(e => e.eventType === 'product_view')?.eventData?.productId,
+              lastProductViewed: (recentEvents.find(e => e.eventType === 'product_view')?.eventData as any)?.productId,
               lastChannelUsed: recentEvents[0]?.channel,
               totalSessions: sessionEvents.length / 2, // Pairs of start/end
               lastSessionAt: recentEvents[0]?.createdAt?.toISOString(),
@@ -2380,10 +2392,10 @@ export class DatabaseStorage implements IStorage {
     }
   }
 
-  private calculateDevicePreference(events: CustomerEvent[]): "mobile" | "desktop" | "tablet" | undefined {
+  private calculateDevicePreference(events: CustomerEvents[]): "mobile" | "desktop" | "tablet" | undefined {
     const deviceCounts: Record<string, number> = {};
     events.forEach(e => {
-      const device = e.eventData?.deviceType;
+      const device = (e.eventData as any)?.deviceType;
       if (device) deviceCounts[device] = (deviceCounts[device] || 0) + 1;
     });
     
@@ -2391,7 +2403,7 @@ export class DatabaseStorage implements IStorage {
     return sorted[0]?.[0] as any;
   }
 
-  private calculateChannelPreference(events: CustomerEvent[]): "web" | "facebook" | "instagram" | "app" | undefined {
+  private calculateChannelPreference(events: CustomerEvents[]): "web" | "facebook" | "instagram" | "app" | undefined {
     const channelCounts: Record<string, number> = {};
     events.forEach(e => {
       if (e.channel) channelCounts[e.channel] = (channelCounts[e.channel] || 0) + 1;
@@ -2401,7 +2413,7 @@ export class DatabaseStorage implements IStorage {
     return sorted[0]?.[0] as any;
   }
 
-  private calculateAvgSessionTime(sessionEvents: CustomerEvent[]): number {
+  private calculateAvgSessionTime(sessionEvents: CustomerEvents[]): number {
     const sessions: { start?: Date; end?: Date }[] = [];
     let currentSession: { start?: Date; end?: Date } = {};
     
@@ -2439,7 +2451,7 @@ export class DatabaseStorage implements IStorage {
   async createNotification(notification: InsertNotifications): Promise<Notifications> {
     const [newNotification] = await db
       .insert(notifications)
-      .values(notification)
+      .values(notification as any)
       .returning();
     return newNotification;
   }
@@ -2451,7 +2463,7 @@ export class DatabaseStorage implements IStorage {
       .update(notifications)
       .set({ 
         isRead: true,
-        readAt: new Date().toISOString()
+        readAt: new Date()
       })
       .where(
         and(
@@ -2493,7 +2505,7 @@ export class DatabaseStorage implements IStorage {
     return flashSale || undefined;
   }
 
-  async getFlashSaleBySlug(slug: string): Promise<(FlashSales & { product: Product }) | undefined> {
+  async getFlashSaleBySlug(slug: string): Promise<(FlashSales & { product: Products }) | undefined> {
     const result = await db
       .select({
         id: flashSales.id,
@@ -2522,12 +2534,12 @@ export class DatabaseStorage implements IStorage {
     const row = result[0];
     return {
       ...row,
-      product: row.product as Product
-    } as FlashSales & { product: Product };
+      product: row.product as Products
+    } as FlashSales & { product: Products };
   }
 
-  async getActiveFlashSales(): Promise<(FlashSales & { product: Product })[]> {
-    const now = new Date().toISOString();
+  async getActiveFlashSales(): Promise<(FlashSales & { product: Products })[]> {
+    const now = new Date();
     
     const results = await db
       .select({
@@ -2561,8 +2573,8 @@ export class DatabaseStorage implements IStorage {
 
     return results.map(row => ({
       ...row,
-      product: row.product as Product
-    })) as (FlashSales & { product: Product })[];
+      product: row.product as Products
+    })) as (FlashSales & { product: Products })[];
   }
 
   async createFlashSale(data: InsertFlashSales): Promise<FlashSales> {
@@ -2570,9 +2582,9 @@ export class DatabaseStorage implements IStorage {
       .insert(flashSales)
       .values({
         ...data,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
-      })
+        createdAt: new Date(),
+        updatedAt: new Date()
+      } as any)
       .returning();
     return flashSale;
   }
@@ -2582,7 +2594,7 @@ export class DatabaseStorage implements IStorage {
       .update(flashSales)
       .set({
         ...data,
-        updatedAt: new Date().toISOString()
+        updatedAt: new Date()
       })
       .where(eq(flashSales.id, id))
       .returning();
@@ -2615,7 +2627,7 @@ export class DatabaseStorage implements IStorage {
     return preorder || undefined;
   }
 
-  async getPreorderBySlug(slug: string): Promise<PreorderProducts & { product?: Product }> {
+  async getPreorderBySlug(slug: string): Promise<PreorderProducts & { product?: Products }> {
     const result = await db
       .select({
         id: preorderProducts.id,
@@ -2643,11 +2655,11 @@ export class DatabaseStorage implements IStorage {
     const row = result[0];
     return {
       ...row,
-      product: row.product ? (row.product as Product) : undefined
-    } as PreorderProducts & { product?: Product };
+      product: row.product ? (row.product as Products) : undefined
+    } as PreorderProducts & { product?: Products };
   }
 
-  async getActivePreorders(): Promise<(PreorderProducts & { product?: Product })[]> {
+  async getActivePreorders(): Promise<(PreorderProducts & { product?: Products })[]> {
     const results = await db
       .select({
         id: preorderProducts.id,
@@ -2671,8 +2683,8 @@ export class DatabaseStorage implements IStorage {
 
     return results.map(row => ({
       ...row,
-      product: row.product ? (row.product as Product) : undefined
-    })) as (PreorderProducts & { product?: Product })[];
+      product: row.product ? (row.product as Products) : undefined
+    })) as (PreorderProducts & { product?: Products })[];
   }
 
   async createPreorder(data: InsertPreorderProducts): Promise<PreorderProducts> {
@@ -2680,9 +2692,9 @@ export class DatabaseStorage implements IStorage {
       .insert(preorderProducts)
       .values({
         ...data,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
-      })
+        createdAt: new Date(),
+        updatedAt: new Date()
+      } as any)
       .returning();
     return preorder;
   }
@@ -2692,7 +2704,7 @@ export class DatabaseStorage implements IStorage {
       .update(preorderProducts)
       .set({
         ...data,
-        updatedAt: new Date().toISOString()
+        updatedAt: new Date()
       })
       .where(eq(preorderProducts.id, id))
       .returning();
@@ -2708,7 +2720,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   // Order methods
-  async getOrders(limit = 50): Promise<(Order & { customerName: string; customerEmail: string })[]> {
+  async getOrders(limit = 50): Promise<(Orders & { customerName: string; customerEmail: string })[]> {
     const result = await db
       .select({
         id: orders.id,
@@ -2731,15 +2743,15 @@ export class DatabaseStorage implements IStorage {
       .orderBy(desc(orders.createdAt))
       .limit(limit);
     
-    return result as (Order & { customerName: string; customerEmail: string })[];
+    return result as (Orders & { customerName: string; customerEmail: string })[];
   }
 
-  async getOrder(id: string): Promise<Order | undefined> {
+  async getOrder(id: string): Promise<Orders | undefined> {
     const [order] = await db.select().from(orders).where(eq(orders.id, id));
     return order || undefined;
   }
 
-  async createOrder(order: InsertOrder): Promise<Order> {
+  async createOrder(order: InsertOrders): Promise<Orders> {
     // Parse total to calculate subtotal
     const totalAmount = parseFloat(order.total);
     const shippingFee = order.shippingFee ? parseFloat(order.shippingFee) : 30000; // Default 30k VND shipping
@@ -2759,17 +2771,17 @@ export class DatabaseStorage implements IStorage {
       paymentMethod: order.paymentMethod || 'cash'
     };
     
-    const [newOrder] = await db.insert(orders).values(orderData).returning();
+    const [newOrder] = await db.insert(orders).values(orderData as any).returning();
     
     // 🎯 AUTO-COMPLETE PROFILE: Mark profile as complete when first order is created
-    if (orderData.customerId) {
+    if ((orderData as any).customerId) {
       try {
         await db
           .update(customers)
           .set({ profileStatus: 'complete' })
           .where(
             and(
-              eq(customers.id, orderData.customerId),
+              eq(customers.id, (orderData as any).customerId),
               eq(customers.profileStatus, 'incomplete')
             )
           );
@@ -2780,30 +2792,30 @@ export class DatabaseStorage implements IStorage {
     }
     
     // Handle debt payment: update customer's total debt
-    if (orderData.paymentMethod === 'debt' && orderData.customerId) {
-      const orderTotal = parseFloat(orderData.total);
+    if ((orderData as any).paymentMethod === 'debt' && (orderData as any).customerId) {
+      const orderTotal = parseFloat((orderData as any).total);
       
       await db
         .update(customers)
         .set({
           totalDebt: sql`COALESCE(total_debt, 0) + ${orderTotal}`
         })
-        .where(eq(customers.id, orderData.customerId));
+        .where(eq(customers.id, (orderData as any).customerId));
     }
     
     // 🏭 AUTO-ASSIGN TO VENDORS: Create vendor_orders for consignment products
-    if (orderData.items && orderData.items.length > 0 && orderData.customerId) {
+    if ((orderData as any).items && (orderData as any).items.length > 0 && (orderData as any).customerId) {
       try {
         const vendorAssignment = await assignOrderToVendors({
           orderId: newOrder.id,
-          customerId: orderData.customerId,
-          orderItems: orderData.items.map((item: any) => ({
+          customerId: (orderData as any).customerId,
+          orderItems: (orderData as any).items.map((item: any) => ({
             productId: item.productId || item.id,
             quantity: item.quantity,
             price: item.price
           })),
-          paymentMethod: orderData.paymentMethod,
-          shippingInfo: orderData.shippingInfo
+          paymentMethod: (orderData as any).paymentMethod,
+          shippingInfo: (orderData as any).shippingInfo
         });
 
         if (vendorAssignment.success && vendorAssignment.vendorOrderIds.length > 0) {
@@ -2818,7 +2830,7 @@ export class DatabaseStorage implements IStorage {
     return newOrder;
   }
 
-  async updateOrderStatus(id: string, status: string): Promise<Order | undefined> {
+  async updateOrderStatus(id: string, status: string): Promise<Orders | undefined> {
     const [updatedOrder] = await db
       .update(orders)
       .set({ status: status as any, updatedAt: new Date() })
@@ -2827,7 +2839,7 @@ export class DatabaseStorage implements IStorage {
     return updatedOrder || undefined;
   }
 
-  async updateOrder(id: string, order: Partial<InsertOrder>): Promise<Order | undefined> {
+  async updateOrder(id: string, order: Partial<InsertOrders>): Promise<Orders | undefined> {
     const [updatedOrder] = await db
       .update(orders)
       .set({ ...order, updatedAt: new Date() })
@@ -2844,7 +2856,7 @@ export class DatabaseStorage implements IStorage {
     return (result.rowCount ?? 0) > 0;
   }
 
-  async getOrderWithDetails(id: string): Promise<(Order & { customerName: string; customerEmail: string; orderItems: (OrderItem & { productName: string })[] }) | undefined> {
+  async getOrderWithDetails(id: string): Promise<(Orders & { customerName: string; customerEmail: string; orderItems: (OrderItems & { productName: string })[] }) | undefined> {
     // Get order with customer info
     const orderResult = await db
       .select({
@@ -2892,22 +2904,22 @@ export class DatabaseStorage implements IStorage {
   }
 
   // Order items methods
-  async getOrderItems(orderId: string): Promise<OrderItem[]> {
+  async getOrderItems(orderId: string): Promise<OrderItems[]> {
     return await db.select().from(orderItems).where(eq(orderItems.orderId, orderId));
   }
 
-  async createOrderItem(orderItem: InsertOrderItem): Promise<OrderItem> {
-    const [newOrderItem] = await db.insert(orderItems).values(orderItem).returning();
+  async createOrderItem(orderItem: InsertOrderItems): Promise<OrderItems> {
+    const [newOrderItem] = await db.insert(orderItems).values(orderItem as any).returning();
     return newOrderItem;
   }
 
   async deleteOrderItem(id: string): Promise<boolean> {
     const result = await db.delete(orderItems).where(eq(orderItems.id, id));
-    return result.rowCount > 0;
+    return result.rowCount ? result.rowCount > 0 : false;
   }
 
   // Debt management methods
-  async updateCustomerDebt(customerId: string, paymentAmount: number): Promise<Customer | undefined> {
+  async updateCustomerDebt(customerId: string, paymentAmount: number): Promise<Customers | undefined> {
     const [updatedCustomer] = await db
       .update(customers)
       .set({
@@ -2936,36 +2948,36 @@ export class DatabaseStorage implements IStorage {
   }
 
   // Social account methods
-  async getSocialAccounts(): Promise<SocialAccount[]> {
+  async getSocialAccounts(): Promise<SocialAccounts[]> {
     return await db.select().from(socialAccounts).orderBy(desc(socialAccounts.createdAt));
   }
 
-  async getSocialAccount(id: string): Promise<SocialAccount | undefined> {
+  async getSocialAccount(id: string): Promise<SocialAccounts | undefined> {
     const [account] = await db.select().from(socialAccounts).where(eq(socialAccounts.id, id));
     return account || undefined;
   }
 
-  async getSocialAccountById(id: string): Promise<SocialAccount | undefined> {
+  async getSocialAccountById(id: string): Promise<SocialAccounts | undefined> {
     const [account] = await db.select().from(socialAccounts).where(eq(socialAccounts.id, id));
     return account || undefined;
   }
 
-  async getSocialAccountByPlatform(platform: string): Promise<SocialAccount | undefined> {
+  async getSocialAccountByPlatform(platform: string): Promise<SocialAccounts | undefined> {
     const [account] = await db.select().from(socialAccounts).where(eq(socialAccounts.platform, platform as any));
     return account || undefined;
   }
 
-  async getSocialAccountsByPlatform(platform: string): Promise<SocialAccount[]> {
+  async getSocialAccountsByPlatform(platform: string): Promise<SocialAccounts[]> {
     return await db.select().from(socialAccounts).where(eq(socialAccounts.platform, platform as any));
   }
 
 
-  async createSocialAccount(account: InsertSocialAccount): Promise<SocialAccount> {
+  async createSocialAccount(account: InsertSocialAccounts): Promise<SocialAccounts> {
     const [newAccount] = await db.insert(socialAccounts).values([account as any]).returning();
     return newAccount;
   }
 
-  async updateSocialAccount(id: string, account: Partial<InsertSocialAccount>): Promise<SocialAccount | undefined> {
+  async updateSocialAccount(id: string, account: Partial<InsertSocialAccounts>): Promise<SocialAccounts | undefined> {
     const [updatedAccount] = await db
       .update(socialAccounts)
       .set({ ...account, updatedAt: new Date() } as any)
@@ -2975,15 +2987,15 @@ export class DatabaseStorage implements IStorage {
   }
 
   // 🤖 Bot Config methods for per-fanpage RASA configuration
-  async getSocialAccountBotConfig(id: string): Promise<FanpageBotConfig | null> {
+  async getSocialAccountBotConfig(id: string): Promise<any | null> {
     const account = await this.getSocialAccount(id);
     if (!account) return null; // Account doesn't exist
     // Return stored config or empty object (all fields optional) for existing accounts
-    const config = account.botConfig as FanpageBotConfig | null | undefined;
+    const config = account.botConfig as any | null | undefined;
     return config || {}; // Guarantee {} for existing accounts without config
   }
 
-  async updateSocialAccountBotConfig(id: string, botConfig: FanpageBotConfig): Promise<SocialAccount | undefined> {
+  async updateSocialAccountBotConfig(id: string, botConfig: any): Promise<SocialAccounts | undefined> {
     const [updatedAccount] = await db
       .update(socialAccounts)
       .set({ botConfig: botConfig as any, updatedAt: new Date() })
@@ -2993,7 +3005,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   // Chatbot methods
-  async getChatbotConversations(limit = 50): Promise<ChatbotConversation[]> {
+  async getChatbotConversations(limit = 50): Promise<ChatbotConversations[]> {
     return await db
       .select()
       .from(chatbotConversations)
@@ -3001,22 +3013,22 @@ export class DatabaseStorage implements IStorage {
       .limit(limit);
   }
 
-  async createChatbotConversation(conversation: InsertChatbotConversation): Promise<ChatbotConversation> {
-    const [newConversation] = await db.insert(chatbotConversations).values(conversation).returning();
+  async createChatbotConversation(conversation: InsertChatbotConversations): Promise<ChatbotConversations> {
+    const [newConversation] = await db.insert(chatbotConversations).values(conversation as any).returning();
     return newConversation;
   }
 
-  async getChatbotConversation(id: string): Promise<ChatbotConversation | undefined> {
+  async getChatbotConversation(id: string): Promise<ChatbotConversations | undefined> {
     const [conversation] = await db.select().from(chatbotConversations).where(eq(chatbotConversations.id, id));
     return conversation || undefined;
   }
 
-  async getChatbotConversationBySession(sessionId: string): Promise<ChatbotConversation | undefined> {
+  async getChatbotConversationBySession(sessionId: string): Promise<ChatbotConversations | undefined> {
     const [conversation] = await db.select().from(chatbotConversations).where(eq(chatbotConversations.sessionId, sessionId));
     return conversation || undefined;
   }
 
-  async getChatbotConversationByCustomer(customerId: string): Promise<ChatbotConversation | undefined> {
+  async getChatbotConversationByCustomer(customerId: string): Promise<ChatbotConversations | undefined> {
     const [conversation] = await db
       .select()
       .from(chatbotConversations)
@@ -3029,7 +3041,7 @@ export class DatabaseStorage implements IStorage {
     return conversation || undefined;
   }
 
-  async updateChatbotConversation(id: string, conversation: Partial<InsertChatbotConversation>): Promise<ChatbotConversation | undefined> {
+  async updateChatbotConversation(id: string, conversation: Partial<InsertChatbotConversations>): Promise<ChatbotConversations | undefined> {
     const [updatedConversation] = await db
       .update(chatbotConversations)
       .set({ ...conversation, updatedAt: new Date() })
@@ -3038,7 +3050,7 @@ export class DatabaseStorage implements IStorage {
     return updatedConversation || undefined;
   }
 
-  async addMessageToChatbotConversation(conversationId: string, message: any): Promise<ChatbotConversation | undefined> {
+  async addMessageToChatbotConversation(conversationId: string, message: any): Promise<ChatbotConversations | undefined> {
     // Get current conversation to access existing messages
     const conversation = await this.getChatbotConversation(conversationId);
     if (!conversation) {
@@ -3126,16 +3138,16 @@ export class DatabaseStorage implements IStorage {
   }
 
   // API Management methods
-  async getApiConfigurations(): Promise<ApiConfiguration[]> {
+  async getApiConfigurations(): Promise<ApiConfigurations[]> {
     return await db.select().from(apiConfigurations).orderBy(desc(apiConfigurations.createdAt));
   }
 
-  async getApiConfiguration(id: string): Promise<ApiConfiguration | undefined> {
+  async getApiConfiguration(id: string): Promise<ApiConfigurations | undefined> {
     const [config] = await db.select().from(apiConfigurations).where(eq(apiConfigurations.id, id));
     return config || undefined;
   }
 
-  async getApiConfigurationByEndpoint(endpoint: string, method?: string): Promise<ApiConfiguration | undefined> {
+  async getApiConfigurationByEndpoint(endpoint: string, method?: string): Promise<ApiConfigurations | undefined> {
     const conditions = [eq(apiConfigurations.endpoint, endpoint)];
     if (method) {
       conditions.push(eq(apiConfigurations.method, method));
@@ -3145,18 +3157,18 @@ export class DatabaseStorage implements IStorage {
     return config || undefined;
   }
 
-  async getApiConfigurationsByCategory(category: string): Promise<ApiConfiguration[]> {
+  async getApiConfigurationsByCategory(category: string): Promise<ApiConfigurations[]> {
     return await db.select().from(apiConfigurations)
       .where(eq(apiConfigurations.category, category))
       .orderBy(desc(apiConfigurations.createdAt));
   }
 
-  async createApiConfiguration(config: InsertApiConfiguration): Promise<ApiConfiguration> {
-    const [newConfig] = await db.insert(apiConfigurations).values(config).returning();
+  async createApiConfiguration(config: InsertApiConfigurations): Promise<ApiConfigurations> {
+    const [newConfig] = await db.insert(apiConfigurations).values(config as any).returning();
     return newConfig;
   }
 
-  async updateApiConfiguration(id: string, config: Partial<UpdateApiConfiguration>): Promise<ApiConfiguration | undefined> {
+  async updateApiConfiguration(id: string, config: Partial<ApiConfigurations>): Promise<ApiConfigurations | undefined> {
     const [updatedConfig] = await db
       .update(apiConfigurations)
       .set({ ...config, updatedAt: new Date() })
@@ -3170,7 +3182,7 @@ export class DatabaseStorage implements IStorage {
     return result.rowCount ? result.rowCount > 0 : false;
   }
 
-  async toggleApiEnabled(id: string, enabled: boolean): Promise<ApiConfiguration | undefined> {
+  async toggleApiEnabled(id: string, enabled: boolean): Promise<ApiConfigurations | undefined> {
     const [updatedConfig] = await db
       .update(apiConfigurations)
       .set({ 
@@ -3219,7 +3231,7 @@ export class DatabaseStorage implements IStorage {
       .where(eq(apiConfigurations.id, id));
   }
 
-  async getEnabledApiConfigurations(): Promise<ApiConfiguration[]> {
+  async getEnabledApiConfigurations(): Promise<ApiConfigurations[]> {
     return await db.select().from(apiConfigurations)
       .where(and(
         eq(apiConfigurations.isEnabled, true),
@@ -3291,7 +3303,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   async createStorefrontConfig(insertConfig: InsertStorefrontConfig): Promise<StorefrontConfig> {
-    const [config] = await db.insert(storefrontConfig).values(insertConfig).returning();
+    const [config] = await db.insert(storefrontConfig).values(insertConfig as any).returning();
     return config;
   }
 
@@ -3304,7 +3316,7 @@ export class DatabaseStorage implements IStorage {
     return config || undefined;
   }
 
-  async getTopProductsForStorefront(configId: string): Promise<Product[]> {
+  async getTopProductsForStorefront(configId: string): Promise<Products[]> {
     const config = await this.getStorefrontConfig(configId);
     if (!config) return [];
 
@@ -3332,7 +3344,7 @@ export class DatabaseStorage implements IStorage {
     }
   }
 
-  async getStorefrontOrders(configId?: string, limit: number = 50): Promise<StorefrontOrder[]> {
+  async getStorefrontOrders(configId?: string, limit: number = 50): Promise<StorefrontOrders[]> {
     if (configId) {
       return await db
         .select()
@@ -3349,7 +3361,7 @@ export class DatabaseStorage implements IStorage {
     }
   }
 
-  async getStorefrontOrder(id: string): Promise<StorefrontOrder | undefined> {
+  async getStorefrontOrder(id: string): Promise<StorefrontOrders | undefined> {
     const [order] = await db
       .select()
       .from(storefrontOrders)
@@ -3357,12 +3369,12 @@ export class DatabaseStorage implements IStorage {
     return order || undefined;
   }
 
-  async createStorefrontOrder(order: InsertStorefrontOrder): Promise<StorefrontOrder> {
-    const [newOrder] = await db.insert(storefrontOrders).values(order).returning();
+  async createStorefrontOrder(order: InsertStorefrontOrders): Promise<StorefrontOrders> {
+    const [newOrder] = await db.insert(storefrontOrders).values(order as any).returning();
     return newOrder;
   }
 
-  async updateStorefrontOrderStatus(id: string, status: string): Promise<StorefrontOrder | undefined> {
+  async updateStorefrontOrderStatus(id: string, status: string): Promise<StorefrontOrders | undefined> {
     const [order] = await db
       .update(storefrontOrders)
       .set({ status: status as any, updatedAt: new Date() })
@@ -3390,7 +3402,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   // Affiliate-specific storefront order methods
-  async getStorefrontOrdersByAffiliateCode(affiliateCode: string, limit: number = 50): Promise<StorefrontOrder[]> {
+  async getStorefrontOrdersByAffiliateCode(affiliateCode: string, limit: number = 50): Promise<StorefrontOrders[]> {
     return await db
       .select()
       .from(storefrontOrders)
@@ -3399,7 +3411,7 @@ export class DatabaseStorage implements IStorage {
       .limit(limit);
   }
 
-  async getStorefrontOrdersByAffiliateCodeAndDateRange(affiliateCode: string, startDate: Date, endDate: Date): Promise<StorefrontOrder[]> {
+  async getStorefrontOrdersByAffiliateCodeAndDateRange(affiliateCode: string, startDate: Date, endDate: Date): Promise<StorefrontOrders[]> {
     return await db
       .select()
       .from(storefrontOrders)
@@ -3413,7 +3425,7 @@ export class DatabaseStorage implements IStorage {
       .orderBy(desc(storefrontOrders.createdAt));
   }
 
-  async getStorefrontOrdersByAffiliateCodeWithFilters(filters: any, limit: number = 50, offset: number = 0): Promise<StorefrontOrder[]> {
+  async getStorefrontOrdersByAffiliateCodeWithFilters(filters: any, limit: number = 50, offset: number = 0): Promise<StorefrontOrders[]> {
     const { affiliateCode, status, startDate, endDate, search } = filters;
     
     let query = db
@@ -3496,7 +3508,7 @@ export class DatabaseStorage implements IStorage {
     return result.count;
   }
 
-  async getCustomerByEmail(email: string): Promise<Customer | undefined> {
+  async getCustomerByEmail(email: string): Promise<Customers | undefined> {
     const [customer] = await db
       .select()
       .from(customers)
@@ -3505,13 +3517,13 @@ export class DatabaseStorage implements IStorage {
   }
 
   // Payment methods
-  async getPayment(orderId: string): Promise<Payment | undefined> {
+  async getPayment(orderId: string): Promise<Payments | undefined> {
     const [payment] = await db.select().from(payments).where(eq(payments.orderId, orderId));
     return payment || undefined;
   }
 
-  async createPayment(payment: InsertPayment): Promise<Payment> {
-    const [newPayment] = await db.insert(payments).values(payment).returning();
+  async createPayment(payment: InsertPayments): Promise<Payments> {
+    const [newPayment] = await db.insert(payments).values(payment as any).returning();
     return newPayment;
   }
 
@@ -3519,7 +3531,7 @@ export class DatabaseStorage implements IStorage {
    * 🚀 Create Payment with Automatic QR Generation
    * Enhanced method that auto-generates VietQR codes for SHB bank
    */
-  async createPaymentWithQR(orderId: string, amount: number, description?: string): Promise<Payment> {
+  async createPaymentWithQR(orderId: string, amount: number, description?: string): Promise<Payments> {
     // Import VietQRService dynamically để avoid circular dependencies
     const { VietQRService } = await import('./services/vietqr-service');
     
@@ -3537,7 +3549,7 @@ export class DatabaseStorage implements IStorage {
     );
     
     // 💾 Create payment record với auto-generated QR
-    const paymentData: InsertPayment = {
+    const paymentData: InsertPayments = {
       orderId,
       method: 'bank_transfer',
       amount: amount.toString(),
@@ -3546,11 +3558,11 @@ export class DatabaseStorage implements IStorage {
       bankInfo: qrResult.bankInfo,
     };
     
-    const [newPayment] = await db.insert(payments).values(paymentData).returning();
+    const [newPayment] = await db.insert(payments).values(paymentData as any).returning();
     return newPayment;
   }
 
-  async updatePaymentStatus(id: string, status: string, transactionId?: string): Promise<Payment | undefined> {
+  async updatePaymentStatus(id: string, status: string, transactionId?: string): Promise<Payments | undefined> {
     const updateData: any = { status, updatedAt: new Date() };
     if (transactionId) {
       updateData.transactionId = transactionId;
@@ -3606,12 +3618,12 @@ export class DatabaseStorage implements IStorage {
         await tx.update(shopSettings).set({ isDefault: false, updatedAt: new Date() });
         
         // Then create the new default settings
-        const [settings] = await tx.insert(shopSettings).values(insertSettings).returning();
+        const [settings] = await tx.insert(shopSettings).values(insertSettings as any).returning();
         return settings;
       });
     }
     
-    const [settings] = await db.insert(shopSettings).values(insertSettings).returning();
+    const [settings] = await db.insert(shopSettings).values(insertSettings as any).returning();
     return settings;
   }
 
@@ -3662,7 +3674,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   // Product Landing Page methods
-  async getAllProductLandingPages(): Promise<ProductLandingPage[]> {
+  async getAllProductLandingPages(): Promise<ProductLandingPages[]> {
     const result = await db
       .select()
       .from(productLandingPages)
@@ -3670,7 +3682,7 @@ export class DatabaseStorage implements IStorage {
     return result;
   }
 
-  async getProductLandingPageById(id: string): Promise<ProductLandingPage | undefined> {
+  async getProductLandingPageById(id: string): Promise<ProductLandingPages | undefined> {
     const [landingPage] = await db
       .select()
       .from(productLandingPages)
@@ -3678,7 +3690,7 @@ export class DatabaseStorage implements IStorage {
     return landingPage || undefined;
   }
 
-  async getProductLandingPageBySlug(slug: string): Promise<ProductLandingPage | undefined> {
+  async getProductLandingPageBySlug(slug: string): Promise<ProductLandingPages | undefined> {
     // Normalize input to handle case/whitespace/encoding issues
     const normalizedSlug = decodeURIComponent(slug).trim().toLowerCase();
     
@@ -3700,7 +3712,7 @@ export class DatabaseStorage implements IStorage {
     return landingPage || undefined;
   }
 
-  async createProductLandingPage(data: InsertProductLandingPage): Promise<ProductLandingPage> {
+  async createProductLandingPage(data: InsertProductLandingPages): Promise<ProductLandingPages> {
     // Check if slug already exists
     const existing = await this.getProductLandingPageBySlug(data.slug);
     if (existing) {
@@ -3714,12 +3726,12 @@ export class DatabaseStorage implements IStorage {
         viewCount: 0,
         orderCount: 0,
         conversionRate: "0.00"
-      })
+      } as any)
       .returning();
     return landingPage;
   }
 
-  async updateProductLandingPage(id: string, data: Partial<InsertProductLandingPage>): Promise<ProductLandingPage | undefined> {
+  async updateProductLandingPage(id: string, data: Partial<InsertProductLandingPages>): Promise<ProductLandingPages | undefined> {
     const [landingPage] = await db
       .update(productLandingPages)
       .set({ ...data, updatedAt: new Date() })
@@ -3754,7 +3766,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getProductLandingPageWithDetails(idOrSlug: string): Promise<any> {
-    let landingPage: ProductLandingPage | undefined;
+    let landingPage: ProductLandingPages | undefined;
     
     // Try to get by slug first, then by ID
     // UUIDs are exactly 36 characters with dashes at positions 8,13,18,23
@@ -3788,12 +3800,12 @@ export class DatabaseStorage implements IStorage {
   }
 
   // Product Landing Click Tracking methods
-  async createProductLandingClick(data: InsertProductLandingClick): Promise<ProductLandingClick> {
-    const [click] = await db.insert(productLandingClicks).values(data).returning();
+  async createProductLandingClick(data: InsertProductLandingClicks): Promise<ProductLandingClicks> {
+    const [click] = await db.insert(productLandingClicks).values(data as any).returning();
     return click;
   }
 
-  async getProductLandingClickByCookie(trackingCookie: string): Promise<ProductLandingClick | undefined> {
+  async getProductLandingClickByCookie(trackingCookie: string): Promise<ProductLandingClicks | undefined> {
     const clicks = await db
       .select()
       .from(productLandingClicks)
@@ -3819,7 +3831,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   // Product Review methods
-  async getProductReviews(productId: string, limit = 20): Promise<ProductReview[]> {
+  async getProductReviews(productId: string, limit = 20): Promise<ProductReviews[]> {
     return await db
       .select()
       .from(productReviews)
@@ -3832,7 +3844,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getProductReviewsWithStats(productId: string): Promise<{ 
-    reviews: ProductReview[]; 
+    reviews: ProductReviews[]; 
     averageRating: number; 
     totalReviews: number; 
     ratingCounts: { [key: number]: number } 
@@ -3876,12 +3888,12 @@ export class DatabaseStorage implements IStorage {
     };
   }
 
-  async createProductReview(review: InsertProductReview): Promise<ProductReview> {
-    const [newReview] = await db.insert(productReviews).values(review).returning();
+  async createProductReview(review: InsertProductReviews): Promise<ProductReviews> {
+    const [newReview] = await db.insert(productReviews).values(review as any).returning();
     return newReview;
   }
 
-  async updateProductReview(id: string, review: Partial<InsertProductReview>): Promise<ProductReview | undefined> {
+  async updateProductReview(id: string, review: Partial<InsertProductReviews>): Promise<ProductReviews | undefined> {
     const [updatedReview] = await db
       .update(productReviews)
       .set({ ...review, updatedAt: new Date() })
@@ -3932,7 +3944,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   async createProductFAQ(faq: InsertProductFAQ): Promise<ProductFAQ> {
-    const [newFAQ] = await db.insert(productFAQs).values(faq).returning();
+    const [newFAQ] = await db.insert(productFAQs).values(faq as any).returning();
     return newFAQ;
   }
 
@@ -3978,7 +3990,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   // Product Policy methods
-  async getProductPolicies(): Promise<ProductPolicy[]> {
+  async getProductPolicies(): Promise<ProductPolicies[]> {
     return await db
       .select()
       .from(productPolicies)
@@ -3986,17 +3998,17 @@ export class DatabaseStorage implements IStorage {
       .orderBy(productPolicies.sortOrder, productPolicies.createdAt);
   }
 
-  async getProductPolicy(id: string): Promise<ProductPolicy | undefined> {
+  async getProductPolicy(id: string): Promise<ProductPolicies | undefined> {
     const [policy] = await db.select().from(productPolicies).where(eq(productPolicies.id, id));
     return policy || undefined;
   }
 
-  async createProductPolicy(policy: InsertProductPolicy): Promise<ProductPolicy> {
-    const [newPolicy] = await db.insert(productPolicies).values(policy).returning();
+  async createProductPolicy(policy: InsertProductPolicies): Promise<ProductPolicies> {
+    const [newPolicy] = await db.insert(productPolicies).values(policy as any).returning();
     return newPolicy;
   }
 
-  async updateProductPolicy(id: string, policy: Partial<InsertProductPolicy>): Promise<ProductPolicy | undefined> {
+  async updateProductPolicy(id: string, policy: Partial<InsertProductPolicies>): Promise<ProductPolicies | undefined> {
     const [updatedPolicy] = await db
       .update(productPolicies)
       .set({ ...policy, updatedAt: new Date() })
@@ -4011,7 +4023,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   // Product Policy Association methods
-  async getProductPolicyAssociations(productId: string): Promise<(ProductPolicyAssociation & { policy: ProductPolicy })[]> {
+  async getProductPolicyAssociations(productId: string): Promise<(ProductPolicyAssociations & { policy: ProductPolicies })[]> {
     const results = await db
       .select({
         productId: productPolicyAssociations.productId,
@@ -4040,11 +4052,11 @@ export class DatabaseStorage implements IStorage {
       policyId: row.policyId,
       sortOrder: row.sortOrder,
       createdAt: row.createdAt,
-      policy: row.policy as ProductPolicy
+      policy: row.policy as ProductPolicies
     }));
   }
 
-  async addProductPolicyAssociation(productId: string, policyId: string, sortOrder = 0): Promise<ProductPolicyAssociation> {
+  async addProductPolicyAssociation(productId: string, policyId: string, sortOrder = 0): Promise<ProductPolicyAssociations> {
     const [association] = await db
       .insert(productPolicyAssociations)
       .values({ productId, policyId, sortOrder })
@@ -4081,16 +4093,16 @@ export class DatabaseStorage implements IStorage {
   }
 
   // Facebook Management Methods
-  async getPageTags(): Promise<PageTag[]> {
+  async getPageTags(): Promise<PageTags[]> {
     return await db.select().from(pageTags).orderBy(desc(pageTags.createdAt));
   }
 
-  async createPageTag(tag: InsertPageTag): Promise<PageTag> {
-    const [newTag] = await db.insert(pageTags).values(tag).returning();
+  async createPageTag(tag: InsertPageTags): Promise<PageTags> {
+    const [newTag] = await db.insert(pageTags).values(tag as any).returning();
     return newTag;
   }
 
-  async updatePageTag(id: string, tag: Partial<InsertPageTag>): Promise<PageTag | undefined> {
+  async updatePageTag(id: string, tag: Partial<InsertPageTags>): Promise<PageTags | undefined> {
     const [updatedTag] = await db
       .update(pageTags)
       .set({ ...tag, updatedAt: new Date() })
@@ -4105,21 +4117,21 @@ export class DatabaseStorage implements IStorage {
   }
 
   // Unified tag methods implementation
-  async getUnifiedTags(): Promise<UnifiedTag[]> {
+  async getUnifiedTags(): Promise<UnifiedTags[]> {
     return await db.select().from(unifiedTags).orderBy(desc(unifiedTags.createdAt));
   }
 
-  async getUnifiedTag(id: string): Promise<UnifiedTag | undefined> {
+  async getUnifiedTag(id: string): Promise<UnifiedTags | undefined> {
     const [tag] = await db.select().from(unifiedTags).where(eq(unifiedTags.id, id));
     return tag || undefined;
   }
 
-  async createUnifiedTag(tag: InsertUnifiedTag): Promise<UnifiedTag> {
-    const [newTag] = await db.insert(unifiedTags).values(tag).returning();
+  async createUnifiedTag(tag: InsertUnifiedTags): Promise<UnifiedTags> {
+    const [newTag] = await db.insert(unifiedTags).values(tag as any).returning();
     return newTag;
   }
 
-  async updateUnifiedTag(id: string, tag: Partial<InsertUnifiedTag>): Promise<UnifiedTag | undefined> {
+  async updateUnifiedTag(id: string, tag: Partial<InsertUnifiedTags>): Promise<UnifiedTags | undefined> {
     const [updatedTag] = await db
       .update(unifiedTags)
       .set({ ...tag, updatedAt: new Date() })
@@ -4134,7 +4146,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   // Facebook Conversations
-  async getFacebookConversations(pageId?: string, limit = 50): Promise<FacebookConversation[]> {
+  async getFacebookConversations(pageId?: string, limit = 50): Promise<FacebookConversations[]> {
     const query = db.select().from(facebookConversations);
     
     if (pageId) {
@@ -4149,12 +4161,12 @@ export class DatabaseStorage implements IStorage {
       .limit(limit);
   }
 
-  async getFacebookConversation(id: string): Promise<FacebookConversation | undefined> {
+  async getFacebookConversation(id: string): Promise<FacebookConversations | undefined> {
     const [conversation] = await db.select().from(facebookConversations).where(eq(facebookConversations.id, id));
     return conversation || undefined;
   }
 
-  async getFacebookConversationByParticipant(pageId: string, participantId: string): Promise<FacebookConversation | undefined> {
+  async getFacebookConversationByParticipant(pageId: string, participantId: string): Promise<FacebookConversations | undefined> {
     const [conversation] = await db
       .select()
       .from(facebookConversations)
@@ -4165,12 +4177,12 @@ export class DatabaseStorage implements IStorage {
     return conversation || undefined;
   }
 
-  async createFacebookConversation(conversation: InsertFacebookConversation): Promise<FacebookConversation> {
+  async createFacebookConversation(conversation: InsertFacebookConversations): Promise<FacebookConversations> {
     const [newConversation] = await db.insert(facebookConversations).values([conversation as any]).returning();
     return newConversation;
   }
 
-  async updateFacebookConversation(id: string, conversation: Partial<InsertFacebookConversation>): Promise<FacebookConversation | undefined> {
+  async updateFacebookConversation(id: string, conversation: Partial<InsertFacebookConversations>): Promise<FacebookConversations | undefined> {
     const [updatedConversation] = await db
       .update(facebookConversations)
       .set({ ...conversation, updatedAt: new Date() } as any)
@@ -4180,7 +4192,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   // Facebook Messages
-  async getFacebookMessages(conversationId: string, limit = 50): Promise<FacebookMessage[]> {
+  async getFacebookMessages(conversationId: string, limit = 50): Promise<FacebookMessages[]> {
     return await db
       .select()
       .from(facebookMessages)
@@ -4189,7 +4201,7 @@ export class DatabaseStorage implements IStorage {
       .limit(limit);
   }
 
-  async createFacebookMessage(message: InsertFacebookMessage): Promise<FacebookMessage> {
+  async createFacebookMessage(message: InsertFacebookMessages): Promise<FacebookMessages> {
     // Update conversation's last message info
     await db
       .update(facebookConversations)
@@ -4217,7 +4229,7 @@ export class DatabaseStorage implements IStorage {
     return (result.rowCount ?? 0) > 0;
   }
 
-  async getSocialAccountByPageId(pageId: string): Promise<SocialAccount | undefined> {
+  async getSocialAccountByPageId(pageId: string): Promise<SocialAccounts | undefined> {
     const accounts = await db.select().from(socialAccounts).where(eq(socialAccounts.platform, "facebook"));
     
     // Search through pageAccessTokens jsonb field
@@ -4231,26 +4243,26 @@ export class DatabaseStorage implements IStorage {
   }
 
   // TikTok Business Account methods
-  async getTikTokBusinessAccounts(): Promise<TikTokBusinessAccount[]> {
+  async getTikTokBusinessAccounts(): Promise<TiktokBusinessAccounts[]> {
     return await db.select().from(tiktokBusinessAccounts).orderBy(desc(tiktokBusinessAccounts.createdAt));
   }
 
-  async getTikTokBusinessAccount(id: string): Promise<TikTokBusinessAccount | undefined> {
+  async getTikTokBusinessAccount(id: string): Promise<TiktokBusinessAccounts | undefined> {
     const [account] = await db.select().from(tiktokBusinessAccounts).where(eq(tiktokBusinessAccounts.id, id));
     return account;
   }
 
-  async getTikTokBusinessAccountByBusinessId(businessId: string): Promise<TikTokBusinessAccount | undefined> {
+  async getTikTokBusinessAccountByBusinessId(businessId: string): Promise<TiktokBusinessAccounts | undefined> {
     const [account] = await db.select().from(tiktokBusinessAccounts).where(eq(tiktokBusinessAccounts.businessId, businessId));
     return account;
   }
 
-  async createTikTokBusinessAccount(account: InsertTikTokBusinessAccount): Promise<TikTokBusinessAccount> {
-    const [newAccount] = await db.insert(tiktokBusinessAccounts).values(account).returning();
+  async createTikTokBusinessAccount(account: InsertTiktokBusinessAccounts): Promise<TiktokBusinessAccounts> {
+    const [newAccount] = await db.insert(tiktokBusinessAccounts).values(account as any).returning();
     return newAccount;
   }
 
-  async updateTikTokBusinessAccount(id: string, account: Partial<InsertTikTokBusinessAccount>): Promise<TikTokBusinessAccount | undefined> {
+  async updateTikTokBusinessAccount(id: string, account: Partial<InsertTiktokBusinessAccounts>): Promise<TiktokBusinessAccounts | undefined> {
     const [updatedAccount] = await db.update(tiktokBusinessAccounts)
       .set({ ...account, updatedAt: new Date() })
       .where(eq(tiktokBusinessAccounts.id, id))
@@ -4264,26 +4276,26 @@ export class DatabaseStorage implements IStorage {
   }
 
   // Facebook Apps methods
-  async getAllFacebookApps(): Promise<FacebookApp[]> {
+  async getAllFacebookApps(): Promise<FacebookApps[]> {
     return await db.select().from(facebookApps).orderBy(desc(facebookApps.createdAt));
   }
 
-  async getFacebookAppById(id: string): Promise<FacebookApp | undefined> {
+  async getFacebookAppById(id: string): Promise<FacebookApps | undefined> {
     const [app] = await db.select().from(facebookApps).where(eq(facebookApps.id, id));
     return app;
   }
 
-  async getFacebookAppByAppId(appId: string): Promise<FacebookApp | undefined> {
+  async getFacebookAppByAppId(appId: string): Promise<FacebookApps | undefined> {
     const [app] = await db.select().from(facebookApps).where(eq(facebookApps.appId, appId));
     return app;
   }
 
-  async createFacebookApp(app: InsertFacebookApp): Promise<FacebookApp> {
-    const [newApp] = await db.insert(facebookApps).values(app).returning();
+  async createFacebookApp(app: InsertFacebookApps): Promise<FacebookApps> {
+    const [newApp] = await db.insert(facebookApps).values(app as any).returning();
     return newApp;
   }
 
-  async updateFacebookApp(id: string, app: Partial<InsertFacebookApp>): Promise<FacebookApp | undefined> {
+  async updateFacebookApp(id: string, app: Partial<InsertFacebookApps>): Promise<FacebookApps | undefined> {
     const [updatedApp] = await db
       .update(facebookApps)
       .set({ ...app, updatedAt: new Date() })
@@ -4298,30 +4310,30 @@ export class DatabaseStorage implements IStorage {
   }
 
   // TikTok Shop Order methods
-  async getTikTokShopOrders(limit?: number): Promise<TikTokShopOrder[]> {
+  async getTikTokShopOrders(limit?: number): Promise<TiktokShopOrders[]> {
     let query = db.select().from(tiktokShopOrders).orderBy(desc(tiktokShopOrders.createdAt));
     if (limit) {
-      query = query.limit(limit);
+      query = (query as any).limit(limit);
     }
     return await query;
   }
 
-  async getTikTokShopOrder(id: string): Promise<TikTokShopOrder | undefined> {
+  async getTikTokShopOrder(id: string): Promise<TiktokShopOrders | undefined> {
     const [order] = await db.select().from(tiktokShopOrders).where(eq(tiktokShopOrders.id, id));
     return order;
   }
 
-  async getTikTokShopOrderByTikTokId(tiktokOrderId: string): Promise<TikTokShopOrder | undefined> {
+  async getTikTokShopOrderByTikTokId(tiktokOrderId: string): Promise<TiktokShopOrders | undefined> {
     const [order] = await db.select().from(tiktokShopOrders).where(eq(tiktokShopOrders.tiktokOrderId, tiktokOrderId));
     return order;
   }
 
-  async createTikTokShopOrder(order: InsertTikTokShopOrder): Promise<TikTokShopOrder> {
-    const [newOrder] = await db.insert(tiktokShopOrders).values(order).returning();
+  async createTikTokShopOrder(order: InsertTiktokShopOrders): Promise<TiktokShopOrders> {
+    const [newOrder] = await db.insert(tiktokShopOrders).values(order as any).returning();
     return newOrder;
   }
 
-  async updateTikTokShopOrder(id: string, order: Partial<InsertTikTokShopOrder>): Promise<TikTokShopOrder | undefined> {
+  async updateTikTokShopOrder(id: string, order: Partial<InsertTiktokShopOrders>): Promise<TiktokShopOrders | undefined> {
     const [updatedOrder] = await db.update(tiktokShopOrders)
       .set({ ...order, updatedAt: new Date() })
       .where(eq(tiktokShopOrders.id, id))
@@ -4335,26 +4347,26 @@ export class DatabaseStorage implements IStorage {
   }
 
   // TikTok Shop Product methods
-  async getTikTokShopProducts(): Promise<TikTokShopProduct[]> {
+  async getTikTokShopProducts(): Promise<TiktokShopProducts[]> {
     return await db.select().from(tiktokShopProducts).orderBy(desc(tiktokShopProducts.createdAt));
   }
 
-  async getTikTokShopProduct(id: string): Promise<TikTokShopProduct | undefined> {
+  async getTikTokShopProduct(id: string): Promise<TiktokShopProducts | undefined> {
     const [product] = await db.select().from(tiktokShopProducts).where(eq(tiktokShopProducts.id, id));
     return product;
   }
 
-  async getTikTokShopProductByTikTokId(tiktokProductId: string): Promise<TikTokShopProduct | undefined> {
+  async getTikTokShopProductByTikTokId(tiktokProductId: string): Promise<TiktokShopProducts | undefined> {
     const [product] = await db.select().from(tiktokShopProducts).where(eq(tiktokShopProducts.tiktokProductId, tiktokProductId));
     return product;
   }
 
-  async createTikTokShopProduct(product: InsertTikTokShopProduct): Promise<TikTokShopProduct> {
-    const [newProduct] = await db.insert(tiktokShopProducts).values(product).returning();
+  async createTikTokShopProduct(product: InsertTiktokShopProducts): Promise<TiktokShopProducts> {
+    const [newProduct] = await db.insert(tiktokShopProducts).values(product as any).returning();
     return newProduct;
   }
 
-  async updateTikTokShopProduct(id: string, product: Partial<InsertTikTokShopProduct>): Promise<TikTokShopProduct | undefined> {
+  async updateTikTokShopProduct(id: string, product: Partial<InsertTiktokShopProducts>): Promise<TiktokShopProducts | undefined> {
     const [updatedProduct] = await db.update(tiktokShopProducts)
       .set({ ...product, updatedAt: new Date() })
       .where(eq(tiktokShopProducts.id, id))
@@ -4368,30 +4380,30 @@ export class DatabaseStorage implements IStorage {
   }
 
   // TikTok Video methods
-  async getTikTokVideos(businessAccountId?: string): Promise<TikTokVideo[]> {
+  async getTikTokVideos(businessAccountId?: string): Promise<TiktokVideos[]> {
     let query = db.select().from(tiktokVideos).orderBy(desc(tiktokVideos.createdAt));
     if (businessAccountId) {
-      query = query.where(eq(tiktokVideos.businessAccountId, businessAccountId));
+      query = (query as any).where(eq(tiktokVideos.businessAccountId, businessAccountId));
     }
     return await query;
   }
 
-  async getTikTokVideo(id: string): Promise<TikTokVideo | undefined> {
+  async getTikTokVideo(id: string): Promise<TiktokVideos | undefined> {
     const [video] = await db.select().from(tiktokVideos).where(eq(tiktokVideos.id, id));
     return video;
   }
 
-  async getTikTokVideoByVideoId(videoId: string): Promise<TikTokVideo | undefined> {
+  async getTikTokVideoByVideoId(videoId: string): Promise<TiktokVideos | undefined> {
     const [video] = await db.select().from(tiktokVideos).where(eq(tiktokVideos.videoId, videoId));
     return video;
   }
 
-  async createTikTokVideo(video: InsertTikTokVideo): Promise<TikTokVideo> {
-    const [newVideo] = await db.insert(tiktokVideos).values(video).returning();
+  async createTikTokVideo(video: InsertTiktokVideos): Promise<TiktokVideos> {
+    const [newVideo] = await db.insert(tiktokVideos).values(video as any).returning();
     return newVideo;
   }
 
-  async updateTikTokVideo(id: string, video: Partial<InsertTikTokVideo>): Promise<TikTokVideo | undefined> {
+  async updateTikTokVideo(id: string, video: Partial<InsertTiktokVideos>): Promise<TiktokVideos | undefined> {
     const [updatedVideo] = await db.update(tiktokVideos)
       .set({ ...video, updatedAt: new Date() })
       .where(eq(tiktokVideos.id, id))
@@ -4409,18 +4421,18 @@ export class DatabaseStorage implements IStorage {
   // ===========================================
 
   // Content Categories
-  async getContentCategories(): Promise<ContentCategory[]> {
+  async getContentCategories(): Promise<ContentCategories[]> {
     return await db.select().from(contentCategories)
       .where(eq(contentCategories.isActive, true))
       .orderBy(contentCategories.sortOrder, contentCategories.name);
   }
 
-  async createContentCategory(category: InsertContentCategory): Promise<ContentCategory> {
-    const [newCategory] = await db.insert(contentCategories).values(category).returning();
+  async createContentCategory(category: InsertContentCategories): Promise<ContentCategories> {
+    const [newCategory] = await db.insert(contentCategories).values(category as any).returning();
     return newCategory;
   }
 
-  async updateContentCategory(id: number, category: Partial<InsertContentCategory>): Promise<ContentCategory | undefined> {
+  async updateContentCategory(id: number, category: Partial<InsertContentCategories>): Promise<ContentCategories | undefined> {
     const [updated] = await db.update(contentCategories)
       .set({ ...category, updatedAt: new Date() })
       .where(eq(contentCategories.id, id))
@@ -4434,28 +4446,28 @@ export class DatabaseStorage implements IStorage {
   }
 
   // Content Assets
-  async getContentAssets(): Promise<ContentAsset[]> {
+  async getContentAssets(): Promise<ContentAssets[]> {
     return await db.select().from(contentAssets)
       .orderBy(desc(contentAssets.createdAt));
   }
 
-  async getContentAsset(id: string): Promise<ContentAsset | undefined> {
+  async getContentAsset(id: string): Promise<ContentAssets | undefined> {
     const [asset] = await db.select().from(contentAssets).where(eq(contentAssets.id, id));
     return asset;
   }
 
-  async getContentAssetsByCategory(categoryId: number): Promise<ContentAsset[]> {
+  async getContentAssetsByCategory(categoryId: number): Promise<ContentAssets[]> {
     return await db.select().from(contentAssets)
       .where(eq(contentAssets.categoryId, categoryId))
       .orderBy(desc(contentAssets.createdAt));
   }
 
-  async createContentAsset(asset: InsertContentAsset): Promise<ContentAsset> {
-    const [newAsset] = await db.insert(contentAssets).values(asset).returning();
+  async createContentAsset(asset: InsertContentAssets): Promise<ContentAssets> {
+    const [newAsset] = await db.insert(contentAssets).values(asset as any).returning();
     return newAsset;
   }
 
-  async updateContentAsset(id: string, asset: Partial<InsertContentAsset>): Promise<ContentAsset | undefined> {
+  async updateContentAsset(id: string, asset: Partial<InsertContentAssets>): Promise<ContentAssets | undefined> {
     const [updated] = await db.update(contentAssets)
       .set({ ...asset, updatedAt: new Date() })
       .where(eq(contentAssets.id, id))
@@ -4482,7 +4494,7 @@ export class DatabaseStorage implements IStorage {
     tags: string[], 
     resourceType?: 'image' | 'video',
     limit: number = 1
-  ): Promise<ContentAsset[]> {
+  ): Promise<ContentAssets[]> {
     const conditions = [
       sql`${contentAssets.lastUsed} IS NULL`,
       sql`${contentAssets.tags} && ARRAY[${sql.join(tags.map(tag => sql`${tag}`), sql`, `)}]::text[]`
@@ -4501,17 +4513,17 @@ export class DatabaseStorage implements IStorage {
   }
 
   // Scheduled Posts
-  async getScheduledPosts(): Promise<ScheduledPost[]> {
+  async getScheduledPosts(): Promise<ScheduledPosts[]> {
     return await db.select().from(scheduledPosts)
       .orderBy(desc(scheduledPosts.scheduledTime));
   }
 
-  async getScheduledPost(id: string): Promise<ScheduledPost | undefined> {
+  async getScheduledPost(id: string): Promise<ScheduledPosts | undefined> {
     const [post] = await db.select().from(scheduledPosts).where(eq(scheduledPosts.id, id));
     return post;
   }
 
-  async getScheduledPostsToProcess(now: Date): Promise<ScheduledPost[]> {
+  async getScheduledPostsToProcess(now: Date): Promise<ScheduledPosts[]> {
     return await db.select().from(scheduledPosts)
       .where(
         and(
@@ -4522,7 +4534,7 @@ export class DatabaseStorage implements IStorage {
       .orderBy(scheduledPosts.scheduledTime);
   }
 
-  async getUpcomingScheduledPosts(limit: number = 50): Promise<ScheduledPost[]> {
+  async getUpcomingScheduledPosts(limit: number = 50): Promise<ScheduledPosts[]> {
     const now = new Date();
     return await db.select().from(scheduledPosts)
       .where(
@@ -4535,12 +4547,12 @@ export class DatabaseStorage implements IStorage {
       .limit(limit);
   }
 
-  async createScheduledPost(post: InsertScheduledPost): Promise<ScheduledPost> {
-    const [newPost] = await db.insert(scheduledPosts).values(post).returning();
+  async createScheduledPost(post: InsertScheduledPosts): Promise<ScheduledPosts> {
+    const [newPost] = await db.insert(scheduledPosts).values(post as any).returning();
     return newPost;
   }
 
-  async updateScheduledPost(id: string, post: Partial<InsertScheduledPost>): Promise<ScheduledPost | undefined> {
+  async updateScheduledPost(id: string, post: Partial<InsertScheduledPosts>): Promise<ScheduledPosts | undefined> {
     const [updated] = await db.update(scheduledPosts)
       .set({ ...post, updatedAt: new Date() })
       .where(eq(scheduledPosts.id, id))
@@ -4548,7 +4560,7 @@ export class DatabaseStorage implements IStorage {
     return updated;
   }
 
-  async updateScheduledPostStatus(id: string, status: ScheduledPost['status']): Promise<void> {
+  async updateScheduledPostStatus(id: string, status: ScheduledPosts['status']): Promise<void> {
     await db.update(scheduledPosts)
       .set({ status, updatedAt: new Date() })
       .where(eq(scheduledPosts.id, id));
@@ -4559,14 +4571,14 @@ export class DatabaseStorage implements IStorage {
     return result.rowCount! > 0;
   }
 
-  async getScheduledPostsByAccount(socialAccountId: string): Promise<ScheduledPost[]> {
+  async getScheduledPostsByAccount(socialAccountId: string): Promise<ScheduledPosts[]> {
     return await db.select().from(scheduledPosts)
       .where(eq(scheduledPosts.socialAccountId, socialAccountId))
       .orderBy(desc(scheduledPosts.scheduledTime));
   }
 
   // Content Library methods
-  async getContentLibraryItems(filters?: { tags?: string[]; status?: string; contentType?: string; priority?: string }): Promise<ContentLibrary[]> {
+  async getContentLibraryItems(filters?: { tags?: string[]; status?: string; contentType?: string; priority?: string }): Promise<ContentLibraries[]> {
     // Build conditions array to properly combine multiple WHERE clauses
     const conditions = [];
     
@@ -4592,28 +4604,28 @@ export class DatabaseStorage implements IStorage {
     
     // Apply all conditions using AND logic
     if (conditions.length > 0) {
-      query = query.where(and(...conditions));
+      query = (query as any).where(and(...conditions));
     }
     
     return await query.orderBy(desc(contentLibrary.createdAt));
   }
 
-  async getContentLibraryItem(id: string): Promise<ContentLibrary | undefined> {
+  async getContentLibraryItem(id: string): Promise<ContentLibraries | undefined> {
     const [item] = await db.select().from(contentLibrary).where(eq(contentLibrary.id, id));
     return item;
   }
 
-  async createContentLibraryItem(item: InsertContentLibrary): Promise<ContentLibrary> {
+  async createContentLibraryItem(item: InsertContentLibraries): Promise<ContentLibraries> {
     const { duplicateDetectionService } = await import('./services/duplicate-detection');
     const fingerprint = duplicateDetectionService.generateFingerprint(item.baseContent);
     
     const [newItem] = await db.insert(contentLibrary)
-      .values({ ...item, contentFingerprint: fingerprint })
+      .values({ ...item, contentFingerprint: fingerprint } as any)
       .returning();
     return newItem;
   }
 
-  async updateContentLibraryItem(id: string, item: UpdateContentLibrary): Promise<ContentLibrary | undefined> {
+  async updateContentLibraryItem(id: string, item: Partial<ContentLibraries>): Promise<ContentLibraries | undefined> {
     const updateData: any = { ...item, updatedAt: new Date() };
     
     if (item.baseContent) {
@@ -4643,7 +4655,7 @@ export class DatabaseStorage implements IStorage {
       .where(eq(contentLibrary.id, id));
   }
 
-  async addAIVariation(id: string, variation: { content: string; tone: string; style: string }): Promise<ContentLibrary | undefined> {
+  async addAIVariation(id: string, variation: { content: string; tone: string; style: string }): Promise<ContentLibraries | undefined> {
     const [item] = await db.select().from(contentLibrary).where(eq(contentLibrary.id, id));
     if (!item) return undefined;
 
@@ -4655,7 +4667,7 @@ export class DatabaseStorage implements IStorage {
       generatedAt: new Date().toISOString()
     };
 
-    const updatedVariations = [...(item.aiVariations || []), newVariation];
+    const updatedVariations = [...(item.aiVariations as any[] || []), newVariation];
 
     const [updated] = await db.update(contentLibrary)
       .set({ 
@@ -4667,7 +4679,7 @@ export class DatabaseStorage implements IStorage {
     return updated;
   }
 
-  async getContentLibraryByTags(tagIds: string[]): Promise<ContentLibrary[]> {
+  async getContentLibraryByTags(tagIds: string[]): Promise<ContentLibraries[]> {
     if (tagIds.length === 0) return [];
     
     return await db.select().from(contentLibrary)
@@ -4675,7 +4687,7 @@ export class DatabaseStorage implements IStorage {
       .orderBy(desc(contentLibrary.lastUsed), desc(contentLibrary.createdAt));
   }
 
-  async getContentLibraryByPriority(priority: string): Promise<ContentLibrary[]> {
+  async getContentLibraryByPriority(priority: string): Promise<ContentLibraries[]> {
     return await db.select().from(contentLibrary)
       .where(eq(contentLibrary.priority, priority as any))
       .orderBy(desc(contentLibrary.createdAt));
@@ -4712,7 +4724,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   async createQueueItem(item: InsertContentQueue): Promise<ContentQueue> {
-    const [created] = await db.insert(contentQueue).values(item).returning();
+    const [created] = await db.insert(contentQueue).values(item as any).returning();
     return created;
   }
 
@@ -4726,7 +4738,7 @@ export class DatabaseStorage implements IStorage {
 
   async deleteQueueItem(id: string): Promise<boolean> {
     const result = await db.delete(contentQueue).where(eq(contentQueue.id, id));
-    return result.rowCount > 0;
+    return result.rowCount ? result.rowCount > 0 : false;
   }
 
   async updateQueuePosition(id: string, newPosition: number): Promise<ContentQueue | undefined> {
@@ -4755,7 +4767,7 @@ export class DatabaseStorage implements IStorage {
       ));
     
     if (targetType) {
-      query = query.where(eq(contentQueue.targetType, targetType as any)) as any;
+      query = (query as any).where(eq(contentQueue.targetType, targetType as any));
     }
     
     return await query
@@ -4780,7 +4792,7 @@ export class DatabaseStorage implements IStorage {
       return updated;
     } else {
       const [created] = await db.insert(queueAutoFillSettings)
-        .values(settings as InsertQueueAutoFillSettings)
+        .values(settings as any)
         .returning();
       return created;
     }
@@ -4798,7 +4810,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   async createQueueHistory(history: InsertQueueHistory): Promise<QueueHistory> {
-    const [created] = await db.insert(queueHistory).values(history).returning();
+    const [created] = await db.insert(queueHistory).values(history as any).returning();
     return created;
   }
 
@@ -4807,7 +4819,7 @@ export class DatabaseStorage implements IStorage {
     return await db.select().from(accountGroups).orderBy(desc(accountGroups.createdAt));
   }
 
-  async getGroupAccounts(groupId: string): Promise<SocialAccount[]> {
+  async getGroupAccounts(groupId: string): Promise<SocialAccounts[]> {
     return await db
       .select({
         id: socialAccounts.id,
@@ -4906,7 +4918,7 @@ export class DatabaseStorage implements IStorage {
 
   async deleteWorker(id: string): Promise<boolean> {
     const result = await db.delete(workers).where(eq(workers.id, id));
-    return result.rowCount > 0;
+    return result.rowCount ? result.rowCount > 0 : false;
   }
 
   async updateWorkerStatus(workerId: string, isOnline: boolean, lastPingAt?: Date): Promise<Worker | undefined> {
@@ -4939,7 +4951,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   async createAbebooksAccount(account: InsertAbebooksAccount): Promise<AbebooksAccount> {
-    const [created] = await db.insert(abebooksAccounts).values(account).returning();
+    const [created] = await db.insert(abebooksAccounts).values(account as any).returning();
     return created;
   }
 
@@ -4987,7 +4999,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   async createAbebooksListing(listing: InsertAbebooksListing): Promise<AbebooksListing> {
-    const [created] = await db.insert(abebooksListings).values(listing).returning();
+    const [created] = await db.insert(abebooksListings).values(listing as any).returning();
     return created;
   }
 
@@ -5001,7 +5013,7 @@ export class DatabaseStorage implements IStorage {
 
   async deleteAbebooksListing(id: string): Promise<boolean> {
     const result = await db.delete(abebooksListings).where(eq(abebooksListings.id, id));
-    return result.rowCount > 0;
+    return result.rowCount ? result.rowCount > 0 : false;
   }
 
   async getAbebooksSearchHistory(accountId?: string, limit: number = 50): Promise<AbebooksSearchHistory[]> {
@@ -5015,7 +5027,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   async createAbebooksSearchHistory(history: InsertAbebooksSearchHistory): Promise<AbebooksSearchHistory> {
-    const [created] = await db.insert(abebooksSearchHistory).values(history).returning();
+    const [created] = await db.insert(abebooksSearchHistory).values(history as any).returning();
     return created;
   }
 
@@ -5029,7 +5041,7 @@ export class DatabaseStorage implements IStorage {
   }, pagination?: {
     limit?: number;
     offset?: number;
-  }): Promise<CookieProfile[]> {
+  }): Promise<CookieProfiles[]> {
     const query = db.select().from(cookieProfiles);
     const conditions = [];
 
@@ -5070,17 +5082,17 @@ export class DatabaseStorage implements IStorage {
       .offset(offset);
   }
 
-  async getCookieProfileById(id: string): Promise<CookieProfile | undefined> {
+  async getCookieProfileById(id: string): Promise<CookieProfiles | undefined> {
     const [profile] = await db.select().from(cookieProfiles).where(eq(cookieProfiles.id, id));
     return profile || undefined;
   }
 
-  async createCookieProfile(profile: UpsertCookieProfile): Promise<CookieProfile> {
-    const [created] = await db.insert(cookieProfiles).values(profile).returning();
+  async createCookieProfile(profile: InsertCookieProfiles): Promise<CookieProfiles> {
+    const [created] = await db.insert(cookieProfiles).values(profile as any).returning();
     return created;
   }
 
-  async updateCookieProfile(id: string, profile: UpdateCookieProfile): Promise<CookieProfile | undefined> {
+  async updateCookieProfile(id: string, profile: Partial<CookieProfiles>): Promise<CookieProfiles | undefined> {
     const [updated] = await db.update(cookieProfiles)
       .set({ ...profile, updatedAt: new Date() })
       .where(eq(cookieProfiles.id, id))
@@ -5090,7 +5102,7 @@ export class DatabaseStorage implements IStorage {
 
   async deleteCookieProfile(id: string): Promise<boolean> {
     const result = await db.delete(cookieProfiles).where(eq(cookieProfiles.id, id));
-    return result.rowCount > 0;
+    return result.rowCount ? result.rowCount > 0 : false;
   }
 
   // Get cookie profile by identity (userId + socialNetwork + accountName) - NO LIMIT
@@ -5098,7 +5110,7 @@ export class DatabaseStorage implements IStorage {
     userId: string, 
     socialNetwork: string, 
     accountName: string
-  ): Promise<CookieProfile | undefined> {
+  ): Promise<CookieProfiles | undefined> {
     const [profile] = await db.select().from(cookieProfiles).where(
       and(
         eq(cookieProfiles.userId, userId),
@@ -5113,8 +5125,8 @@ export class DatabaseStorage implements IStorage {
   async updateCookieProfileWithVersion(
     id: string, 
     expectedVersion: number,
-    profile: UpdateCookieProfile
-  ): Promise<{ success: boolean; profile?: CookieProfile; currentVersion?: number }> {
+    profile: Partial<CookieProfiles>
+  ): Promise<{ success: boolean; profile?: CookieProfiles; currentVersion?: number }> {
     // Atomic update: only update if version matches
     const [updated] = await db.update(cookieProfiles)
       .set({ ...profile, updatedAt: new Date() })
@@ -5138,7 +5150,7 @@ export class DatabaseStorage implements IStorage {
     };
   }
 
-  async getAuthUsers(): Promise<AuthUser[]> {
+  async getAuthUsers(): Promise<AuthUsers[]> {
     return await db.select().from(authUsers).orderBy(desc(authUsers.createdAt));
   }
 
@@ -5254,7 +5266,7 @@ export class DatabaseStorage implements IStorage {
   }, pagination?: {
     limit?: number;
     offset?: number;
-  }): Promise<CookieProfile[]> {
+  }): Promise<CookieProfiles[]> {
     const query = db.select().from(cookieProfiles);
     const conditions = [gte(cookieProfiles.updatedAt, new Date(timestamp))];
 
@@ -5276,7 +5288,7 @@ export class DatabaseStorage implements IStorage {
               eq(cookieProfiles.updatedAt, filters.cursorTimestamp),
               sql`${cookieProfiles.id} > ${filters.cursorId}`
             )
-          )
+          )!
         );
       } else {
         // Fallback to simple exclusive cursor
@@ -5309,10 +5321,6 @@ export class DatabaseStorage implements IStorage {
     return result.lastSync || null;
   }
 
-  async getAuthUsers(): Promise<AuthUser[]> {
-    return await db.select().from(authUsers).orderBy(desc(authUsers.createdAt));
-  }
-
   async validateUsersBatch(userIds: string[]): Promise<Set<string>> {
     if (userIds.length === 0) return new Set();
     
@@ -5328,7 +5336,7 @@ export class DatabaseStorage implements IStorage {
     socialNetwork: string;
     groupTag: string;
     accountName: string;
-  }>): Promise<Map<string, CookieProfile>> {
+  }>): Promise<Map<string, CookieProfiles>> {
     if (keys.length === 0) return new Map();
     
     // Build OR conditions for each composite key
@@ -5346,7 +5354,7 @@ export class DatabaseStorage implements IStorage {
       .where(or(...conditions));
     
     // Create a map keyed by composite key string
-    const profileMap = new Map<string, CookieProfile>();
+    const profileMap = new Map<string, CookieProfiles>();
     existingProfiles.forEach(profile => {
       const compositeKey = `${profile.userId}:${profile.socialNetwork}:${profile.groupTag}:${profile.accountName}`;
       profileMap.set(compositeKey, profile);
@@ -5356,7 +5364,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   // 📚 Book Orders & Sellers Integration implementation
-  async getBookSellers(filters?: { isActive?: boolean; tier?: string }): Promise<BookSeller[]> {
+  async getBookSellers(filters?: { isActive?: boolean; tier?: string }): Promise<BookSellers[]> {
     let query = db.select().from(bookSellers);
     
     const conditions = [];
@@ -5370,13 +5378,13 @@ export class DatabaseStorage implements IStorage {
     return await (query.orderBy(desc(bookSellers.createdAt)) as any);
   }
 
-  async createBookSeller(data: InsertBookSeller): Promise<BookSeller> {
-    const [seller] = await db.insert(bookSellers).values(data).returning();
+  async createBookSeller(data: InsertBookSellers): Promise<BookSellers> {
+    const [seller] = await db.insert(bookSellers).values(data as any).returning();
     return seller;
   }
 
   // 📚 Book Orders CRUD methods
-  async getBookOrders(filters?: { status?: string; sellerId?: string; limit?: number; offset?: number }): Promise<BookOrder[]> {
+  async getBookOrders(filters?: { status?: string; sellerId?: string; limit?: number; offset?: number }): Promise<BookOrders[]> {
     let query = db.select().from(bookOrders);
     
     const conditions = [];
@@ -5393,17 +5401,17 @@ export class DatabaseStorage implements IStorage {
     return await (query.orderBy(desc(bookOrders.createdAt)).limit(limit).offset(offset) as any);
   }
 
-  async getBookOrder(id: string): Promise<BookOrder | undefined> {
+  async getBookOrder(id: string): Promise<BookOrders | undefined> {
     const [order] = await db.select().from(bookOrders).where(eq(bookOrders.id, id));
     return order || undefined;
   }
 
-  async createBookOrder(order: InsertBookOrder): Promise<BookOrder> {
-    const [newOrder] = await db.insert(bookOrders).values(order).returning();
+  async createBookOrder(order: InsertBookOrders): Promise<BookOrders> {
+    const [newOrder] = await db.insert(bookOrders).values(order as any).returning();
     return newOrder;
   }
 
-  async updateBookOrder(id: string, order: Partial<InsertBookOrder>): Promise<BookOrder | undefined> {
+  async updateBookOrder(id: string, order: Partial<InsertBookOrders>): Promise<BookOrders | undefined> {
     const [updated] = await db.update(bookOrders)
       .set({ ...order, updatedAt: new Date() })
       .where(eq(bookOrders.id, id))
@@ -5411,7 +5419,7 @@ export class DatabaseStorage implements IStorage {
     return updated || undefined;
   }
 
-  async updateBookOrderStatus(id: string, status: string): Promise<BookOrder | undefined> {
+  async updateBookOrderStatus(id: string, status: string): Promise<BookOrders | undefined> {
     const [updated] = await db.update(bookOrders)
       .set({ status: status as any, updatedAt: new Date() })
       .where(eq(bookOrders.id, id))
@@ -5419,7 +5427,7 @@ export class DatabaseStorage implements IStorage {
     return updated || undefined;
   }
 
-  async getBookOrdersBySellerId(sellerId: string, limit: number = 50): Promise<BookOrder[]> {
+  async getBookOrdersBySellerId(sellerId: string, limit: number = 50): Promise<BookOrders[]> {
     return await db
       .select()
       .from(bookOrders)
@@ -5470,7 +5478,7 @@ export class DatabaseStorage implements IStorage {
               })
               .where(
                 and(
-                  eq(bookSellerInventory.sellerId, bookOrder.sellerId),
+                  eq(bookSellerInventory.sellerId, bookOrder.sellerId!),
                   eq(bookSellerInventory.productId, item.productId)
                 )
               );
@@ -5487,7 +5495,7 @@ export class DatabaseStorage implements IStorage {
               })
               .where(
                 and(
-                  eq(bookSellerInventory.sellerId, bookOrder.sellerId),
+                  eq(bookSellerInventory.sellerId, bookOrder.sellerId!),
                   eq(bookSellerInventory.productId, item.productId)
                 )
               );
@@ -5503,7 +5511,7 @@ export class DatabaseStorage implements IStorage {
               })
               .where(
                 and(
-                  eq(bookSellerInventory.sellerId, bookOrder.sellerId),
+                  eq(bookSellerInventory.sellerId, bookOrder.sellerId!),
                   eq(bookSellerInventory.productId, item.productId)
                 )
               );
@@ -5521,7 +5529,7 @@ export class DatabaseStorage implements IStorage {
               })
               .where(
                 and(
-                  eq(bookSellerInventory.sellerId, bookOrder.sellerId),
+                  eq(bookSellerInventory.sellerId, bookOrder.sellerId!),
                   eq(bookSellerInventory.productId, item.productId)
                 )
               );
@@ -5765,7 +5773,7 @@ export class DatabaseStorage implements IStorage {
     }
   }
 
-  async updateSellerRating(sellerId: string, rating: number, feedback?: string): Promise<BookSeller | undefined> {
+  async updateSellerRating(sellerId: string, rating: number, feedback?: string): Promise<BookSellers | undefined> {
     try {
       // Get current seller data
       const [seller] = await db
@@ -5802,7 +5810,7 @@ export class DatabaseStorage implements IStorage {
     }
   }
 
-  async getBookOrdersBySellerAndStatus(sellerId: string, status: string): Promise<BookOrder[]> {
+  async getBookOrdersBySellerAndStatus(sellerId: string, status: string): Promise<BookOrders[]> {
     return await db
       .select()
       .from(bookOrders)
@@ -5823,7 +5831,7 @@ export class DatabaseStorage implements IStorage {
     return await this.updateSellerInventoryFromOrder(orderId, 'release');
   }
 
-  async getSellerInventoryBySellerId(sellerId: string): Promise<BookSellerInventory[]> {
+  async getSellerInventoryBySellerId(sellerId: string): Promise<BookSellerInventories[]> {
     return await db
       .select()
       .from(bookSellerInventory)
@@ -5836,7 +5844,7 @@ export class DatabaseStorage implements IStorage {
       .orderBy(desc(bookSellerInventory.updatedAt));
   }
 
-  async updateSellerPerformanceStats(sellerId: string, orderTotal: number, commission: number): Promise<BookSeller | undefined> {
+  async updateSellerPerformanceStats(sellerId: string, orderTotal: number, commission: number): Promise<BookSellers | undefined> {
     try {
       const [updatedSeller] = await db
         .update(bookSellers)
@@ -5860,7 +5868,7 @@ export class DatabaseStorage implements IStorage {
     categoryId?: string;
     trendDirection?: string;
     automationEnabled?: boolean;
-  }): Promise<MarketTrend[]> {
+  }): Promise<MarketTrends[]> {
     let query = db.select().from(marketTrends);
     
     const conditions = [];
@@ -5875,17 +5883,17 @@ export class DatabaseStorage implements IStorage {
     return await (query.orderBy(desc(marketTrends.trendScore)) as any);
   }
 
-  async getMarketTrendById(id: string): Promise<MarketTrend | undefined> {
+  async getMarketTrendById(id: string): Promise<MarketTrends | undefined> {
     const [trend] = await db.select().from(marketTrends).where(eq(marketTrends.id, id));
     return trend;
   }
 
-  async createMarketTrend(data: InsertMarketTrend): Promise<MarketTrend> {
-    const [trend] = await db.insert(marketTrends).values(data).returning();
+  async createMarketTrend(data: InsertMarketTrends): Promise<MarketTrends> {
+    const [trend] = await db.insert(marketTrends).values(data as any).returning();
     return trend;
   }
 
-  async updateMarketTrend(id: string, data: UpdateMarketTrend): Promise<MarketTrend | undefined> {
+  async updateMarketTrend(id: string, data: Partial<MarketTrends>): Promise<MarketTrends | undefined> {
     const [trend] = await db.update(marketTrends).set({ ...data, updatedAt: new Date() }).where(eq(marketTrends.id, id)).returning();
     return trend;
   }
@@ -5900,7 +5908,7 @@ export class DatabaseStorage implements IStorage {
     competitorType?: string;
     pricingStrategy?: string;
     isActive?: boolean;
-  }): Promise<CompetitorProfile[]> {
+  }): Promise<CompetitorProfiles[]> {
     let query = db.select().from(competitorProfiles);
     
     const conditions = [];
@@ -5915,17 +5923,17 @@ export class DatabaseStorage implements IStorage {
     return await (query.orderBy(desc(competitorProfiles.marketShare)) as any);
   }
 
-  async getCompetitorProfileById(id: string): Promise<CompetitorProfile | undefined> {
+  async getCompetitorProfileById(id: string): Promise<CompetitorProfiles | undefined> {
     const [profile] = await db.select().from(competitorProfiles).where(eq(competitorProfiles.id, id));
     return profile;
   }
 
-  async createCompetitorProfile(data: InsertCompetitorProfile): Promise<CompetitorProfile> {
-    const [profile] = await db.insert(competitorProfiles).values(data).returning();
+  async createCompetitorProfile(data: InsertCompetitorProfiles): Promise<CompetitorProfiles> {
+    const [profile] = await db.insert(competitorProfiles).values(data as any).returning();
     return profile;
   }
 
-  async updateCompetitorProfile(id: string, data: UpdateCompetitorProfile): Promise<CompetitorProfile | undefined> {
+  async updateCompetitorProfile(id: string, data: Partial<CompetitorProfiles>): Promise<CompetitorProfiles | undefined> {
     const [profile] = await db.update(competitorProfiles).set({ ...data, updatedAt: new Date() }).where(eq(competitorProfiles.id, id)).returning();
     return profile;
   }
@@ -5941,7 +5949,7 @@ export class DatabaseStorage implements IStorage {
     ruleType?: string;
     isActive?: boolean;
     autoApply?: boolean;
-  }): Promise<SeasonalRule[]> {
+  }): Promise<SeasonalRules[]> {
     let query = db.select().from(seasonalRules);
     
     const conditions = [];
@@ -5957,17 +5965,17 @@ export class DatabaseStorage implements IStorage {
     return await (query.orderBy(desc(seasonalRules.priority)) as any);
   }
 
-  async getSeasonalRuleById(id: string): Promise<SeasonalRule | undefined> {
+  async getSeasonalRuleById(id: string): Promise<SeasonalRules | undefined> {
     const [rule] = await db.select().from(seasonalRules).where(eq(seasonalRules.id, id));
     return rule;
   }
 
-  async createSeasonalRule(data: InsertSeasonalRule): Promise<SeasonalRule> {
-    const [rule] = await db.insert(seasonalRules).values(data).returning();
+  async createSeasonalRule(data: InsertSeasonalRules): Promise<SeasonalRules> {
+    const [rule] = await db.insert(seasonalRules).values(data as any).returning();
     return rule;
   }
 
-  async updateSeasonalRule(id: string, data: UpdateSeasonalRule): Promise<SeasonalRule | undefined> {
+  async updateSeasonalRule(id: string, data: Partial<SeasonalRules>): Promise<SeasonalRules | undefined> {
     const [rule] = await db.update(seasonalRules).set({ ...data, updatedAt: new Date() }).where(eq(seasonalRules.id, id)).returning();
     return rule;
   }
@@ -5977,7 +5985,7 @@ export class DatabaseStorage implements IStorage {
     return result.rowCount ? result.rowCount > 0 : false;
   }
 
-  async applySeasonalRule(id: string): Promise<SeasonalRule | undefined> {
+  async applySeasonalRule(id: string): Promise<SeasonalRules | undefined> {
     const [rule] = await db.update(seasonalRules).set({
       lastApplied: new Date(),
       timesApplied: sql`${seasonalRules.timesApplied} + 1`,
@@ -5992,7 +6000,7 @@ export class DatabaseStorage implements IStorage {
     strategyType?: string;
     isActive?: boolean;
     autoAdjustmentEnabled?: boolean;
-  }): Promise<PricingStrategy[]> {
+  }): Promise<PricingStrategies[]> {
     let query = db.select().from(pricingStrategies);
     
     const conditions = [];
@@ -6008,12 +6016,12 @@ export class DatabaseStorage implements IStorage {
     return await (query.orderBy(desc(pricingStrategies.profitabilityScore)) as any);
   }
 
-  async getPricingStrategyById(id: string): Promise<PricingStrategy | undefined> {
+  async getPricingStrategyById(id: string): Promise<PricingStrategies | undefined> {
     const [strategy] = await db.select().from(pricingStrategies).where(eq(pricingStrategies.id, id));
     return strategy;
   }
 
-  async getPricingStrategyBySellerId(sellerId: string): Promise<PricingStrategy | undefined> {
+  async getPricingStrategyBySellerId(sellerId: string): Promise<PricingStrategies | undefined> {
     const [strategy] = await db.select().from(pricingStrategies).where(
       and(
         eq(pricingStrategies.sellerId, sellerId),
@@ -6023,12 +6031,12 @@ export class DatabaseStorage implements IStorage {
     return strategy;
   }
 
-  async createPricingStrategy(data: InsertPricingStrategy): Promise<PricingStrategy> {
-    const [strategy] = await db.insert(pricingStrategies).values(data).returning();
+  async createPricingStrategy(data: InsertPricingStrategies): Promise<PricingStrategies> {
+    const [strategy] = await db.insert(pricingStrategies).values(data as any).returning();
     return strategy;
   }
 
-  async updatePricingStrategy(id: string, data: UpdatePricingStrategy): Promise<PricingStrategy | undefined> {
+  async updatePricingStrategy(id: string, data: Partial<PricingStrategies>): Promise<PricingStrategies | undefined> {
     const [strategy] = await db.update(pricingStrategies).set({ ...data, updatedAt: new Date() }).where(eq(pricingStrategies.id, id)).returning();
     return strategy;
   }
@@ -6038,7 +6046,7 @@ export class DatabaseStorage implements IStorage {
     return result.rowCount ? result.rowCount > 0 : false;
   }
 
-  async recordPricingAdjustment(id: string, priceChangePercent: number): Promise<PricingStrategy | undefined> {
+  async recordPricingAdjustment(id: string, priceChangePercent: number): Promise<PricingStrategies | undefined> {
     const [strategy] = await db.update(pricingStrategies).set({
       lastAdjusted: new Date(),
       avgPriceChangePercent: sql`(${pricingStrategies.avgPriceChangePercent} + ${priceChangePercent}) / 2`,
@@ -6048,7 +6056,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   // 🔔 Push Notification Subscription implementations
-  async getPushSubscriptionsByCustomer(customerId: string): Promise<PushSubscription[]> {
+  async getPushSubscriptionsByCustomer(customerId: string): Promise<PushSubscriptions[]> {
     return await db
       .select()
       .from(pushSubscriptions)
@@ -6060,7 +6068,7 @@ export class DatabaseStorage implements IStorage {
       );
   }
 
-  async getPushSubscription(id: string): Promise<PushSubscription | undefined> {
+  async getPushSubscription(id: string): Promise<PushSubscriptions | undefined> {
     const [subscription] = await db
       .select()
       .from(pushSubscriptions)
@@ -6068,7 +6076,7 @@ export class DatabaseStorage implements IStorage {
     return subscription || undefined;
   }
 
-  async getPushSubscriptionByEndpoint(endpoint: string): Promise<PushSubscription | undefined> {
+  async getPushSubscriptionByEndpoint(endpoint: string): Promise<PushSubscriptions | undefined> {
     const [subscription] = await db
       .select()
       .from(pushSubscriptions)
@@ -6076,15 +6084,15 @@ export class DatabaseStorage implements IStorage {
     return subscription || undefined;
   }
 
-  async createPushSubscription(subscription: InsertPushSubscription): Promise<PushSubscription> {
+  async createPushSubscription(subscription: InsertPushSubscriptions): Promise<PushSubscriptions> {
     const [newSubscription] = await db
       .insert(pushSubscriptions)
-      .values(subscription)
+      .values(subscription as any)
       .returning();
     return newSubscription;
   }
 
-  async updatePushSubscription(id: string, subscription: Partial<InsertPushSubscription>): Promise<PushSubscription | undefined> {
+  async updatePushSubscription(id: string, subscription: Partial<InsertPushSubscriptions>): Promise<PushSubscriptions | undefined> {
     const [updated] = await db
       .update(pushSubscriptions)
       .set({ ...subscription, updatedAt: new Date() })
@@ -6104,7 +6112,7 @@ export class DatabaseStorage implements IStorage {
   async getCarGroups(filters?: {
     groupType?: string;
     isActive?: boolean;
-  }): Promise<CarGroup[]> {
+  }): Promise<CarGroups[]> {
     let query = db.select().from(carGroups);
     
     const conditions = [];
@@ -6118,17 +6126,17 @@ export class DatabaseStorage implements IStorage {
     return await (query.orderBy(desc(carGroups.createdAt)) as any);
   }
 
-  async getCarGroupById(id: string): Promise<CarGroup | undefined> {
+  async getCarGroupById(id: string): Promise<CarGroups | undefined> {
     const [group] = await db.select().from(carGroups).where(eq(carGroups.id, id));
     return group;
   }
 
-  async createCarGroup(data: InsertCarGroup): Promise<CarGroup> {
-    const [group] = await db.insert(carGroups).values(data).returning();
+  async createCarGroup(data: InsertCarGroups): Promise<CarGroups> {
+    const [group] = await db.insert(carGroups).values(data as any).returning();
     return group;
   }
 
-  async updateCarGroup(id: string, data: Partial<InsertCarGroup>): Promise<CarGroup | undefined> {
+  async updateCarGroup(id: string, data: Partial<InsertCarGroups>): Promise<CarGroups | undefined> {
     const [group] = await db.update(carGroups)
       .set({ ...data, updatedAt: new Date() })
       .where(eq(carGroups.id, id))
@@ -6145,7 +6153,7 @@ export class DatabaseStorage implements IStorage {
   async getVehicleGroupAssignments(filters?: {
     vehicleId?: string;
     groupId?: string;
-  }): Promise<VehicleGroupAssignment[]> {
+  }): Promise<VehicleGroupAssignments[]> {
     let query = db.select().from(vehicleGroupAssignments);
     
     const conditions = [];
@@ -6159,8 +6167,8 @@ export class DatabaseStorage implements IStorage {
     return await (query.orderBy(desc(vehicleGroupAssignments.assignedAt)) as any);
   }
 
-  async assignVehicleToGroup(data: InsertVehicleGroupAssignment): Promise<VehicleGroupAssignment> {
-    const [assignment] = await db.insert(vehicleGroupAssignments).values(data).returning();
+  async assignVehicleToGroup(data: InsertVehicleGroupAssignments): Promise<VehicleGroupAssignments> {
+    const [assignment] = await db.insert(vehicleGroupAssignments).values(data as any).returning();
     return assignment;
   }
 
@@ -6300,7 +6308,7 @@ export class DatabaseStorage implements IStorage {
     membershipTier?: string; 
     limit?: number; 
     offset?: number 
-  }): Promise<Customer[]> {
+  }): Promise<Customers[]> {
     const conditions = [eq(customers.customerRole, 'vip')];
 
     if (filters?.status) {
@@ -6313,7 +6321,7 @@ export class DatabaseStorage implements IStorage {
           and(
             eq(customers.status, 'active'),
             sql`(${customers.limitsData}->>'suspended' IS NULL OR ${customers.limitsData}->>'suspended' != 'true')`
-          )
+          )!
         );
       } else {
         conditions.push(eq(customers.status, filters.status as any));
@@ -6387,7 +6395,12 @@ export class DatabaseStorage implements IStorage {
         count: sql<number>`count(*)::int`
       })
       .from(customers)
-      .where(eq(customers.customerRole, 'vip'))
+      .where(
+        and(
+          eq(customers.customerRole, 'vip'),
+          isNotNull(customers.membershipTier)
+        )
+      )
       .groupBy(customers.membershipTier);
 
     const [totalRevenueResult] = await db
@@ -6409,17 +6422,17 @@ export class DatabaseStorage implements IStorage {
       );
 
     return {
-      totalVIPs: totalVIPsResult?.count || 0,
-      pendingVIPs: pendingVIPsResult?.count || 0,
-      activeVIPs: activeVIPsResult?.count || 0,
-      suspendedVIPs: suspendedVIPsResult?.count || 0,
-      tierBreakdown: tierBreakdown || [],
+      totalVIPs: Number(totalVIPsResult?.count) || 0,
+      pendingVIPs: Number(pendingVIPsResult?.count) || 0,
+      activeVIPs: Number(activeVIPsResult?.count) || 0,
+      suspendedVIPs: Number(suspendedVIPsResult?.count) || 0,
+      tierBreakdown: tierBreakdown.filter(t => t.tier !== null).map(t => ({ tier: t.tier!, count: t.count })) || [],
       totalRevenue: Number(totalRevenueResult?.total || 0),
-      monthlyGrowth: monthlyGrowthResult?.count || 0
+      monthlyGrowth: Number(monthlyGrowthResult?.count) || 0
     };
   }
 
-  async approvePendingVIP(customerId: string, membershipTier?: string): Promise<Customer | undefined> {
+  async approvePendingVIP(customerId: string, membershipTier?: string): Promise<Customers | undefined> {
     const [updated] = await db
       .update(customers)
       .set({
@@ -6432,7 +6445,7 @@ export class DatabaseStorage implements IStorage {
     return updated || undefined;
   }
 
-  async toggleVIPStatus(customerId: string, status: 'active' | 'suspended'): Promise<Customer | undefined> {
+  async toggleVIPStatus(customerId: string, status: 'active' | 'suspended'): Promise<Customers | undefined> {
     const [updated] = await db
       .update(customers)
       .set({
@@ -6445,7 +6458,7 @@ export class DatabaseStorage implements IStorage {
     return updated || undefined;
   }
 
-  async rejectVIPApplication(customerId: string, reason?: string): Promise<Customer | undefined> {
+  async rejectVIPApplication(customerId: string, reason?: string): Promise<Customers | undefined> {
     const [updated] = await db
       .update(customers)
       .set({
@@ -6457,7 +6470,7 @@ export class DatabaseStorage implements IStorage {
     return updated || undefined;
   }
 
-  async getVIPProducts(): Promise<Product[]> {
+  async getVIPProducts(): Promise<Products[]> {
     return await db
       .select()
       .from(products)
@@ -6472,7 +6485,7 @@ export class DatabaseStorage implements IStorage {
         isVipOnly,
         requiredVipTier: requiredVipTier || null
       })
-      .where(eq(products.category, categoryId))
+      .where(eq(products.categoryId, categoryId))
       .returning({ id: products.id });
     
     return { updatedCount: result.length };
@@ -6483,7 +6496,7 @@ export class DatabaseStorage implements IStorage {
     status?: string; 
     limit?: number; 
     offset?: number 
-  }): Promise<Customer[]> {
+  }): Promise<Customers[]> {
     const conditions = [eq(customers.customerRole, 'driver')];
 
     if (filters?.status) {
@@ -6496,7 +6509,7 @@ export class DatabaseStorage implements IStorage {
           and(
             eq(customers.status, 'active'),
             sql`(${customers.limitsData}->>'suspended' IS NULL OR ${customers.limitsData}->>'suspended' != 'true')`
-          )
+          )!
         );
       } else {
         conditions.push(eq(customers.status, filters.status as any));
@@ -6564,20 +6577,20 @@ export class DatabaseStorage implements IStorage {
       .from(trips);
 
     const [totalRevenueResult] = await db
-      .select({ total: sql`COALESCE(sum(${trips.totalCost}), 0)::numeric` })
+      .select({ total: sql`COALESCE(sum(${trips.expenses}), 0)::numeric` })
       .from(trips);
 
     return {
-      totalDrivers: totalDriversResult?.count || 0,
-      pendingDrivers: pendingDriversResult?.count || 0,
-      activeDrivers: activeDriversResult?.count || 0,
-      suspendedDrivers: suspendedDriversResult?.count || 0,
-      totalDeliveries: totalDeliveriesResult?.count || 0,
+      totalDrivers: Number(totalDriversResult?.count) || 0,
+      pendingDrivers: Number(pendingDriversResult?.count) || 0,
+      activeDrivers: Number(activeDriversResult?.count) || 0,
+      suspendedDrivers: Number(suspendedDriversResult?.count) || 0,
+      totalDeliveries: Number(totalDeliveriesResult?.count) || 0,
       totalRevenue: Number(totalRevenueResult?.total || 0)
     };
   }
 
-  async approvePendingDriver(customerId: string): Promise<Customer | undefined> {
+  async approvePendingDriver(customerId: string): Promise<Customers | undefined> {
     const [updated] = await db
       .update(customers)
       .set({
@@ -6589,7 +6602,7 @@ export class DatabaseStorage implements IStorage {
     return updated || undefined;
   }
 
-  async toggleDriverStatus(customerId: string, status: 'active' | 'suspended'): Promise<Customer | undefined> {
+  async toggleDriverStatus(customerId: string, status: 'active' | 'suspended'): Promise<Customers | undefined> {
     const [updated] = await db
       .update(customers)
       .set({
@@ -6602,7 +6615,7 @@ export class DatabaseStorage implements IStorage {
     return updated || undefined;
   }
 
-  async rejectDriverApplication(customerId: string, reason?: string): Promise<Customer | undefined> {
+  async rejectDriverApplication(customerId: string, reason?: string): Promise<Customers | undefined> {
     const [updated] = await db
       .update(customers)
       .set({
@@ -6619,7 +6632,7 @@ export class DatabaseStorage implements IStorage {
     status?: string; 
     limit?: number; 
     offset?: number 
-  }): Promise<Customer[]> {
+  }): Promise<Customers[]> {
     const conditions = [eq(customers.isAffiliate, true)];
 
     if (filters?.status) {
@@ -6680,14 +6693,14 @@ export class DatabaseStorage implements IStorage {
       );
 
     return {
-      totalAffiliates: totalAffiliatesResult?.count || 0,
-      pendingAffiliates: pendingAffiliatesResult?.count || 0,
-      activeAffiliates: activeAffiliatesResult?.count || 0,
-      suspendedAffiliates: suspendedAffiliatesResult?.count || 0
+      totalAffiliates: Number(totalAffiliatesResult?.count) || 0,
+      pendingAffiliates: Number(pendingAffiliatesResult?.count) || 0,
+      activeAffiliates: Number(activeAffiliatesResult?.count) || 0,
+      suspendedAffiliates: Number(suspendedAffiliatesResult?.count) || 0
     };
   }
 
-  async approvePendingAffiliate(customerId: string, commissionRate?: string): Promise<Customer | undefined> {
+  async approvePendingAffiliate(customerId: string, commissionRate?: string): Promise<Customers | undefined> {
     const [updated] = await db
       .update(customers)
       .set({
@@ -6700,7 +6713,7 @@ export class DatabaseStorage implements IStorage {
     return updated || undefined;
   }
 
-  async toggleAffiliateStatus(customerId: string, status: 'active' | 'suspended'): Promise<Customer | undefined> {
+  async toggleAffiliateStatus(customerId: string, status: 'active' | 'suspended'): Promise<Customers | undefined> {
     const [updated] = await db
       .update(customers)
       .set({
@@ -6711,7 +6724,7 @@ export class DatabaseStorage implements IStorage {
     return updated || undefined;
   }
 
-  async rejectAffiliateApplication(customerId: string, reason?: string): Promise<Customer | undefined> {
+  async rejectAffiliateApplication(customerId: string, reason?: string): Promise<Customers | undefined> {
     const [updated] = await db
       .update(customers)
       .set({
@@ -6723,47 +6736,12 @@ export class DatabaseStorage implements IStorage {
     return updated || undefined;
   }
 
-  // 🏪 Shop Settings methods implementation
-  async getShopSettings(): Promise<ShopSettings | undefined> {
-    // Get the default shop settings (isDefault=true)
-    const [settings] = await db
-      .select()
-      .from(shopSettings)
-      .where(eq(shopSettings.isDefault, true))
-      .limit(1);
-    return settings || undefined;
-  }
-
-  async getShopSettingsById(id: string): Promise<ShopSettings | undefined> {
-    const [settings] = await db
-      .select()
-      .from(shopSettings)
-      .where(eq(shopSettings.id, id));
-    return settings || undefined;
-  }
-
-  async createShopSettings(data: InsertShopSettings): Promise<ShopSettings> {
-    const [settings] = await db
-      .insert(shopSettings)
-      .values(data)
-      .returning();
-    return settings;
-  }
-
-  async updateShopSettings(id: string, data: Partial<InsertShopSettings>): Promise<ShopSettings | undefined> {
-    const [settings] = await db
-      .update(shopSettings)
-      .set({ ...data, updatedAt: new Date() })
-      .where(eq(shopSettings.id, id))
-      .returning();
-    return settings || undefined;
-  }
 
   // 📦 Affiliate Product Request Methods
-  async createAffiliateProductRequest(data: InsertAffiliateProductRequest): Promise<AffiliateProductRequest> {
+  async createAffiliateProductRequest(data: InsertAffiliateProductRequests): Promise<AffiliateProductRequests> {
     const [request] = await db
       .insert(affiliateProductRequests)
-      .values(data)
+      .values(data as any)
       .returning();
     return request;
   }
@@ -6772,7 +6750,7 @@ export class DatabaseStorage implements IStorage {
     status?: string;
     limit?: number;
     offset?: number;
-  }): Promise<AffiliateProductRequest[]> {
+  }): Promise<AffiliateProductRequests[]> {
     let query = db
       .select()
       .from(affiliateProductRequests)
@@ -6837,7 +6815,7 @@ export class DatabaseStorage implements IStorage {
       .$dynamic();
 
     if (conditions.length > 0) {
-      query = query.where(and(...conditions));
+      query = (query as any).where(and(...conditions));
     }
 
     query = query
@@ -6848,7 +6826,7 @@ export class DatabaseStorage implements IStorage {
     return await query;
   }
 
-  async getAffiliateProductRequest(id: string): Promise<AffiliateProductRequest | undefined> {
+  async getAffiliateProductRequest(id: string): Promise<AffiliateProductRequests | undefined> {
     const [request] = await db
       .select()
       .from(affiliateProductRequests)
@@ -6859,8 +6837,8 @@ export class DatabaseStorage implements IStorage {
 
   async updateAffiliateProductRequest(
     id: string, 
-    data: UpdateAffiliateProductRequest
-  ): Promise<AffiliateProductRequest | undefined> {
+    data: Partial<AffiliateProductRequests>
+  ): Promise<AffiliateProductRequests | undefined> {
     const [request] = await db
       .update(affiliateProductRequests)
       .set({ ...data, updatedAt: new Date() })
@@ -6870,10 +6848,10 @@ export class DatabaseStorage implements IStorage {
   }
 
   // 📦 Affiliate Product Assignment Methods
-  async createAffiliateProductAssignment(data: InsertAffiliateProductAssignment): Promise<AffiliateProductAssignment> {
+  async createAffiliateProductAssignment(data: InsertAffiliateProductAssignments): Promise<AffiliateProductAssignments> {
     const [assignment] = await db
       .insert(affiliateProductAssignments)
-      .values(data)
+      .values(data as any)
       .returning();
     return assignment;
   }
@@ -6932,14 +6910,14 @@ export class DatabaseStorage implements IStorage {
     return result.length > 0;
   }
 
-  async getDefaultAffiliateAssignments(): Promise<AffiliateProductAssignment[]> {
+  async getDefaultAffiliateAssignments(): Promise<AffiliateProductAssignments[]> {
     return await db
       .select()
       .from(affiliateProductAssignments)
       .where(eq(affiliateProductAssignments.isDefaultAssignment, true));
   }
 
-  async getBulkAffiliateAssignments(affiliateIds: string[], productIds: string[]): Promise<AffiliateProductAssignment[]> {
+  async getBulkAffiliateAssignments(affiliateIds: string[], productIds: string[]): Promise<AffiliateProductAssignments[]> {
     if (affiliateIds.length === 0 || productIds.length === 0) {
       return [];
     }
@@ -6956,17 +6934,17 @@ export class DatabaseStorage implements IStorage {
   }
 
   // 🌐 IP Pool Management Methods
-  async createIpPool(data: InsertIpPool): Promise<IpPool> {
-    const [pool] = await db.insert(ipPools).values(data).returning();
+  async createIpPool(data: InsertIpPools): Promise<IpPools> {
+    const [pool] = await db.insert(ipPools).values(data as any).returning();
     return pool;
   }
 
-  async getIpPool(id: string): Promise<IpPool | undefined> {
-    const [pool] = await db.select().from(ipPools).where(eq(ipPools.id, id));
+  async getIpPool(id: string): Promise<IpPools | undefined> {
+    const [pool] = await db.select().from(ipPools).where(eq(ipPools.id, parseInt(id)));
     return pool;
   }
 
-  async getIpPools(filters?: { type?: string; status?: string; isEnabled?: boolean }): Promise<IpPool[]> {
+  async getIpPools(filters?: { type?: string; status?: string; isEnabled?: boolean }): Promise<IpPools[]> {
     let query = db.select().from(ipPools).$dynamic();
     
     const conditions = [];
@@ -6975,77 +6953,87 @@ export class DatabaseStorage implements IStorage {
     if (filters?.isEnabled !== undefined) conditions.push(eq(ipPools.isEnabled, filters.isEnabled));
     
     if (conditions.length > 0) {
-      query = query.where(and(...conditions));
+      query = (query as any).where(and(...conditions));
     }
     
     return await query.orderBy(desc(ipPools.priority), desc(ipPools.createdAt));
   }
 
-  async updateIpPool(id: string, data: UpdateIpPool): Promise<IpPool | undefined> {
+  async updateIpPool(id: string, data: Partial<IpPools>): Promise<IpPools | undefined> {
     const [updated] = await db
       .update(ipPools)
       .set({ ...data, updatedAt: new Date() })
-      .where(eq(ipPools.id, id))
+      .where(eq(ipPools.id, parseInt(id)))
       .returning();
     return updated;
   }
 
   async deleteIpPool(id: string): Promise<boolean> {
-    const result = await db.delete(ipPools).where(eq(ipPools.id, id)).returning();
+    const result = await db.delete(ipPools).where(eq(ipPools.id, parseInt(id))).returning();
     return result.length > 0;
   }
 
   // IP Pool Session Methods
-  async createIpPoolSession(data: InsertIpPoolSession): Promise<IpPoolSession> {
-    const [session] = await db.insert(ipPoolSessions).values(data).returning();
+  async createIpPoolSession(data: InsertIpPoolSessions): Promise<IpPoolSessions> {
+    const [session] = await db.insert(ipPoolSessions).values(data as any).returning();
     return session;
   }
 
-  async getIpPoolSession(id: string): Promise<IpPoolSession | undefined> {
-    const [session] = await db.select().from(ipPoolSessions).where(eq(ipPoolSessions.id, id));
+  async getIpPoolSession(id: string): Promise<IpPoolSessions | undefined> {
+    const [session] = await db.select().from(ipPoolSessions).where(eq(ipPoolSessions.id, parseInt(id)));
     return session;
   }
 
-  async getIpPoolSessionsByPoolId(poolId: string): Promise<IpPoolSession[]> {
+  async getIpPoolSessionsByPoolId(poolId: string): Promise<IpPoolSessions[]> {
     return await db
       .select()
       .from(ipPoolSessions)
-      .where(eq(ipPoolSessions.ipPoolId, poolId))
-      .orderBy(desc(ipPoolSessions.startedAt));
+      .where(eq(ipPoolSessions.ipPoolId, parseInt(poolId)))
+      .orderBy(desc(ipPoolSessions.sessionStart));
   }
 
-  async updateIpPoolSession(id: string, data: UpdateIpPoolSession): Promise<IpPoolSession | undefined> {
+  async updateIpPoolSession(id: string, data: Partial<IpPoolSessions>): Promise<IpPoolSessions | undefined> {
     const [updated] = await db
       .update(ipPoolSessions)
       .set(data)
-      .where(eq(ipPoolSessions.id, id))
+      .where(eq(ipPoolSessions.id, parseInt(id)))
       .returning();
     return updated;
   }
 
   // IP Rotation Log Methods
-  async createIpRotationLog(data: InsertIpRotationLog): Promise<IpRotationLog> {
-    const [log] = await db.insert(ipRotationLogs).values(data).returning();
+  async createIpRotationLog(data: InsertIpRotationLogs): Promise<IpRotationLogs> {
+    const [log] = await db.insert(ipRotationLogs).values(data as any).returning();
     return log;
   }
 
-  async getIpRotationLogs(poolId?: string, limit: number = 100): Promise<IpRotationLog[]> {
+  async getIpRotationLogs(poolId?: string, limit: number = 100): Promise<IpRotationLogs[]> {
     let query = db.select().from(ipRotationLogs).$dynamic();
     
     if (poolId) {
-      query = query.where(eq(ipRotationLogs.ipPoolId, poolId));
+      query = query.where(eq(ipRotationLogs.ipPoolId, parseInt(poolId)));
     }
     
     return await query.orderBy(desc(ipRotationLogs.createdAt)).limit(limit);
   }
 
+  // Missing methods
+  async getUserById(id: string): Promise<Users | undefined> {
+    return await this.getUser(id);
+  }
+
+  async getPageTag(id: string): Promise<any> {
+    // Placeholder implementation
+    return null;
+  }
+
   // Affiliate Order Methods
-  async createAffiliateOrder(data: InsertAffiliateOrder): Promise<AffiliateOrder> {
-    const [order] = await db.insert(affiliateOrders).values(data).returning();
+  async createAffiliateOrder(data: InsertAffiliateOrders): Promise<AffiliateOrders> {
+    const [order] = await db.insert(affiliateOrders).values(data as any).returning();
     return order;
   }
 
-  async getAffiliateOrdersByAffiliateId(affiliateId: string): Promise<AffiliateOrder[]> {
+  async getAffiliateOrdersByAffiliateId(affiliateId: string): Promise<AffiliateOrders[]> {
     return await db
       .select()
       .from(affiliateOrders)
@@ -7053,7 +7041,7 @@ export class DatabaseStorage implements IStorage {
       .orderBy(desc(affiliateOrders.createdAt));
   }
 
-  async getAffiliateOrderByOrderId(orderId: string): Promise<AffiliateOrder | undefined> {
+  async getAffiliateOrderByOrderId(orderId: string): Promise<AffiliateOrders | undefined> {
     const [order] = await db
       .select()
       .from(affiliateOrders)
@@ -7063,8 +7051,8 @@ export class DatabaseStorage implements IStorage {
   }
 
   // Affiliate Share Log Methods
-  async createAffiliateShareLog(data: InsertAffiliateShareLog): Promise<AffiliateShareLog> {
-    const [log] = await db.insert(affiliateShareLogs).values(data).returning();
+  async createAffiliateShareLog(data: InsertAffiliateShareLogs): Promise<AffiliateShareLogs> {
+    const [log] = await db.insert(affiliateShareLogs).values(data as any).returning();
     return log;
   }
 
@@ -7072,7 +7060,7 @@ export class DatabaseStorage implements IStorage {
     affiliateId: string,
     startDate: Date,
     endDate: Date
-  ): Promise<AffiliateShareLog[]> {
+  ): Promise<AffiliateShareLogs[]> {
     return await db
       .select()
       .from(affiliateShareLogs)
@@ -7086,7 +7074,7 @@ export class DatabaseStorage implements IStorage {
       .orderBy(desc(affiliateShareLogs.sharedAt));
   }
 
-  async getAffiliateShareLogsByAffiliateId(affiliateId: string): Promise<AffiliateShareLog[]> {
+  async getAffiliateShareLogsByAffiliateId(affiliateId: string): Promise<AffiliateShareLogs[]> {
     return await db
       .select()
       .from(affiliateShareLogs)

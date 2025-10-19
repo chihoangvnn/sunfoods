@@ -139,11 +139,11 @@ class ViettelPostAPI {
 
       const result = await response.json();
       
-      if (result.status !== 200) {
-        throw new Error(`VTP Authentication failed: ${result.message}`);
+      if ((result as any).status !== 200) {
+        throw new Error(`VTP Authentication failed: ${(result as any).message}`);
       }
 
-      this.token = result.data.token;
+      this.token = (result as any).data.token;
       this.tokenExpiry = new Date(Date.now() + 24 * 60 * 60 * 1000); // Token hết hạn sau 24h
       
       return this.token!;
@@ -179,11 +179,11 @@ class ViettelPostAPI {
         body: JSON.stringify(orderData),
       });
 
-      const result: VTPOrderResponse = await response.json();
+      const result = await response.json() as any;
       
-      if (result.status !== 200) {
+      if ((result as any).status !== 200) {
         console.error('VTP Create Order Error:', result);
-        throw new Error(`VTP Create Order failed: ${result.message || result.error}`);
+        throw new Error(`VTP Create Order failed: ${(result as any).message || (result as any).error}`);
       }
 
       return result;
@@ -211,7 +211,7 @@ class ViettelPostAPI {
         }),
       });
 
-      const result: VTPTrackingResponse = await response.json();
+      const result = await response.json() as any;
       
       return result;
     } catch (error) {
@@ -239,7 +239,7 @@ class ViettelPostAPI {
         }),
       });
 
-      const result: VTPOrderResponse = await response.json();
+      const result = await response.json() as any;
       
       return result;
     } catch (error) {
@@ -264,7 +264,7 @@ class ViettelPostAPI {
         body: JSON.stringify({}),
       });
 
-      const result: VTPServiceResponse = await response.json();
+      const result = await response.json() as any;
       
       return result;
     } catch (error) {
@@ -289,7 +289,7 @@ class ViettelPostAPI {
         body: JSON.stringify({ PROVINCE_ID: -1 }),
       });
 
-      const result: VTPLocationResponse = await response.json();
+      const result = await response.json() as any;
       
       return result;
     } catch (error) {
@@ -314,7 +314,7 @@ class ViettelPostAPI {
         body: JSON.stringify({ PROVINCE_ID: provinceId }),
       });
 
-      const result: VTPLocationResponse = await response.json();
+      const result = await response.json() as any;
       
       return result;
     } catch (error) {
@@ -339,7 +339,7 @@ class ViettelPostAPI {
         body: JSON.stringify({ DISTRICT_ID: districtId }),
       });
 
-      const result: VTPLocationResponse = await response.json();
+      const result = await response.json() as any;
       
       return result;
     } catch (error) {

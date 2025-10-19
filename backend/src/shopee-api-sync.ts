@@ -831,7 +831,7 @@ export class ShopeeApiSyncService {
             console.log(`🏪 Shopee wins: Recent sync detected, using marketplace data`);
           } else {
             // Old sync - check which is more recent based on business logic
-            const localIsNewer = localProduct.updatedAt > (localProduct.lastSyncAt || new Date(0));
+            const localIsNewer = (localProduct.updatedAt || new Date(0)) > (localProduct.lastSyncAt || new Date(0));
             
             if (localIsNewer) {
               // Local changes are newer - push to Shopee

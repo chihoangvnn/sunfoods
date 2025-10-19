@@ -55,7 +55,7 @@ export async function autoDeductDeposit(vendorOrderId: string): Promise<{
         throw new Error('Vendor not found');
       }
 
-      const commissionAmount = parseFloat(vendorOrder.commissionAmount.toString());
+      const commissionAmount = parseFloat((vendorOrder.commissionAmount || 0).toString());
       const currentBalance = parseFloat(vendor.depositBalance.toString());
 
       // 4. Validate balance inside transaction

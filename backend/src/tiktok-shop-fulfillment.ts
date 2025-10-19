@@ -89,15 +89,15 @@ class TikTokShopFulfillmentService {
         id: order.id,
         orderId: order.id,
         orderNumber: order.orderNumber,
-        customerName: order.customerInfo.name,
-        status: order.fulfillmentStatus || 'pending',
+        customerName: (order.customerInfo as any).name,
+        status: (order.fulfillmentStatus || 'pending') as 'pending' | 'processing' | 'shipped' | 'delivered' | 'failed' | 'ready_to_ship',
         priority,
-        items: order.items.map(item => ({
+        items: (order.items as any[]).map((item: any) => ({
           productName: item.name,
           quantity: item.quantity,
           sku: item.sku
         })),
-        shippingAddress: order.customerInfo.shippingAddress,
+        shippingAddress: (order.customerInfo as any).shippingAddress,
         totalAmount: parseFloat(order.totalAmount.toString()),
         createdAt: order.orderDate,
         dueDate

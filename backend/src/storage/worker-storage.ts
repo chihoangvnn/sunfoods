@@ -63,7 +63,7 @@ class WorkerStorage {
     }
 
     return workers.filter(worker => {
-      if (filters.platform && !worker.platforms.includes(filters.platform)) {
+      if (filters.platform && !(worker.platforms as string[]).includes(filters.platform)) {
         return false;
       }
       if (filters.region && worker.region !== filters.region) {

@@ -33,9 +33,9 @@ export const accountGroups = pgTable("account_groups", {
   isActive: boolean("is_active").default(true),
   formulaId: varchar("formula_id"),
   totalPosts: integer("total_posts").default(0),
-  lastPostAt: timestamp("last_post_at", { mode: 'string' }),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  lastPostAt: timestamp("last_post_at", { mode: 'date' }),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
 });
 
 export const admins = pgTable("admins", {
@@ -45,9 +45,9 @@ export const admins = pgTable("admins", {
   name: text().notNull(),
   role: text().default('staff').notNull(),
   isActive: boolean("is_active").default(true).notNull(),
-  lastLoginAt: timestamp("last_login_at", { mode: 'string' }),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  lastLoginAt: timestamp("last_login_at", { mode: 'date' }),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
 }, (table) => [
   unique("admins_email_key").on(table.email),
 ]);
@@ -64,8 +64,8 @@ export const affiliateClicks = pgTable("affiliate_clicks", {
   converted: boolean().default(false).notNull(),
   orderId: varchar("order_id"),
   conversionValue: numeric("conversion_value", { precision: 15, scale: 2 }),
-  clickedAt: timestamp("clicked_at", { mode: 'string' }).defaultNow().notNull(),
-  convertedAt: timestamp("converted_at", { mode: 'string' }),
+  clickedAt: timestamp("clicked_at", { mode: 'date' }).defaultNow().notNull(),
+  convertedAt: timestamp("converted_at", { mode: 'date' }),
 });
 
 export const affiliateLandingPages = pgTable("affiliate_landing_pages", {
@@ -92,8 +92,8 @@ export const affiliateLandingPages = pgTable("affiliate_landing_pages", {
   totalRevenue: numeric("total_revenue", { precision: 15, scale: 2 }).default(0.00),
   conversionRate: numeric("conversion_rate", { precision: 5, scale: 2 }).default(0.00),
   isActive: boolean("is_active").default(true).notNull(),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow().notNull(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow().notNull(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow().notNull(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow().notNull(),
 }, (table) => [
   unique("affiliate_landing_pages_slug_key").on(table.slug),
 ]);
@@ -111,9 +111,9 @@ export const affiliateProductAssignments = pgTable("affiliate_product_assignment
   totalSales: integer("total_sales").default(0).notNull(),
   totalCommission: numeric("total_commission", { precision: 15, scale: 2 }).default(0).notNull(),
   assignedBy: varchar("assigned_by"),
-  assignedAt: timestamp("assigned_at", { mode: 'string' }).defaultNow(),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  assignedAt: timestamp("assigned_at", { mode: 'date' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
   isDefaultAssignment: boolean("is_default_assignment").default(false).notNull(),
 });
 
@@ -131,9 +131,115 @@ export const affiliateProductRequests = pgTable("affiliate_product_requests", {
   approvedProductId: varchar("approved_product_id"),
   approvedCommissionRate: numeric("approved_commission_rate", { precision: 5, scale: 2 }),
   reviewedBy: varchar("reviewed_by"),
-  reviewedAt: timestamp("reviewed_at", { mode: 'string' }),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  reviewedAt: timestamp("reviewed_at", { mode: 'date' }),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
+});
+
+export const affiliateOrders = pgTable("affiliate_orders", {
+  id: varchar().default(sql`gen_random_uuid()`).primaryKey(),
+  affiliateId: varchar("affiliate_id").notNull(),
+  orderId: varchar("order_id").notNull(),
+  commissionAmount: numeric("commission_amount", { precision: 15, scale: 2 }).notNull(),
+  commissionRate: numeric("commission_rate", { precision: 5, scale: 2 }).notNull(),
+  status: text().default('pending').notNull(),
+  paidAt: timestamp("paid_at", { mode: 'date' }),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
+});
+
+export const affiliateShareLogs = pgTable("affiliate_share_logs", {
+  id: varchar().default(sql`gen_random_uuid()`).primaryKey(),
+  affiliateId: varchar("affiliate_id").notNull(),
+  platform: text().notNull(),
+  contentId: varchar("content_id"),
+  shareUrl: text("share_url"),
+  sharedAt: timestamp("shared_at", { mode: 'date' }).defaultNow(),
+  clicks: integer().default(0).notNull(),
+  conversions: integer().default(0).notNull(),
+  revenue: numeric({ precision: 15, scale: 2 }).default(0).notNull(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
+});
+
+export const abebooksSearchHistory = pgTable("abebooks_search_history", {
+  id: varchar().default(sql`gen_random_uuid()`).primaryKey(),
+  accountId: varchar("account_id").notNull(),
+  searchQuery: text("search_query").notNull(),
+  searchResults: integer("search_results").default(0).notNull(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+});
+
+export const abebooksAccounts = pgTable("abebooks_accounts", {
+  id: varchar().default(sql`gen_random_uuid()`).primaryKey(),
+  username: varchar().notNull(),
+  email: varchar().notNull(),
+  requestsUsed: integer("requests_used").default(0).notNull(),
+  isDefault: boolean("is_default").default(false).notNull(),
+  lastUsedAt: timestamp("last_used_at", { mode: 'date' }),
+  status: text().default('active').notNull(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
+});
+
+export const abebooksListings = pgTable("abebooks_listings", {
+  id: varchar().default(sql`gen_random_uuid()`).primaryKey(),
+  accountId: varchar("account_id").notNull(),
+  title: text().notNull(),
+  author: text(),
+  isbn: varchar(),
+  bookIsbn: varchar("book_isbn"),
+  price: numeric({ precision: 10, scale: 2 }),
+  condition: text(),
+  description: text(),
+  status: text().default('active').notNull(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
+});
+
+export const queueAutoFillSettings = pgTable("queue_auto_fill_settings", {
+  id: varchar().default(sql`gen_random_uuid()`).primaryKey(),
+  queueId: varchar("queue_id").notNull(),
+  autoFillEnabled: boolean("auto_fill_enabled").default(false).notNull(),
+  fillInterval: integer("fill_interval").default(300).notNull(),
+  maxFillCount: integer("max_fill_count").default(10).notNull(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
+});
+
+export const groupAccounts = pgTable("group_accounts", {
+  id: varchar().default(sql`gen_random_uuid()`).primaryKey(),
+  groupId: varchar("group_id").notNull(),
+  accountId: varchar("account_id").notNull(),
+  socialAccountId: varchar("social_account_id"),
+  role: text().default('member').notNull(),
+  isActive: boolean("is_active").default(true).notNull(),
+  joinedAt: timestamp("joined_at", { mode: 'date' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
+});
+
+export const productFAQs = pgTable("product_faqs", {
+  id: varchar().default(sql`gen_random_uuid()`).primaryKey(),
+  productId: varchar("product_id").notNull(),
+  question: text().notNull(),
+  answer: text().notNull(),
+  sortOrder: integer("sort_order").default(0).notNull(),
+  isActive: boolean("is_active").default(true).notNull(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
+});
+
+export const vendorPushSubscriptions = pgTable("vendor_push_subscriptions", {
+  id: varchar().default(sql`gen_random_uuid()`).primaryKey(),
+  vendorId: varchar("vendor_id").notNull(),
+  endpoint: text().notNull(),
+  p256dhKey: text("p256dh_key").notNull(),
+  authKey: text("auth_key").notNull(),
+  isActive: boolean("is_active").default(true).notNull(),
+  lastNotifiedAt: timestamp("last_notified_at", { mode: 'date' }),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
 });
 
 export const apiConfigurations = pgTable("api_configurations", {
@@ -154,16 +260,16 @@ export const apiConfigurations = pgTable("api_configurations", {
   accessCount: integer("access_count").default(0).notNull(),
   errorCount: integer("error_count").default(0).notNull(),
   avgResponseTime: numeric("avg_response_time", { precision: 10, scale: 3 }).default(0),
-  lastAccessed: timestamp("last_accessed", { mode: 'string' }),
-  lastToggled: timestamp("last_toggled", { mode: 'string' }),
-  lastError: timestamp("last_error", { mode: 'string' }),
+  lastAccessed: timestamp("last_accessed", { mode: 'date' }),
+  lastToggled: timestamp("last_toggled", { mode: 'date' }),
+  lastError: timestamp("last_error", { mode: 'date' }),
   tags: jsonb().default([]),
   priority: text().default('normal').notNull(),
   owner: text(),
   requiresAuth: boolean("requires_auth").default(true).notNull(),
   adminOnly: boolean("admin_only").default(false).notNull(),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
 }, (table) => [
   unique("api_configurations_endpoint_method_unique").on(table.endpoint, table.method),
 ]);
@@ -174,8 +280,8 @@ export const authUsers = pgTable("auth_users", {
   firstName: varchar("first_name"),
   lastName: varchar("last_name"),
   profileImageUrl: varchar("profile_image_url"),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
   provider: text().default('replit'),
 }, (table) => [
   unique("auth_users_email_key").on(table.email),
@@ -197,24 +303,24 @@ export const bookAnalytics = pgTable("book_analytics", {
   averagePrice: numeric("average_price", { precision: 10, scale: 2 }),
   totalRatings: integer("total_ratings").default(0),
   averageRating: numeric("average_rating", { precision: 3, scale: 2 }),
-  lastViewedAt: timestamp("last_viewed_at", { mode: 'string' }),
-  lastPurchasedAt: timestamp("last_purchased_at", { mode: 'string' }),
-  analyticsDate: timestamp("analytics_date", { mode: 'string' }).defaultNow(),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  lastViewedAt: timestamp("last_viewed_at", { mode: 'date' }),
+  lastPurchasedAt: timestamp("last_purchased_at", { mode: 'date' }),
+  analyticsDate: timestamp("analytics_date", { mode: 'date' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
 });
 
 export const bookCampaignRecipients = pgTable("book_campaign_recipients", {
   id: varchar().default(sql`gen_random_uuid()`).primaryKey(),
   campaignId: varchar("campaign_id").notNull(),
   customerId: varchar("customer_id").notNull(),
-  sentAt: timestamp("sent_at", { mode: 'string' }),
-  openedAt: timestamp("opened_at", { mode: 'string' }),
-  clickedAt: timestamp("clicked_at", { mode: 'string' }),
-  convertedAt: timestamp("converted_at", { mode: 'string' }),
+  sentAt: timestamp("sent_at", { mode: 'date' }),
+  openedAt: timestamp("opened_at", { mode: 'date' }),
+  clickedAt: timestamp("clicked_at", { mode: 'date' }),
+  convertedAt: timestamp("converted_at", { mode: 'date' }),
   emailAddress: text("email_address").notNull(),
   deliveryStatus: text("delivery_status").default('pending').notNull(),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
 }, (table) => [
   unique("book_campaign_recipients_campaign_id_customer_id_key").on(table.campaignId, table.customerId),
 ]);
@@ -236,8 +342,8 @@ export const bookCategories = pgTable("book_categories", {
   isFeatured: boolean("is_featured").default(false),
   metaTitle: varchar("meta_title"),
   metaDescription: text("meta_description"),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
 });
 
 export const bookCategoryAssignments = pgTable("book_category_assignments", {
@@ -245,12 +351,12 @@ export const bookCategoryAssignments = pgTable("book_category_assignments", {
   bookIsbn: varchar("book_isbn").notNull(),
   categoryId: varchar("category_id").notNull(),
   isPrimary: boolean("is_primary").default(false),
-  assignedAt: timestamp("assigned_at", { mode: 'string' }).defaultNow(),
+  assignedAt: timestamp("assigned_at", { mode: 'date' }).defaultNow(),
   assignedBy: varchar("assigned_by"),
   confidenceScore: numeric("confidence_score"),
   isAutoAssigned: boolean("is_auto_assigned").default(false),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
 }, (table) => [
   unique("book_category_assignments_book_isbn_category_id_key").on(table.bookIsbn, table.categoryId),
 ]);
@@ -265,13 +371,13 @@ export const bookCustomers = pgTable("book_customers", {
   totalSpent: numeric("total_spent", { precision: 15, scale: 2 }).default(0).notNull(),
   totalBooks: integer("total_books").default(0).notNull(),
   avgOrderValue: numeric("avg_order_value", { precision: 15, scale: 2 }).default(0).notNull(),
-  lastPurchase: timestamp("last_purchase", { mode: 'string' }),
+  lastPurchase: timestamp("last_purchase", { mode: 'date' }),
   emailSubscribed: boolean("email_subscribed").default(true).notNull(),
   smsSubscribed: boolean("sms_subscribed").default(false).notNull(),
   marketingTags: jsonb("marketing_tags").default([]),
   status: text().default('active').notNull(),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
 }, (table) => [
   unique("book_customers_email_key").on(table.email),
 ]);
@@ -283,7 +389,7 @@ export const bookMarketingCampaigns = pgTable("book_marketing_campaigns", {
   targetCriteria: jsonb("target_criteria").default({}),
   emailContent: jsonb("email_content").notNull(),
   scheduleType: text("schedule_type").default('immediate').notNull(),
-  scheduledAt: timestamp("scheduled_at", { mode: 'string' }),
+  scheduledAt: timestamp("scheduled_at", { mode: 'date' }),
   triggerEvents: jsonb("trigger_events").default([]),
   status: text().default('draft').notNull(),
   targetCount: integer("target_count").default(0).notNull(),
@@ -292,8 +398,8 @@ export const bookMarketingCampaigns = pgTable("book_marketing_campaigns", {
   clickCount: integer("click_count").default(0).notNull(),
   conversionCount: integer("conversion_count").default(0).notNull(),
   isActive: boolean("is_active").default(true).notNull(),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
 });
 
 export const bookOrderItems = pgTable("book_order_items", {
@@ -327,8 +433,8 @@ export const bookOrders = pgTable("book_orders", {
   vtpStatus: text("vtp_status").default('not_shipped'),
   vtpTrackingData: jsonb("vtp_tracking_data"),
   vtpShippingInfo: jsonb("vtp_shipping_info"),
-  vtpCreatedAt: timestamp("vtp_created_at", { mode: 'string' }),
-  vtpUpdatedAt: timestamp("vtp_updated_at", { mode: 'string' }),
+  vtpCreatedAt: timestamp("vtp_created_at", { mode: 'date' }),
+  vtpUpdatedAt: timestamp("vtp_updated_at", { mode: 'date' }),
   sellerId: varchar("seller_id"),
   bookSource: text("book_source").default('local_inventory').notNull(),
   isbn: text(),
@@ -336,8 +442,8 @@ export const bookOrders = pgTable("book_orders", {
   sellerCommission: numeric("seller_commission", { precision: 15, scale: 2 }).default(0),
   bookMetadata: jsonb("book_metadata"),
   inventoryStatus: text("inventory_status").default('reserved').notNull(),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
   customerNameBook: text("customer_name_book").notNull(),
   customerEmailBook: text("customer_email_book"),
   customerPhoneBook: text("customer_phone_book").notNull(),
@@ -358,8 +464,8 @@ export const bookPaymentTransactions = pgTable("book_payment_transactions", {
   customerEmail: varchar("customer_email"),
   metadata: jsonb().default({}),
   errorMessage: text("error_message"),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  completedAt: timestamp("completed_at", { mode: 'string' }),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  completedAt: timestamp("completed_at", { mode: 'date' }),
 });
 
 export const bookPrices = pgTable("book_prices", {
@@ -370,8 +476,8 @@ export const bookPrices = pgTable("book_prices", {
   status: varchar().default('In Stock'),
   sourceUrl: varchar("source_url"),
   productId: varchar("product_id"),
-  lastUpdatedAt: timestamp("last_updated_at", { mode: 'string' }).defaultNow(),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
+  lastUpdatedAt: timestamp("last_updated_at", { mode: 'date' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
   sourceId: varchar("source_id"),
   currency: varchar({ length: 3 }).default('USD'),
   stock: integer().default(0),
@@ -381,8 +487,8 @@ export const bookPrices = pgTable("book_prices", {
   deliveryTime: varchar("delivery_time", { length: 50 }),
   isCurrentPrice: boolean("is_current_price").default(true),
   priceHistory: jsonb("price_history"),
-  lastChecked: timestamp("last_checked", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  lastChecked: timestamp("last_checked", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
 }, (table) => [
   unique("book_prices_book_isbn_source_key").on(table.bookIsbn, table.source),
 ]);
@@ -395,8 +501,8 @@ export const bookPricingRules = pgTable("book_pricing_rules", {
   priceAdjustment: jsonb("price_adjustment").notNull(),
   priority: integer().default(0).notNull(),
   isActive: boolean("is_active").default(true).notNull(),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
 });
 
 export const bookSellerInventory = pgTable("book_seller_inventory", {
@@ -408,14 +514,14 @@ export const bookSellerInventory = pgTable("book_seller_inventory", {
   basePrice: numeric("base_price", { precision: 15, scale: 2 }).notNull(),
   sellerPrice: numeric("seller_price", { precision: 15, scale: 2 }).notNull(),
   calculatedPrice: numeric("calculated_price", { precision: 15, scale: 2 }).notNull(),
-  assignedAt: timestamp("assigned_at", { mode: 'string' }).defaultNow(),
+  assignedAt: timestamp("assigned_at", { mode: 'date' }).defaultNow(),
   assignmentType: text("assignment_type").default('auto_random').notNull(),
   totalSold: integer("total_sold").default(0).notNull(),
   totalRevenue: numeric("total_revenue", { precision: 15, scale: 2 }).default(0).notNull(),
-  lastSale: timestamp("last_sale", { mode: 'string' }),
+  lastSale: timestamp("last_sale", { mode: 'date' }),
   isActive: boolean("is_active").default(true).notNull(),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
 }, (table) => [
   unique("book_seller_inventory_seller_id_product_id_key").on(table.sellerId, table.productId),
 ]);
@@ -437,8 +543,8 @@ export const bookSellers = pgTable("book_sellers", {
   autoAssignBooks: boolean("auto_assign_books").default(true).notNull(),
   isActive: boolean("is_active").default(true).notNull(),
   isTopSeller: boolean("is_top_seller").default(false).notNull(),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
   config: jsonb(),
 }, (table) => [
   unique("book_sellers_seller_id_key").on(table.sellerId),
@@ -454,8 +560,8 @@ export const books = pgTable("books", {
   averageRating: numeric("average_rating", { precision: 3, scale: 2 }).default(0.0),
   reviewCount: integer("review_count").default(0),
   isTopSeller: boolean("is_top_seller").default(false),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
   subtitle: text(),
   publisher: varchar({ length: 255 }),
   publicationYear: integer("publication_year"),
@@ -474,7 +580,7 @@ export const books = pgTable("books", {
   seoKeywords: jsonb("seo_keywords"),
   priceRegions: jsonb("price_regions"),
   targetMarkets: jsonb("target_markets"),
-  lastPriceUpdate: timestamp("last_price_update", { mode: 'string' }),
+  lastPriceUpdate: timestamp("last_price_update", { mode: 'date' }),
   sellerId: varchar("seller_id", { length: 50 }),
 });
 
@@ -487,11 +593,11 @@ export const botSettings = pgTable("bot_settings", {
   apiKey: text("api_key"),
   connectionTimeout: integer("connection_timeout").default(5000).notNull(),
   maxRetries: integer("max_retries").default(3).notNull(),
-  lastHealthCheck: timestamp("last_health_check", { mode: 'string' }),
+  lastHealthCheck: timestamp("last_health_check", { mode: 'date' }),
   healthStatus: text("health_status").default('offline').notNull(),
   errorMessage: text("error_message"),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
 });
 
 export const campaignParticipations = pgTable("campaign_participations", {
@@ -499,17 +605,17 @@ export const campaignParticipations = pgTable("campaign_participations", {
   campaignId: varchar("campaign_id").notNull(),
   customerId: varchar("customer_id").notNull(),
   shareUrl: text("share_url").notNull(),
-  submittedAt: timestamp("submitted_at", { mode: 'string' }).defaultNow().notNull(),
+  submittedAt: timestamp("submitted_at", { mode: 'date' }).defaultNow().notNull(),
   status: text().default('pending').notNull(),
-  verificationScheduledAt: timestamp("verification_scheduled_at", { mode: 'string' }),
-  lastVerifiedAt: timestamp("last_verified_at", { mode: 'string' }),
-  rewardedAt: timestamp("rewarded_at", { mode: 'string' }),
+  verificationScheduledAt: timestamp("verification_scheduled_at", { mode: 'date' }),
+  lastVerifiedAt: timestamp("last_verified_at", { mode: 'date' }),
+  rewardedAt: timestamp("rewarded_at", { mode: 'date' }),
   voucherId: varchar("voucher_id"),
   rejectionReason: text("rejection_reason"),
   verificationAttempts: integer("verification_attempts").default(0).notNull(),
   metadata: jsonb().default({}),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow().notNull(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow().notNull(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow().notNull(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow().notNull(),
 }, (table) => [
   unique("campaign_participations_campaign_id_customer_id_key").on(table.campaignId, table.customerId),
 ]);
@@ -523,8 +629,8 @@ export const campaigns = pgTable("campaigns", {
   rewardVoucherCodeId: varchar("reward_voucher_code_id"),
   rewardPoints: integer("reward_points").default(0),
   status: text().default('draft').notNull(),
-  startDate: timestamp("start_date", { mode: 'string' }).notNull(),
-  endDate: timestamp("end_date", { mode: 'string' }),
+  startDate: timestamp("start_date", { mode: 'date' }).notNull(),
+  endDate: timestamp("end_date", { mode: 'date' }),
   verificationDelayHours: integer("verification_delay_hours").default(24).notNull(),
   minEngagementLikes: integer("min_engagement_likes").default(0),
   minEngagementShares: integer("min_engagement_shares").default(0),
@@ -534,8 +640,8 @@ export const campaigns = pgTable("campaigns", {
   maxParticipationsPerCustomer: integer("max_participations_per_customer").default(1),
   shareTemplate: text("share_template"),
   requiredHashtags: jsonb("required_hashtags").default([]),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow().notNull(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow().notNull(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow().notNull(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow().notNull(),
   createdBy: varchar("created_by"),
 });
 
@@ -548,8 +654,8 @@ export const carGroups = pgTable("car_groups", {
   groupType: text("group_type").default('custom').notNull(),
   isActive: boolean("is_active").default(true).notNull(),
   metadata: jsonb().default({}),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
   createdBy: varchar("created_by"),
 });
 
@@ -560,8 +666,8 @@ export const categories = pgTable("categories", {
   description: text(),
   isActive: boolean("is_active").default(true).notNull(),
   sortOrder: integer("sort_order").default(0).notNull(),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
   industryId: varchar("industry_id").notNull(),
   consultationConfig: jsonb("consultation_config").default({}),
   consultationTemplates: jsonb("consultation_templates").default({}),
@@ -580,8 +686,8 @@ export const categoryFaqTemplates = pgTable("category_faq_templates", {
   autoInherit: boolean("auto_inherit").default(true).notNull(),
   createdBy: varchar("created_by"),
   templateNote: text("template_note"),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
 }, (table) => [
   unique("category_faq_templates_category_id_faq_id_key").on(table.categoryId, table.faqId),
 ]);
@@ -600,8 +706,8 @@ export const categoryPriceRules = pgTable("category_price_rules", {
   isActive: boolean("is_active").default(true),
   startDate: text("start_date"),
   endDate: text("end_date"),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
 });
 
 export const stores = pgTable("stores", {
@@ -611,8 +717,8 @@ export const stores = pgTable("stores", {
   industry: varchar().default('food'),
   themeConfig: jsonb("theme_config").default({}),
   isActive: boolean("is_active").default(true),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
 });
 
 export const storeProducts = pgTable("store_products", {
@@ -623,8 +729,8 @@ export const storeProducts = pgTable("store_products", {
   isFeatured: boolean("is_featured").default(false),
   sortOrder: integer("sort_order").default(0),
   isActive: boolean("is_active").default(true),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
 }, (table) => [
   unique("store_products_store_product").on(table.storeId, table.productId),
   index("store_products_store_id_idx").on(table.storeId),
@@ -637,7 +743,7 @@ export const storeCategories = pgTable("store_categories", {
   categoryId: varchar("category_id").notNull().references(() => categories.id, { onDelete: 'cascade' }),
   sortOrder: integer("sort_order").default(0),
   isActive: boolean("is_active").default(true),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
 }, (table) => [
   unique("store_categories_store_category").on(table.storeId, table.categoryId),
   index("store_categories_store_id_idx").on(table.storeId),
@@ -650,8 +756,8 @@ export const chatbotConversations = pgTable("chatbot_conversations", {
   messages: jsonb().notNull(),
   status: text().default('active').notNull(),
   satisfactionRating: integer("satisfaction_rating"),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
 });
 
 export const competitorProfiles = pgTable("competitor_profiles", {
@@ -676,8 +782,8 @@ export const competitorProfiles = pgTable("competitor_profiles", {
   vietnameseBusinessPractices: jsonb("vietnamese_business_practices").default(sql`'{"acceptsDebt": false, "festivalDiscounts": true, "offersInstallment": false, "regionalPreferences": []}'::jsonb`),
   isActive: boolean("is_active").default(true).notNull(),
   simulationWeight: numeric("simulation_weight", { precision: 3, scale: 2 }).default(1.00).notNull(),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
 });
 
 export const consignmentRequests = pgTable("consignment_requests", {
@@ -693,9 +799,9 @@ export const consignmentRequests = pgTable("consignment_requests", {
   status: varchar().default('pending'),
   reviewerId: varchar("reviewer_id"),
   reviewerNotes: text("reviewer_notes"),
-  reviewedAt: timestamp("reviewed_at", { mode: 'string' }),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow().notNull(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow().notNull(),
+  reviewedAt: timestamp("reviewed_at", { mode: 'date' }),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow().notNull(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow().notNull(),
 });
 
 export const contentAssets = pgTable("content_assets", {
@@ -714,10 +820,11 @@ export const contentAssets = pgTable("content_assets", {
   altText: text("alt_text"),
   caption: text(),
   usageCount: integer("usage_count").default(0),
-  lastUsed: timestamp("last_used", { mode: 'string' }),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  lastUsed: timestamp("last_used", { mode: 'date' }),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
   tagIds: jsonb("tag_ids").default([]),
+  tags: text().array(),
   resourceType: varchar("resource_type", { length: 20 }).notNull(),
 }, (table) => [
   unique("content_assets_cloudinary_public_id_unique").on(table.cloudinaryPublicId),
@@ -731,8 +838,8 @@ export const contentCategories = pgTable("content_categories", {
   icon: varchar({ length: 50 }),
   sortOrder: integer("sort_order").default(0),
   isActive: boolean("is_active").default(true),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
 });
 
 export const contentFaqAssignments = pgTable("content_faq_assignments", {
@@ -744,11 +851,11 @@ export const contentFaqAssignments = pgTable("content_faq_assignments", {
   isVisible: boolean("is_visible").default(true).notNull(),
   assignedBy: varchar("assigned_by"),
   assignmentNote: text("assignment_note"),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
   isInherited: boolean("is_inherited").default(false).notNull(),
   templateId: varchar("template_id"),
-  inheritedAt: timestamp("inherited_at", { mode: 'string' }),
+  inheritedAt: timestamp("inherited_at", { mode: 'date' }),
 }, (table) => [
   unique("unique_faq_content_assignment").on(table.faqId, table.contentType, table.contentId),
 ]);
@@ -763,13 +870,13 @@ export const contentLibrary = pgTable("content_library", {
   aiVariations: jsonb("ai_variations").default([]),
   priority: text().default('normal').notNull(),
   usageCount: integer("usage_count").default(0),
-  lastUsed: timestamp("last_used", { mode: 'string' }),
+  lastUsed: timestamp("last_used", { mode: 'date' }),
   status: text().default('draft').notNull(),
   isTemplate: boolean("is_template").default(false),
   platforms: jsonb().default(sql`'["facebook", "instagram", "tiktok"]'::jsonb`),
   bestTimeSlots: jsonb("best_time_slots").default([]),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
   contentFingerprint: text("content_fingerprint"),
 });
 
@@ -790,13 +897,13 @@ export const contentQueue = pgTable("content_queue", {
   variationTone: text("variation_tone"),
   status: text().default('pending').notNull(),
   timesUsed: integer("times_used").default(0),
-  lastScheduledAt: timestamp("last_scheduled_at", { mode: 'string' }),
+  lastScheduledAt: timestamp("last_scheduled_at", { mode: 'date' }),
   errorMessage: text("error_message"),
   retryCount: integer("retry_count").default(0),
   metadata: jsonb(),
   createdBy: varchar("created_by"),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
 });
 
 export const conversationMessages = pgTable("conversation_messages", {
@@ -812,8 +919,8 @@ export const conversationMessages = pgTable("conversation_messages", {
   responseTime: integer("response_time"),
   context: jsonb().default({}),
   metadata: jsonb().default({}),
-  timestamp: timestamp({ mode: 'string' }).defaultNow(),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
+  timestamp: timestamp({ mode: 'date' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
 });
 
 export const conversationSessions = pgTable("conversation_sessions", {
@@ -829,14 +936,14 @@ export const conversationSessions = pgTable("conversation_sessions", {
   status: text().default('active').notNull(),
   resolutionStatus: text("resolution_status"),
   escalatedToHuman: boolean("escalated_to_human").default(false).notNull(),
-  escalatedAt: timestamp("escalated_at", { mode: 'string' }),
+  escalatedAt: timestamp("escalated_at", { mode: 'date' }),
   escalationReason: text("escalation_reason"),
   assignedAgentId: varchar("assigned_agent_id"),
-  startedAt: timestamp("started_at", { mode: 'string' }).defaultNow(),
-  endedAt: timestamp("ended_at", { mode: 'string' }),
-  lastActiveAt: timestamp("last_active_at", { mode: 'string' }).defaultNow(),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  startedAt: timestamp("started_at", { mode: 'date' }).defaultNow(),
+  endedAt: timestamp("ended_at", { mode: 'date' }),
+  lastActiveAt: timestamp("last_active_at", { mode: 'date' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
 }, (table) => [
   unique("conversation_sessions_session_id_key").on(table.sessionId),
 ]);
@@ -848,15 +955,15 @@ export const cookieProfiles = pgTable("cookie_profiles", {
   groupTag: text("group_tag").notNull(),
   accountName: text("account_name").notNull(),
   encryptedData: text("encrypted_data").notNull(),
-  lastUsed: timestamp("last_used", { mode: 'string' }),
+  lastUsed: timestamp("last_used", { mode: 'date' }),
   isActive: boolean("is_active").default(true).notNull(),
   metadata: jsonb().default({}),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
   version: integer().default(1).notNull(),
   isVerified: boolean("is_verified").default(false).notNull(),
   verificationStatus: text("verification_status"),
-  lastVerifiedAt: timestamp("last_verified_at", { mode: 'string' }),
+  lastVerifiedAt: timestamp("last_verified_at", { mode: 'date' }),
   adAccounts: jsonb("ad_accounts").default([]),
   hasAdsAccess: boolean("has_ads_access").default(false),
 });
@@ -868,7 +975,7 @@ export const customerEvents = pgTable("customer_events", {
   eventData: jsonb("event_data").default({}),
   channel: text().notNull(),
   sessionId: text("session_id"),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow().notNull(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow().notNull(),
 });
 
 export const customerReviews = pgTable("customer_reviews", {
@@ -889,33 +996,33 @@ export const customerReviews = pgTable("customer_reviews", {
   sentimentScore: numeric("sentiment_score", { precision: 3, scale: 2 }).default(0),
   helpfulnessVotes: integer("helpfulness_votes").default(0),
   isVerified: boolean("is_verified").default(false),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
 });
 
 export const customerVouchers = pgTable("customer_vouchers", {
   id: varchar().default(sql`gen_random_uuid()`).primaryKey(),
   customerId: varchar("customer_id").notNull(),
   discountCodeId: integer("discount_code_id").notNull(),
-  claimedAt: timestamp("claimed_at", { mode: 'string' }).defaultNow().notNull(),
+  claimedAt: timestamp("claimed_at", { mode: 'date' }).defaultNow().notNull(),
   claimedVia: text("claimed_via").default('manual_input').notNull(),
   campaignId: varchar("campaign_id"),
   shareVerificationId: varchar("share_verification_id"),
   status: text().default('active').notNull(),
-  usedAt: timestamp("used_at", { mode: 'string' }),
-  revokedAt: timestamp("revoked_at", { mode: 'string' }),
+  usedAt: timestamp("used_at", { mode: 'date' }),
+  revokedAt: timestamp("revoked_at", { mode: 'date' }),
   revokedReason: text("revoked_reason"),
   orderId: varchar("order_id"),
   discountApplied: numeric("discount_applied", { precision: 10, scale: 2 }),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow().notNull(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow().notNull(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow().notNull(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow().notNull(),
 });
 
 export const wishlists = pgTable("wishlists", {
   id: varchar().default(sql`gen_random_uuid()`).primaryKey(),
   customerId: varchar("customer_id").notNull(),
   productId: varchar("product_id").notNull(),
-  addedAt: timestamp("added_at", { mode: 'string' }).defaultNow().notNull(),
+  addedAt: timestamp("added_at", { mode: 'date' }).defaultNow().notNull(),
 }, (table) => [
   unique("wishlists_customer_product_unique").on(table.customerId, table.productId),
 ]);
@@ -927,14 +1034,14 @@ export const customers = pgTable("customers", {
   phone: text().notNull(),
   avatar: text(),
   status: text().default('active').notNull(),
-  joinDate: timestamp("join_date", { mode: 'string' }).defaultNow(),
+  joinDate: timestamp("join_date", { mode: 'date' }).defaultNow(),
   totalDebt: numeric("total_debt", { precision: 15, scale: 2 }).default(0),
   creditLimit: numeric("credit_limit", { precision: 15, scale: 2 }).default(0),
   membershipTier: text("membership_tier").default('member'),
   totalSpent: numeric("total_spent", { precision: 15, scale: 2 }).default(0),
   pointsBalance: integer("points_balance").default(0),
   pointsEarned: integer("points_earned").default(0),
-  lastTierUpdate: timestamp("last_tier_update", { mode: 'string' }).defaultNow(),
+  lastTierUpdate: timestamp("last_tier_update", { mode: 'date' }).defaultNow(),
   authUserId: varchar("auth_user_id"),
   membershipData: jsonb("membership_data").default({}),
   socialAccountIds: jsonb("social_account_ids").default({}),
@@ -955,7 +1062,7 @@ export const customers = pgTable("customers", {
   distanceFromShop: numeric("distance_from_shop", { precision: 10, scale: 3 }),
   routeDistanceFromShop: numeric("route_distance_from_shop", { precision: 10, scale: 3 }),
   geocodingStatus: text("geocoding_status").default('not_geocoded'),
-  lastGeocodedAt: timestamp("last_geocoded_at", { mode: 'string' }),
+  lastGeocodedAt: timestamp("last_geocoded_at", { mode: 'date' }),
   address2: text(),
   district: text(),
 }, (table) => [
@@ -974,7 +1081,7 @@ export const depositTransactions = pgTable("deposit_transactions", {
   proofUrl: text("proof_url"),
   description: text(),
   processedById: varchar("processed_by_id"),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow().notNull(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow().notNull(),
 });
 
 export const discountCodeUsages = pgTable("discount_code_usages", {
@@ -985,7 +1092,7 @@ export const discountCodeUsages = pgTable("discount_code_usages", {
   usageAmount: numeric("usage_amount", { precision: 10, scale: 2 }).notNull(),
   discountApplied: numeric("discount_applied", { precision: 10, scale: 2 }).notNull(),
   channel: varchar().default('online'),
-  usedAt: timestamp("used_at", { mode: 'string' }).defaultNow(),
+  usedAt: timestamp("used_at", { mode: 'date' }).defaultNow(),
   metadata: jsonb(),
 });
 
@@ -1001,15 +1108,15 @@ export const discountCodes = pgTable("discount_codes", {
   maxUsage: integer("max_usage"),
   maxUsagePerCustomer: integer("max_usage_per_customer").default(1),
   minOrderAmount: numeric("min_order_amount", { precision: 10, scale: 2 }).default(0),
-  validFrom: timestamp("valid_from", { mode: 'string' }).notNull(),
-  validUntil: timestamp("valid_until", { mode: 'string' }),
+  validFrom: timestamp("valid_from", { mode: 'date' }).notNull(),
+  validUntil: timestamp("valid_until", { mode: 'date' }),
   channelRestrictions: jsonb("channel_restrictions"),
   scheduleRules: jsonb("schedule_rules"),
   status: varchar().default('active').notNull(),
   usageCount: integer("usage_count").default(0),
   localizedMessages: jsonb("localized_messages"),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
   createdBy: varchar("created_by"),
 }, (table) => [
   unique("discount_codes_code_key").on(table.code),
@@ -1024,8 +1131,8 @@ export const discountScopeAssignments = pgTable("discount_scope_assignments", {
   customerSegmentRules: jsonb("customer_segment_rules"),
   assignmentType: varchar("assignment_type").default('include').notNull(),
   isExclusion: boolean("is_exclusion").default(false),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
 });
 
 export const driverReports = pgTable("driver_reports", {
@@ -1039,12 +1146,12 @@ export const driverReports = pgTable("driver_reports", {
   severity: text().default('medium').notNull(),
   status: text().default('pending').notNull(),
   resolution: text(),
-  reportedAt: timestamp("reported_at", { mode: 'string' }).defaultNow(),
-  reviewedAt: timestamp("reviewed_at", { mode: 'string' }),
-  resolvedAt: timestamp("resolved_at", { mode: 'string' }),
+  reportedAt: timestamp("reported_at", { mode: 'date' }).defaultNow(),
+  reviewedAt: timestamp("reviewed_at", { mode: 'date' }),
+  resolvedAt: timestamp("resolved_at", { mode: 'date' }),
   reviewedBy: varchar("reviewed_by"),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
 });
 
 export const facebookApps = pgTable("facebook_apps", {
@@ -1058,10 +1165,10 @@ export const facebookApps = pgTable("facebook_apps", {
   isActive: boolean("is_active").default(true),
   environment: text().default('development'),
   description: text(),
-  lastWebhookEvent: timestamp("last_webhook_event", { mode: 'string' }),
+  lastWebhookEvent: timestamp("last_webhook_event", { mode: 'date' }),
   totalEvents: integer("total_events").default(0),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
   tagIds: jsonb("tag_ids").default([]),
   groupId: varchar("group_id"),
 }, (table) => [
@@ -1079,11 +1186,11 @@ export const facebookConversations = pgTable("facebook_conversations", {
   priority: text().default('normal').notNull(),
   assignedTo: varchar("assigned_to"),
   messageCount: integer("message_count").default(0).notNull(),
-  lastMessageAt: timestamp("last_message_at", { mode: 'string' }),
+  lastMessageAt: timestamp("last_message_at", { mode: 'date' }),
   lastMessagePreview: text("last_message_preview"),
   isRead: boolean("is_read").default(false),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
   tagIds: jsonb("tag_ids").default([]),
 });
 
@@ -1097,12 +1204,12 @@ export const facebookMessages = pgTable("facebook_messages", {
   content: text(),
   messageType: text("message_type").default('text').notNull(),
   attachments: jsonb().default([]),
-  timestamp: timestamp({ mode: 'string' }).notNull(),
+  timestamp: timestamp({ mode: 'date' }).notNull(),
   isEcho: boolean("is_echo").default(false),
   replyToMessageId: text("reply_to_message_id"),
   isRead: boolean("is_read").default(false),
   isDelivered: boolean("is_delivered").default(true),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
 }, (table) => [
   unique("facebook_messages_facebook_message_id_unique").on(table.facebookMessageId),
 ]);
@@ -1112,7 +1219,7 @@ export const facebookWebhookEvents = pgTable("facebook_webhook_events", {
   appId: varchar("app_id").notNull(),
   eventType: text("event_type").notNull(),
   eventData: jsonb("event_data").notNull(),
-  processedAt: timestamp("processed_at", { mode: 'string' }).defaultNow(),
+  processedAt: timestamp("processed_at", { mode: 'date' }).defaultNow(),
   status: text().default('pending'),
   errorMessage: text("error_message"),
 });
@@ -1126,11 +1233,11 @@ export const faqGenerationJobs = pgTable("faq_generation_jobs", {
   status: varchar().default('pending'),
   rawResponse: jsonb("raw_response"),
   error: text(),
-  processingStartedAt: timestamp("processing_started_at", { mode: 'string' }),
-  processingCompletedAt: timestamp("processing_completed_at", { mode: 'string' }),
+  processingStartedAt: timestamp("processing_started_at", { mode: 'date' }),
+  processingCompletedAt: timestamp("processing_completed_at", { mode: 'date' }),
   requestedBy: varchar("requested_by").default('anonymous'),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
 });
 
 export const faqGenerationResults = pgTable("faq_generation_results", {
@@ -1141,11 +1248,11 @@ export const faqGenerationResults = pgTable("faq_generation_results", {
   questionOrder: integer("question_order").default(1),
   status: varchar().default('generated'),
   finalFaqId: varchar("final_faq_id"),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
   confidenceScore: numeric("confidence_score", { precision: 5, scale: 3 }).default(0.85),
   reviewedBy: varchar("reviewed_by"),
-  reviewedAt: timestamp("reviewed_at", { mode: 'string' }),
+  reviewedAt: timestamp("reviewed_at", { mode: 'date' }),
   reviewNotes: text("review_notes"),
 });
 
@@ -1159,10 +1266,10 @@ export const faqLibrary = pgTable("faq_library", {
   isActive: boolean("is_active").default(true).notNull(),
   sortOrder: integer("sort_order").default(0).notNull(),
   usageCount: integer("usage_count").default(0).notNull(),
-  lastUsed: timestamp("last_used", { mode: 'string' }),
+  lastUsed: timestamp("last_used", { mode: 'date' }),
   keywords: jsonb().default([]),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
 });
 
 export const flashSales = pgTable("flash_sales", {
@@ -1173,14 +1280,14 @@ export const flashSales = pgTable("flash_sales", {
   originalPrice: numeric("original_price", { precision: 15, scale: 2 }).notNull(),
   salePrice: numeric("sale_price", { precision: 15, scale: 2 }).notNull(),
   discountPercent: integer("discount_percent"),
-  startTime: timestamp("start_time", { mode: 'string' }).notNull(),
-  endTime: timestamp("end_time", { mode: 'string' }).notNull(),
+  startTime: timestamp("start_time", { mode: 'date' }).notNull(),
+  endTime: timestamp("end_time", { mode: 'date' }).notNull(),
   bannerImage: text("banner_image"),
   description: text(),
   unit: varchar("unit", { length: 50 }),
   isActive: boolean("is_active").default(true).notNull(),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
 }, (table) => [
   unique("flash_sales_slug_key").on(table.slug),
 ]);
@@ -1192,8 +1299,8 @@ export const frontendCategoryAssignments = pgTable("frontend_category_assignment
   isLocalOnly: boolean("is_local_only").default(false).notNull(),
   sortOrder: integer("sort_order").default(0).notNull(),
   isActive: boolean("is_active").default(true).notNull(),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
 });
 
 export const generalCategories = pgTable("general_categories", {
@@ -1211,8 +1318,8 @@ export const generalCategories = pgTable("general_categories", {
   isFeatured: boolean("is_featured").default(false),
   metaTitle: varchar("meta_title"),
   metaDescription: text("meta_description"),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
 }, (table) => [
   unique("general_categories_slug_key").on(table.slug),
 ]);
@@ -1220,7 +1327,7 @@ export const generalCategories = pgTable("general_categories", {
 export const generalCategoryAnalytics = pgTable("general_category_analytics", {
   id: varchar().default(sql`gen_random_uuid()`).primaryKey(),
   categoryId: varchar("category_id").notNull(),
-  analyticsDate: timestamp("analytics_date", { mode: 'string' }).defaultNow().notNull(),
+  analyticsDate: timestamp("analytics_date", { mode: 'date' }).defaultNow().notNull(),
   pageViews: integer("page_views").default(0),
   uniqueVisitors: integer("unique_visitors").default(0),
   bounceRate: numeric("bounce_rate", { precision: 5, scale: 2 }).default(0.00),
@@ -1231,8 +1338,8 @@ export const generalCategoryAnalytics = pgTable("general_category_analytics", {
   totalRevenue: numeric("total_revenue", { precision: 12, scale: 2 }).default(0.00),
   clickThroughRate: numeric("click_through_rate", { precision: 5, scale: 2 }).default(0.00),
   conversionRate: numeric("conversion_rate", { precision: 5, scale: 2 }).default(0.00),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
 });
 
 export const generalCategoryAssignments = pgTable("general_category_assignments", {
@@ -1241,8 +1348,8 @@ export const generalCategoryAssignments = pgTable("general_category_assignments"
   categoryId: varchar("category_id").notNull(),
   isPrimary: boolean("is_primary").default(false),
   sortOrder: integer("sort_order").default(0),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
 }, (table) => [
   unique("general_unique_product_category").on(table.productId, table.categoryId),
 ]);
@@ -1259,10 +1366,10 @@ export const generalCategoryPriceRules = pgTable("general_category_price_rules",
   conditions: jsonb().default({}),
   priority: integer().default(0),
   isActive: boolean("is_active").default(true),
-  startDate: timestamp("start_date", { mode: 'string' }),
-  endDate: timestamp("end_date", { mode: 'string' }),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  startDate: timestamp("start_date", { mode: 'date' }),
+  endDate: timestamp("end_date", { mode: 'date' }),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
 });
 
 export const giftCampaigns = pgTable("gift_campaigns", {
@@ -1282,12 +1389,12 @@ export const giftCampaigns = pgTable("gift_campaigns", {
   invoiceRequired: boolean("invoice_required").default(false).notNull(),
   complianceNotes: text("compliance_notes"),
   status: varchar().default('draft').notNull(),
-  activeFrom: timestamp("active_from", { mode: 'string' }).defaultNow(),
-  activeUntil: timestamp("active_until", { mode: 'string' }),
+  activeFrom: timestamp("active_from", { mode: 'date' }).defaultNow(),
+  activeUntil: timestamp("active_until", { mode: 'date' }),
   totalSold: integer("total_sold").default(0).notNull(),
   totalValue: numeric("total_value", { precision: 12, scale: 2 }).default(0).notNull(),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
   createdBy: varchar("created_by"),
 });
 
@@ -1304,9 +1411,9 @@ export const giftRedemptions = pgTable("gift_redemptions", {
   staffMemberId: varchar("staff_member_id"),
   redemptionStatus: varchar("redemption_status").default('successful').notNull(),
   validationResult: jsonb("validation_result").default({}),
-  redeemedAt: timestamp("redeemed_at", { mode: 'string' }).defaultNow(),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  redeemedAt: timestamp("redeemed_at", { mode: 'date' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
 });
 
 export const giftVouchers = pgTable("gift_vouchers", {
@@ -1326,16 +1433,16 @@ export const giftVouchers = pgTable("gift_vouchers", {
   deliveryMethod: varchar("delivery_method").default('email').notNull(),
   deliveryStatus: varchar("delivery_status").default('pending').notNull(),
   deliveryDetails: jsonb("delivery_details").default({}),
-  expiresAt: timestamp("expires_at", { mode: 'string' }).notNull(),
-  firstUsedAt: timestamp("first_used_at", { mode: 'string' }),
-  fullyRedeemedAt: timestamp("fully_redeemed_at", { mode: 'string' }),
+  expiresAt: timestamp("expires_at", { mode: 'date' }).notNull(),
+  firstUsedAt: timestamp("first_used_at", { mode: 'date' }),
+  fullyRedeemedAt: timestamp("fully_redeemed_at", { mode: 'date' }),
   status: varchar().default('issued').notNull(),
   vatAmount: numeric("vat_amount", { precision: 10, scale: 2 }),
   invoiceNumber: text("invoice_number"),
   complianceData: jsonb("compliance_data").default({}),
-  issuedAt: timestamp("issued_at", { mode: 'string' }).defaultNow(),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  issuedAt: timestamp("issued_at", { mode: 'date' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
 }, (table) => [
   unique("gift_vouchers_voucher_code_key").on(table.voucherCode),
 ]);
@@ -1351,8 +1458,8 @@ export const globalAutomationControl = pgTable("global_automation_control", {
   statistics: jsonb(),
   notes: text(),
   lastUpdatedBy: text("last_updated_by"),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
   version: integer().default(1),
 });
 
@@ -1362,8 +1469,8 @@ export const industries = pgTable("industries", {
   description: text(),
   isActive: boolean("is_active").default(true).notNull(),
   sortOrder: integer("sort_order").default(0).notNull(),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
 });
 
 export const industryKeywords = pgTable("industry_keywords", {
@@ -1372,8 +1479,8 @@ export const industryKeywords = pgTable("industry_keywords", {
   keyword: text().notNull(),
   weight: numeric({ precision: 5, scale: 3 }).default(1.000).notNull(),
   isActive: boolean("is_active").default(true).notNull(),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
 });
 
 export const industryRules = pgTable("industry_rules", {
@@ -1381,8 +1488,8 @@ export const industryRules = pgTable("industry_rules", {
   industryId: varchar("industry_id").notNull(),
   rulesJson: jsonb("rules_json").default({}),
   isActive: boolean("is_active").default(true).notNull(),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
 });
 
 export const industryTemplates = pgTable("industry_templates", {
@@ -1393,8 +1500,8 @@ export const industryTemplates = pgTable("industry_templates", {
   language: text().default('vi').notNull(),
   isActive: boolean("is_active").default(true).notNull(),
   priority: integer().default(0).notNull(),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
 });
 
 export const intentAnalytics = pgTable("intent_analytics", {
@@ -1408,9 +1515,9 @@ export const intentAnalytics = pgTable("intent_analytics", {
   successRate: numeric("success_rate", { precision: 5, scale: 2 }).default(0.00),
   avgConfidence: numeric("avg_confidence", { precision: 4, scale: 3 }),
   avgResponseTime: numeric("avg_response_time", { precision: 8, scale: 2 }),
-  lastTriggered: timestamp("last_triggered", { mode: 'string' }),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  lastTriggered: timestamp("last_triggered", { mode: 'date' }),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
 }, (table) => [
   unique("intent_analytics_intent_name_key").on(table.intentName),
 ]);
@@ -1420,22 +1527,22 @@ export const invoiceTemplates = pgTable("invoice_templates", {
   name: varchar({ length: 255 }).notNull(),
   config: jsonb().default({}).notNull(),
   isDefault: boolean("is_default").default(false).notNull(),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
 });
 
 export const ipPoolSessions = pgTable("ip_pool_sessions", {
   id: integer().default('nextval(ip_pool_sessions_id_seq').primaryKey(),
   ipPoolId: integer("ip_pool_id").notNull(),
-  sessionStart: timestamp("session_start", { mode: 'string' }).defaultNow().notNull(),
-  sessionEnd: timestamp("session_end", { mode: 'string' }),
+  sessionStart: timestamp("session_start", { mode: 'date' }).defaultNow().notNull(),
+  sessionEnd: timestamp("session_end", { mode: 'date' }),
   ipAddress: varchar("ip_address", { length: 100 }),
   postsCount: integer("posts_count").default(0),
   successCount: integer("success_count").default(0),
   failCount: integer("fail_count").default(0),
   status: varchar({ length: 50 }).default('active'),
   metadata: jsonb().default({}),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
 });
 
 export const ipPools = pgTable("ip_pools", {
@@ -1447,13 +1554,13 @@ export const ipPools = pgTable("ip_pools", {
   config: jsonb().default({}),
   healthScore: integer("health_score").default(100),
   totalRotations: integer("total_rotations").default(0),
-  lastRotatedAt: timestamp("last_rotated_at", { mode: 'string' }),
+  lastRotatedAt: timestamp("last_rotated_at", { mode: 'date' }),
   isEnabled: boolean("is_enabled").default(true),
   priority: integer().default(0),
   costPerMonth: numeric("cost_per_month", { precision: 10, scale: 2 }),
   notes: text(),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
 });
 
 export const ipRotationLogs = pgTable("ip_rotation_logs", {
@@ -1466,7 +1573,7 @@ export const ipRotationLogs = pgTable("ip_rotation_logs", {
   success: boolean().default(false),
   errorMessage: text("error_message"),
   metadata: jsonb().default({}),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
 });
 
 export const marketTrends = pgTable("market_trends", {
@@ -1493,9 +1600,9 @@ export const marketTrends = pgTable("market_trends", {
   confidenceScore: numeric("confidence_score", { precision: 3, scale: 2 }).default(0.50).notNull(),
   recommendedAction: text("recommended_action").default('maintain'),
   automationEnabled: boolean("automation_enabled").default(false).notNull(),
-  lastCalculated: timestamp("last_calculated", { mode: 'string' }).defaultNow(),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  lastCalculated: timestamp("last_calculated", { mode: 'date' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
 });
 
 export const notifications = pgTable("notifications", {
@@ -1506,8 +1613,8 @@ export const notifications = pgTable("notifications", {
   message: text().notNull(),
   link: text(),
   isRead: boolean("is_read").default(false).notNull(),
-  readAt: timestamp("read_at", { mode: 'string' }),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow().notNull(),
+  readAt: timestamp("read_at", { mode: 'date' }),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow().notNull(),
 });
 
 export const oauthConnections = pgTable("oauth_connections", {
@@ -1518,11 +1625,11 @@ export const oauthConnections = pgTable("oauth_connections", {
   email: varchar(),
   accessToken: text("access_token"),
   refreshToken: text("refresh_token"),
-  tokenExpiresAt: timestamp("token_expires_at", { mode: 'string' }),
+  tokenExpiresAt: timestamp("token_expires_at", { mode: 'date' }),
   profileData: jsonb("profile_data"),
   isPrimary: boolean("is_primary").default(false).notNull(),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
 }, (table) => [
   unique("unique_provider_user").on(table.provider, table.providerUserId),
 ]);
@@ -1537,8 +1644,8 @@ export const oauthProviderSettings = pgTable("oauth_provider_settings", {
   scopes: text(),
   isActive: boolean("is_active").default(true).notNull(),
   metadata: jsonb().default({}),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
 }, (table) => [
   unique("unique_provider_oauth_settings").on(table.provider),
 ]);
@@ -1566,12 +1673,12 @@ export const orders = pgTable("orders", {
   paymentMethod: varchar("payment_method", { length: 50 }),
   status: varchar({ length: 20 }).default('pending'),
   trackingNumber: varchar("tracking_number", { length: 100 }),
-  estimatedDelivery: timestamp("estimated_delivery", { mode: 'string' }),
-  deliveredAt: timestamp("delivered_at", { mode: 'string' }),
+  estimatedDelivery: timestamp("estimated_delivery", { mode: 'date' }),
+  deliveredAt: timestamp("delivered_at", { mode: 'date' }),
   customerNotes: text("customer_notes"),
   adminNotes: text("admin_notes"),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
   source: text().default('admin'),
   sourceOrderId: text("source_order_id"),
   sourceReference: text("source_reference"),
@@ -1584,13 +1691,13 @@ export const orders = pgTable("orders", {
   vtpStatus: text("vtp_status"),
   vtpTrackingData: jsonb("vtp_tracking_data"),
   vtpShippingInfo: jsonb("vtp_shipping_info"),
-  vtpCreatedAt: timestamp("vtp_created_at", { mode: 'string' }),
-  vtpUpdatedAt: timestamp("vtp_updated_at", { mode: 'string' }),
+  vtpCreatedAt: timestamp("vtp_created_at", { mode: 'date' }),
+  vtpUpdatedAt: timestamp("vtp_updated_at", { mode: 'date' }),
   assignedDriverId: varchar("assigned_driver_id"),
   affiliateId: varchar("affiliate_id"),
   affiliateCommission: numeric("affiliate_commission", { precision: 15, scale: 2 }).default(0.00),
   sendInvoiceToChat: boolean("send_invoice_to_chat").default(false),
-  invoiceSentAt: timestamp("invoice_sent_at", { mode: 'string' }),
+  invoiceSentAt: timestamp("invoice_sent_at", { mode: 'date' }),
   invoiceSentVia: varchar("invoice_sent_via"),
   tags: text().default('ARRAY[]'),
 });
@@ -1601,8 +1708,8 @@ export const pageTags = pgTable("page_tags", {
   color: text().default('#3B82F6').notNull(),
   description: text(),
   isDefault: boolean("is_default").default(false),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
 });
 
 export const paymentGatewaySettings = pgTable("payment_gateway_settings", {
@@ -1612,8 +1719,8 @@ export const paymentGatewaySettings = pgTable("payment_gateway_settings", {
   credentials: jsonb().default({}).notNull(),
   testMode: boolean("test_mode").default(true).notNull(),
   webhookSecret: text("webhook_secret"),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
 }, (table) => [
   unique("payment_gateway_settings_gateway_key").on(table.gateway),
 ]);
@@ -1627,16 +1734,16 @@ export const payments = pgTable("payments", {
   status: text().default('pending').notNull(),
   transactionId: text("transaction_id"),
   bankInfo: jsonb("bank_info"),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
 });
 
 export const performanceMetrics = pgTable("performance_metrics", {
   id: varchar().default(sql`gen_random_uuid()`).primaryKey(),
   sellerId: varchar("seller_id").notNull(),
   periodType: varchar("period_type", { length: 20 }).notNull(),
-  periodStart: timestamp("period_start", { mode: 'string' }).notNull(),
-  periodEnd: timestamp("period_end", { mode: 'string' }).notNull(),
+  periodStart: timestamp("period_start", { mode: 'date' }).notNull(),
+  periodEnd: timestamp("period_end", { mode: 'date' }).notNull(),
   totalOrders: integer("total_orders").default(0),
   successfulOrders: integer("successful_orders").default(0),
   cancelledOrders: integer("cancelled_orders").default(0),
@@ -1652,8 +1759,8 @@ export const performanceMetrics = pgTable("performance_metrics", {
   efficiencyScore: numeric("efficiency_score", { precision: 3, scale: 2 }).default(0),
   qualityScore: numeric("quality_score", { precision: 3, scale: 2 }).default(0),
   overallPerformanceScore: numeric("overall_performance_score", { precision: 3, scale: 2 }).default(0),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
 });
 
 export const priceSources = pgTable("price_sources", {
@@ -1664,8 +1771,8 @@ export const priceSources = pgTable("price_sources", {
   apiKey: varchar("api_key", { length: 255 }),
   isActive: boolean("is_active").default(true),
   priority: integer().default(100),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
 });
 
 export const pricingStrategies = pgTable("pricing_strategies", {
@@ -1696,10 +1803,10 @@ export const pricingStrategies = pgTable("pricing_strategies", {
   competitivenessScore: numeric("competitiveness_score", { precision: 5, scale: 2 }).default(50.00).notNull(),
   salesVelocityImpact: numeric("sales_velocity_impact", { precision: 7, scale: 4 }).default(0).notNull(),
   isActive: boolean("is_active").default(true).notNull(),
-  lastAdjusted: timestamp("last_adjusted", { mode: 'string' }),
-  nextAdjustment: timestamp("next_adjustment", { mode: 'string' }),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  lastAdjusted: timestamp("last_adjusted", { mode: 'date' }),
+  nextAdjustment: timestamp("next_adjustment", { mode: 'date' }),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
 });
 
 export const preorderProducts = pgTable("preorder_products", {
@@ -1709,12 +1816,12 @@ export const preorderProducts = pgTable("preorder_products", {
   title: text().notNull(),
   description: text(),
   price: numeric({ precision: 15, scale: 2 }).notNull(),
-  estimatedDate: timestamp("estimated_date", { mode: 'string' }).notNull(),
+  estimatedDate: timestamp("estimated_date", { mode: 'date' }).notNull(),
   bannerImage: text("banner_image"),
   unit: text().default('cái'),
   isActive: boolean("is_active").default(true).notNull(),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
 }, (table) => [
   unique("preorder_products_slug_key").on(table.slug),
 ]);
@@ -1726,8 +1833,8 @@ export const productFaqs = pgTable("product_faqs", {
   answer: text().notNull(),
   sortOrder: integer("sort_order").default(0).notNull(),
   isActive: boolean("is_active").default(true).notNull(),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
   faqId: varchar("faq_id"),
   isAutoGenerated: boolean("is_auto_generated").default(false).notNull(),
   category: text(),
@@ -1754,8 +1861,8 @@ export const productLandingClicks = pgTable("product_landing_clicks", {
   converted: boolean().default(false).notNull(),
   orderId: varchar("order_id"),
   conversionValue: numeric("conversion_value", { precision: 15, scale: 2 }),
-  clickedAt: timestamp("clicked_at", { mode: 'string' }).defaultNow().notNull(),
-  convertedAt: timestamp("converted_at", { mode: 'string' }),
+  clickedAt: timestamp("clicked_at", { mode: 'date' }).defaultNow().notNull(),
+  convertedAt: timestamp("converted_at", { mode: 'date' }),
 });
 
 export const productLandingPages = pgTable("product_landing_pages", {
@@ -1781,8 +1888,8 @@ export const productLandingPages = pgTable("product_landing_pages", {
   orderCount: integer("order_count").default(0).notNull(),
   conversionRate: numeric("conversion_rate", { precision: 5, scale: 2 }).default(0.00).notNull(),
   paymentMethods: jsonb("payment_methods").default(sql`'{"cod": true, "online": false, "bankTransfer": true}'::jsonb`).notNull(),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
   themeConfigId: varchar("theme_config_id"),
   advancedThemeConfig: jsonb("advanced_theme_config"),
   affiliateId: varchar("affiliate_id"),
@@ -1800,15 +1907,15 @@ export const productPolicies = pgTable("product_policies", {
   type: text().notNull(),
   isActive: boolean("is_active").default(true).notNull(),
   sortOrder: integer("sort_order").default(0).notNull(),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
 });
 
 export const productPolicyAssociations = pgTable("product_policy_associations", {
   productId: varchar("product_id").primaryKey(),
   policyId: varchar("policy_id").primaryKey(),
   sortOrder: integer("sort_order").default(0).notNull(),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
 });
 
 export const productReviews = pgTable("product_reviews", {
@@ -1827,8 +1934,8 @@ export const productReviews = pgTable("product_reviews", {
   reviewImages: jsonb("review_images").default([]),
   status: varchar().default('pending').notNull(),
   adminNotes: text("admin_notes"),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
 });
 
 export const products = pgTable("products", {
@@ -1840,8 +1947,8 @@ export const products = pgTable("products", {
   categoryId: varchar("category_id"),
   status: text().default('active').notNull(),
   image: text(),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
   sku: text(),
   images: jsonb().default([]),
   videos: jsonb().default([]),
@@ -1902,13 +2009,13 @@ export const projectTemplates = pgTable("project_templates", {
   templateType: varchar("template_type").notNull(),
   templateName: text("template_name").notNull(),
   appliedCustomizations: jsonb("applied_customizations").notNull(),
-  appliedAt: timestamp("applied_at", { mode: 'string' }).defaultNow(),
+  appliedAt: timestamp("applied_at", { mode: 'date' }).defaultNow(),
   isActive: boolean("is_active").default(true).notNull(),
   platform: varchar().notNull(),
   loadTime: integer("load_time"),
   compilationTime: integer("compilation_time"),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
 });
 
 export const pushSubscriptions = pgTable("push_subscriptions", {
@@ -1916,7 +2023,7 @@ export const pushSubscriptions = pgTable("push_subscriptions", {
   customerId: varchar("customer_id"),
   userId: varchar("user_id"),
   endpoint: text().notNull(),
-  expirationTime: timestamp("expiration_time", { mode: 'string' }),
+  expirationTime: timestamp("expiration_time", { mode: 'date' }),
   keys: jsonb().notNull(),
   userAgent: text("user_agent"),
   deviceType: text("device_type").default('unknown'),
@@ -1924,11 +2031,11 @@ export const pushSubscriptions = pgTable("push_subscriptions", {
   notificationTypes: jsonb("notification_types").default(sql`'["order_updates", "messages", "promotions"]'::jsonb`),
   isActive: boolean("is_active").default(true).notNull(),
   isTestSubscription: boolean("is_test_subscription").default(false),
-  lastUsedAt: timestamp("last_used_at", { mode: 'string' }),
+  lastUsedAt: timestamp("last_used_at", { mode: 'date' }),
   failureCount: integer("failure_count").default(0),
   lastError: text("last_error"),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
 }, (table) => [
   unique("push_subscriptions_endpoint_key").on(table.endpoint),
 ]);
@@ -1945,8 +2052,8 @@ export const queueAutofillSettings = pgTable("queue_autofill_settings", {
   similarityThreshold: numeric("similarity_threshold", { precision: 3, scale: 2 }).default(0.8),
   forceVariation: boolean("force_variation").default(true),
   variationModel: text("variation_model").default('gemini-pro'),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
 });
 
 export const queueHistory = pgTable("queue_history", {
@@ -1959,7 +2066,7 @@ export const queueHistory = pgTable("queue_history", {
   errorMessage: text("error_message"),
   metadata: jsonb(),
   performedBy: varchar("performed_by"),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
 });
 
 export const registrationTokens = pgTable("registration_tokens", {
@@ -1968,11 +2075,11 @@ export const registrationTokens = pgTable("registration_tokens", {
   tier: text().default('gold').notNull(),
   maxUses: integer("max_uses").default(100),
   usedCount: integer("used_count").default(0).notNull(),
-  expiresAt: timestamp("expires_at", { mode: 'string' }).notNull(),
+  expiresAt: timestamp("expires_at", { mode: 'date' }).notNull(),
   createdBy: varchar("created_by"),
   notes: text(),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
 }, (table) => [
   unique("registration_tokens_token_key").on(table.token),
 ]);
@@ -1987,10 +2094,10 @@ export const returnRequests = pgTable("return_requests", {
   refundAmount: text("refund_amount").notNull(),
   status: varchar().default('pending').notNull(),
   adminNotes: text("admin_notes"),
-  processedAt: timestamp("processed_at", { mode: 'string' }),
+  processedAt: timestamp("processed_at", { mode: 'date' }),
   proofImages: jsonb("proof_images").default([]),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow().notNull(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow().notNull(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow().notNull(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow().notNull(),
 });
 
 export const salesAutomationConfigs = pgTable("sales_automation_configs", {
@@ -2005,12 +2112,12 @@ export const salesAutomationConfigs = pgTable("sales_automation_configs", {
   customerSimulation: jsonb("customer_simulation"),
   performanceParams: jsonb("performance_params"),
   advancedSettings: jsonb("advanced_settings"),
-  lastRunAt: timestamp("last_run_at", { mode: 'string' }),
-  nextRunAt: timestamp("next_run_at", { mode: 'string' }),
+  lastRunAt: timestamp("last_run_at", { mode: 'date' }),
+  nextRunAt: timestamp("next_run_at", { mode: 'date' }),
   totalAutomatedOrders: integer("total_automated_orders").default(0),
   totalAutomatedRevenue: numeric("total_automated_revenue", { precision: 15, scale: 2 }).default(0),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
 });
 
 export const salesAutomationHistory = pgTable("sales_automation_history", {
@@ -2023,9 +2130,9 @@ export const salesAutomationHistory = pgTable("sales_automation_history", {
   results: jsonb(),
   duration: integer(),
   errorLog: jsonb("error_log"),
-  startedAt: timestamp("started_at", { mode: 'string' }).defaultNow(),
-  completedAt: timestamp("completed_at", { mode: 'string' }),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
+  startedAt: timestamp("started_at", { mode: 'date' }).defaultNow(),
+  completedAt: timestamp("completed_at", { mode: 'date' }),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
   vietnameseSimulationData: jsonb("vietnamese_simulation_data").default({}),
   performanceMetrics: jsonb("performance_metrics").default({}),
 });
@@ -2049,9 +2156,9 @@ export const satisfactionSurveys = pgTable("satisfaction_surveys", {
   improvementSuggestions: text("improvement_suggestions"),
   surveyLanguage: varchar("survey_language", { length: 10 }).default('vi'),
   isAutoGenerated: boolean("is_auto_generated").default(false),
-  completedAt: timestamp("completed_at", { mode: 'string' }),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  completedAt: timestamp("completed_at", { mode: 'date' }),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
 });
 
 export const scheduledPosts = pgTable("scheduled_posts", {
@@ -2061,18 +2168,18 @@ export const scheduledPosts = pgTable("scheduled_posts", {
   assetIds: jsonb("asset_ids").default([]),
   socialAccountId: varchar("social_account_id").notNull(),
   platform: text().notNull(),
-  scheduledTime: timestamp("scheduled_time", { mode: 'string' }).notNull(),
+  scheduledTime: timestamp("scheduled_time", { mode: 'date' }).notNull(),
   timezone: varchar({ length: 50 }).default('Asia/Ho_Chi_Minh'),
   status: text().default('draft').notNull(),
-  publishedAt: timestamp("published_at", { mode: 'string' }),
+  publishedAt: timestamp("published_at", { mode: 'date' }),
   platformPostId: varchar("platform_post_id", { length: 255 }),
   platformUrl: text("platform_url"),
   errorMessage: text("error_message"),
   retryCount: integer("retry_count").default(0),
-  lastRetryAt: timestamp("last_retry_at", { mode: 'string' }),
+  lastRetryAt: timestamp("last_retry_at", { mode: 'date' }),
   analytics: jsonb(),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
   priority: integer().default(5).notNull(),
   ipPoolId: integer("ip_pool_id"),
   ipSnapshot: varchar("ip_snapshot", { length: 100 }),
@@ -2084,8 +2191,8 @@ export const seasonalRules = pgTable("seasonal_rules", {
   ruleName: text("rule_name").notNull(),
   ruleType: text("rule_type").notNull(),
   seasonType: text("season_type").notNull(),
-  startDate: timestamp("start_date", { mode: 'string' }),
-  endDate: timestamp("end_date", { mode: 'string' }),
+  startDate: timestamp("start_date", { mode: 'date' }),
+  endDate: timestamp("end_date", { mode: 'date' }),
   isRecurring: boolean("is_recurring").default(true).notNull(),
   targetCategories: jsonb("target_categories").default([]),
   targetSellerTiers: jsonb("target_seller_tiers").default(sql`'["standard", "professional", "top_seller", "premium"]'::jsonb`),
@@ -2106,11 +2213,11 @@ export const seasonalRules = pgTable("seasonal_rules", {
   priority: integer().default(50).notNull(),
   isActive: boolean("is_active").default(true).notNull(),
   autoApply: boolean("auto_apply").default(false).notNull(),
-  lastApplied: timestamp("last_applied", { mode: 'string' }),
+  lastApplied: timestamp("last_applied", { mode: 'date' }),
   timesApplied: integer("times_applied").default(0).notNull(),
   avgImpactScore: numeric("avg_impact_score", { precision: 5, scale: 2 }).default(0).notNull(),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
 });
 
 export const sellerPaymentConfigs = pgTable("seller_payment_configs", {
@@ -2122,8 +2229,8 @@ export const sellerPaymentConfigs = pgTable("seller_payment_configs", {
   autoPayoutEnabled: boolean("auto_payout_enabled").default(false).notNull(),
   payoutSchedule: text("payout_schedule").default('weekly'),
   bankDetails: jsonb("bank_details").default({}),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
 }, (table) => [
   unique("seller_payment_configs_seller_id_key").on(table.sellerId),
 ]);
@@ -2141,21 +2248,21 @@ export const sellerRatings = pgTable("seller_ratings", {
   culturalSensitivityRating: numeric("cultural_sensitivity_rating", { precision: 3, scale: 2 }).default(0).notNull(),
   responseTimeHours: numeric("response_time_hours", { precision: 5, scale: 2 }).default(0).notNull(),
   fulfillmentAccuracyPercent: numeric("fulfillment_accuracy_percent", { precision: 5, scale: 2 }).default(0).notNull(),
-  lastUpdatedAt: timestamp("last_updated_at", { mode: 'string' }).defaultNow(),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  lastUpdatedAt: timestamp("last_updated_at", { mode: 'date' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
 });
 
 export const sessions = pgTable("sessions", {
   sid: varchar().primaryKey(),
   sess: jsonb().notNull(),
-  expire: timestamp({ mode: 'string' }).notNull(),
+  expire: timestamp({ mode: 'date' }).notNull(),
 });
 
 export const shareVerifications = pgTable("share_verifications", {
   id: varchar().default(sql`gen_random_uuid()`).primaryKey(),
   participationId: varchar("participation_id").notNull(),
-  verifiedAt: timestamp("verified_at", { mode: 'string' }).defaultNow().notNull(),
+  verifiedAt: timestamp("verified_at", { mode: 'date' }).defaultNow().notNull(),
   attemptNumber: integer("attempt_number").notNull(),
   postExists: boolean("post_exists").notNull(),
   postId: text("post_id"),
@@ -2166,7 +2273,7 @@ export const shareVerifications = pgTable("share_verifications", {
   passed: boolean().notNull(),
   failureReason: text("failure_reason"),
   rawResponse: jsonb("raw_response").default({}),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow().notNull(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow().notNull(),
 });
 
 export const shippingZones = pgTable("shipping_zones", {
@@ -2184,8 +2291,8 @@ export const shippingZones = pgTable("shipping_zones", {
   zoneType: text("zone_type").default('standard').notNull(),
   isActive: boolean("is_active").default(true).notNull(),
   sortOrder: integer("sort_order").default(0).notNull(),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
 });
 
 export const shopSettings = pgTable("shop_settings", {
@@ -2198,8 +2305,8 @@ export const shopSettings = pgTable("shop_settings", {
   website: text(),
   logo: text(),
   isDefault: boolean("is_default").default(true).notNull(),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
   tagline: text(),
   logoUrl: text("logo_url"),
   zaloNumber: text("zalo_number"),
@@ -2237,7 +2344,7 @@ export const shopeeBusinessAccounts = pgTable("shopee_business_accounts", {
   shopLogo: text("shop_logo"),
   accessToken: text("access_token"),
   refreshToken: text("refresh_token"),
-  tokenExpiresAt: timestamp("token_expires_at", { mode: 'string' }),
+  tokenExpiresAt: timestamp("token_expires_at", { mode: 'date' }),
   partnerKey: text("partner_key"),
   shopType: text("shop_type"),
   shopStatus: text("shop_status").default('normal'),
@@ -2256,13 +2363,13 @@ export const shopeeBusinessAccounts = pgTable("shopee_business_accounts", {
   totalOrders: integer("total_orders").default(0),
   totalRevenue: numeric("total_revenue", { precision: 15, scale: 2 }).default(0),
   avgOrderValue: numeric("avg_order_value", { precision: 15, scale: 2 }).default(0),
-  lastOrderAt: timestamp("last_order_at", { mode: 'string' }),
-  lastSync: timestamp("last_sync", { mode: 'string' }),
+  lastOrderAt: timestamp("last_order_at", { mode: 'date' }),
+  lastSync: timestamp("last_sync", { mode: 'date' }),
   tagIds: jsonb("tag_ids").default([]),
   isActive: boolean("is_active").default(true),
   connected: boolean().default(false),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
 }, (table) => [
   unique("shopee_business_accounts_shop_id_key").on(table.shopId),
 ]);
@@ -2285,8 +2392,8 @@ export const shopeeShopOrders = pgTable("shopee_shop_orders", {
   items: jsonb().notNull(),
   shippingCarrier: text("shipping_carrier"),
   trackingNumber: text("tracking_number"),
-  shipTime: timestamp("ship_time", { mode: 'string' }),
-  deliveryTime: timestamp("delivery_time", { mode: 'string' }),
+  shipTime: timestamp("ship_time", { mode: 'date' }),
+  deliveryTime: timestamp("delivery_time", { mode: 'date' }),
   actualShippingFeeConfirmed: boolean("actual_shipping_fee_confirmed").default(false),
   paymentMethod: text("payment_method"),
   creditCardNumber: text("credit_card_number"),
@@ -2304,11 +2411,11 @@ export const shopeeShopOrders = pgTable("shopee_shop_orders", {
   serviceFee: numeric("service_fee", { precision: 15, scale: 2 }).default(0),
   tagIds: jsonb("tag_ids").default([]),
   notes: text(),
-  createTime: timestamp("create_time", { mode: 'string' }).notNull(),
-  updateTime: timestamp("update_time", { mode: 'string' }),
-  payTime: timestamp("pay_time", { mode: 'string' }),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  createTime: timestamp("create_time", { mode: 'date' }).notNull(),
+  updateTime: timestamp("update_time", { mode: 'date' }),
+  payTime: timestamp("pay_time", { mode: 'date' }),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
 }, (table) => [
   unique("shopee_shop_orders_shopee_order_id_key").on(table.shopeeOrderId),
 ]);
@@ -2342,11 +2449,11 @@ export const shopeeShopProducts = pgTable("shopee_shop_products", {
   ratingCount: integer("rating_count").default(0),
   logisticEnabled: boolean("logistic_enabled").default(true),
   daysToShip: integer("days_to_ship").default(3),
-  lastSyncAt: timestamp("last_sync_at", { mode: 'string' }),
+  lastSyncAt: timestamp("last_sync_at", { mode: 'date' }),
   syncStatus: text("sync_status").default('pending'),
   syncError: text("sync_error"),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
 }, (table) => [
   unique("shopee_shop_products_shopee_item_id_shop_id_key").on(table.shopeeItemId, table.shopId),
 ]);
@@ -2359,21 +2466,21 @@ export const socialAccounts = pgTable("social_accounts", {
   accessToken: text("access_token"),
   followers: integer().default(0),
   connected: boolean().default(false),
-  lastPost: timestamp("last_post", { mode: 'string' }),
+  lastPost: timestamp("last_post", { mode: 'date' }),
   engagement: numeric({ precision: 5, scale: 2 }).default(0),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
   refreshToken: text("refresh_token"),
-  tokenExpiresAt: timestamp("token_expires_at", { mode: 'string' }),
+  tokenExpiresAt: timestamp("token_expires_at", { mode: 'date' }),
   pageAccessTokens: jsonb("page_access_tokens").default([]),
   webhookSubscriptions: jsonb("webhook_subscriptions").default([]),
-  lastSync: timestamp("last_sync", { mode: 'string' }),
+  lastSync: timestamp("last_sync", { mode: 'date' }),
   isActive: boolean("is_active").default(true),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
   tagIds: jsonb("tag_ids").default([]),
   contentPreferences: jsonb("content_preferences").default(sql`'{"brandVoice": "friendly", "mediaRatio": {"image": 70, "video": 25, "textOnly": 5}, "excludedTags": [], "hashtagCount": 5, "postingTimes": ["09:00", "14:00", "21:00"], "contentLength": "medium", "preferredTags": [], "topicCategories": []}'::jsonb`),
   schedulingRules: jsonb("scheduling_rules").default(sql`'{"enabled": true, "timeSpacing": 60, "maxPostsPerDay": 8, "distributionMode": "weighted", "respectPeakHours": true, "conflictResolution": "ask"}'::jsonb`),
   performanceScore: numeric("performance_score", { precision: 5, scale: 2 }).default(0),
-  lastOptimization: timestamp("last_optimization", { mode: 'string' }),
+  lastOptimization: timestamp("last_optimization", { mode: 'date' }),
   botConfig: jsonb("bot_config").default({}),
   facebookAppId: varchar("facebook_app_id"),
 });
@@ -2385,12 +2492,12 @@ export const stockReservations = pgTable("stock_reservations", {
   orderId: varchar("order_id"),
   quantity: integer().notNull(),
   reservationType: text("reservation_type").default('cart').notNull(),
-  reservedAt: timestamp("reserved_at", { mode: 'string' }).defaultNow().notNull(),
-  expiresAt: timestamp("expires_at", { mode: 'string' }).notNull(),
-  releasedAt: timestamp("released_at", { mode: 'string' }),
+  reservedAt: timestamp("reserved_at", { mode: 'date' }).defaultNow().notNull(),
+  expiresAt: timestamp("expires_at", { mode: 'date' }).notNull(),
+  releasedAt: timestamp("released_at", { mode: 'date' }),
   status: text().default('active').notNull(),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
 });
 
 export const storefrontConfig = pgTable("storefront_config", {
@@ -2403,7 +2510,7 @@ export const storefrontConfig = pgTable("storefront_config", {
   theme: text().default('organic').notNull(),
   primaryColor: text("primary_color").default('#4ade80').notNull(),
   contactInfo: jsonb("contact_info").notNull(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
 }, (table) => [
   unique("storefront_config_name_unique").on(table.name),
 ]);
@@ -2423,8 +2530,8 @@ export const storefrontOrders = pgTable("storefront_orders", {
   deliveryType: text("delivery_type").default('local_delivery').notNull(),
   status: text().default('pending').notNull(),
   notes: text(),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
   affiliateCode: text("affiliate_code"),
 });
 
@@ -2440,8 +2547,8 @@ export const templateCompilations = pgTable("template_compilations", {
   appliedTheme: jsonb("applied_theme"),
   version: varchar().default(1.0).notNull(),
   isValid: boolean("is_valid").default(true).notNull(),
-  expiresAt: timestamp("expires_at", { mode: 'string' }),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
+  expiresAt: timestamp("expires_at", { mode: 'date' }),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
 }, (table) => [
   unique("template_compilations_template_id_template_type_customizati_key").on(table.templateId, table.templateType, table.customizationHash, table.framework),
 ]);
@@ -2463,8 +2570,8 @@ export const themeConfigurations = pgTable("theme_configurations", {
   createdBy: varchar("created_by"),
   isPublic: boolean("is_public").default(false).notNull(),
   usageCount: integer("usage_count").default(0).notNull(),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
 });
 
 export const tiktokBusinessAccounts = pgTable("tiktok_business_accounts", {
@@ -2475,7 +2582,7 @@ export const tiktokBusinessAccounts = pgTable("tiktok_business_accounts", {
   avatarUrl: text("avatar_url"),
   accessToken: text("access_token"),
   refreshToken: text("refresh_token"),
-  tokenExpiresAt: timestamp("token_expires_at", { mode: 'string' }),
+  tokenExpiresAt: timestamp("token_expires_at", { mode: 'date' }),
   scope: jsonb().default([]),
   businessType: text("business_type"),
   industry: text(),
@@ -2490,12 +2597,12 @@ export const tiktokBusinessAccounts = pgTable("tiktok_business_accounts", {
   likeCount: integer("like_count").default(0),
   engagement: numeric({ precision: 5, scale: 2 }).default(0),
   avgViews: integer("avg_views").default(0),
-  lastPost: timestamp("last_post", { mode: 'string' }),
-  lastSync: timestamp("last_sync", { mode: 'string' }),
+  lastPost: timestamp("last_post", { mode: 'date' }),
+  lastSync: timestamp("last_sync", { mode: 'date' }),
   isActive: boolean("is_active").default(true),
   connected: boolean().default(false),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
   tagIds: jsonb("tag_ids").default([]),
 }, (table) => [
   unique("tiktok_business_accounts_business_id_unique").on(table.businessId),
@@ -2518,15 +2625,15 @@ export const tiktokShopOrders = pgTable("tiktok_shop_orders", {
   fulfillmentStatus: text("fulfillment_status").default('pending'),
   trackingNumber: text("tracking_number"),
   shippingCarrier: text("shipping_carrier"),
-  shippedAt: timestamp("shipped_at", { mode: 'string' }),
-  deliveredAt: timestamp("delivered_at", { mode: 'string' }),
+  shippedAt: timestamp("shipped_at", { mode: 'date' }),
+  deliveredAt: timestamp("delivered_at", { mode: 'date' }),
   paymentMethod: text("payment_method"),
   paymentStatus: text("payment_status"),
   tiktokFees: numeric("tiktok_fees", { precision: 15, scale: 2 }).default(0),
   notes: text(),
-  orderDate: timestamp("order_date", { mode: 'string' }).notNull(),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  orderDate: timestamp("order_date", { mode: 'date' }).notNull(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
   tagIds: jsonb("tag_ids").default([]),
 }, (table) => [
   unique("tiktok_shop_orders_tiktok_order_id_unique").on(table.tiktokOrderId),
@@ -2551,11 +2658,11 @@ export const tiktokShopProducts = pgTable("tiktok_shop_products", {
   orders: integer().default(0),
   revenue: numeric({ precision: 15, scale: 2 }).default(0),
   conversionRate: numeric("conversion_rate", { precision: 5, scale: 2 }).default(0),
-  lastSyncAt: timestamp("last_sync_at", { mode: 'string' }),
+  lastSyncAt: timestamp("last_sync_at", { mode: 'date' }),
   syncStatus: text("sync_status").default('pending'),
   syncError: text("sync_error"),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
   tagIds: jsonb("tag_ids").default([]),
 });
 
@@ -2577,9 +2684,9 @@ export const tiktokVideos = pgTable("tiktok_videos", {
   salesFromVideo: numeric("sales_from_video", { precision: 15, scale: 2 }).default(0),
   clickthroughRate: numeric("clickthrough_rate", { precision: 5, scale: 2 }).default(0),
   status: text().default('published'),
-  publishedAt: timestamp("published_at", { mode: 'string' }),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  publishedAt: timestamp("published_at", { mode: 'date' }),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
   tagIds: jsonb("tag_ids").default([]),
 }, (table) => [
   unique("tiktok_videos_video_id_unique").on(table.videoId),
@@ -2594,9 +2701,9 @@ export const trips = pgTable("trips", {
   arrivalLocation: text("arrival_location").notNull(),
   stops: jsonb().default([]),
   distance: numeric({ precision: 10, scale: 2 }),
-  departureTime: timestamp("departure_time", { mode: 'string' }).notNull(),
-  arrivalTime: timestamp("arrival_time", { mode: 'string' }).notNull(),
-  actualArrivalTime: timestamp("actual_arrival_time", { mode: 'string' }),
+  departureTime: timestamp("departure_time", { mode: 'date' }).notNull(),
+  arrivalTime: timestamp("arrival_time", { mode: 'date' }).notNull(),
+  actualArrivalTime: timestamp("actual_arrival_time", { mode: 'date' }),
   ticketPrice: numeric("ticket_price", { precision: 15, scale: 2 }).notNull(),
   currency: text().default('VND').notNull(),
   totalSeats: integer("total_seats").notNull(),
@@ -2609,9 +2716,9 @@ export const trips = pgTable("trips", {
   netProfit: numeric("net_profit", { precision: 15, scale: 2 }).default(0),
   notes: text(),
   cancellationReason: text("cancellation_reason"),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
-  completedAt: timestamp("completed_at", { mode: 'string' }),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
+  completedAt: timestamp("completed_at", { mode: 'date' }),
 });
 
 export const unifiedTags = pgTable("unified_tags", {
@@ -2625,12 +2732,12 @@ export const unifiedTags = pgTable("unified_tags", {
   description: text(),
   keywords: jsonb().default([]),
   usageCount: integer("usage_count").default(0),
-  lastUsed: timestamp("last_used", { mode: 'string' }),
+  lastUsed: timestamp("last_used", { mode: 'date' }),
   isSystemDefault: boolean("is_system_default").default(false),
   isActive: boolean("is_active").default(true),
   sortOrder: integer("sort_order").default(0),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
 }, (table) => [
   unique("unified_tags_slug_unique").on(table.slug),
 ]);
@@ -2647,13 +2754,13 @@ export const userSatisfactionScores = pgTable("user_satisfaction_scores", {
   speedSatisfaction: integer("speed_satisfaction"),
   overallExperience: text("overall_experience"),
   wouldRecommend: boolean("would_recommend"),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
 });
 
 export const userSessions = pgTable("user_sessions", {
   sid: varchar().primaryKey(),
   sess: text().notNull(),
-  expire: timestamp({ mode: 'string' }).notNull(),
+  expire: timestamp({ mode: 'date' }).notNull(),
 });
 
 export const userTemplates = pgTable("user_templates", {
@@ -2670,8 +2777,8 @@ export const userTemplates = pgTable("user_templates", {
   tags: jsonb().default([]),
   usageCount: integer("usage_count").default(0).notNull(),
   rating: numeric({ precision: 3, scale: 2 }).default(0.00),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
 });
 
 export const users = pgTable("users", {
@@ -2686,7 +2793,7 @@ export const vehicleGroupAssignments = pgTable("vehicle_group_assignments", {
   id: varchar().default(sql`gen_random_uuid()`).primaryKey(),
   vehicleId: varchar("vehicle_id").notNull(),
   groupId: varchar("group_id").notNull(),
-  assignedAt: timestamp("assigned_at", { mode: 'string' }).defaultNow(),
+  assignedAt: timestamp("assigned_at", { mode: 'date' }).defaultNow(),
   assignedBy: varchar("assigned_by"),
   notes: text(),
 }, (table) => [
@@ -2705,15 +2812,15 @@ export const vehicles = pgTable("vehicles", {
   seatingCapacity: integer("seating_capacity"),
   cargoCapacity: numeric("cargo_capacity", { precision: 10, scale: 2 }),
   registrationNumber: text("registration_number"),
-  registrationExpiry: timestamp("registration_expiry", { mode: 'string' }),
+  registrationExpiry: timestamp("registration_expiry", { mode: 'date' }),
   insuranceNumber: text("insurance_number"),
-  insuranceExpiry: timestamp("insurance_expiry", { mode: 'string' }),
+  insuranceExpiry: timestamp("insurance_expiry", { mode: 'date' }),
   status: text().default('active').notNull(),
   isVerified: boolean("is_verified").default(false).notNull(),
   images: jsonb().default([]),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
-  verifiedAt: timestamp("verified_at", { mode: 'string' }),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
+  verifiedAt: timestamp("verified_at", { mode: 'date' }),
   verifiedBy: varchar("verified_by"),
 }, (table) => [
   unique("vehicles_license_plate_key").on(table.licensePlate),
@@ -2734,12 +2841,12 @@ export const vendorOrders = pgTable("vendor_orders", {
   commissionAmount: numeric("commission_amount", { precision: 15, scale: 2 }),
   depositDeducted: boolean("deposit_deducted").default(false),
   status: varchar().default('pending'),
-  processingAt: timestamp("processing_at", { mode: 'string' }),
-  shippedAt: timestamp("shipped_at", { mode: 'string' }),
-  deliveredAt: timestamp("delivered_at", { mode: 'string' }),
-  cancelledAt: timestamp("cancelled_at", { mode: 'string' }),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow().notNull(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow().notNull(),
+  processingAt: timestamp("processing_at", { mode: 'date' }),
+  shippedAt: timestamp("shipped_at", { mode: 'date' }),
+  deliveredAt: timestamp("delivered_at", { mode: 'date' }),
+  cancelledAt: timestamp("cancelled_at", { mode: 'date' }),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow().notNull(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow().notNull(),
 });
 
 export const vendorProducts = pgTable("vendor_products", {
@@ -2751,11 +2858,11 @@ export const vendorProducts = pgTable("vendor_products", {
   quantityReturned: integer("quantity_returned").default(0).notNull(),
   consignmentPrice: numeric("consignment_price", { precision: 15, scale: 2 }).notNull(),
   discountPercent: numeric("discount_percent", { precision: 5, scale: 2 }).default(0),
-  consignmentDate: timestamp("consignment_date", { mode: 'string' }).defaultNow().notNull(),
-  expiryDate: timestamp("expiry_date", { mode: 'string' }),
+  consignmentDate: timestamp("consignment_date", { mode: 'date' }).defaultNow().notNull(),
+  expiryDate: timestamp("expiry_date", { mode: 'date' }),
   status: varchar().default('active'),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow().notNull(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow().notNull(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow().notNull(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow().notNull(),
   commissionPerUnit: numeric("commission_per_unit", { precision: 15, scale: 2 }).default(0.00),
 }, (table) => [
   unique("vendor_products_vendor_id_product_id_key").on(table.vendorId, table.productId),
@@ -2780,10 +2887,10 @@ export const vendors = pgTable("vendors", {
   commissionRate: numeric("commission_rate", { precision: 5, scale: 2 }).default(0.30).notNull(),
   notificationPreferences: jsonb("notification_preferences").default({}),
   status: varchar().default('pending'),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow().notNull(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow().notNull(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow().notNull(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow().notNull(),
   password: text().default('').notNull(),
-  lastLoginAt: timestamp("last_login_at", { mode: 'string' }),
+  lastLoginAt: timestamp("last_login_at", { mode: 'date' }),
   warehousePostalCode: text("warehouse_postal_code"),
   warehousePhone: text("warehouse_phone"),
   paymentModel: text("payment_model").default('deposit').notNull(),
@@ -2807,8 +2914,8 @@ export const vietnameseReviewTemplates = pgTable("vietnamese_review_templates", 
   usageCount: integer("usage_count").default(0),
   isActive: boolean("is_active").default(true),
   tags: text().default('{}'),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
 });
 
 export const workers = pgTable("workers", {
@@ -2829,8 +2936,8 @@ export const workers = pgTable("workers", {
   endpointUrl: text("endpoint_url").notNull(),
   status: text().default('active').notNull(),
   isOnline: boolean("is_online").default(false).notNull(),
-  lastPingAt: timestamp("last_ping_at", { mode: 'string' }),
-  lastJobAt: timestamp("last_job_at", { mode: 'string' }),
+  lastPingAt: timestamp("last_ping_at", { mode: 'date' }),
+  lastJobAt: timestamp("last_job_at", { mode: 'date' }),
   currentLoad: integer("current_load").default(0).notNull(),
   totalJobsCompleted: integer("total_jobs_completed").default(0).notNull(),
   totalJobsFailed: integer("total_jobs_failed").default(0).notNull(),
@@ -2838,13 +2945,13 @@ export const workers = pgTable("workers", {
   avgResponseTime: integer("avg_response_time").default(0).notNull(),
   registrationSecret: text("registration_secret"),
   authToken: text("auth_token"),
-  tokenExpiresAt: timestamp("token_expires_at", { mode: 'string' }),
+  tokenExpiresAt: timestamp("token_expires_at", { mode: 'date' }),
   tags: jsonb(),
   priority: integer().default(1).notNull(),
   isEnabled: boolean("is_enabled").default(true).notNull(),
   metadata: jsonb(),
-  createdAt: timestamp("created_at", { mode: 'string' }).defaultNow().notNull(),
-  updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow().notNull(),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow().notNull(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow().notNull(),
   ipAddress: text("ip_address"),
   ipCountry: text("ip_country"),
   ipRegion: text("ip_region"),
@@ -2865,6 +2972,24 @@ export const insertAffiliateProductAssignmentsSchema = createInsertSchema(affili
 export const selectAffiliateProductAssignmentsSchema = createSelectSchema(affiliateProductAssignments);
 export const insertAffiliateProductRequestsSchema = createInsertSchema(affiliateProductRequests);
 export const selectAffiliateProductRequestsSchema = createSelectSchema(affiliateProductRequests);
+export const insertAffiliateOrdersSchema = createInsertSchema(affiliateOrders);
+export const selectAffiliateOrdersSchema = createSelectSchema(affiliateOrders);
+export const insertAffiliateShareLogsSchema = createInsertSchema(affiliateShareLogs);
+export const selectAffiliateShareLogsSchema = createSelectSchema(affiliateShareLogs);
+export const insertAbebooksSearchHistorySchema = createInsertSchema(abebooksSearchHistory);
+export const selectAbebooksSearchHistorySchema = createSelectSchema(abebooksSearchHistory);
+export const insertAbebooksAccountsSchema = createInsertSchema(abebooksAccounts);
+export const selectAbebooksAccountsSchema = createSelectSchema(abebooksAccounts);
+export const insertAbebooksListingsSchema = createInsertSchema(abebooksListings);
+export const selectAbebooksListingsSchema = createSelectSchema(abebooksListings);
+export const insertQueueAutoFillSettingsSchema = createInsertSchema(queueAutoFillSettings);
+export const selectQueueAutoFillSettingsSchema = createSelectSchema(queueAutoFillSettings);
+export const insertGroupAccountsSchema = createInsertSchema(groupAccounts);
+export const selectGroupAccountsSchema = createSelectSchema(groupAccounts);
+export const insertProductFAQsSchema = createInsertSchema(productFAQs);
+export const selectProductFAQsSchema = createSelectSchema(productFAQs);
+export const insertVendorPushSubscriptionsSchema = createInsertSchema(vendorPushSubscriptions);
+export const selectVendorPushSubscriptionsSchema = createSelectSchema(vendorPushSubscriptions);
 export const insertApiConfigurationsSchema = createInsertSchema(apiConfigurations);
 export const selectApiConfigurationsSchema = createSelectSchema(apiConfigurations);
 export const insertAuthUsersSchema = createInsertSchema(authUsers);
@@ -3186,8 +3311,8 @@ export type InsertBookPrices = z.infer<typeof insertBookPricesSchema>;
 export type BookPrices = typeof bookPrices.$inferSelect;
 export type InsertBookPricingRules = z.infer<typeof insertBookPricingRulesSchema>;
 export type BookPricingRules = typeof bookPricingRules.$inferSelect;
-export type InsertBookSellerInventory = z.infer<typeof insertBookSellerInventorySchema>;
-export type BookSellerInventory = typeof bookSellerInventory.$inferSelect;
+export type InsertBookSellerInventories = z.infer<typeof insertBookSellerInventorySchema>;
+export type BookSellerInventories = typeof bookSellerInventory.$inferSelect;
 export type InsertBookSellers = z.infer<typeof insertBookSellersSchema>;
 export type BookSellers = typeof bookSellers.$inferSelect;
 export type InsertBooks = z.infer<typeof insertBooksSchema>;
@@ -3218,8 +3343,8 @@ export type InsertContentCategories = z.infer<typeof insertContentCategoriesSche
 export type ContentCategories = typeof contentCategories.$inferSelect;
 export type InsertContentFaqAssignments = z.infer<typeof insertContentFaqAssignmentsSchema>;
 export type ContentFaqAssignments = typeof contentFaqAssignments.$inferSelect;
-export type InsertContentLibrary = z.infer<typeof insertContentLibrarySchema>;
-export type ContentLibrary = typeof contentLibrary.$inferSelect;
+export type InsertContentLibraries = z.infer<typeof insertContentLibrarySchema>;
+export type ContentLibraries = typeof contentLibrary.$inferSelect;
 export type InsertContentQueue = z.infer<typeof insertContentQueueSchema>;
 export type ContentQueue = typeof contentQueue.$inferSelect;
 export type InsertConversationMessages = z.infer<typeof insertConversationMessagesSchema>;
@@ -3294,6 +3419,7 @@ export type InsertIntentAnalytics = z.infer<typeof insertIntentAnalyticsSchema>;
 export type IntentAnalytics = typeof intentAnalytics.$inferSelect;
 export type InsertInvoiceTemplates = z.infer<typeof insertInvoiceTemplatesSchema>;
 export type InvoiceTemplates = typeof invoiceTemplates.$inferSelect;
+export type InvoiceTemplateConfig = InvoiceTemplates;
 export type InsertIpPoolSessions = z.infer<typeof insertIpPoolSessionsSchema>;
 export type IpPoolSessions = typeof ipPoolSessions.$inferSelect;
 export type InsertIpPools = z.infer<typeof insertIpPoolsSchema>;
@@ -3447,3 +3573,106 @@ export interface WorkerCapability {
 export type BookWithPrices = Books & {
   prices?: BookPrices[];
 };
+
+// Missing types
+export type InsertAffiliateOrders = z.infer<typeof insertAffiliateOrdersSchema>;
+export type AffiliateOrders = typeof affiliateOrders.$inferSelect;
+export type InsertAffiliateShareLogs = z.infer<typeof insertAffiliateShareLogsSchema>;
+export type AffiliateShareLogs = typeof affiliateShareLogs.$inferSelect;
+export type InsertAbebooksSearchHistory = z.infer<typeof insertAbebooksSearchHistorySchema>;
+export type AbebooksSearchHistory = typeof abebooksSearchHistory.$inferSelect;
+export type InsertAbebooksAccounts = z.infer<typeof insertAbebooksAccountsSchema>;
+export type AbebooksAccounts = typeof abebooksAccounts.$inferSelect;
+export type InsertAbebooksListings = z.infer<typeof insertAbebooksListingsSchema>;
+export type AbebooksListings = typeof abebooksListings.$inferSelect;
+export type InsertAbebooksAccount = z.infer<typeof insertAbebooksAccountsSchema>;
+export type AbebooksAccount = typeof abebooksAccounts.$inferSelect;
+export type InsertAbebooksListing = z.infer<typeof insertAbebooksListingsSchema>;
+export type AbebooksListing = typeof abebooksListings.$inferSelect;
+export type InsertQueueAutoFillSettings = z.infer<typeof insertQueueAutoFillSettingsSchema>;
+export type QueueAutoFillSettings = typeof queueAutoFillSettings.$inferSelect;
+export type InsertGroupAccounts = z.infer<typeof insertGroupAccountsSchema>;
+export type GroupAccounts = typeof groupAccounts.$inferSelect;
+export type InsertProductFAQs = z.infer<typeof insertProductFAQsSchema>;
+export type ProductFAQs = typeof productFAQs.$inferSelect;
+export type InsertProductFAQ = z.infer<typeof insertProductFAQsSchema>;
+export type ProductFAQ = typeof productFAQs.$inferSelect;
+export type InsertVendorPushSubscriptions = z.infer<typeof insertVendorPushSubscriptionsSchema>;
+export type VendorPushSubscriptions = typeof vendorPushSubscriptions.$inferSelect;
+
+// Worker types
+export type Worker = typeof workers.$inferSelect;
+export type InsertWorker = typeof workers.$inferInsert;
+export type WorkerJob = typeof workerJobs.$inferSelect;
+export type InsertWorkerJob = typeof workerJobs.$inferInsert;
+export type WorkerHealthCheck = typeof workerHealthChecks.$inferSelect;
+export type InsertWorkerHealthCheck = typeof workerHealthChecks.$inferInsert;
+
+// Missing exports for compatibility
+export type FanpageContentPreferences = any;
+export type SmartSchedulingRules = any;
+export type CustomDescriptionTemplate = any;
+export type PushSubscription = PushSubscriptions;
+export type VendorPushSubscription = VendorPushSubscriptions;
+export type SocialAccount = SocialAccounts;
+export type FieldCategory = any;
+
+// Missing tables for compatibility
+export const fanpageContentPreferences = pgTable("fanpage_content_preferences", {
+  id: varchar().default(sql`gen_random_uuid()`).primaryKey(),
+  socialAccountId: varchar("social_account_id").notNull(),
+  preferredTags: jsonb("preferred_tags").default([]),
+  excludedTags: jsonb("excluded_tags").default([]),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
+});
+
+export const smartSchedulingRules = pgTable("smart_scheduling_rules", {
+  id: varchar().default(sql`gen_random_uuid()`).primaryKey(),
+  name: text().notNull(),
+  conditions: jsonb().default({}),
+  actions: jsonb().default({}),
+  isActive: boolean("is_active").default(true),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
+});
+
+export const customDescriptionTemplates = pgTable("custom_description_templates", {
+  id: varchar().default(sql`gen_random_uuid()`).primaryKey(),
+  name: text().notNull(),
+  template: text().notNull(),
+  isActive: boolean("is_active").default(true),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
+});
+
+export const fieldCategories = pgTable("field_categories", {
+  id: varchar().default(sql`gen_random_uuid()`).primaryKey(),
+  name: text().notNull(),
+  description: text(),
+  isActive: boolean("is_active").default(true),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
+});
+
+export const viettelpostConfigs = pgTable("viettelpost_configs", {
+  id: varchar().default(sql`gen_random_uuid()`).primaryKey(),
+  name: text().notNull(),
+  apiKey: text("api_key").notNull(),
+  isActive: boolean("is_active").default(true),
+  isDefault: boolean("is_default").default(false),
+  createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: 'date' }).defaultNow(),
+});
+
+// Type exports for new tables
+export type InsertFanpageContentPreferences = typeof fanpageContentPreferences.$inferInsert;
+export type FanpageContentPreferences = typeof fanpageContentPreferences.$inferSelect;
+export type InsertSmartSchedulingRules = typeof smartSchedulingRules.$inferInsert;
+export type SmartSchedulingRules = typeof smartSchedulingRules.$inferSelect;
+export type InsertCustomDescriptionTemplates = typeof customDescriptionTemplates.$inferInsert;
+export type CustomDescriptionTemplates = typeof customDescriptionTemplates.$inferSelect;
+export type InsertFieldCategories = typeof fieldCategories.$inferInsert;
+export type FieldCategories = typeof fieldCategories.$inferSelect;
+export type InsertViettelpostConfigs = typeof viettelpostConfigs.$inferInsert;
+export type ViettelpostConfigs = typeof viettelpostConfigs.$inferSelect;

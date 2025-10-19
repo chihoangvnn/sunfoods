@@ -34,7 +34,7 @@ export class VendorRefundService {
       throw new Error('Vendor order not found');
     }
 
-    const vendorCost = parseFloat(vendorOrder.vendorCost);
+    const vendorCost = parseFloat(vendorOrder.vendorCost || "0");
     if (refundAmount > vendorCost) {
       throw new Error('Refund amount cannot exceed original order vendor cost');
     }
@@ -173,7 +173,7 @@ export class VendorRefundService {
     adminId?: string
   ): Promise<RefundResult> {
     const commissionRate = parseFloat(vendor.commissionRate);
-    const orderTotal = parseFloat(vendorOrder.vendorCost);
+    const orderTotal = parseFloat(vendorOrder.vendorCost || "0");
     
     const vendorShare = (orderTotal * commissionRate) / 100;
     const platformShare = orderTotal - vendorShare;

@@ -154,7 +154,7 @@ class ShopeeAuthService {
         })
       });
 
-      const data = await response.json();
+      const data = await response.json() as any as any;
 
       // 🔧 FIXED: Handle Shopee API error structure
       if (data.error || !data.access_token) {
@@ -208,7 +208,7 @@ class ShopeeAuthService {
         })
       });
 
-      const data = await response.json();
+      const data = await response.json() as any as any;
 
       // 🔧 FIXED: Handle Shopee API error structure
       if (data.error || !data.access_token) {
@@ -413,7 +413,7 @@ class ShopeeAuthService {
       throw new Error(`Shopee API request failed: ${response.status} ${response.statusText} - ${errorText}`);
     }
 
-    const result = await response.json();
+    const result = await response.json() as any as any;
     
     // 🔧 FIXED: Handle Shopee API error responses
     if (result.error) {

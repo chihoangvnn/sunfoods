@@ -118,16 +118,16 @@ export class TikTokAuthService {
 
       const data = await response.json();
       
-      if (data.error) {
-        throw new Error(`TikTok Business OAuth error: ${data.error} - ${data.error_description}`);
+      if ((data as any).error) {
+        throw new Error(`TikTok Business OAuth error: ${(data as any).error} - ${(data as any).error_description}`);
       }
 
       return {
-        access_token: data.access_token,
-        token_type: data.token_type,
-        expires_in: data.expires_in,
-        refresh_token: data.refresh_token,
-        scope: data.scope,
+        access_token: (data as any).access_token,
+        token_type: (data as any).token_type,
+        expires_in: (data as any).expires_in,
+        refresh_token: (data as any).refresh_token,
+        scope: (data as any).scope,
       };
     } catch (error) {
       console.error('TikTok Business token exchange error:', error);
@@ -164,16 +164,16 @@ export class TikTokAuthService {
 
       const data = await response.json();
       
-      if (data.error) {
-        throw new Error(`TikTok Shop OAuth error: ${data.error} - ${data.error_description}`);
+      if ((data as any).error) {
+        throw new Error(`TikTok Shop OAuth error: ${(data as any).error} - ${(data as any).error_description}`);
       }
 
       return {
-        access_token: data.access_token,
-        token_type: data.token_type,
-        expires_in: data.expires_in,
-        refresh_token: data.refresh_token,
-        scope: data.scope,
+        access_token: (data as any).access_token,
+        token_type: (data as any).token_type,
+        expires_in: (data as any).expires_in,
+        refresh_token: (data as any).refresh_token,
+        scope: (data as any).scope,
       };
     } catch (error) {
       console.error('TikTok Shop token exchange error:', error);
@@ -204,11 +204,11 @@ export class TikTokAuthService {
 
       const data = await response.json();
       
-      if (data.error) {
-        throw new Error(`TikTok user profile error: ${data.error.message}`);
+      if ((data as any).error) {
+        throw new Error(`TikTok user profile error: ${(data as any).error.message}`);
       }
 
-      return data.data.user;
+      return (data as any).data.user;
     } catch (error) {
       console.error('TikTok user profile fetch error:', error);
       throw error;
@@ -234,11 +234,11 @@ export class TikTokAuthService {
 
       const data = await response.json();
       
-      if (data.code !== 0) {
-        throw new Error(`TikTok business profile error: ${data.message}`);
+      if ((data as any).code !== 0) {
+        throw new Error(`TikTok business profile error: ${(data as any).message}`);
       }
 
-      return data.data.list;
+      return (data as any).data.list;
     } catch (error) {
       console.error('TikTok business profile fetch error:', error);
       throw error;
@@ -272,16 +272,16 @@ export class TikTokAuthService {
 
       const data = await response.json();
       
-      if (data.error) {
-        throw new Error(`TikTok token refresh error: ${data.error} - ${data.error_description}`);
+      if ((data as any).error) {
+        throw new Error(`TikTok token refresh error: ${(data as any).error} - ${(data as any).error_description}`);
       }
 
       return {
-        access_token: data.access_token,
-        token_type: data.token_type,
-        expires_in: data.expires_in,
-        refresh_token: data.refresh_token,
-        scope: data.scope,
+        access_token: (data as any).access_token,
+        token_type: (data as any).token_type,
+        expires_in: (data as any).expires_in,
+        refresh_token: (data as any).refresh_token,
+        scope: (data as any).scope,
       };
     } catch (error) {
       console.error('TikTok token refresh error:', error);

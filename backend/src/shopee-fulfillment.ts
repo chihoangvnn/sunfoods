@@ -90,11 +90,11 @@ class ShopeeFulfillmentService {
         id: order.id,
         orderId: order.id,
         orderNumber: order.orderNumber,
-        customerName: order.customerInfo?.buyerUsername || 'Unknown Customer',
+        customerName: (order.customerInfo as any)?.buyerUsername || 'Unknown Customer',
         status: this.mapOrderStatusToFulfillmentStatus(order.orderStatus, order.trackingNumber || undefined),
         priority,
-        items: this.mapOrderItems(order.items || []),
-        shippingAddress: order.customerInfo?.recipientAddress || {},
+        items: this.mapOrderItems((order.items as any[]) || []),
+        shippingAddress: (order.customerInfo as any)?.recipientAddress || {},
         totalAmount: Number(order.totalAmount),
         trackingNumber: order.trackingNumber,
         shippingCarrier: order.shippingCarrier,
@@ -204,7 +204,7 @@ class ShopeeFulfillmentService {
       carrier: orderData.shippingCarrier || 'Shopee Express',
       labelUrl: `/api/shopee-shop/labels/${taskId}.pdf`,
       estimatedDelivery: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000), // 5 days
-      cost: this.calculateShippingCost(Number(orderData.totalAmount), orderData.customerInfo?.recipientAddress)
+      cost: this.calculateShippingCost(Number(orderData.totalAmount), (orderData.customerInfo as any)?.recipientAddress)
     };
 
     // Update order with tracking info

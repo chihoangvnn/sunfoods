@@ -75,8 +75,8 @@ export async function sendEmail(message: SmtpMessage): Promise<{
 
   if (!response.ok) {
     const error = await response.json();
-    throw new Error(error.message || "Failed to send email");
+    throw new Error((error as any).message || "Failed to send email");
   }
 
-  return await response.json();
+  return await response.json() as any;
 }

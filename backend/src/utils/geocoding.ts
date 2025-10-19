@@ -33,7 +33,7 @@ export async function geocodeAddress(address: string): Promise<GeocodingResult> 
 
     const data = await response.json();
 
-    if (!data || data.length === 0) {
+    if (!data || (data as any).length === 0) {
       return {
         success: false,
         error: "Address not found",
@@ -41,7 +41,7 @@ export async function geocodeAddress(address: string): Promise<GeocodingResult> 
       };
     }
 
-    const result = data[0];
+    const result = (data as any)[0];
     
     return {
       success: true,
