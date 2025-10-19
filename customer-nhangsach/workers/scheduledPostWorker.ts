@@ -1,9 +1,6 @@
 import { Worker } from 'bullmq';
 import { getRedisClient } from '../lib/redis';
 import { ScheduledPostJobData } from '../lib/queues/scheduledPost';
-import { db } from '../server/db';
-import { affiliateShareLogs, affiliates } from '../shared/schema';
-import { eq, and, gte, count, desc } from 'drizzle-orm';
 import crypto from 'crypto';
 
 const connection = getRedisClient();
@@ -18,60 +15,57 @@ const worker = new Worker<ScheduledPostJobData>(
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    const [shareCountResult] = await db
-      .select({ count: count() })
-      .from(affiliateShareLogs)
-      .where(
-        and(
-          eq(affiliateShareLogs.affiliateId, affiliateId),
-          eq(affiliateShareLogs.platform, platform),
-          gte(affiliateShareLogs.sharedAt, today)
-        )
-      );
+    // Check rate limits via API
+    const rateLimitResponse = await fetch(`${process.env.BACKEND_URL || 'http://localhost:5000'}/api/affiliate/rate-limit`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        affiliateId,
+        platform,
+        date: today.toISOString()
+      })
+    });
 
-    const todayShareCount = shareCountResult?.count || 0;
-
-    if (todayShareCount >= 4) {
-      throw new Error(`Rate limit exceeded: Already shared ${todayShareCount} times on ${platform} today`);
+    if (!rateLimitResponse.ok) {
+      const errorData = await rateLimitResponse.json();
+      throw new Error(errorData.message || 'Rate limit check failed');
     }
 
-    const recentShares = await db
-      .select()
-      .from(affiliateShareLogs)
-      .where(
-        and(
-          eq(affiliateShareLogs.affiliateId, affiliateId),
-          eq(affiliateShareLogs.platform, platform)
-        )
-      )
-      .orderBy(desc(affiliateShareLogs.sharedAt))
-      .limit(1);
+    const rateLimitData = await rateLimitResponse.json();
+    
+    if (rateLimitData.todayShareCount >= 4) {
+      throw new Error(`Rate limit exceeded: Already shared ${rateLimitData.todayShareCount} times on ${platform} today`);
+    }
 
-    if (recentShares.length > 0) {
-      const lastShareTime = new Date(recentShares[0].sharedAt);
-      const hoursSinceLastShare = (Date.now() - lastShareTime.getTime()) / (1000 * 60 * 60);
-
-      if (hoursSinceLastShare < 2) {
-        throw new Error(`Rate limit: Must wait 2 hours between shares. Last share was ${hoursSinceLastShare.toFixed(1)} hours ago`);
-      }
+    if (rateLimitData.hoursSinceLastShare < 2) {
+      throw new Error(`Rate limit: Must wait 2 hours between shares. Last share was ${rateLimitData.hoursSinceLastShare.toFixed(1)} hours ago`);
     }
 
     const shortCode = crypto.randomBytes(6).toString('base64url');
 
-    await db.insert(affiliateShareLogs).values({
-      id: crypto.randomUUID(),
-      affiliateId,
-      productId,
-      productSlug,
-      productName,
-      platform,
-      imageIndex,
-      captionTemplate: null,
-      customCaption: caption,
-      shortCode,
-      clickCount: 0,
-      sharedAt: new Date(),
+    // Create share log via API
+    const shareLogResponse = await fetch(`${process.env.BACKEND_URL || 'http://localhost:5000'}/api/affiliate/share-log`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        affiliateId,
+        productId,
+        productSlug,
+        productName,
+        platform,
+        imageIndex,
+        captionTemplate: null,
+        customCaption: caption,
+        shortCode,
+        clickCount: 0,
+        sharedAt: new Date().toISOString(),
+      })
     });
+
+    if (!shareLogResponse.ok) {
+      const errorData = await shareLogResponse.json();
+      throw new Error(errorData.message || 'Failed to create share log');
+    }
 
     console.log(`✅ Scheduled post processed successfully. Short code: ${shortCode}`);
 

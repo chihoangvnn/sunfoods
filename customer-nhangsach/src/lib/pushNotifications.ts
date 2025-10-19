@@ -1,7 +1,4 @@
 import webpush from 'web-push';
-import { db } from '../../server/storage';
-import { pushSubscriptions } from '../../shared/schema';
-import { eq, and } from 'drizzle-orm';
 
 // Configure VAPID details
 const vapidPublicKey = process.env.VAPID_PUBLIC_KEY;
@@ -80,16 +77,13 @@ export async function sendPushToUser(
   expiredSubscriptions: string[];
 }> {
   try {
-    // Get all active subscriptions for the user
-    const subscriptions = await db
-      .select()
-      .from(pushSubscriptions)
-      .where(
-        and(
-          eq(pushSubscriptions.userId, userId),
-          eq(pushSubscriptions.isActive, true)
-        )
-      );
+    // Get all active subscriptions for the user via API
+    const response = await fetch(`/api/push-subscriptions?userId=${userId}&active=true`);
+    if (!response.ok) {
+      throw new Error('Failed to fetch subscriptions');
+    }
+    
+    const subscriptions = await response.json();
 
     if (subscriptions.length === 0) {
       return { sent: 0, failed: 0, expiredSubscriptions: [] };
@@ -126,15 +120,16 @@ export async function sendPushToUser(
       }
     }
 
-    // Deactivate expired subscriptions
+    // Deactivate expired subscriptions via API
     if (expiredSubscriptions.length > 0) {
       await Promise.all(
-        expiredSubscriptions.map((id) =>
-          db
-            .update(pushSubscriptions)
-            .set({ isActive: false })
-            .where(eq(pushSubscriptions.id, id))
-        )
+        expiredSubscriptions.map(async (id) => {
+          await fetch(`/api/push-subscriptions/${id}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ isActive: false })
+          });
+        })
       );
     }
 

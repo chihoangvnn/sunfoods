@@ -24,8 +24,21 @@ export async function getAuthenticatedUser(request: NextRequest): Promise<Authen
   }
 
   try {
-    const { sessionManager } = await import('../../server/sessionManager');
-    const sessionData = await sessionManager.getSession(sessionId);
+    // Validate session via API call to backend
+    const response = await fetch(`${process.env.BACKEND_URL || 'http://localhost:5000'}/api/auth/validate-session`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Cookie': `session_id=${sessionId}`
+      },
+      body: JSON.stringify({ sessionId })
+    });
+    
+    if (!response.ok) {
+      return null;
+    }
+    
+    const sessionData = await response.json();
     
     if (!sessionData || !sessionData.userId) {
       return null;

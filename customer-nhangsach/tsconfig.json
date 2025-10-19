@@ -27,10 +27,10 @@
         "./src/*"
       ],
       "@shared/*": [
-        "./shared/*"
+        "../backend/shared/*"
       ],
       "@server/*": [
-        "./server/*"
+        "../backend/src/*"
       ]
     },
     "target": "ES2017"
