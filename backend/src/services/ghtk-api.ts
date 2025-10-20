@@ -1,3 +1,5 @@
+// Fallback type for environments without DOM lib
+type HeadersInit = Record<string, string>;
 export interface GHTKConfig {
   token: string;
   clientSource?: string;
@@ -125,7 +127,7 @@ class GHTKApi {
         headers: this.getHeaders(),
       });
 
-      const result = await response.json();
+      const result: any = await response.json();
       
       if (response.ok && result.success) {
         return { success: true };
@@ -147,7 +149,7 @@ class GHTKApi {
         body: JSON.stringify(orderData),
       });
 
-      const result: GHTKOrderResponse = await response.json();
+      const result: any = await response.json();
       
       if (!result.success) {
         console.error('GHTK Create Order Error:', result);
@@ -168,7 +170,7 @@ class GHTKApi {
         headers: this.getHeaders(),
       });
 
-      const result: GHTKTrackingResponse = await response.json();
+      const result: any = await response.json();
       
       if (!result.success) {
         console.error('GHTK Get Order Status Error:', result);
@@ -189,7 +191,7 @@ class GHTKApi {
         headers: this.getHeaders(),
       });
 
-      const result: GHTKCancelResponse = await response.json();
+      const result: any = await response.json();
       
       if (!result.success) {
         console.error('GHTK Cancel Order Error:', result);
@@ -237,7 +239,7 @@ class GHTKApi {
         headers: this.getHeaders(),
       });
 
-      const result: GHTKFeeResponse = await response.json();
+      const result: any = await response.json();
       
       if (!result.success) {
         console.error('GHTK Calculate Fee Error:', result);

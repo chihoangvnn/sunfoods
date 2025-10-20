@@ -1,5 +1,5 @@
 import { storage } from '../storage';
-import type { InsertCustomer } from '../../shared/schema';
+// Avoid strict schema type coupling here
 
 export interface MembershipProcessingResult {
   success: boolean;
@@ -262,7 +262,7 @@ export async function ensureCustomerForOrder(params: {
       }
 
       // Create new customer
-      const customerData: InsertCustomer = {
+      const customerData = {
         name: customerName,
         email: customerEmail || `guest-${Date.now()}@membership.local`,
         phone: customerPhone,

@@ -15,17 +15,19 @@ import QueueService from './queue';
 import { SUPPORTED_REGIONS } from './regions';
 import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
-import type { 
-  Worker, 
-  InsertWorker, 
-  WorkerJob, 
+import type {
+  Workers,
+  InsertWorkers,
+  WorkerJob,
   InsertWorkerJob,
   WorkerHealthCheck,
   InsertWorkerHealthCheck,
   WorkerPlatform,
-  WorkerCapability,
-  SUPPORTED_WORKER_PLATFORMS
+  WorkerCapability
 } from '@shared/schema';
+
+// Define supported platforms locally
+const SUPPORTED_WORKER_PLATFORMS = ['facebook', 'instagram', 'twitter', 'tiktok', 'youtube', 'linkedin'] as const;
 
 // Worker registration and capabilities
 export interface WorkerRegistrationData {
@@ -184,7 +186,7 @@ export class WorkerManagementService {
       );
 
       // Create worker record
-      const workerData: InsertWorker = {
+      const workerData = {
         workerId: registrationData.workerId,
         name: registrationData.name,
         description: registrationData.description,
@@ -209,9 +211,9 @@ export class WorkerManagementService {
         priority: 1,
         isEnabled: true,
         metadata: registrationData.metadata || {}
-      };
+      } as any;
 
-      const worker = await workerStorage.createWorker(workerData);
+      const worker = await workerStorage.createWorker(workerData as any);
       
       if (!worker) {
         return {
@@ -254,7 +256,7 @@ export class WorkerManagementService {
 
       // Filter by job type capabilities
       const capableWorkers = availableWorkers.filter(worker => 
-        (worker.capabilities as any[]).some(cap => 
+        ((worker as any).capabilities as any[]).some(cap => 
           cap.platform === criteria.platform && 
           cap.actions.includes(criteria.jobType)
         )
@@ -269,13 +271,13 @@ export class WorkerManagementService {
       
       if (criteria.excludeWorkers?.length) {
         filteredWorkers = filteredWorkers.filter(w => 
-          !criteria.excludeWorkers!.includes(w.workerId)
+          !criteria.excludeWorkers!.includes((w as any).workerId)
         );
       }
 
       if (criteria.preferredWorkers?.length) {
         const preferredWorkers = filteredWorkers.filter(w => 
-          criteria.preferredWorkers!.includes(w.workerId)
+          criteria.preferredWorkers!.includes((w as any).workerId)
         );
         if (preferredWorkers.length > 0) {
           filteredWorkers = preferredWorkers;
@@ -329,19 +331,19 @@ export class WorkerManagementService {
         return { success: false, error: 'Worker not found' };
       }
 
-      if (!worker.isEnabled || worker.status !== 'active') {
+      if (!(worker as any).isEnabled || (worker as any).status !== 'active') {
         return { success: false, error: 'Worker not available' };
       }
 
       // Check worker capacity
       const currentLoad = await this.getWorkerCurrentLoad(workerId);
-      if (currentLoad >= worker.maxConcurrentJobs) {
+      if (currentLoad >= (worker as any).maxConcurrentJobs) {
         return { success: false, error: 'Worker at capacity' };
       }
 
       // Create worker job assignment
       const workerJobData: InsertWorkerJob = {
-        workerId: worker.id,
+        workerId: (worker as any).id,
         jobId: jobData.jobId,
         scheduledPostId: jobData.scheduledPostId,
         platform: jobData.platform,
@@ -357,7 +359,7 @@ export class WorkerManagementService {
       }
 
       // Update worker current load
-      await workerStorage.updateWorker(worker.id, {
+      await workerStorage.updateWorker((worker as any).id, {
         currentLoad: currentLoad + 1,
         lastJobAt: new Date()
       });
@@ -390,7 +392,7 @@ export class WorkerManagementService {
 
       // Create health check record
       const healthCheckData: InsertWorkerHealthCheck = {
-        workerId: worker.id,
+        workerId: (worker as any).id,
         status: healthData.status || 'healthy',
         responseTime: healthData.systemMetrics?.responseTime || 0,
         cpuUsage: healthData.systemMetrics?.cpuUsage ? healthData.systemMetrics.cpuUsage.toString() : undefined,
@@ -405,10 +407,10 @@ export class WorkerManagementService {
 
       // Update worker status
       const isOnline = healthData.status !== 'offline';
-      await workerStorage.updateWorker(worker.id, {
+      await workerStorage.updateWorker((worker as any).id, {
         isOnline,
         lastPingAt: new Date(),
-        avgResponseTime: healthData.systemMetrics?.responseTime || worker.avgResponseTime
+        avgResponseTime: healthData.systemMetrics?.responseTime || (worker as any).avgResponseTime
       });
 
       return { success: true };
@@ -431,18 +433,18 @@ export class WorkerManagementService {
       if (!worker) return null;
 
       return {
-        totalJobs: worker.totalJobsCompleted + worker.totalJobsFailed,
-        successfulJobs: worker.totalJobsCompleted,
-        failedJobs: worker.totalJobsFailed,
-        averageExecutionTime: worker.avgExecutionTime || 0,
-        averageResponseTime: worker.avgResponseTime || 0,
-        successRate: parseFloat(worker.successRate || '0'),
-        currentLoad: worker.currentLoad,
-        utilizationRate: (worker.currentLoad / worker.maxConcurrentJobs) * 100,
-        errorRate: worker.totalJobsCompleted > 0 ? 
-          (worker.totalJobsFailed / (worker.totalJobsCompleted + worker.totalJobsFailed)) * 100 : 0,
-        lastJobAt: worker.lastJobAt || undefined,
-        lastPingAt: worker.lastPingAt || undefined
+        totalJobs: (worker as any).totalJobsCompleted + (worker as any).totalJobsFailed,
+        successfulJobs: (worker as any).totalJobsCompleted,
+        failedJobs: (worker as any).totalJobsFailed,
+        averageExecutionTime: (worker as any).avgExecutionTime || 0,
+        averageResponseTime: (worker as any).avgResponseTime || 0,
+        successRate: parseFloat((worker as any).successRate || '0'),
+        currentLoad: (worker as any).currentLoad,
+        utilizationRate: ((worker as any).currentLoad / (worker as any).maxConcurrentJobs) * 100,
+        errorRate: (worker as any).totalJobsCompleted > 0 ?
+          ((worker as any).totalJobsFailed / ((worker as any).totalJobsCompleted + (worker as any).totalJobsFailed)) * 100 : 0,
+        lastJobAt: (worker as any).lastJobAt || undefined,
+        lastPingAt: (worker as any).lastPingAt || undefined
       };
 
     } catch (error) {
@@ -512,22 +514,22 @@ export class WorkerManagementService {
     let score = 0;
 
     // Base score from success rate
-    score += parseFloat(worker.successRate || '0') * 10;
+    score += parseFloat((worker as any).successRate || '0') * 10;
 
     // Capacity score (prefer workers with more available capacity)
-    const availableCapacity = worker.maxConcurrentJobs - worker.currentLoad;
-    score += (availableCapacity / worker.maxConcurrentJobs) * 20;
+    const availableCapacity = (worker as any).maxConcurrentJobs - (worker as any).currentLoad;
+    score += (availableCapacity / (worker as any).maxConcurrentJobs) * 20;
 
     // Performance score (prefer faster workers)
-    const avgTime = worker.avgExecutionTime || 5000;
+    const avgTime = (worker as any).avgExecutionTime || 5000;
     score += Math.max(0, (10000 - avgTime) / 1000); // Better score for faster execution
 
     // Priority bonus
-    score += (5 - worker.priority) * 5; // Higher priority = better score
+    score += (5 - (worker as any).priority) * 5; // Higher priority = better score
 
     // Recent activity bonus (prefer recently active workers)
-    if (worker.lastJobAt) {
-      const hoursSinceLastJob = (Date.now() - worker.lastJobAt.getTime()) / (1000 * 60 * 60);
+    if ((worker as any).lastJobAt) {
+      const hoursSinceLastJob = (Date.now() - (worker as any).lastJobAt.getTime()) / (1000 * 60 * 60);
       if (hoursSinceLastJob < 1) score += 10;
       else if (hoursSinceLastJob < 24) score += 5;
     }
@@ -564,7 +566,7 @@ export class WorkerManagementService {
         
         // Mark as offline if no ping in 5 minutes
         if (timeSinceLastPing > 5 * 60 * 1000) {
-          await workerStorage.updateWorker(worker.id, {
+          await workerStorage.updateWorker((worker as any).id, {
             isOnline: false,
             status: 'failed'
           });

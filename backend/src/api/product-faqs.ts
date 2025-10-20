@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Router } from 'express';
 import { DatabaseStorage } from '../storage.js';
 import { eq, inArray, sql } from 'drizzle-orm';

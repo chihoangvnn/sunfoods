@@ -130,14 +130,14 @@ router.put('/vendors/:id/status', requireAdminAuth, async (req, res) => {
       return res.status(404).json({ error: 'Không tìm thấy nhà cung cấp' });
     }
 
-    const updateData: any = {
-      status,
+    const updateData = {
+      status: status as any,
       updatedAt: new Date()
     };
 
     const [updatedVendor] = await db
       .update(vendors)
-      .set(updateData)
+      .set(updateData as any)
       .where(eq(vendors.id, id))
       .returning();
 
@@ -181,12 +181,12 @@ router.post('/consignment-requests/:id/approve', requireAdminAuth, async (req, r
       const [approvedRequest] = await tx
         .update(consignmentRequests)
         .set({
-          status: 'approved',
-          reviewerId: req.admin!.id,
+          status: 'approved' as any,
+          reviewerId: (req as any).admin!.id,
           reviewerNotes: notes || null,
           reviewedAt: new Date(),
           updatedAt: new Date()
-        })
+        } as any)
         .where(eq(consignmentRequests.id, id))
         .returning();
 
@@ -215,7 +215,7 @@ router.post('/consignment-requests/:id/approve', requireAdminAuth, async (req, r
             consignmentPrice: request.proposedPrice,
             discountPercent: request.discountPercent || '0.00',
             updatedAt: new Date()
-          })
+          } as any)
           .where(eq(vendorProducts.id, existingVendorProduct.id))
           .returning();
       } else {
@@ -227,11 +227,11 @@ router.post('/consignment-requests/:id/approve', requireAdminAuth, async (req, r
             quantityConsigned: request.quantity,
             consignmentPrice: request.proposedPrice,
             discountPercent: request.discountPercent || '0.00',
-            status: 'active',
+            status: 'active' as any,
             consignmentDate: new Date(),
             createdAt: new Date(),
             updatedAt: new Date()
-          })
+          } as any)
           .returning();
       }
 
@@ -277,12 +277,12 @@ router.post('/consignment-requests/:id/reject', requireAdminAuth, async (req, re
     const [rejectedRequest] = await db
       .update(consignmentRequests)
       .set({
-        status: 'rejected',
-        reviewerId: req.admin!.id,
+        status: 'rejected' as any,
+        reviewerId: (req as any).admin!.id,
         reviewerNotes: rejectionReason,
         reviewedAt: new Date(),
         updatedAt: new Date()
-      })
+      } as any)
       .where(eq(consignmentRequests.id, id))
       .returning();
 

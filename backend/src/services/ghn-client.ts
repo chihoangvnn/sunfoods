@@ -148,7 +148,7 @@ export class GHNClient {
         body: body ? JSON.stringify(body) : undefined
       });
 
-      const data = await response.json();
+      const data: any = await response.json();
 
       if (data.code !== 200) {
         throw new Error(`GHN API Error: ${data.message || 'Unknown error'} (Code: ${data.code})`);

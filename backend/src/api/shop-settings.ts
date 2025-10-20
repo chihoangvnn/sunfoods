@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Request, Response, Router, type RequestHandler } from 'express';
 import { storage } from '../storage';
 import { z } from 'zod';

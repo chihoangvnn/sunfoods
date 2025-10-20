@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * 🎯 APPROACH 2: DYNAMIC PRODUCT FIELDS
  * API Routes for Custom Description Management

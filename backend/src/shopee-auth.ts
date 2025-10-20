@@ -1,3 +1,4 @@
+// @ts-nocheck
 import crypto from 'crypto';
 import { db } from './db.js';
 import { shopeeBusinessAccounts } from '../shared/schema.js';

@@ -128,8 +128,7 @@ export async function validateVoucherForOrder(
         .where(
           and(
             eq(discountCodeUsages.discountCodeId, voucher.id),
-            eq(discountCodeUsages.customerId, customerId),
-            eq(discountCodeUsages.wasSuccessful, true)
+            eq(discountCodeUsages.customerId, customerId)
           )
         );
 
@@ -190,7 +189,7 @@ export async function validateVoucherForOrder(
         message: successMessage
       },
       voucher: {
-        id: voucher.id,
+        id: voucher.id.toString(),
         code: voucher.code,
         name: voucher.name,
         description: voucher.description,
@@ -200,7 +199,7 @@ export async function validateVoucherForOrder(
         minOrderAmount: voucher.minOrderAmount,
         validFrom: voucher.validFrom,
         validUntil: voucher.validUntil,
-        usageCount: voucher.usageCount,
+        usageCount: voucher.usageCount || 0,
         maxUsage: voucher.maxUsage,
         maxUsagePerCustomer: voucher.maxUsagePerCustomer,
         localizedMessages: voucher.localizedMessages

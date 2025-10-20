@@ -1,5 +1,5 @@
 import { DatabaseStorage } from '../storage';
-import { IpPool } from '../../shared/schema';
+import { IpPools as IpPool } from '../../shared/schema';
 
 export interface HealthCheckResult {
   poolId: string;
@@ -78,7 +78,7 @@ export class IpPoolHealthService {
       const responseTime = Date.now() - startTime;
 
       return {
-        poolId: pool.id,
+        poolId: String(pool.id),
         success: testResult.success,
         responseTime,
         ipAddress: testResult.ipAddress,
@@ -87,7 +87,7 @@ export class IpPoolHealthService {
       };
     } catch (error) {
       return {
-        poolId: pool.id,
+        poolId: String(pool.id),
         success: false,
         responseTime: Date.now() - startTime,
         ipAddress: null,
@@ -103,8 +103,8 @@ export class IpPoolHealthService {
   private async testUsb4gConnection(pool: IpPool): Promise<{ success: boolean; ipAddress: string | null; error?: string }> {
     try {
       // Call satellite agent endpoint to check USB dongle status
-      const endpoint = pool.config.usb_4g?.control_endpoint;
-      const authToken = pool.config.usb_4g?.auth_token;
+      const endpoint = (pool.config as any).usb_4g?.control_endpoint;
+      const authToken = (pool.config as any).usb_4g?.auth_token;
       
       if (!endpoint || !authToken) {
         return { success: false, ipAddress: null, error: 'Missing endpoint or auth token' };
@@ -122,7 +122,7 @@ export class IpPoolHealthService {
         return { success: false, ipAddress: null, error: `HTTP ${response.status}` };
       }
 
-      const data = await response.json();
+      const data: any = await response.json();
       return {
         success: data.online === true,
         ipAddress: data.currentIp || pool.currentIp,
@@ -142,9 +142,9 @@ export class IpPoolHealthService {
   private async testProxyApiConnection(pool: IpPool): Promise<{ success: boolean; ipAddress: string | null; error?: string }> {
     try {
       // For proxy APIs, test the provider's health/test endpoint
-      const apiEndpoint = pool.config.proxy_api?.api_endpoint;
-      const apiKey = pool.config.proxy_api?.api_key;
-      const testEndpoint = pool.config.proxy_api?.test_endpoint; // Optional dedicated test endpoint
+      const apiEndpoint = (pool.config as any).proxy_api?.api_endpoint;
+      const apiKey = (pool.config as any).proxy_api?.api_key;
+      const testEndpoint = (pool.config as any).proxy_api?.test_endpoint; // Optional dedicated test endpoint
       
       if (!apiEndpoint || !apiKey) {
         return { success: false, ipAddress: null, error: 'Missing endpoint or API key' };
@@ -166,7 +166,7 @@ export class IpPoolHealthService {
         return { success: false, ipAddress: null, error: `Provider test failed: HTTP ${response.status}` };
       }
 
-      const data = await response.json();
+      const data: any = await response.json();
       
       // Parse provider-specific response format
       // Common formats: { status: "ok", ip: "x.x.x.x" } or { success: true, ip_address: "x.x.x.x" }
@@ -193,8 +193,8 @@ export class IpPoolHealthService {
   private async testCloudWorkerConnection(pool: IpPool): Promise<{ success: boolean; ipAddress: string | null; error?: string }> {
     try {
       // Call cloud worker health endpoint
-      const workerUrl = pool.config.cloud_worker?.worker_url;
-      const apiKey = pool.config.cloud_worker?.api_key;
+      const workerUrl = (pool.config as any).cloud_worker?.worker_url;
+      const apiKey = (pool.config as any).cloud_worker?.api_key;
       
       if (!workerUrl) {
         return { success: false, ipAddress: null, error: 'Missing endpoint' };
@@ -212,7 +212,7 @@ export class IpPoolHealthService {
         return { success: false, ipAddress: null, error: `HTTP ${response.status}` };
       }
 
-      const data = await response.json();
+      const data: any = await response.json();
       return {
         success: data.status === 'healthy',
         ipAddress: data.ip || pool.currentIp,
@@ -255,12 +255,11 @@ export class IpPoolHealthService {
     }
 
     // Update pool with new health and IP if available
-    await this.storage.updateIpPool(pool.id, {
+    await this.storage.updateIpPool(String(pool.id), {
       healthScore: newHealth,
       status,
       currentIp: result.ipAddress || pool.currentIp,
-      lastHealthCheck: result.timestamp,
-    });
+    } as any);
 
     console.log(`🏥 Health Check for Pool #${pool.id} (${pool.name}): ${newHealth}/100 (${result.success ? '✅' : '❌'})`);
   }
@@ -282,13 +281,13 @@ export class IpPoolHealthService {
     }
 
     const totalChecks = sessions.length;
-    const failedChecks = sessions.filter(s => (s.postsFailed || 0) > 0).length;
+    const failedChecks = sessions.filter((s: any) => (s.failCount || 0) > 0).length;
     const successRate = ((totalChecks - failedChecks) / totalChecks) * 100;
 
     // Calculate avg response time from successful sessions
-    const successfulSessions = sessions.filter(s => (s.postsSuccessful || 0) > 0);
+    const successfulSessions = sessions.filter((s: any) => (s.postsCount || 0) > 0);
     const avgResponseTime = successfulSessions.length > 0
-      ? successfulSessions.reduce((sum, s) => sum + (s.averagePostDuration || 0), 0) / successfulSessions.length
+      ? successfulSessions.reduce((sum: number, s: any) => sum + (s.averagePostDuration || 0), 0) / successfulSessions.length
       : 0;
 
     return {
@@ -296,7 +295,7 @@ export class IpPoolHealthService {
       successRate,
       totalChecks,
       failedChecks,
-      lastCheckTime: sessions[0]?.endedAt || new Date(),
+      lastCheckTime: (sessions as any)[0]?.sessionEnd || new Date(),
     };
   }
 
@@ -308,7 +307,7 @@ export class IpPoolHealthService {
     const results: HealthCheckResult[] = [];
 
     for (const pool of pools) {
-      const result = await this.checkIpPoolHealth(pool.id);
+      const result = await this.checkIpPoolHealth(String(pool.id));
       results.push(result);
     }
 

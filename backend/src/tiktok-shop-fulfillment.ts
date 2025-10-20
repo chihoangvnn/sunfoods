@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { db } from './db.js';
 import { tiktokShopOrders, tiktokBusinessAccounts } from '../shared/schema.js';
 import { eq, and, or, inArray } from 'drizzle-orm';

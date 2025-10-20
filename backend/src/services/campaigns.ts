@@ -11,9 +11,9 @@ import {
   campaignParticipations, 
   shareVerifications, 
   customerVouchers,
-  type Campaign,
-  type InsertCampaign,
-  type CampaignParticipation
+  type Campaigns,
+  type InsertCampaigns,
+  type CampaignParticipations
 } from '@shared/schema';
 import { eq, and, lte, count, sql } from 'drizzle-orm';
 
@@ -23,7 +23,7 @@ import { eq, and, lte, count, sql } from 'drizzle-orm';
  * @param campaignData - Partial campaign data to validate
  * @returns Validation result with errors if invalid
  */
-export async function validateCampaign(campaignData: Partial<InsertCampaign>): Promise<{
+export async function validateCampaign(campaignData: Partial<InsertCampaigns>): Promise<{
   valid: boolean;
   errors?: string[];
 }> {
@@ -325,7 +325,7 @@ export async function checkParticipationLimits(campaignId: string): Promise<{
  * 
  * @returns Array of participations ready for verification
  */
-export async function getParticipationsDueForVerification(): Promise<CampaignParticipation[]> {
+export async function getParticipationsDueForVerification(): Promise<CampaignParticipations[]> {
   const now = new Date();
 
   // Query participations where:

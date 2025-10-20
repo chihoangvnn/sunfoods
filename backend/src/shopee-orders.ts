@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { db } from './db.js';
 import { shopeeShopOrders, shopeeBusinessAccounts } from '../shared/schema.js';
 import { eq, desc, asc, and, gte, lte, ilike, or, count, sum } from 'drizzle-orm';

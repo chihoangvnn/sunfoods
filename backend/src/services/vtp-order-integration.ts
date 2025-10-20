@@ -1,5 +1,5 @@
 import { db } from '../db.js';
-import { orders } from '../../shared/schema.js';
+import { orders, viettelpostConfigs } from '../../shared/schema.js';
 import { eq, and } from 'drizzle-orm';
 import ViettelPostShippingService from './viettelpost-shipping-service.js';
 
@@ -47,7 +47,7 @@ class VTPOrderIntegration {
     try {
       // Kiểm tra cấu hình auto create order
       const config = await this.getActiveConfig();
-      if (!config || !config.autoCreateOrder) {
+      if (!config || !(config as any).autoCreateOrder) {
         return {
           success: false,
           error: 'Auto create order is disabled or no active ViettelPost configuration found'
@@ -121,7 +121,7 @@ class VTPOrderIntegration {
       }
 
       // Sử dụng địa chỉ mặc định từ config hoặc default values
-      const senderInfo = config.defaultSenderInfo;
+      const senderInfo = (config as any).defaultSenderInfo;
       
       // TODO: Parse địa chỉ khách hàng thành province/district/ward ID
       // Hiện tại sử dụng default values - cần implement address parsing
@@ -135,7 +135,7 @@ class VTPOrderIntegration {
         receiverDistrictId: receiverDistrictId,
         weight: orderData.productInfo.totalWeight || 500, // Default 500g
         value: orderData.productInfo.totalValue,
-        serviceCode: orderData.shippingOptions?.serviceCode || config.defaultServiceCode,
+        serviceCode: orderData.shippingOptions?.serviceCode || (config as any).defaultServiceCode,
       });
 
       return result;
@@ -283,7 +283,7 @@ class VTPOrderIntegration {
         weight: Math.max(totalWeight, 100), // Minimum 100g
       },
       serviceOptions: {
-        serviceCode: orderData.shippingOptions?.serviceCode || config.defaultServiceCode,
+        serviceCode: orderData.shippingOptions?.serviceCode || (config as any).defaultServiceCode,
         paymentMethod: orderData.shippingOptions?.paymentMethod || 1, // Người gửi trả
         moneyCollection: orderData.shippingOptions?.moneyCollection || 0,
         note: orderData.shippingOptions?.note || `Đơn hàng từ e-commerce #${orderData.orderId.slice(-8)}`,

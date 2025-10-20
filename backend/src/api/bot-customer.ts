@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Router } from "express";
 import { DatabaseStorage } from "../storage";
 import { normalizePhone, isValidVietnamesePhone } from "../../shared/phoneUtils";

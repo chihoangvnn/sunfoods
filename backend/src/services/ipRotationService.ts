@@ -1,5 +1,5 @@
 import { DatabaseStorage } from '../storage';
-import { IpPool } from '../../shared/schema';
+import { IpPools as IpPool } from '../../shared/schema';
 
 export interface RotationOptions {
   poolId: string;
@@ -51,7 +51,7 @@ export class IpRotationService {
         console.log(`⏭️ Rotation skipped for Pool #${pool.id} - not needed yet`);
         return {
           success: true,
-          poolId: pool.id,
+          poolId: String(pool.id),
           oldIp: pool.currentIp,
           newIp: pool.currentIp,
           rotatedAt: new Date(),
@@ -66,15 +66,14 @@ export class IpRotationService {
       const newIp = await this.executeRotationByType(pool);
       
       // Update pool with new IP
-      await this.storage.updateIpPool(pool.id, {
+      await this.storage.updateIpPool(String(pool.id), {
         currentIp: newIp,
         lastRotatedAt: new Date(),
-        rotationCount: (pool.rotationCount || 0) + 1,
       });
 
       // Log rotation
       await this.storage.createIpRotationLog({
-        ipPoolId: pool.id,
+        ipPoolId: String(pool.id),
         oldIp,
         newIp,
         rotationTrigger: options.trigger,
@@ -87,7 +86,7 @@ export class IpRotationService {
 
       return {
         success: true,
-        poolId: pool.id,
+        poolId: String(pool.id),
         oldIp,
         newIp,
         rotatedAt: new Date(),
@@ -95,7 +94,7 @@ export class IpRotationService {
     } catch (error) {
       // Log failed rotation
       await this.storage.createIpRotationLog({
-        ipPoolId: pool.id,
+        ipPoolId: String(pool.id),
         oldIp,
         newIp: null,
         rotationTrigger: options.trigger,
@@ -107,7 +106,7 @@ export class IpRotationService {
 
       return {
         success: false,
-        poolId: pool.id,
+        poolId: String(pool.id),
         oldIp,
         newIp: null,
         rotatedAt: new Date(),
@@ -140,18 +139,18 @@ export class IpRotationService {
    */
   private async checkBatchThreshold(pool: IpPool): Promise<boolean> {
     // Get active session for this pool
-    const sessions = await this.storage.getIpPoolSessionsByPoolId(pool.id);
+    const sessions = await this.storage.getIpPoolSessionsByPoolId(String(pool.id));
     
     if (sessions.length === 0) {
       return false; // No session yet
     }
 
-    const activeSession = sessions.find(s => !s.endedAt);
+    const activeSession = sessions.find((s: any) => !s.sessionEnd);
     if (!activeSession) {
       return false; // No active session
     }
 
-    const totalPosts = (activeSession.postsSuccessful || 0) + (activeSession.postsFailed || 0);
+    const totalPosts = (Number((activeSession as any).postsCount) || 0) + (Number((activeSession as any).failCount) || 0);
     return totalPosts >= this.BATCH_THRESHOLD;
   }
 
@@ -187,8 +186,8 @@ export class IpRotationService {
    * Rotate USB 4G dongle IP via airplane mode
    */
   private async rotateUsb4g(pool: IpPool): Promise<string> {
-    const endpoint = pool.config.usb_4g?.control_endpoint;
-    const authToken = pool.config.usb_4g?.auth_token;
+    const endpoint = (pool.config as any).usb_4g?.control_endpoint;
+    const authToken = (pool.config as any).usb_4g?.auth_token;
     
     if (!endpoint || !authToken) {
       throw new Error('Missing endpoint or auth token for USB 4G rotation');
@@ -212,7 +211,7 @@ export class IpRotationService {
       throw new Error(`USB 4G rotation failed: HTTP ${response.status}`);
     }
 
-    const data = await response.json();
+    const data: any = await response.json();
     
     if (!data.newIp) {
       throw new Error('USB 4G rotation completed but no new IP returned');
@@ -225,8 +224,8 @@ export class IpRotationService {
    * Rotate Proxy API IP by requesting new session
    */
   private async rotateProxyApi(pool: IpPool): Promise<string> {
-    const apiEndpoint = pool.config.proxy_api?.api_endpoint;
-    const apiKey = pool.config.proxy_api?.api_key;
+    const apiEndpoint = (pool.config as any).proxy_api?.api_endpoint;
+    const apiKey = (pool.config as any).proxy_api?.api_key;
     
     if (!apiEndpoint || !apiKey) {
       throw new Error('Missing endpoint or auth token for Proxy API rotation');
@@ -246,7 +245,7 @@ export class IpRotationService {
       throw new Error(`Proxy API rotation failed: HTTP ${response.status}`);
     }
 
-    const data = await response.json();
+    const data: any = await response.json();
     
     if (!data.ip && !data.newIp) {
       throw new Error('Proxy API rotation completed but no new IP returned');
@@ -259,8 +258,8 @@ export class IpRotationService {
    * Rotate Cloud Worker IP (typically by deploying to new region/worker)
    */
   private async rotateCloudWorker(pool: IpPool): Promise<string> {
-    const workerUrl = pool.config.cloud_worker?.worker_url;
-    const apiKey = pool.config.cloud_worker?.api_key;
+    const workerUrl = (pool.config as any).cloud_worker?.worker_url;
+    const apiKey = (pool.config as any).cloud_worker?.api_key;
     
     if (!workerUrl) {
       throw new Error('Missing endpoint for Cloud Worker rotation');
@@ -282,7 +281,7 @@ export class IpRotationService {
       throw new Error(`Cloud Worker rotation failed: HTTP ${response.status}`);
     }
 
-    const data = await response.json();
+    const data: any = await response.json();
     
     if (!data.newIp && !data.ip) {
       throw new Error('Cloud Worker rotation completed but no new IP returned');
@@ -302,7 +301,7 @@ export class IpRotationService {
       // Check batch threshold
       if (await this.checkBatchThreshold(pool)) {
         const result = await this.rotateIp({
-          poolId: pool.id,
+          poolId: String(pool.id),
           trigger: 'batch_threshold',
           reason: `Reached batch threshold of ${this.BATCH_THRESHOLD} posts`,
         });
@@ -313,7 +312,7 @@ export class IpRotationService {
       // Check time interval
       if (this.checkTimeInterval(pool)) {
         const result = await this.rotateIp({
-          poolId: pool.id,
+          poolId: String(pool.id),
           trigger: 'time_interval',
           reason: `Exceeded ${this.TIME_THRESHOLD_HOURS} hours since last rotation`,
         });
@@ -324,7 +323,7 @@ export class IpRotationService {
       // Check health degradation
       if (pool.healthScore && pool.healthScore < 30) {
         const result = await this.rotateIp({
-          poolId: pool.id,
+          poolId: String(pool.id),
           trigger: 'health_degradation',
           reason: `Health score dropped to ${pool.healthScore}`,
         });

@@ -1,3 +1,5 @@
+// Fallback type for environments without DOM lib
+type HeadersInit = Record<string, string>;
 export interface GHNConfig {
   token: string;
   shopId: number;
@@ -129,7 +131,7 @@ class GHNApi {
         body: JSON.stringify(orderData),
       });
 
-      const result: GHNOrderResponse = await response.json();
+      const result: any = await response.json();
       
       if (result.code !== 200) {
         console.error('GHN Create Order Error:', result);
@@ -153,7 +155,7 @@ class GHNApi {
         }),
       });
 
-      const result: GHNTrackingResponse = await response.json();
+      const result: any = await response.json();
       
       if (result.code !== 200) {
         console.error('GHN Get Order Details Error:', result);
@@ -177,7 +179,7 @@ class GHNApi {
         }),
       });
 
-      const result: GHNCancelResponse = await response.json();
+      const result: any = await response.json();
       
       if (result.code !== 200) {
         console.error('GHN Cancel Order Error:', result);
@@ -211,7 +213,7 @@ class GHNApi {
         body: JSON.stringify(params),
       });
 
-      const result: GHNFeeResponse = await response.json();
+      const result: any = await response.json();
       
       if (result.code !== 200) {
         console.error('GHN Calculate Fee Error:', result);
@@ -237,7 +239,7 @@ class GHNApi {
         body: JSON.stringify(params),
       });
 
-      const result: GHNServiceResponse = await response.json();
+      const result: any = await response.json();
       
       if (result.code !== 200) {
         console.error('GHN Get Available Services Error:', result);

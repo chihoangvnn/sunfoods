@@ -71,8 +71,8 @@ router.post('/bulk-upload', requireAuth, async (req, res) => {
     let errorCount = 0;
 
     // Fetch all social accounts once for efficiency
-    const allSocialAccounts = await storage.getAllSocialAccounts();
-    const socialAccountMap = new Map(allSocialAccounts.map(acc => [acc.id, acc]));
+    const allSocialAccounts = await storage.getSocialAccounts();
+    const socialAccountMap = new Map(allSocialAccounts.map((acc: any) => [acc.id, acc]));
 
     // Process each post
     for (let i = 0; i < posts.length; i++) {

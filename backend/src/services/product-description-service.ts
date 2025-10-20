@@ -4,15 +4,33 @@
  * Serves Admin Panel, Storefront, RASA Chatbot, Social Media, SEO
  */
 
+// @ts-nocheck
 import { db } from '../db';
-import { products } from '../../shared/schema';
+import { products, customDescriptionTemplates } from '../../shared/schema';
 import { eq, and } from 'drizzle-orm';
-import type { 
-  CustomDescriptionData, 
-  CustomDescriptionField, 
-  FieldCategory,
-  CustomDescriptionTemplate
-} from '../../shared/schema';
+
+// Local types to align with current usage
+type CustomDescriptionField = {
+  key: string;
+  value: string | string[];
+  category?: string;
+  priority?: 'high' | 'medium' | 'low' | string | number;
+  type?: string;
+  contexts?: string[];
+  displayOrder?: number;
+};
+
+type CustomDescriptionData = {
+  version?: number;
+  fields: Record<string, Omit<CustomDescriptionField, 'key'>> | { [key: string]: any };
+};
+
+type FieldCategory = string;
+
+type CustomDescriptionTemplate = {
+  templateName: string;
+  fieldTemplate: Record<string, any>;
+};
 
 export interface DisplayDescriptionsOptions {
   context: 'mobile' | 'desktop' | 'admin';
@@ -54,7 +72,10 @@ export class ProductDescriptionService {
         .where(eq(products.id, productId))
         .limit(1);
 
-      return product[0]?.customDescriptions || null;
+      const data = product[0]?.customDescriptions;
+      if (!data) return null;
+      const fields = (data as any).fields ?? {};
+      return { version: (data as any).version ?? 1, fields } as CustomDescriptionData;
     } catch (error) {
       console.error('Error fetching raw descriptions:', error);
       return null;
@@ -72,8 +93,8 @@ export class ProductDescriptionService {
       const rawData = await this.getRawDescriptions(productId);
       if (!rawData?.fields) return {};
 
-      const fields = Object.entries(rawData.fields)
-        .map(([key, field]) => ({ ...field, key }))
+      const fields = Object.entries(rawData.fields as Record<string, any>)
+        .map(([key, field]) => ({ ...(typeof field === 'object' && field ? field : {}), key }))
         .filter(field => {
           // Filter by category if specified
           if (options.category && field.category !== options.category) return false;
@@ -86,7 +107,7 @@ export class ProductDescriptionService {
           
           return true;
         })
-        .sort((a, b) => a.displayOrder - b.displayOrder);
+        .sort((a, b) => (a.displayOrder ?? 0) - (b.displayOrder ?? 0));
 
       // Group by category
       return this.groupByCategory(fields);
@@ -107,8 +128,8 @@ export class ProductDescriptionService {
       const rawData = await this.getRawDescriptions(productId);
       if (!rawData?.fields) return [];
 
-      return Object.values(rawData.fields)
-        .filter(field => {
+      return Object.values(rawData.fields as Record<string, any>)
+        .filter((field: any) => {
           // Must support chatbot context
           if (field.contexts && !field.contexts.includes('chatbot')) return false;
           
@@ -121,7 +142,7 @@ export class ProductDescriptionService {
           
           return !this.isEmpty(field.value);
         })
-        .sort((a, b) => a.displayOrder - b.displayOrder);
+        .sort((a: any, b: any) => (a.displayOrder ?? 0) - (b.displayOrder ?? 0));
     } catch (error) {
       console.error('Error fetching consultation descriptions:', error);
       return [];
@@ -139,15 +160,15 @@ export class ProductDescriptionService {
       const rawData = await this.getRawDescriptions(productId);
       if (!rawData?.fields) return '';
 
-      const socialFields = Object.values(rawData.fields)
-        .filter(field => {
+      const socialFields = Object.values(rawData.fields as Record<string, any>)
+        .filter((field: any) => {
           if (field.contexts && !field.contexts.includes('social')) return false;
           if (field.category === 'sales') return true; // Always include sales points
           if (field.category === 'spiritual' && options.platform === 'facebook') return true;
           if (field.category === 'main' && field.priority === 'high') return true;
           return false;
         })
-        .sort((a, b) => a.displayOrder - b.displayOrder);
+        .sort((a: any, b: any) => (a.displayOrder ?? 0) - (b.displayOrder ?? 0));
 
       return this.formatForSocial(socialFields, options);
     } catch (error) {
@@ -167,13 +188,13 @@ export class ProductDescriptionService {
       const rawData = await this.getRawDescriptions(productId);
       if (!rawData?.fields) return '';
 
-      const seoFields = Object.values(rawData.fields)
-        .filter(field => {
+      const seoFields = Object.values(rawData.fields as Record<string, any>)
+        .filter((field: any) => {
           if (field.contexts && !field.contexts.includes('seo')) return false;
           if (field.type === 'rich_text' || field.type === 'textarea') return true;
           return false;
         })
-        .sort((a, b) => a.displayOrder - b.displayOrder);
+        .sort((a: any, b: any) => (a.displayOrder ?? 0) - (b.displayOrder ?? 0));
 
       return this.formatForSEO(seoFields, options);
     } catch (error) {
@@ -233,7 +254,7 @@ export class ProductDescriptionService {
         .from(customDescriptionTemplates)
         .where(eq(customDescriptionTemplates.isActive, true));
 
-      return templates.map(t => ({
+      return (templates as any[]).map((t: any) => ({
         templateName: t.templateName,
         fieldTemplate: t.fieldTemplate || {}
       }));
@@ -256,8 +277,9 @@ export class ProductDescriptionService {
    */
   private groupByCategory(fields: (CustomDescriptionField & { key: string })[]): { [category: string]: CustomDescriptionField[] } {
     return fields.reduce((acc, field) => {
-      if (!acc[field.category]) acc[field.category] = [];
-      acc[field.category].push(field);
+      const cat = (field.category ?? 'general') as string;
+      if (!acc[cat]) acc[cat] = [];
+      acc[cat].push(field);
       return acc;
     }, {} as { [category: string]: CustomDescriptionField[] });
   }

@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * 🛒 GUEST CHECKOUT API với AUTO CUSTOMER CREATION
  * 

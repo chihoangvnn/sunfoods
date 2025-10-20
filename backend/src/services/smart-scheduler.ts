@@ -268,11 +268,11 @@ export class SmartSchedulerService {
     const excludedTags = preferences.excludedTags || [];
 
     // Check for excluded tags (immediate disqualification)
-    const hasExcludedTag = contentTags.some((tagId: any) => excludedTags.includes(tagId));
+    const hasExcludedTag = (contentTags as any[]).some((tagId: any) => excludedTags.includes(tagId));
     if (hasExcludedTag) return 0;
 
     // Calculate preferred tag matches
-    const matchingPreferredTags = contentTags.filter((tagId: any) => preferredTags.includes(tagId));
+    const matchingPreferredTags = (contentTags as any[]).filter((tagId: any) => preferredTags.includes(tagId));
     const preferredTagScore = preferredTags.length > 0 
       ? (matchingPreferredTags.length / preferredTags.length) * 40 
       : 20; // Neutral if no preferences set
@@ -285,7 +285,7 @@ export class SmartSchedulerService {
     score += contentTypeScore * 0.3;
 
     // 3. Selected Tag Relevance (20% weight)
-    const selectedTagMatches = contentTags.filter((tagId: any) => selectedTags.includes(tagId));
+    const selectedTagMatches = (contentTags as any[]).filter((tagId: any) => selectedTags.includes(tagId));
     const selectedTagScore = selectedTags.length > 0 
       ? (selectedTagMatches.length / selectedTags.length) * 20 
       : 10;
@@ -331,7 +331,7 @@ export class SmartSchedulerService {
     const contentTags = content.tagIds || [];
     
     // Check preferred tags
-    const matchingPreferred = contentTags.filter((tagId: any) => preferences.preferredTags.includes(tagId));
+    const matchingPreferred = (contentTags as any[]).filter((tagId: any) => preferences.preferredTags.includes(tagId));
     if (matchingPreferred.length > 0) {
       const tagNames = matchingPreferred.map((id: any) => tagsMap.get(id) || id).join(', ');
       reasons.push(`Preferred tags: ${tagNames}`);
@@ -345,7 +345,7 @@ export class SmartSchedulerService {
     }
 
     // Check selected tag overlap
-    const selectedTagMatches = contentTags.filter((tagId: any) => selectedTags.includes(tagId));
+    const selectedTagMatches = (contentTags as any[]).filter((tagId: any) => selectedTags.includes(tagId));
     if (selectedTagMatches.length > 0) {
       const tagNames = selectedTagMatches.map((id: any) => tagsMap.get(id) || id).join(', ');
       reasons.push(`Campaign tags: ${tagNames}`);

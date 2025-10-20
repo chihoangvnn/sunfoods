@@ -1,5 +1,5 @@
 import { v2 as cloudinary } from 'cloudinary';
-import type { CloudinaryImage, CloudinaryVideo } from '@shared/schema';
+// Removed CloudinaryImage, CloudinaryVideo imports - not exported from schema
 
 // Configure Cloudinary
 const cloudName = process.env.CLOUDINARY_CLOUD_NAME === 'Untitled' ? 'dnqfvqnsg' : process.env.CLOUDINARY_CLOUD_NAME;
@@ -103,7 +103,7 @@ export async function deleteFromCloudinary(publicId: string, resourceType: 'imag
 /**
  * Convert Cloudinary upload result to typed schema format
  */
-export function convertToCloudinaryMedia(result: CloudinaryUploadResult, alt?: string): CloudinaryImage | CloudinaryVideo {
+export function convertToCloudinaryMedia(result: CloudinaryUploadResult, alt?: string): any {
   const base = {
     public_id: result.public_id,
     asset_id: result.asset_id,
@@ -124,7 +124,7 @@ export function convertToCloudinaryMedia(result: CloudinaryUploadResult, alt?: s
       resource_type: 'image',
       width: result.width || 0,
       height: result.height || 0,
-    } as CloudinaryImage;
+    } as any;
   } else {
     return {
       ...base,
@@ -133,7 +133,7 @@ export function convertToCloudinaryMedia(result: CloudinaryUploadResult, alt?: s
       width: result.width,
       height: result.height,
       thumbnail_url: result.secure_url.replace(/\.[^/.]+$/, '.jpg'), // Generate thumbnail URL
-    } as CloudinaryVideo;
+    } as any;
   }
 }
 

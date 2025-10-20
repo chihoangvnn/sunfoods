@@ -85,10 +85,14 @@ export class PushNotificationService {
       }
 
       try {
+        const keys = (subscription as any).keys || {
+          p256dh: (subscription as any).p256dh || (subscription as any).p256dhKey,
+          auth: (subscription as any).auth || (subscription as any).authKey
+        };
         const pushSubscription = {
-          endpoint: subscription.endpoint,
-          expirationTime: subscription.expirationTime ? new Date(subscription.expirationTime).getTime() : null,
-          keys: subscription.keys as { p256dh: string; auth: string }
+          endpoint: (subscription as any).endpoint,
+          expirationTime: (subscription as any).expirationTime ? new Date((subscription as any).expirationTime).getTime() : null,
+          keys: keys as { p256dh: string; auth: string }
         };
 
         await webpush.sendNotification(pushSubscription, pushPayload);
@@ -245,10 +249,10 @@ export class PushNotificationService {
 
       try {
         const pushSubscription = {
-          endpoint: subscription.endpoint,
+          endpoint: (subscription as any).endpoint,
           keys: {
-            p256dh: subscription.p256dh,
-            auth: subscription.auth
+            p256dh: (subscription as any).p256dh || (subscription as any).p256dhKey,
+            auth: (subscription as any).auth || (subscription as any).authKey
           }
         };
 

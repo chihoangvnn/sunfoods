@@ -17,11 +17,11 @@ router.get('/dev-login', async (req, res) => {
     }
     
     // Set session
-    req.session.adminId = admin.id;
-    req.session.adminRole = admin.role;
+    (req.session as any).adminId = admin.id;
+    (req.session as any).adminRole = admin.role;
     
     await new Promise<void>((resolve, reject) => {
-      req.session.save((err) => {
+      (req.session as any).save((err: any) => {
         if (err) reject(err);
         else resolve();
       });

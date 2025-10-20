@@ -133,7 +133,10 @@ class QueueService {
     const queue = this.getQueue(platform, region);
     
     // Get waiting jobs (FIFO order)
-    const jobs = await queue.getJobs(['waiting'], 0, capacity - 1);
+    if (!queue) {
+      return [];
+    }
+    const jobs = await queue.getJobs(['waiting'], 0, Math.max(0, capacity - 1));
     
     // Return jobs directly - BullMQ handles state management
     const validJobs: Job<PostJobPayload>[] = [];

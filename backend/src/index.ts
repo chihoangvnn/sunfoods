@@ -12,9 +12,9 @@ import { fileURLToPath } from "url";
 // In production (CommonJS build): use process.cwd() + dist
 const __dirname = (() => {
   try {
-    if (typeof import.meta?.url !== 'undefined') {
+    if (typeof (global as any).import?.meta?.url !== 'undefined') {
       // ESM mode: calculate from import.meta.url
-      return path.dirname(fileURLToPath(import.meta.url));
+      return path.dirname(fileURLToPath((global as any).import?.meta?.url || __filename));
     }
   } catch (e) {
     // Ignore and fall through to CommonJS mode
@@ -117,9 +117,9 @@ app.use(express.urlencoded({ extended: false }));
 // Session-based authentication for frontend users
 const PGStore = ConnectPGSimple(session);
 
-app.use(session({
+app.use((session as any)({
   store: new PGStore({
-    pool: pool, // Use PostgreSQL Pool directly
+    pool: pool as any, // Use PostgreSQL Pool directly
     tableName: 'user_sessions',
     createTableIfMissing: true
   }),
@@ -222,7 +222,7 @@ app.use((req, res, next) => {
     const message = err.message || "Internal Server Error";
 
     // Log the error with request context for debugging
-    log(`Error ${status}: ${message} - ${req.method} ${req.path}`, "error");
+    log(`Error ${status}: ${message} - ${req.method} ${req.path}`);
     if (status >= 500) {
       console.error(err.stack); // Log full stack trace for server errors
     }

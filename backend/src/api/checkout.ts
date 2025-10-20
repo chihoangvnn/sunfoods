@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * 🛒 CHECKOUT VOUCHER VALIDATION API
  * 

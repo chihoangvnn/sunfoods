@@ -1,6 +1,6 @@
 import { DatabaseStorage } from '../storage';
 import { facebookPostingService } from './facebook-posting-service';
-import { ScheduledPost, ContentAsset, SocialAccount, ContentLibrary } from '../../shared/schema';
+import { ScheduledPosts as ScheduledPost, ContentAssets as ContentAsset, SocialAccounts as SocialAccount, contentLibrary as ContentLibrary } from '../../shared/schema';
 import { jobOrchestrator } from './job-orchestrator';
 import { getAssignmentService } from './ipAssignmentService';
 import { getRotationService } from './ipRotationService';
@@ -22,7 +22,7 @@ export interface SmartScheduleOptions {
 }
 
 export interface ContentSelectionResult {
-  content: ContentLibrary;
+  content: any;
   selectedAccounts: SocialAccount[];
   estimatedReach: number;
 }
@@ -170,7 +170,7 @@ export class PostScheduler {
           status: 'posted',
           publishedAt: new Date(),
           analytics: {
-            ...post.analytics,
+            ...(typeof post.analytics === 'object' && post.analytics ? post.analytics : {}),
             postedAt: new Date().toISOString(),
             workerExecuted: assignedWorker,
             campaignCompleted: true
@@ -179,7 +179,7 @@ export class PostScheduler {
 
         // Update asset usage count
         if (post.assetIds) {
-          for (const assetId of post.assetIds) {
+          for (const assetId of (post.assetIds as any)) {
             await this.storage.incrementAssetUsage(assetId);
           }
         }
@@ -238,18 +238,18 @@ export class PostScheduler {
         // Assign best IP pool for this post
         const assignment = await assignmentService.assignIpPool(post.id, {
           platform: post.platform,
-          priority: post.priority,
+          priority: (typeof (post as any).priority === 'string' ? (post as any).priority : 'normal') as 'high' | 'normal' | 'low',
         });
 
         if (assignment.pool) {
-          assignedPoolId = assignment.pool.id;
+          assignedPoolId = String(assignment.pool.id);
           assignedIpAddress = assignment.pool.currentIp;
           
           console.log(`🎯 Assigned IP Pool #${assignment.pool.id} (${assignment.pool.name}) to Post #${post.id}`);
           
           // Get or create active session for this pool
           assignedSessionId = await assignmentService.getOrCreateSession(
-            assignment.pool.id,
+            String(assignment.pool.id),
             post.batchId || undefined
           );
           
@@ -267,8 +267,8 @@ export class PostScheduler {
 
       // Get content assets if any
       const assets: ContentAsset[] = [];
-      if (post.assetIds && post.assetIds.length > 0) {
-        for (const assetId of post.assetIds) {
+      if ((post as any).assetIds && (post as any).assetIds.length > 0) {
+        for (const assetId of (post as any).assetIds as string[]) {
           const asset = await this.storage.getContentAsset(assetId);
           if (asset) assets.push(asset);
         }
@@ -277,7 +277,7 @@ export class PostScheduler {
       // Build post message with hashtags
       const message = facebookPostingService.buildPostMessage(
         post.caption, 
-        post.hashtags || []
+        ((post as any).hashtags as string[]) || []
       );
 
       // Post based on platform
@@ -308,7 +308,7 @@ export class PostScheduler {
 
     } catch (error) {
       console.error(`❌ Post ${post.id} failed:`, error);
-      await this.handlePostFailure(post, error as Error, assignedSessionId);
+      await this.handlePostFailure(post, error as Error, undefined);
     }
   }
 
@@ -400,7 +400,7 @@ export class PostScheduler {
 
     // Update asset usage count
     if (post.assetIds) {
-      for (const assetId of post.assetIds) {
+      for (const assetId of (post.assetIds as any)) {
         await this.storage.incrementAssetUsage(assetId);
       }
     }
@@ -549,7 +549,7 @@ export class PostScheduler {
     platforms?: string[];
     excludeRecentlyUsed?: boolean;
     limit?: number;
-  }): Promise<ContentLibrary[]> {
+  }): Promise<any[]> {
     const { tags, priority, platforms, excludeRecentlyUsed = true, limit = 10 } = options;
     
     // Build filters for content selection
@@ -567,8 +567,8 @@ export class PostScheduler {
     
     // Filter by platforms if specified
     if (platforms && platforms.length > 0) {
-      contentItems = contentItems.filter(item => 
-        !item.platforms || item.platforms.some(platform => platforms.includes(platform))
+      contentItems = contentItems.filter((item: any) => 
+        !item.platforms || (item.platforms as string[]).some((platform: string) => platforms.includes(platform))
       );
     }
     
@@ -581,10 +581,10 @@ export class PostScheduler {
     }
     
     // Sort by priority: high -> normal -> low, then by usage count (ascending)
-    contentItems.sort((a, b) => {
+    contentItems.sort((a: any, b: any) => {
       const priorityOrder = { high: 3, normal: 2, low: 1 };
-      const aPriority = priorityOrder[a.priority || 'normal'];
-      const bPriority = priorityOrder[b.priority || 'normal'];
+      const aPriority = (priorityOrder as any)[(a.priority as any) || 'normal'];
+      const bPriority = (priorityOrder as any)[(b.priority as any) || 'normal'];
       
       if (aPriority !== bPriority) {
         return bPriority - aPriority; // Higher priority first
@@ -880,8 +880,8 @@ export class PostScheduler {
 
       // Get content assets if any
       const assets: ContentAsset[] = [];
-      if (post.assetIds && post.assetIds.length > 0) {
-        for (const assetId of post.assetIds) {
+      if (post.assetIds && (post.assetIds as any).length > 0) {
+        for (const assetId of (post.assetIds as any)) {
           const asset = await this.storage.getContentAsset(assetId);
           if (asset) assets.push(asset);
         }
@@ -890,7 +890,7 @@ export class PostScheduler {
       // Build post message with hashtags
       const message = facebookPostingService.buildPostMessage(
         post.caption, 
-        post.hashtags || []
+        (post.hashtags as any) || []
       );
 
       // Post based on platform
@@ -961,7 +961,7 @@ export class PostScheduler {
         lastRetryAt: new Date(),
         scheduledTime: nextRetryAt,
         analytics: {
-          ...post.analytics,
+          ...(post.analytics as any),
           lastError: error.message,
           retryHistory: [...((post.analytics as any)?.retryHistory || []), {
             attempt: retryCount,
@@ -978,7 +978,7 @@ export class PostScheduler {
         status: 'failed',
         lastRetryAt: new Date(),
         analytics: {
-          ...post.analytics,
+          ...(post.analytics as any),
           lastError: error.message,
           maxRetriesExceeded: true,
           failedAt: new Date().toISOString()

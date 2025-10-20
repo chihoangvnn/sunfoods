@@ -47,7 +47,7 @@ export const subscribeToPushNotifications = async (): Promise<PushSubscription> 
   
   const subscription = await registration.pushManager.subscribe({
     userVisibleOnly: true,
-    applicationServerKey: urlBase64ToUint8Array(vapidKey)
+    applicationServerKey: urlBase64ToUint8Array(vapidKey) as any
   });
   
   await fetch('/api/vendor/notifications/subscribe', {

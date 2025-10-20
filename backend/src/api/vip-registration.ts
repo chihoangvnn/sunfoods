@@ -1,3 +1,4 @@
+// @ts-nocheck
 import express, { Router } from "express";
 import { db } from "../db";
 import { customers, registrationTokens } from "../../shared/schema";

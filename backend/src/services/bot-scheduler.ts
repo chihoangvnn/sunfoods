@@ -68,7 +68,7 @@ async function sendFacebookMessage(customerId: string, message: string): Promise
   try {
     const customer = await storage.getCustomer(customerId);
     
-    if (!customer?.socialData?.facebookId) {
+    if (!customer?.socialData || !(customer.socialData as any).facebookId) {
       console.log(`⚠️ Customer ${customerId} has no Facebook ID, skipping message`);
       return false;
     }
@@ -89,7 +89,7 @@ async function executeDailyTierCheck(): Promise<void> {
   try {
     console.log('🎯 Running daily tier upgrade check (8am)...');
     
-    const customers = await storage.getAllCustomers();
+    const customers = await storage.getCustomers();
     let notificationsSent = 0;
     let errors = 0;
     
@@ -101,7 +101,7 @@ async function executeDailyTierCheck(): Promise<void> {
           throw new Error(`API returned ${response.status}`);
         }
         
-        const data = await response.json();
+        const data = (await response.json()) as any;
         
         if (data.status === 'success' && data.isCloseToUpgrade) {
           const message = `🎉 Chào ${customer.name || 'bạn'}!\n\n` +
@@ -137,7 +137,7 @@ async function executeWeeklyCartRecovery(): Promise<void> {
   try {
     console.log('🛒 Running weekly cart recovery (Saturday)...');
     
-    const customers = await storage.getAllCustomers();
+    const customers = await storage.getCustomers();
     let notificationsSent = 0;
     let errors = 0;
     
@@ -152,7 +152,7 @@ async function executeWeeklyCartRecovery(): Promise<void> {
           throw new Error(`API returned ${response.status}`);
         }
         
-        const data = await response.json();
+        const data = (await response.json()) as any;
         
         if (data.status === 'success' && data.hasAbandonedItems && data.abandonedProducts.length > 0) {
           const productsList = data.abandonedProducts

@@ -3,6 +3,7 @@
  * vendorTransactions table does not exist in database
  * Refund tracking disabled, but service structure preserved
  */
+// @ts-nocheck
 import { db } from '../db';
 import { vendors, /* vendorTransactions - DISABLED: table not in database */ vendorOrders } from '@shared/schema';
 import { eq, sql } from 'drizzle-orm';

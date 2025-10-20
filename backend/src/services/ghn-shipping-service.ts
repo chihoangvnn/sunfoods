@@ -219,7 +219,7 @@ class GHNShippingService {
           updateData.cancelledAt = new Date();
         }
 
-        const existingNotes = vendorOrder[0].notes ? JSON.parse(vendorOrder[0].notes) : {};
+        const existingNotes = (vendorOrder[0] as any).notes ? JSON.parse((vendorOrder[0] as any).notes) : {};
         updateData.notes = JSON.stringify({
           ...existingNotes,
           trackingData: {
@@ -288,7 +288,7 @@ class GHNShippingService {
           status: 'cancelled',
           cancelledAt: new Date(),
           notes: JSON.stringify({
-            ...(vendorOrder[0].notes ? JSON.parse(vendorOrder[0].notes) : {}),
+            ...(((vendorOrder[0] as any).notes ? JSON.parse((vendorOrder[0] as any).notes) : {})),
             cancelReason: reason || 'Cancelled by request',
             cancelledAt: new Date().toISOString(),
           }),

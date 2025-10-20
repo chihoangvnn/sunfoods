@@ -583,7 +583,7 @@ Trả về JSON format:`;
         }
       }
 
-      const rawJson = response.text;
+      const rawJson = response?.text;
       
       if (rawJson) {
         try {

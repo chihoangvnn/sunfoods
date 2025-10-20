@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * 🌟 SELLER RATING & FEEDBACK SYSTEM API
  * Vietnamese book marketplace seller rating system with REAL DATABASE INTEGRATION

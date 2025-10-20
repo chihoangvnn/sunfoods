@@ -300,7 +300,7 @@ export function ProfileTab({ addToCart, setActiveTab }: ProfileTabProps = {}) {
         </div>
         <div className="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm">
           <div className="text-[24px] font-bold text-green-600">
-            {orders.filter(o => o.status !== 'delivered' && o.status !== 'cancelled').length}
+            {orders.filter(o => o.status !== 'delivered' && o.status !== 'cancelled' && o.status !== 'shipped').length}
           </div>
           <div className="text-[16px] md:text-[17px] text-gray-600">Chờ giao</div>
         </div>

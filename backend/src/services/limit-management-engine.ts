@@ -10,7 +10,7 @@
  */
 
 import { storage } from '../storage';
-import { AccountGroup, SocialAccount, ScheduledPost } from '../../shared/schema';
+import { AccountGroups as AccountGroup, SocialAccounts as SocialAccount, ScheduledPosts as ScheduledPost } from '../../shared/schema';
 
 // Types for limit management
 interface LimitRule {

@@ -223,10 +223,10 @@ router.post('/admin-campaigns', requireAdminAuth, async (req, res) => {
         ...restData,
         startDate: new Date(startDate),
         endDate: endDate ? new Date(endDate) : undefined,
-        createdBy: req.admin!.id,
+        createdBy: (req as any).admin!.id,
         createdAt: new Date(),
         updatedAt: new Date()
-      })
+      } as any)
       .returning();
 
     res.status(201).json(newCampaign);
@@ -288,7 +288,7 @@ router.patch('/admin-campaigns/:id', requireAdminAuth, async (req, res) => {
 
     const [updatedCampaign] = await db
       .update(campaigns)
-      .set(updateData)
+      .set(updateData as any)
       .where(eq(campaigns.id, id))
       .returning();
 
@@ -420,9 +420,9 @@ router.patch('/admin-campaigns/:id/status', requireAdminAuth, async (req, res) =
     const [updatedCampaign] = await db
       .update(campaigns)
       .set({
-        status,
+        status: status as any,
         updatedAt: new Date()
-      })
+      } as any)
       .where(eq(campaigns.id, id))
       .returning();
 

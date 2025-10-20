@@ -98,7 +98,7 @@ export async function analyzePostingPatterns(
     const slot = timeSlotMap.get(key)!;
     slot.posts.push(post);
 
-    const analytics = post.analytics || {};
+    const analytics = (post.analytics as any) || {};
     const likes = analytics.likes || 0;
     const comments = analytics.comments || 0;
     const shares = analytics.shares || 0;
@@ -262,7 +262,7 @@ export async function getPlatformStatistics(daysBack: number = 90) {
     const stats = platformStats.get(post.platform)!;
     stats.count++;
 
-    const analytics = post.analytics || {};
+    const analytics = (post.analytics as any) || {};
     const engagement = (analytics.likes || 0) + (analytics.comments || 0) + (analytics.shares || 0);
     stats.totalEngagement += engagement;
     stats.totalReach += analytics.reach || 0;

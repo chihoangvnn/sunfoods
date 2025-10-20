@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import QueueService, { PostJobPayload } from './queue';
 import { storage } from '../storage';
-import type { ScheduledPost, SocialAccount } from '@shared/schema';
+import type { ScheduledPosts as ScheduledPost, SocialAccounts as SocialAccount } from '@shared/schema';
 
 /**
  * Job Distribution Engine
@@ -102,16 +102,16 @@ class JobDistributionEngine {
 
       // Update scheduled post with job metadata
       await this.updatePostJobMeta(scheduledPostId, {
-        jobId: job.id as string,
+        jobId: (job as any)?.id as string,
         queueName: `posts:${scheduledPost.platform}:${region}`,
         region,
         enqueuedAt: new Date().toISOString(),
         status: 'enqueued'
       });
 
-      console.log(`📤 Enqueued post ${scheduledPostId} as job ${job.id} in region ${region}`);
+      console.log(`📤 Enqueued post ${scheduledPostId} as job ${(job as any)?.id} in region ${region}`);
       
-      return { success: true, jobId: job.id as string };
+      return { success: true, jobId: (job as any)?.id as string };
     } catch (error) {
       const errorMsg = error instanceof Error ? error.message : 'Unknown error';
       console.error(`❌ Failed to enqueue post ${scheduledPostId}:`, errorMsg);
@@ -134,7 +134,7 @@ class JobDistributionEngine {
       scheduledPostId: scheduledPost.id,
       platform: scheduledPost.platform as 'facebook' | 'instagram' | 'twitter' | 'tiktok',
       accountId: socialAccount.accountId,
-      region: region, // Set to computed region
+      region: this.determineRegion(socialAccount),
       content: {
         caption: scheduledPost.caption,
         hashtags: (scheduledPost.hashtags as string[]) || [],

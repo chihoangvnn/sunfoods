@@ -1,5 +1,5 @@
 import { DatabaseStorage } from '../storage';
-import { IpPool, ScheduledPost } from '../../shared/schema';
+import { IpPools as IpPool, ScheduledPosts as ScheduledPost } from '../../shared/schema';
 
 export interface AssignmentOptions {
   platform: string;
@@ -59,7 +59,7 @@ export class IpAssignmentService {
 
     // Filter out excluded pools
     const availablePools = options.excludePoolIds && options.excludePoolIds.length > 0
-      ? pools.filter(p => !options.excludePoolIds!.includes(p.id))
+      ? pools.filter(p => !options.excludePoolIds!.includes(String(p.id)))
       : pools;
 
     if (availablePools.length === 0) {
@@ -160,15 +160,15 @@ export class IpAssignmentService {
    */
   private async calculateLoadScore(pool: IpPool): Promise<number> {
     // Get active session
-    const sessions = await this.storage.getIpPoolSessionsByPoolId(pool.id);
-    const activeSession = sessions.find(s => !s.endedAt);
+    const sessions = await this.storage.getIpPoolSessionsByPoolId(String(pool.id));
+    const activeSession = sessions.find((s: any) => !s.sessionEnd);
 
     if (!activeSession) {
       return 100; // No load, perfect score
     }
 
     // Calculate load based on posts in current session
-    const totalPosts = (activeSession.postsSuccessful || 0) + (activeSession.postsFailed || 0);
+    const totalPosts = (Number((activeSession as any).postsCount) || 0) + (Number((activeSession as any).failCount) || 0);
     const loadPercentage = (totalPosts / 15) * 100; // 15 posts = 100% load
     
     // Invert: lower load = higher score
@@ -180,13 +180,13 @@ export class IpAssignmentService {
    * Lower cost per post = higher score
    */
   private calculateCostScore(pool: IpPool): number {
-    if (!pool.monthlyCost) {
+    if (!(pool as any).costPerMonth) {
       return 50; // Default if cost not set
     }
 
     // Estimate cost per post (assuming 1000 posts/month per pool)
     const estimatedPostsPerMonth = 1000;
-    const costPerPost = Number(pool.monthlyCost) / estimatedPostsPerMonth;
+    const costPerPost = Number((pool as any).costPerMonth) / estimatedPostsPerMonth;
 
     // Score ranges:
     // < 5 VND/post = 100 (USB 4G ~1M/month ÷ 1000 = 1 VND/post)
@@ -204,15 +204,15 @@ export class IpAssignmentService {
    * Score based on historical performance (0-100)
    */
   private async calculatePerformanceScore(pool: IpPool): Promise<number> {
-    const sessions = await this.storage.getIpPoolSessionsByPoolId(pool.id);
+    const sessions = await this.storage.getIpPoolSessionsByPoolId(String(pool.id));
     
     if (sessions.length === 0) {
       return 50; // Default for new pools
     }
 
     // Calculate success rate from all sessions
-    const totalSuccess = sessions.reduce((sum, s) => sum + (s.postsSuccessful || 0), 0);
-    const totalFailure = sessions.reduce((sum, s) => sum + (s.postsFailed || 0), 0);
+    const totalSuccess = sessions.reduce((sum: number, s: any) => sum + (s.postsCount || 0), 0);
+    const totalFailure = sessions.reduce((sum: number, s: any) => sum + (s.failCount || 0), 0);
     const totalPosts = totalSuccess + totalFailure;
 
     if (totalPosts === 0) {
@@ -245,7 +245,7 @@ export class IpAssignmentService {
 
       // Track used pool for load balancing
       if (result.pool) {
-        usedPoolIds.add(result.pool.id);
+        usedPoolIds.add(String(result.pool.id));
       }
     }
 
@@ -264,25 +264,25 @@ export class IpAssignmentService {
 
     // Check for active session
     const sessions = await this.storage.getIpPoolSessionsByPoolId(poolId);
-    const activeSession = sessions.find(s => !s.endedAt);
+    const activeSession = sessions.find((s: any) => !s.sessionEnd);
 
     if (activeSession) {
-      return activeSession.id;
+      return String(activeSession.id);
     }
 
     // Create new session
     const newSession = await this.storage.createIpPoolSession({
-      ipPoolId: pool.id,
+      ipPoolId: String(pool.id),
       ipAddress: pool.currentIp || 'Unknown',
-      startedAt: new Date(),
-      postsSuccessful: 0,
-      postsFailed: 0,
+      sessionStart: new Date(),
+      postsCount: 0,
+      failCount: 0,
       batchId: batchId || null,
     });
 
     console.log(`📊 Created new session #${newSession.id} for Pool #${poolId}`);
     
-    return newSession.id;
+    return String(newSession.id);
   }
 
   /**
@@ -299,15 +299,15 @@ export class IpAssignmentService {
     const updates: any = {};
 
     if (success) {
-      updates.postsSuccessful = (session.postsSuccessful || 0) + 1;
+      updates.postsCount = (Number((session as any).postsCount) || 0) + 1;
     } else {
-      updates.postsFailed = (session.postsFailed || 0) + 1;
+      updates.failCount = (Number((session as any).failCount) || 0) + 1;
     }
 
     // Update average response time
     if (responseTime !== undefined && success) {
-      const currentAvg = session.averagePostDuration || 0;
-      const currentCount = session.postsSuccessful || 0;
+      const currentAvg = (session as any).averagePostDuration || 0;
+      const currentCount = Number((session as any).postsCount) || 0;
       const newAvg = ((currentAvg * currentCount) + responseTime) / (currentCount + 1);
       updates.averagePostDuration = Math.round(newAvg);
     }
@@ -320,8 +320,8 @@ export class IpAssignmentService {
    */
   async closeSession(sessionId: string): Promise<void> {
     await this.storage.updateIpPoolSession(sessionId, {
-      endedAt: new Date(),
-    });
+      sessionEnd: new Date(),
+    } as any);
     
     console.log(`🔚 Closed session #${sessionId}`);
   }
@@ -330,7 +330,7 @@ export class IpAssignmentService {
    * Get pool recommendation for specific platform
    */
   async getPoolRecommendation(platform: string): Promise<IpPool | null> {
-    const result = await this.assignIpPool(0, { platform }); // Use dummy postId for recommendation
+    const result = await this.assignIpPool('0', { platform }); // Use dummy postId for recommendation
     return result.pool;
   }
 

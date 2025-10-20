@@ -1,11 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
 import { storage } from '../storage';
-import type { Vendor } from '../../shared/schema';
+import type { Vendors } from '../../shared/schema';
 
 declare global {
   namespace Express {
     interface Request {
-      vendor?: Vendor;
+      vendor?: Vendors;
     }
   }
 }

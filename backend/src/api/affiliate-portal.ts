@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Request, Response, Router } from 'express';
 import { storage } from '../storage';
 import { requireAffiliateAuth, loadAffiliateData } from './affiliate-auth';

@@ -228,13 +228,13 @@ export class JobDispatchService {
     }
 
     // Platform specialization bonus
-    if (worker.specialties && worker.specialties.includes(payload.platform as string)) {
+    if ((worker as any).specialties && Array.isArray((worker as any).specialties) && (worker as any).specialties.includes(payload.platform as string)) {
       score += 15;
     }
 
     // Job type matching bonus
-    const hasJobTypeCapability = worker.capabilities && worker.capabilities.some((cap: any) => 
-      cap.actions && cap.actions.includes(payload.jobType)
+    const hasJobTypeCapability = (worker as any).capabilities && Array.isArray((worker as any).capabilities) && (worker as any).capabilities.some((cap: any) => 
+      cap && Array.isArray(cap.actions) && cap.actions.includes(payload.jobType)
     );
     if (hasJobTypeCapability) score += 10;
 

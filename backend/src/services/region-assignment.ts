@@ -151,11 +151,12 @@ class RegionAssignmentService {
     }
 
     // Get available regions for this platform
-    const platformRegions = this.PLATFORM_REGIONS[socialAccount.platform] || ['us-east-1'];
+    const platformKey = socialAccount.platform as keyof typeof this.PLATFORM_REGIONS;
+    const platformRegions = this.PLATFORM_REGIONS[platformKey] || ['us-east-1'];
     
     // Filter by preferred regions if specified
     const candidateRegions = options?.preferredRegions 
-      ? platformRegions.filter(r => options.preferredRegions!.includes(r))
+      ? platformRegions.filter((r: string) => options.preferredRegions!.includes(r))
       : platformRegions;
 
     // Geographic optimization
@@ -165,16 +166,16 @@ class RegionAssignmentService {
     try {
       // 1. Geographic preference based on account locale/timezone
       const geoRegion = await this.getGeographicRegion(socialAccount);
-      if (geoRegion && candidateRegions.includes(geoRegion)) {
-        optimalRegion = geoRegion;
+      if (geoRegion && candidateRegions.includes(geoRegion as any)) {
+        optimalRegion = geoRegion as any;
         reason = 'Geographic optimization';
       }
 
       // 2. Load balancing optimization
       if (options?.considerLoad) {
         const loadOptimalRegion = await this.getLoadOptimalRegion(candidateRegions);
-        if (loadOptimalRegion && candidateRegions.includes(loadOptimalRegion.region)) {
-          optimalRegion = loadOptimalRegion.region;
+        if (loadOptimalRegion && candidateRegions.includes(loadOptimalRegion.region as any)) {
+          optimalRegion = loadOptimalRegion.region as any;
           reason = `Load balancing (${loadOptimalRegion.load}% load)`;
         }
       }
@@ -182,7 +183,7 @@ class RegionAssignmentService {
       // 3. Performance optimization
       const performanceRegion = await this.getPerformanceOptimalRegion(candidateRegions, socialAccount.platform);
       if (performanceRegion) {
-        optimalRegion = performanceRegion.region;
+        optimalRegion = performanceRegion.region as any;
         reason = `Performance optimization (${performanceRegion.avgResponseTime}ms avg)`;
       }
 
@@ -197,7 +198,7 @@ class RegionAssignmentService {
     return {
       region: optimalRegion,
       reason,
-      alternatives: candidateRegions.filter(r => r !== optimalRegion)
+      alternatives: candidateRegions.filter((r: string) => r !== optimalRegion)
     };
   }
 

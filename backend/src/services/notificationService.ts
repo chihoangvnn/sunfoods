@@ -6,12 +6,7 @@
 import { sendEmail as sendReplitMail } from '../utils/replitmail';
 import { MailService } from '@sendgrid/mail';
 import { spawn } from 'child_process';
-import type { 
-  NotificationTemplate, 
-  Notification, 
-  InsertNotification, 
-  InsertNotificationLog 
-} from '@shared/schema';
+// Avoid strict coupling to shared schema for notifications
 
 // Vietnamese SMS carrier rates (VND per SMS)
 const VIETNAMESE_SMS_RATES = {

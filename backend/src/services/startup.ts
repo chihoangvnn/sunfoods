@@ -57,7 +57,7 @@ class StartupService {
       console.log(`📍 GeoRegions unique values: ${geoRegionsValues.size}`);
 
       // Check RegionAssignment consistency with centralized regions
-      const assignmentOnly = [...assignmentRegions].filter(r => !supportedRegions.has(r));
+      const assignmentOnly = [...assignmentRegions].filter((r: string) => !supportedRegions.has(r as any));
       const supportedOnly = [...supportedRegions].filter(r => !assignmentRegions.has(r));
       const regionDifference = [...assignmentOnly, ...supportedOnly];
       
@@ -67,7 +67,7 @@ class StartupService {
       }
 
       // Check all GeoRegions values are in SUPPORTED_REGIONS
-      const invalidGeoRegions = [...geoRegionsValues].filter(region => !supportedRegions.has(region));
+      const invalidGeoRegions = [...geoRegionsValues].filter((region: string) => !supportedRegions.has(region as any));
       if (invalidGeoRegions.length > 0) {
         console.error(`❌ GeoRegions contains invalid regions: ${invalidGeoRegions.join(', ')}`);
         throw new Error('Some GeoRegions point to unsupported regions');

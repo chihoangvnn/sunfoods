@@ -24,8 +24,8 @@ const UserProfile = () => {
   };
 
   const getUserDisplayName = () => {
-    if (user.isGuest) {
-      return user.guestName || 'Khách hàng';
+    if ((user as any).isGuest) {
+      return (user as any).guestName || 'Khách hàng';
     }
     
     if (user.firstName && user.lastName) {
@@ -44,7 +44,7 @@ const UserProfile = () => {
   };
 
   const getUserSubtext = () => {
-    if (user.isGuest) {
+    if ((user as any).isGuest) {
       return 'Tài khoản khách - Giới hạn tính năng';
     }
     
@@ -68,7 +68,7 @@ const UserProfile = () => {
                 <User size={24} className="text-white" />
               )}
             </div>
-            {user.isGuest && (
+            {(user as any).isGuest && (
               <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-yellow-400 rounded-full flex items-center justify-center">
                 <Crown size={10} className="text-yellow-800" />
               </div>
@@ -77,7 +77,7 @@ const UserProfile = () => {
           <div className="flex-1">
             <h3 className="font-bold text-lg">{getUserDisplayName()}</h3>
             <p className="text-green-100 text-sm">{getUserSubtext()}</p>
-            {user.isGuest && (
+            {(user as any).isGuest && (
               <div className="mt-2">
                 <button 
                   onClick={() => window.location.href = '/api/login'}
@@ -116,7 +116,7 @@ const UserProfile = () => {
         </button>
 
         {/* Settings */}
-        {!user.isGuest && (
+        {!(user as any).isGuest && (
           <button className="w-full flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg transition-colors">
             <div className="flex items-center space-x-3">
               <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center">
@@ -149,7 +149,7 @@ const UserProfile = () => {
       </div>
 
       {/* Guest Upgrade Prompt */}
-      {user.isGuest && (
+      {(user as any).isGuest && (
         <div className="m-4 p-4 bg-gradient-to-r from-yellow-50 to-orange-50 border border-yellow-200 rounded-lg">
           <div className="flex items-start space-x-3">
             <Crown size={20} className="text-yellow-600 mt-0.5 flex-shrink-0" />

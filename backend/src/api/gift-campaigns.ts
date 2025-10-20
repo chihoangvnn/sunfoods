@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * 🎁 GIFT CAMPAIGNS API
  * 

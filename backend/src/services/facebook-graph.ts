@@ -144,7 +144,7 @@ export async function verifyPostExists(postId: string): Promise<PostVerification
     checkRateLimit(response.headers);
     
     if (response.ok) {
-      const post: FacebookPost = await response.json();
+      const post: FacebookPost = (await response.json()) as any;
       return {
         exists: true,
         postId: post.id,
@@ -154,7 +154,7 @@ export async function verifyPostExists(postId: string): Promise<PostVerification
     }
     
     // Handle error responses
-    const errorData = await response.json().catch(() => null);
+    const errorData = (await response.json().catch(() => null)) as any;
     
     // Post not found (deleted or never existed)
     if (response.status === 404 || errorData?.error?.code === 100) {
@@ -218,7 +218,7 @@ export async function getPostEngagement(postId: string): Promise<EngagementResul
     checkRateLimit(response.headers);
     
     if (!response.ok) {
-      const errorData = await response.json().catch(() => null);
+      const errorData = (await response.json().catch(() => null)) as any;
       
       // Rate limit error
       if (response.status === 429 || errorData?.error?.code === 4) {
@@ -234,7 +234,7 @@ export async function getPostEngagement(postId: string): Promise<EngagementResul
       };
     }
     
-    const data = await response.json();
+    const data = (await response.json()) as any;
     
     // Parse engagement data
     const engagement: PostEngagement = {

@@ -79,7 +79,7 @@ export class FacebookAuthService {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      return await response.json();
+      return await response.json() as any;
     } catch (error) {
       console.error('Error exchanging code for token:', error);
       throw new Error('Failed to exchange authorization code for access token');
@@ -101,7 +101,7 @@ export class FacebookAuthService {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      return await response.json();
+      return await response.json() as any;
     } catch (error) {
       console.error('Error fetching user profile:', error);
       throw new Error('Failed to fetch user profile');
@@ -124,7 +124,7 @@ export class FacebookAuthService {
       }
 
       const data = await response.json();
-      return data.data || [];
+      return (data as any).data || [];
     } catch (error) {
       console.error('Error fetching user pages:', error);
       throw new Error('Failed to fetch user pages');
@@ -148,7 +148,7 @@ export class FacebookAuthService {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      return await response.json();
+      return await response.json() as any;
     } catch (error) {
       console.error('Error getting long-lived token:', error);
       throw new Error('Failed to get long-lived token');
@@ -188,7 +188,7 @@ export class FacebookAuthService {
       }
 
       const data = await response.json();
-      const followers = data.followers_count || 0;
+      const followers = (data as any).followers_count || 0;
       
       // For engagement, we'll start with a basic calculation
       // In a real implementation, you'd fetch page insights data

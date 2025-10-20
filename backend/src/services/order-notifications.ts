@@ -49,7 +49,7 @@ export async function getCustomerFacebookConversation(customerId: string) {
       return null;
     }
 
-    const facebookId = customer.socialData?.facebookId;
+    const facebookId = (customer.socialData as any)?.facebookId;
     if (!facebookId) {
       return null;
     }
@@ -88,7 +88,7 @@ export async function sendOrderStatusNotification(
 ): Promise<{ success: boolean; error?: string }> {
   try {
     const order = await storage.getOrder(orderId);
-    if (!order || !order.customerId) {
+    if (!order || !(order as any).customerId) {
       console.log(`💬 No customer found for order ${orderId}`);
       return { success: false, error: 'No customer found' };
     }
@@ -100,7 +100,7 @@ export async function sendOrderStatusNotification(
 
     // 🔔 TẠO IN-APP NOTIFICATION (database)
     await storage.createNotification({
-      customerId: order.customerId,
+      customerId: (order as any).customerId,
       type: 'order_status',
       title,
       message,
@@ -109,7 +109,7 @@ export async function sendOrderStatusNotification(
     });
 
     // 💬 OPTIONAL: Push message vào chatbot conversation (nếu có)
-    const chatConversation = await getChatbotConversationByCustomer(order.customerId);
+    const chatConversation = await getChatbotConversationByCustomer((order as any).customerId);
     if (chatConversation) {
       await storage.addMessageToChatbotConversation(chatConversation.id, {
         senderType: 'bot',
@@ -127,7 +127,7 @@ export async function sendOrderStatusNotification(
 
     // 🔔 Gửi Web Push Notification (non-blocking)
     PushNotificationService.sendOrderNotification(
-      order.customerId,
+      (order as any).customerId,
       order.id,
       orderNumber,
       newStatus

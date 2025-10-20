@@ -3,11 +3,10 @@ import { WorkerManagementService } from './worker-management';
 import { storage } from '../storage';
 import QueueService from './queue';
 import type { 
-  ScheduledPost, 
-  SocialAccount, 
-  ContentLibrary,
-  Worker,
-  AccountGroup 
+  ScheduledPosts as ScheduledPost, 
+  SocialAccounts as SocialAccount, 
+  Workers as Worker,
+  AccountGroups as AccountGroup 
 } from '../../shared/schema';
 
 /**
@@ -25,7 +24,7 @@ import type {
 export interface SatelliteStrategy {
   templateName: string;
   templateType: 'content' | 'customer_pipeline';
-  targetContent: ContentLibrary[];
+  targetContent: any[];
   targetAccounts: SocialAccount[];
   targetGroups?: AccountGroup[];
   customizations: {
@@ -161,7 +160,7 @@ export class JobOrchestrator {
 
     for (const platform of platforms) {
       const allWorkers = await this.storage.getWorkers();
-      const workers = allWorkers.filter((w: Worker) => w.platforms.includes(platform as any));
+      const workers = allWorkers.filter((w: Worker) => (w.platforms as any[] || []).includes(platform as any));
       const onlineWorkers = workers.filter((w: Worker) => w.isOnline && w.isEnabled);
       
       availableWorkers.push(...onlineWorkers);
@@ -169,7 +168,7 @@ export class JobOrchestrator {
       for (const worker of onlineWorkers) {
         totalCapacity += worker.maxConcurrentJobs || 1;
         regionDistribution[worker.region] = (regionDistribution[worker.region] || 0) + 1;
-        performanceMetrics[worker.workerId] = worker.successRate || 0;
+        performanceMetrics[worker.workerId] = Number(worker.successRate || 0);
       }
     }
 
@@ -202,8 +201,8 @@ export class JobOrchestrator {
     
     // Sort workers by performance and capacity
     const sortedWorkers = availableWorkers.sort((a: Worker, b: Worker) => {
-      const scoreA = (a.successRate || 0) * (a.maxConcurrentJobs || 1);
-      const scoreB = (b.successRate || 0) * (b.maxConcurrentJobs || 1);
+      const scoreA = Number(a.successRate || 0) * Number(a.maxConcurrentJobs || 1);
+      const scoreB = Number(b.successRate || 0) * Number(b.maxConcurrentJobs || 1);
       return scoreB - scoreA;
     });
 
@@ -401,7 +400,7 @@ export class JobOrchestrator {
           scheduledTime,
           status: 'scheduled' as const, // Use existing status for compatibility
           analytics: {
-            ...post.analytics,
+            ...(post && typeof (post as any).analytics === 'object' && (post as any).analytics ? (post as any).analytics : {}),
             assignedWorker: distribution.workerId,
             orchestrationPlan: plan.campaignId,
             jitterApplied: jitterMinutes

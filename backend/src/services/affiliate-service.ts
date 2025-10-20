@@ -125,7 +125,7 @@ export class AffiliateService {
       // Check time gap (minimum 2 hours between shares)
       if (todayLogs.length > 0) {
         const lastShare = todayLogs[todayLogs.length - 1];
-        const lastShareTime = new Date(lastShare.sharedAt);
+        const lastShareTime = new Date(lastShare.sharedAt!);
         
         if (lastShareTime > twoHoursAgo) {
           const nextAllowedTime = new Date(lastShareTime.getTime() + (2 * 60 * 60 * 1000));
@@ -216,7 +216,7 @@ export class AffiliateService {
       const tierInfo = this.calculateTier(totalOrders);
 
       // Get product assignments
-      const assignments = await storage.getAffiliateProductAssignments(affiliateId);
+      const assignments = await storage.getAffiliateProductAssignments({ affiliateId });
       
       // Get all products
       const allProducts = await storage.getProducts();

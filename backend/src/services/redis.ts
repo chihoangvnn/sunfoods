@@ -50,14 +50,14 @@ class RedisService {
           this.isAvailable = true;
         });
         
-        this.instance.on('error', (err) => {
-          if (err.code === 'ECONNREFUSED' || err.code === 'ENOTFOUND') {
+        this.instance.on('error', (err: any) => {
+          if (err?.code === 'ECONNREFUSED' || err?.code === 'ENOTFOUND') {
             if (!this.hasWarned) {
               console.warn('⚠️ Redis unavailable - running without cache/queue support');
               this.hasWarned = true;
             }
           } else {
-            console.error('❌ Redis error:', err.message);
+            console.error('❌ Redis error:', (err as any)?.message || err);
           }
           this.isConnected = false;
         });

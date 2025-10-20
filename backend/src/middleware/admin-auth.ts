@@ -1,11 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
 import { storage } from '../storage';
-import type { Admin } from '../../shared/schema';
+import type { Admins } from '../../shared/schema';
 
 declare global {
   namespace Express {
     interface Request {
-      admin?: Admin;
+      admin?: Admins;
     }
   }
 }

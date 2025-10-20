@@ -1,4 +1,4 @@
-import { SocialAccount, ScheduledPost, ContentAsset } from '../../shared/schema';
+import { SocialAccount, ScheduledPosts, ContentAssets } from '../../shared/schema';
 
 export interface FacebookPageToken {
   pageId: string;
@@ -88,12 +88,12 @@ export class FacebookPostingService {
     });
 
     if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
+      const errorData = (await response.json().catch(() => ({}))) as any;
       const errorMessage = this.parseGraphAPIError(errorData);
       throw new Error(errorMessage);
     }
 
-    const result = await response.json();
+    const result = (await response.json()) as any;
     
     return {
       success: true,
@@ -152,12 +152,12 @@ export class FacebookPostingService {
     });
 
     if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
+      const errorData = (await response.json().catch(() => ({}))) as any;
       const errorMessage = this.parseGraphAPIError(errorData);
       throw new Error(errorMessage);
     }
 
-    const result = await response.json();
+    const result = (await response.json()) as any;
     
     return {
       success: true,
@@ -201,7 +201,7 @@ export class FacebookPostingService {
         }
 
         const uploadResult = await uploadResponse.json();
-        photoIds.push(uploadResult.id);
+        photoIds.push((uploadResult as any).id);
       }
 
       // Step 2: Create the album post with all photos using proper form encoding
@@ -238,8 +238,8 @@ export class FacebookPostingService {
       
       return {
         success: true,
-        postId: albumResult.id,
-        postUrl: `https://www.facebook.com/${albumResult.id}`
+        postId: (albumResult as any).id,
+        postUrl: `https://www.facebook.com/${(albumResult as any).id}`
       };
 
     } catch (error) {
@@ -285,8 +285,8 @@ export class FacebookPostingService {
       
       // Parse insights data
       const analytics: any = {};
-      if (result.data) {
-        for (const metric of result.data) {
+      if ((result as any).data) {
+        for (const metric of (result as any).data) {
           switch (metric.name) {
             case 'post_impressions':
               analytics.impressions = metric.values[0]?.value || 0;
