@@ -11,12 +11,19 @@ const VAPID_PUBLIC_KEY = process.env.VAPID_PUBLIC_KEY || '';
 const VAPID_PRIVATE_KEY = process.env.VAPID_PRIVATE_KEY || '';
 const VAPID_SUBJECT = process.env.VAPID_SUBJECT || 'mailto:admin@incense-shop.vn';
 
+let isVapidConfigured = false;
 if (VAPID_PUBLIC_KEY && VAPID_PRIVATE_KEY) {
-  webpush.setVapidDetails(
-    VAPID_SUBJECT,
-    VAPID_PUBLIC_KEY,
-    VAPID_PRIVATE_KEY
-  );
+  try {
+    webpush.setVapidDetails(
+      VAPID_SUBJECT,
+      VAPID_PUBLIC_KEY,
+      VAPID_PRIVATE_KEY
+    );
+    isVapidConfigured = true;
+  } catch (err: any) {
+    console.warn('⚠️  Invalid VAPID keys provided; push notifications disabled at runtime:', err?.message || err);
+    isVapidConfigured = false;
+  }
 }
 
 export interface PushNotificationPayload {
@@ -46,6 +53,9 @@ export class PushNotificationService {
     customerId: string,
     payload: PushNotificationPayload
   ): Promise<{ success: boolean; sent: number; failed: number; errors: string[] }> {
+    if (!isVapidConfigured) {
+      return { success: false, sent: 0, failed: 0, errors: ['VAPID not configured'] };
+    }
     try {
       const subscriptions = await storage.getPushSubscriptionsByCustomer(customerId);
       
@@ -70,6 +80,9 @@ export class PushNotificationService {
     subscriptions: PushSubscription[],
     payload: PushNotificationPayload
   ): Promise<{ success: boolean; sent: number; failed: number; errors: string[] }> {
+    if (!isVapidConfigured) {
+      return { success: false, sent: 0, failed: 0, errors: ['VAPID not configured'] };
+    }
     const results = {
       success: true,
       sent: 0,
@@ -209,6 +222,9 @@ export class PushNotificationService {
     vendorId: string,
     payload: PushNotificationPayload
   ): Promise<{ success: boolean; sent: number; failed: number; errors: string[] }> {
+    if (!isVapidConfigured) {
+      return { success: false, sent: 0, failed: 0, errors: ['VAPID not configured'] };
+    }
     try {
       const subscriptions = await storage.getVendorPushSubscriptions(vendorId);
       
@@ -233,6 +249,9 @@ export class PushNotificationService {
     subscriptions: VendorPushSubscription[],
     payload: PushNotificationPayload
   ): Promise<{ success: boolean; sent: number; failed: number; errors: string[] }> {
+    if (!isVapidConfigured) {
+      return { success: false, sent: 0, failed: 0, errors: ['VAPID not configured'] };
+    }
     const results = {
       success: true,
       sent: 0,

@@ -7,22 +7,6 @@ import { registerRoutes } from "./routes";
 import path from "path";
 import { fileURLToPath } from "url";
 
-// ESM/CommonJS compatible __dirname
-// In dev (ESM with tsx): use import.meta.url
-// In production (CommonJS build): use process.cwd() + dist
-const __dirname = (() => {
-  try {
-    if (typeof (global as any).import?.meta?.url !== 'undefined') {
-      // ESM mode: calculate from import.meta.url
-      return path.dirname(fileURLToPath((global as any).import?.meta?.url || __filename));
-    }
-  } catch (e) {
-    // Ignore and fall through to CommonJS mode
-  }
-  // CommonJS mode: dist/index.js is in cwd/dist/
-  return path.join(process.cwd(), 'dist');
-})();
-
 // Simple logger
 const log = (msg: string) => console.log(msg);
 import { pool } from "./db";
