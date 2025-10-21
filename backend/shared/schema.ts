@@ -454,7 +454,7 @@ export const bookOrders = pgTable("book_orders", {
 ]);
 
 export const bookPaymentTransactions = pgTable("book_payment_transactions", {
-  id: integer().default('nextval(book_payment_transactions_id_seq').primaryKey(),
+  id: serial().primaryKey(),
   orderId: varchar("order_id"),
   gateway: text().notNull(),
   transactionId: varchar("transaction_id").notNull(),
@@ -832,7 +832,7 @@ export const contentAssets = pgTable("content_assets", {
 ]);
 
 export const contentCategories = pgTable("content_categories", {
-  id: integer().default('nextval(content_categories_id_seq').primaryKey(),
+  id: serial().primaryKey(),
   name: varchar({ length: 255 }).notNull(),
   description: text(),
   color: varchar({ length: 7 }).default('#3B82F6').notNull(),
@@ -1086,7 +1086,7 @@ export const depositTransactions = pgTable("deposit_transactions", {
 });
 
 export const discountCodeUsages = pgTable("discount_code_usages", {
-  id: integer().default('nextval(discount_code_usages_id_seq').primaryKey(),
+  id: serial().primaryKey(),
   discountCodeId: integer("discount_code_id").notNull(),
   orderId: varchar("order_id"),
   customerId: varchar("customer_id"),
@@ -1098,7 +1098,7 @@ export const discountCodeUsages = pgTable("discount_code_usages", {
 });
 
 export const discountCodes = pgTable("discount_codes", {
-  id: integer().default('nextval(discount_codes_id_seq').primaryKey(),
+  id: serial().primaryKey(),
   code: varchar().notNull(),
   name: varchar().notNull(),
   description: text(),
@@ -1124,7 +1124,7 @@ export const discountCodes = pgTable("discount_codes", {
 ]);
 
 export const discountScopeAssignments = pgTable("discount_scope_assignments", {
-  id: integer().default('nextval(discount_scope_assignments_id_seq').primaryKey(),
+  id: serial().primaryKey(),
   discountCodeId: integer("discount_code_id").notNull(),
   productId: varchar("product_id"),
   categoryId: varchar("category_id"),
@@ -1533,7 +1533,7 @@ export const invoiceTemplates = pgTable("invoice_templates", {
 });
 
 export const ipPoolSessions = pgTable("ip_pool_sessions", {
-  id: integer().default('nextval(ip_pool_sessions_id_seq').primaryKey(),
+  id: serial().primaryKey(),
   ipPoolId: integer("ip_pool_id").notNull(),
   sessionStart: timestamp("session_start", { mode: 'date' }).defaultNow().notNull(),
   sessionEnd: timestamp("session_end", { mode: 'date' }),
@@ -1547,7 +1547,7 @@ export const ipPoolSessions = pgTable("ip_pool_sessions", {
 });
 
 export const ipPools = pgTable("ip_pools", {
-  id: integer().default('nextval(ip_pools_id_seq').primaryKey(),
+  id: serial().primaryKey(),
   name: varchar({ length: 255 }).notNull(),
   type: varchar({ length: 50 }).notNull(),
   status: varchar({ length: 50 }).default('inactive').notNull(),
@@ -1565,7 +1565,7 @@ export const ipPools = pgTable("ip_pools", {
 });
 
 export const ipRotationLogs = pgTable("ip_rotation_logs", {
-  id: integer().default('nextval(ip_rotation_logs_id_seq').primaryKey(),
+  id: serial().primaryKey(),
   ipPoolId: integer("ip_pool_id").notNull(),
   oldIp: varchar("old_ip", { length: 100 }),
   newIp: varchar("new_ip", { length: 100 }),
@@ -1714,7 +1714,7 @@ export const pageTags = pgTable("page_tags", {
 });
 
 export const paymentGatewaySettings = pgTable("payment_gateway_settings", {
-  id: integer().default('nextval(payment_gateway_settings_id_seq').primaryKey(),
+  id: serial().primaryKey(),
   gateway: text().notNull(),
   enabled: boolean().default(false).notNull(),
   credentials: jsonb().default({}).notNull(),
@@ -1851,7 +1851,7 @@ export const productFaqs = pgTable("product_faqs", {
 });
 
 export const productLandingClicks = pgTable("product_landing_clicks", {
-  id: integer().default('nextval(product_landing_clicks_id_seq').primaryKey(),
+  id: serial().primaryKey(),
   landingPageId: varchar("landing_page_id").notNull(),
   affiliateId: varchar("affiliate_id"),
   trackingCookie: varchar("tracking_cookie").notNull(),
@@ -1913,11 +1913,13 @@ export const productPolicies = pgTable("product_policies", {
 });
 
 export const productPolicyAssociations = pgTable("product_policy_associations", {
-  productId: varchar("product_id").primaryKey(),
-  policyId: varchar("policy_id").primaryKey(),
+  productId: varchar("product_id").notNull(),
+  policyId: varchar("policy_id").notNull(),
   sortOrder: integer("sort_order").default(0).notNull(),
   createdAt: timestamp("created_at", { mode: 'date' }).defaultNow(),
-});
+}, (table) => [
+  unique("product_policy_associations_pkey").on(table.productId, table.policyId),
+]);
 
 export const productReviews = pgTable("product_reviews", {
   id: varchar().default(sql`gen_random_uuid()`).primaryKey(),
@@ -2222,7 +2224,7 @@ export const seasonalRules = pgTable("seasonal_rules", {
 });
 
 export const sellerPaymentConfigs = pgTable("seller_payment_configs", {
-  id: integer().default('nextval(seller_payment_configs_id_seq').primaryKey(),
+  id: serial().primaryKey(),
   sellerId: varchar("seller_id"),
   commissionRate: numeric("commission_rate", { precision: 5, scale: 2 }).default(15.00).notNull(),
   minCommission: numeric("min_commission", { precision: 15, scale: 2 }).default(0.00),
