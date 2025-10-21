@@ -14,3 +14,4 @@ ssh root@your-vps-ip "cd /var/www/sun/backend && node ultra-safe-fix.js && npm r
 echo "✅ Done!"
 
 
+

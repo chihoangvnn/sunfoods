@@ -17,6 +17,7 @@ import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
 import type {
   Workers,
+  Worker,
   InsertWorkers,
   WorkerJob,
   InsertWorkerJob,

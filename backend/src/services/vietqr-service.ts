@@ -44,13 +44,6 @@ export class VietQRService {
     return value;
   }
 
-  private static readonly SHB_BANK_INFO: BankInfo = {
-    bank: "SHB",
-    bankCode: "970443", // ✅ CORRECT SHB NAPAS BIN code (confirmed from official VietQR list)
-    bankName: "Ngân hàng TMCP Sài Gòn - Hà Nội", 
-    accountNumber: VietQRService.getRequiredEnvVar('SHB_BANK_ACCOUNT'), // MUST be from Replit Secrets
-    accountName: VietQRService.getRequiredEnvVar('SHB_ACCOUNT_NAME') // MUST be from Replit Secrets
-  };
 
   private static readonly BASE_URL = "https://img.vietqr.io/image";
   private static readonly QR_EXPIRY_MINUTES = 15;
@@ -77,7 +70,7 @@ export class VietQRService {
     
     // 🏦 Build VietQR URL format: /image/{BANK}-{ACCOUNT}-{TEMPLATE}.jpg 
     // ✅ Using official VietQR quicklink format as shown by user
-    const baseUrl = `${this.BASE_URL}/${this.SHB_BANK_INFO.bank.toLowerCase()}-${this.SHB_BANK_INFO.accountNumber}-${template}.jpg`;
+    const baseUrl = `${this.BASE_URL}/${VietQRService.getBankInfo().bank.toLowerCase()}-${VietQRService.getBankInfo().accountNumber}-${template}.jpg`;
     
     // 📋 Generate standardized reference for invoice ID (addInfo = id hóa đơn)
     const standardRef = this.generateStandardReference(orderId);
@@ -87,7 +80,7 @@ export class VietQRService {
     const params = new URLSearchParams({
       amount: roundedAmount.toString(),
       addInfo: standardRef, // ✅ addInfo = id hóa đơn (invoice ID)
-      accountName: this.SHB_BANK_INFO.accountName // ✅ No double-encoding (URLSearchParams encodes automatically)
+      accountName: VietQRService.getBankInfo().accountName // ✅ No double-encoding (URLSearchParams encodes automatically)
     });
     
     const qrCodeUrl = `${baseUrl}?${params.toString()}`;
@@ -98,7 +91,7 @@ export class VietQRService {
     
     return {
       qrCodeUrl,
-      bankInfo: this.SHB_BANK_INFO,
+      bankInfo: VietQRService.getBankInfo(),
       amount: roundedAmount,
       orderId, // ✅ Return original orderId, not standardized reference
       standardReference: standardRef, // ✅ Add separate field for memo
@@ -165,7 +158,13 @@ export class VietQRService {
    * 🌟 Get Bank Information
    */
   static getBankInfo(): BankInfo {
-    return this.SHB_BANK_INFO;
+    return {
+      bank: "SHB",
+      bankCode: "970443", // ✅ CORRECT SHB NAPAS BIN code (confirmed from official VietQR list)
+      bankName: "Ngân hàng TMCP Sài Gòn - Hà Nội", 
+      accountNumber: VietQRService.getRequiredEnvVar('SHB_BANK_ACCOUNT'), // MUST be from Replit Secrets
+      accountName: VietQRService.getRequiredEnvVar('SHB_ACCOUNT_NAME') // MUST be from Replit Secrets
+    };
   }
 
   /**
@@ -186,7 +185,7 @@ export class VietQRService {
   static generateDeepLink(amount: number, orderId: string): string {
     const standardRef = this.generateStandardReference(orderId); // ✅ Use standard reference
     const roundedAmount = Math.round(amount); // ✅ Consistent rounding
-    const { bankCode, accountNumber, accountName } = this.SHB_BANK_INFO;
+    const { bankCode, accountNumber, accountName } = VietQRService.getBankInfo();
     
     const params = new URLSearchParams({
       bank: bankCode,
