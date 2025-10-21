@@ -2113,7 +2113,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         preprocessedBody.categoryId = null;
       }
       
-      const validatedData = insertProductsSchema.parse(preprocessedBody);
+      const validatedData = insertProductsSchema.parse(preprocessedBody) as any;
       
       // Generate SKU automatically
       let generatedSKU: string = "";
@@ -6379,7 +6379,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       // Verify storefront config exists and is active
-      const config = await storage.getStorefrontConfig(validation.data.storefrontConfigId);
+      const config = await storage.getStorefrontConfig((validation.data as any).storefrontConfigId);
       if (!config || !config.isActive) {
         return res.status(400).json({ 
           error: 'Storefront không tồn tại hoặc đã bị tắt' 
@@ -6387,7 +6387,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       // Verify product exists and get canonical pricing
-      const product = await storage.getProduct(validation.data.productId);
+      const product = await storage.getProduct((validation.data as any).productId);
       if (!product) {
         return res.status(400).json({ 
           error: 'Sản phẩm không tồn tại' 
@@ -6396,7 +6396,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // SECURITY: Calculate price and total server-side to prevent tampering
       // Never trust client-sent price/total values
-      const quantity = validation.data.quantity;
+      const quantity = (validation.data as any).quantity;
       if (!quantity || quantity <= 0) {
         return res.status(400).json({ 
           error: 'Số lượng phải lớn hơn 0' 

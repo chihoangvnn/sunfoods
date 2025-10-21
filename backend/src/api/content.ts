@@ -356,7 +356,7 @@ router.post('/scheduled-posts', requireAdminAuth, async (req, res) => {
     const validatedData = insertScheduledPostsSchema.parse({
       ...req.body,
       scheduledTime: new Date(req.body.scheduledTime),
-    });
+    }) as any;
 
     // 🛡️ PRE-SCHEDULE VALIDATION: Check posting capacity before allowing schedule creation
     // 🔒 SECURITY: Derive group/app information server-side - NEVER trust client input

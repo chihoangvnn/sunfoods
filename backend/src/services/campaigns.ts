@@ -28,11 +28,12 @@ export async function validateCampaign(campaignData: Partial<InsertCampaigns>): 
   errors?: string[];
 }> {
   const errors: string[] = [];
+  const data = campaignData as any;
 
   // 1. Validate start date before end date
-  if (campaignData.startDate && campaignData.endDate) {
-    const startDate = new Date(campaignData.startDate);
-    const endDate = new Date(campaignData.endDate);
+  if (data.startDate && data.endDate) {
+    const startDate = new Date(data.startDate);
+    const endDate = new Date(data.endDate);
     
     if (startDate >= endDate) {
       errors.push("Ngày bắt đầu phải trước ngày kết thúc");
@@ -40,48 +41,48 @@ export async function validateCampaign(campaignData: Partial<InsertCampaigns>): 
   }
 
   // 2. Validate reward configuration (must have voucher OR points)
-  if (campaignData.rewardType) {
-    if (campaignData.rewardType === 'voucher' && !campaignData.rewardVoucherCodeId) {
+  if (data.rewardType) {
+    if (data.rewardType === 'voucher' && !data.rewardVoucherCodeId) {
       errors.push("Phải chọn voucher khi loại thưởng là 'voucher'");
     }
     
-    if (campaignData.rewardType === 'points' && (!campaignData.rewardPoints || campaignData.rewardPoints <= 0)) {
+    if (data.rewardType === 'points' && (!data.rewardPoints || data.rewardPoints <= 0)) {
       errors.push("Số điểm thưởng phải lớn hơn 0 khi loại thưởng là 'points'");
     }
     
-    if (campaignData.rewardType === 'both') {
-      if (!campaignData.rewardVoucherCodeId) {
+    if (data.rewardType === 'both') {
+      if (!data.rewardVoucherCodeId) {
         errors.push("Phải chọn voucher khi loại thưởng là 'both'");
       }
-      if (!campaignData.rewardPoints || campaignData.rewardPoints <= 0) {
+      if (!data.rewardPoints || data.rewardPoints <= 0) {
         errors.push("Số điểm thưởng phải lớn hơn 0 khi loại thưởng là 'both'");
       }
     }
   }
 
   // 3. Validate anti-fraud settings are reasonable
-  if (campaignData.verificationDelayHours !== undefined && campaignData.verificationDelayHours <= 0) {
+  if (data.verificationDelayHours !== undefined && data.verificationDelayHours <= 0) {
     errors.push("Thời gian chờ xác minh phải lớn hơn 0 giờ");
   }
 
-  if (campaignData.minEngagementLikes !== undefined && campaignData.minEngagementLikes !== null && campaignData.minEngagementLikes < 0) {
+  if (data.minEngagementLikes !== undefined && data.minEngagementLikes !== null && data.minEngagementLikes < 0) {
     errors.push("Số lượt thích tối thiểu không được âm");
   }
 
-  if (campaignData.minEngagementShares !== undefined && campaignData.minEngagementShares !== null && campaignData.minEngagementShares < 0) {
+  if (data.minEngagementShares !== undefined && data.minEngagementShares !== null && data.minEngagementShares < 0) {
     errors.push("Số lượt chia sẻ tối thiểu không được âm");
   }
 
-  if (campaignData.minEngagementComments !== undefined && campaignData.minEngagementComments !== null && campaignData.minEngagementComments < 0) {
+  if (data.minEngagementComments !== undefined && data.minEngagementComments !== null && data.minEngagementComments < 0) {
     errors.push("Số bình luận tối thiểu không được âm");
   }
 
   // 4. Validate max participations > 0 if set
-  if (campaignData.maxParticipations !== undefined && campaignData.maxParticipations !== null && campaignData.maxParticipations <= 0) {
+  if (data.maxParticipations !== undefined && data.maxParticipations !== null && data.maxParticipations <= 0) {
     errors.push("Số lượng tham gia tối đa phải lớn hơn 0");
   }
 
-  if (campaignData.maxParticipationsPerCustomer !== undefined && campaignData.maxParticipationsPerCustomer !== null && campaignData.maxParticipationsPerCustomer <= 0) {
+  if (data.maxParticipationsPerCustomer !== undefined && data.maxParticipationsPerCustomer !== null && data.maxParticipationsPerCustomer <= 0) {
     errors.push("Số lượng tham gia tối đa mỗi khách hàng phải lớn hơn 0");
   }
 
